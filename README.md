@@ -1,60 +1,67 @@
-[![Shopco Screenshot](https://github.com/mohammadoftadeh/repo-assets/blob/main/shopco-cover.png?raw=true)](https://next-ecommerce-shopco.vercel.app/)
+# Nutriblend Haven
 
-# Shopco
+Nutriblend Haven is an open-source e-commerce front-end project tailored for **health, wellness, and nutrition products**.  
+It is built on a modern tech stack including **Next.js 14 App Router**, **TypeScript**, **Tailwind CSS**, **Redux**, **Framer Motion**, and **ShadCN UI** — ensuring a fast, scalable, and responsive shopping experience.
 
-Shopco is an open-source project that converts a Figma design of an e-commerce website into a fully responsive front-end application. It utilizes **Next.js 14 App Router**, **TypeScript**, **Tailwind CSS**, **Redux**, **Framer Motion**, and **ShadCN UI** to deliver a modern, scalable, and optimized solution based on industry standards.
+This project started by adapting an open Figma template into production-ready code, then evolving it into a platform designed specifically for Nutriblend Haven.
+
+---
 
 ## Table of Contents
+- [Overview](#overview)  
+- [Features](#features)  
+- [Technologies](#technologies)  
+- [Installation](#installation)  
+- [Usage](#usage)  
+- [Project Structure](#project-structure)  
+- [Contributing](#contributing)  
+- [Issues](#issues)  
+- [License](#license)  
+- [Contact](#contact)  
 
-- [Shopco](#shopco)
-  - [Table of Contents](#table-of-contents)
-  - [Overview](#overview)
-  - [Demo](#demo)
-  - [Features](#features)
-  - [Technologies](#technologies)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Project Structure](#project-structure)
-  - [Contributing](#contributing)
-  - [Issues](#issues)
-  - [License](#license)
-  - [Contact](#contact)
+---
 
 ## Overview
+Nutriblend Haven bridges the gap between **design** and **development** by delivering a clean, responsive e-commerce storefront.  
+It emphasizes **SEO**, **performance optimization**, and **accessibility**, making it a solid foundation for building a complete nutrition and wellness marketplace.
 
-Shopco bridges the gap between design and development by converting Figma designs into production-ready code. The project follows best practices for **SEO**, **performance optimization**, and **accessibility**, making it a perfect foundation for developers looking to create scalable and maintainable e-commerce front-ends.
+---
 
 ## Demo
+Check out the live demo: **[Nutriblend Haven Demo]**  
 
-Check out the live demo: [Shopco Demo](https://next-ecommerce-shopco.vercel.app/)
+*(currently showcasing deployment setup — project is being extended with Nutriblend’s features)*
 
-<!-- [![Shopco Screenshot](https://github.com/mohammadoftadeh/repo-assets/blob/main/shopco-cover.png?raw=true)](https://next-ecommerce-shopco.vercel.app/) -->
+---
 
 ## Features
+- **Next.js 14** – SSR, SSG, API integrations, and modern routing.  
+- **TypeScript** – Strong typing for safer and more maintainable code.  
+- **Tailwind CSS** – Utility-first styling for fast and consistent UI design.  
+- **Redux** – Centralized state management for cart, products, and user flows.  
+- **Framer Motion** – Smooth animations and transitions for a delightful UX.  
+- **ShadCN UI** – Accessible, customizable UI components.  
+- **Fully Responsive** – Mobile-first design across all devices.  
+- **Performance Optimized** – Lighthouse-friendly and built with speed in mind.  
+- **Accessible** – WCAG-compliant design for inclusivity.  
 
-- **Next.js 14**: Server-side rendering (SSR), Static Site Generation (SSG), optimized routing, and API integrations.
-- **TypeScript**: Strongly typed code for better error detection and maintainability.
-- **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
-- **Redux**: State management for managing the shopping cart and other global states.
-- **Framer Motion**: Smooth animations and transitions for an enhanced user experience.
-- **ShadCN UI**: Beautifully styled, accessible, and customizable UI components.
-- **Fully Responsive**: Mobile-first design ensuring the layout adapts across devices.
-- **Performance Optimized**: Best practices followed for fast loading and interaction.
-- **Accessible**: Built with accessibility standards to provide an inclusive experience.
+---
 
 ## Technologies
+- **Next.js 14** – Core framework for server rendering and routing.  
+- **TypeScript** – Enforces type safety and developer productivity.  
+- **Tailwind CSS** – Rapid, responsive UI development.  
+- **Redux** – Shopping cart and global state management.  
+- **Framer Motion** – Page and component animations.  
+- **ShadCN UI** – Modern UI component library.  
+- **Figma** – Source of initial design inspiration ([template link](https://www.figma.com/community/file/1273571982885059508/e-commerce-website-template-freebie) by [Hamza Naeem](https://www.figma.com/@hamzauix)).  
 
-- **Next.js 14** - A popular React framework with built-in SSR and optimization.
-- **TypeScript** - A superset of JavaScript for strong typing and code consistency.
-- **Tailwind CSS** - A utility-first CSS framework for fast, responsive design.
-- **Redux** - A state management library used for the shopping cart and global app state.
-- **Framer Motion** - A library for animations and interactions in React.
-- **ShadCN UI** - A collection of beautiful, accessible, and customizable UI components.
-- **Figma** - The design tool used as the source of the project’s layout. The [Figma file](https://www.figma.com/community/file/1273571982885059508/e-commerce-website-template-freebie) designed by [Hamza Naeem](https://www.figma.com/@hamzauix)
+---
+
 
 ## Installation
 
-To get started with Shopco locally, follow these steps:
+To get started locally, follow these steps:
 
 1. **Clone the repository:**
 
