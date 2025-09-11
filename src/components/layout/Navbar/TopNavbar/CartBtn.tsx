@@ -27,5 +27,4 @@ const CartBtn = () => {
     </Link>
   );
 };
-
 export default CartBtn;
