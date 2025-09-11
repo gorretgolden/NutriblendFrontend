@@ -6,6 +6,40 @@ import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
 import { Product } from "@/types/product.types";
 import { Review } from "@/types/review.types";
+import HeroCarousel, { CarouselSlide } from "@/components/homepage/imageCarousel";
+
+
+const carouselSlides: CarouselSlide[] = [
+  {
+    id: 1,
+    image: '/images/one.avif',
+    title: 'Liquid Chlorophyll',
+    subtitle: 'Health benefits and side effects',
+    ctaText: 'Shop Now',
+    ctaLink: '/products/chlorophyll',
+    layout: 'imageLeft' 
+  },
+  {
+    id: 2,
+    image: '/images/43.avif',
+    title: 'Plant-Based Proteins',
+    subtitle: 'Fuel your body the natural way',
+    ctaText: 'Discover',
+    ctaLink: '/products/proteins',
+    layout: 'imageRight' 
+  },
+  {
+    id: 3,
+    image: '/images/156.avif',
+    title: 'Essential Vitamins',
+    subtitle: 'Boost your immune system',
+    ctaText: 'Explore',
+    ctaLink: '/products/vitamins',
+    layout: 'imageLeft' 
+  }
+];
+
+
 
 export const newArrivalsData: Product[] = [
   {
@@ -254,6 +288,12 @@ export default function Home() {
   return (
     <>
       <main className="my-[50px] sm:my-[72px]">
+
+        {/* Hero Carousel Section */}
+       <section className="mb-12">
+        <HeroCarousel slides={carouselSlides} autoPlay={true} interval={5000} />
+      </section>
+
         {/* SPecial Offer Section with Carousel */}
         <ProductCarousel
           products={specialOfferProducts}
