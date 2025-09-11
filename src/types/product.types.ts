@@ -3,6 +3,14 @@ export type Discount = {
   percentage: number;
 };
 
+export type Review = {
+  user: string;
+  comment: string;
+  rating: number;
+  date: string;
+};
+
+
 export type Product = {
   id: number;
   title: string;
@@ -11,4 +19,7 @@ export type Product = {
   price: number;
   discount: Discount;
   rating: number;
+  reviews?: number;
+  reviewList?: Review[];
+  brand?: string;
 };
