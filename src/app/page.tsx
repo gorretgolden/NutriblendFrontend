@@ -7,6 +7,7 @@ import Reviews from "@/components/homepage/Reviews";
 import { Product } from "@/types/product.types";
 import { Review } from "@/types/review.types";
 import HeroCarousel, { CarouselSlide } from "@/components/homepage/imageCarousel";
+import CategoryGrid from "@/components/homepage/Categories";
 
 
 const carouselSlides: CarouselSlide[] = [
@@ -300,6 +301,11 @@ export default function Home() {
           title="Special Offers"
           viewAllLink="/recommendations"
         />
+
+        <div className="container mx-auto px-4">
+           <CategoryGrid />
+        </div>
+
         
         {/* New Arrivals Section with Carousel */}
         <ProductCarousel
