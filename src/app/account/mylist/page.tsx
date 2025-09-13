@@ -17,25 +17,25 @@ const dummyProducts: Product[] = [
     id: "prod-1",
     name: "california Gold Nutrition DHA 700",
     price: 299.99,
-    imageUrl: "https://via.placeholder.com/300"
+    imageUrl: "/images/bottle1.avif"
   },
   {
     id: "prod-2",
-    name: "omega 3 fish oil",
+    name: "omega 3 premium fish oil ",
     price: 150.00,
-    imageUrl: "https://via.placeholder.com/300"
+    imageUrl: "/images/bottle2.avif"
   },
   {
     id: "prod-3",
     name: "omega 800 ultra-concentrated",
     price: 450.00,
-    imageUrl: "https://via.placeholder.com/300"
+    imageUrl: "/images/bottle3.avif"
   },
   {
     id: "prod-4",
-    name: "4K Ultra HD Monitor",
+    name: "Omega-3 Fish Oil",
     price: 320.50,
-    imageUrl: "https://via.placeholder.com/300"
+    imageUrl: "/images/bottle4.avif"
   },
 ];
 
