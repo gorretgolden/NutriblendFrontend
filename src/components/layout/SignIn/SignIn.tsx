@@ -77,7 +77,7 @@ const Login = () => {
           <p className="mt-10 text-center text-xs leading-snug text-gray-400 md:mt-16">
             © Copyright 1997-2025 iHerb, LLC. All rights reserved. iHerb® is a registered trademark of iHerb, LLC. and the iHerb.com Trusted Brands. Healthy Rewards. Logo are trademarks of iHerb, LLC. The claims made about the products sold through this website, have not been evaluated by the United States Food and Drug Administration and are not approved to diagnose, treat, cure or prevent any disease.{' '}
             <a href="#" className="text-[#4caf50] no-underline transition-colors hover:text-[#43a047]">
-              Read more »
+              Read more 
             </a>
           </p>
         </div>
