@@ -3,12 +3,12 @@
 import Link from "next/link";
 
 const brands = [
-  { name: "Pfizer", image: "/images/pfizer.png", href: "/products/pfizer" },
-  { name: "GSK", image: "/images/GSK.jpg", href: "/products/GSK" },
-  { name: "AstraZeneca", image: "/images/astra.jpg", href: "/products/astra" },
-  { name: "Johnson & Johnson", image: "/images/johnson.jpg", href: "/products/johnson" },
-  { name: "Roche", image: "/images/rosche.png", href: "/products/rocshe" },
-  { name: "Bayer", image: "/images/bayer.png", href: "/products/bayer" },
+  { name: "Pfizer", image: "/images/pfizer.png", href: "/brands/pfizer" },
+  { name: "GSK", image: "/images/GSK.jpg", href: "/brands/GSK" },
+  { name: "AstraZeneca", image: "/images/astra.jpg", href: "/brands/astra" },
+  { name: "Johnson & Johnson", image: "/images/johnson.jpg", href: "/brands/johnson" },
+  { name: "Roche", image: "/images/rosche.png", href: "/brands/rocshe" },
+  { name: "Bayer", image: "/images/bayer.png", href: "/brands/bayer" },
   
 ];
 
@@ -46,7 +46,7 @@ export default function BrandsSection() {
             />
 
             {/* Name visible only on hover */}
-            <span className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-xs sm:text-sm font-medium text-center py-1 opacity-0 group-hover:opacity-100 transition">
+            <span className="absolute bottom-0 left-0 right-0 bg-green-600 text-white text-xs sm:text-sm font-medium text-center py-1 opacity-0 group-hover:opacity-100 transition">
               {brand.name}
             </span>
           </Link>
