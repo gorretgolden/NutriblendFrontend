@@ -16,6 +16,7 @@ import CartBtn from "./CartBtn";
 
 import { useState } from 'react';
 import Image from 'next/image';
+import SearchWithDropdown from "@/components/homepage/Searchbar";
 
 const Header = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
@@ -41,27 +42,8 @@ const Header = () => {
               </a>
             </div>
           </div>
-
-          {/* Center section - Search bar */}
-          <div className="flex-1 max-w-md mx-4 lg:mx-8">
-            <div className="relative">
-              <form className="flex shadow-sm">
-                <input
-                  type="text"
-                  placeholder="Search all of NutriBlend..."
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-[#4caf50] focus:border-transparent transition-all duration-200"
-                />
-                <button 
-                  type="submit"
-                  className="bg-[#4caf50] text-white px-5 py-2.5 rounded-r-xl hover:bg-green-600 transition-colors duration-200 flex items-center justify-center"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-              </form>
-            </div>
-          </div>
+{/* Center section - Search bar with dropdown */}
+<SearchWithDropdown />
 
           {/* Right section - Account and Cart */}
           <div className="flex items-center space-x-3">
