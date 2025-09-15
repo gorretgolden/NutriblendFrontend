@@ -1,8 +1,5 @@
-// src/components/layout/Header.tsx
 "use client";
-import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
-import Link from "next/link"; // This import is now correctly at the top
+
 import React, { useState } from "react";
 import { NavMenu } from "../navbar.types";
 import { MenuList } from "./MenuList";
@@ -19,6 +16,68 @@ import SearchWithDropdown from "@/components/homepage/Searchbar";
 
 const Header = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Navigation data
+  const navItems = [
+    {
+      name: "Supplements",
+      subItems: [
+        "Vitamins & Minerals",
+        "Protein Powders",
+        "Pre-Workout",
+        "Weight Management",
+        "Omega & Fish Oils",
+      ],
+    },
+    {
+      name: "Sports",
+      subItems: [
+        "Fitness Accessories",
+        "Yoga & Pilates",
+        "Team Sports",
+        "Water Sports",
+        "Outdoor Recreation",
+      ],
+    },
+    {
+      name: "Bath",
+      subItems: [
+        "Bath Oils & Salts",
+        "Body Wash & Shower Gel",
+        "Loofahs & Sponges",
+        "Bathrobes & Towels",
+      ],
+    },
+    {
+      name: "Beauty",
+      subItems: ["Skincare", "Makeup", "Hair Care", "Fragrance", "Men's Grooming"],
+    },
+    {
+      name: "Grocery",
+      subItems: ["Fresh Produce", "Dairy & Eggs", "Meat & Seafood", "Bakery", "Beverages"],
+    },
+    {
+      name: "Home",
+      subItems: ["Furniture", "Kitchen & Dining", "Bedding", "Home Decor", "Lighting"],
+    },
+    {
+      name: "Baby",
+      subItems: ["Diapering", "Feeding", "Baby Gear", "Nursery", "Baby Care"],
+    },
+    {
+      name: "Pets",
+      subItems: ["Dog Supplies", "Cat Supplies", "Fish & Aquatics", "Bird Supplies", "Pet Toys"],
+    },
+    {
+      name: "Brands A-Z",
+      subItems: ["Nike", "Adidas", "Johnson & Johnson", "Procter & Gamble", "Colgate"],
+    },
+    {
+      name: "Health Topics",
+      subItems: ["Diabetes", "Heart Health", "Digestive Health", "Joint Health", "Mental Wellness"],
+    },
+  ];
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -44,139 +103,271 @@ const Header = () => {
 {/* Center section - Search bar with dropdown */}
 <SearchWithDropdown />
 
-          {/* Right section - Account and Cart */}
-          <div className="flex items-center space-x-3">
-            {/* Sign In Dropdown Component */}
-            <div className="relative">
-              <button
-                className="flex items-center space-x-1.5 p-2 rounded-lg hover:bg-gray-50 group relative transition-colors duration-200"
-                onMouseEnter={() => setIsAccountOpen(true)}
-                onMouseLeave={() => setIsAccountOpen(false)}
-              >
-                <div className="p-1.5 rounded-full bg-gray-100 group-hover:bg-green-100 transition-colors">
-                  <svg className="w-5 h-5 text-gray-600 group-hover:text-[#4caf50] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <span className="hidden md:inline text-sm font-medium">Account</span>
-                
-                {/* Dropdown indicator arrow */}
-                <svg
-                  className="ml-1 w-3 h-3 text-gray-400 transition-transform duration-200"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  style={{ transform: isAccountOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                >
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-
-              {/* Dropdown menu */}
-              {isAccountOpen && (
-                <div
-                  className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg z-50 border border-gray-100 overflow-hidden"
+            {/* Right section - Account and Cart */}
+            <div className="flex items-center space-x-3">
+              {/* Sign In Dropdown Component */}
+              <div className="relative">
+                <button
+                  className="flex items-center space-x-1.5 p-2 rounded-lg hover:bg-gray-50 group relative transition-colors duration-200"
                   onMouseEnter={() => setIsAccountOpen(true)}
                   onMouseLeave={() => setIsAccountOpen(false)}
                 >
-                  {/* Welcome header */}
-                  <div className="bg-gradient-to-r from-[#4caf50] to-[#45a049] text-white p-4">
-                    <h3 className="font-semibold text-lg">Welcome!</h3>
-                    <p className="text-sm opacity-90">Sign in to access your account</p>
+                  <div className="p-1.5 rounded-full bg-gray-100 group-hover:bg-green-100 transition-colors">
+                    <svg
+                      className="w-5 h-5 text-gray-600 group-hover:text-[#4caf50] transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
                   </div>
+                  <span className="hidden md:inline text-sm font-medium">
+                    Account
+                  </span>
+                  <svg
+                    className="ml-1 w-3 h-3 text-gray-400 transition-transform duration-200"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    style={{
+                      transform: isAccountOpen ? "rotate(180deg)" : "rotate(0deg)",
+                    }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
 
-                  {/* User options */}
-                  <div className="p-2">
-                    <div className="space-y-1">
-                      {/* Changed to Link component */}
-                      <Link href="/account" className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200">
-                        <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        My Account
-                      </Link>
-                      
-                      {/* Already a correct Link */}
+                {/* Dropdown menu */}
+                {isAccountOpen && (
+                  <div
+                    className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg z-50 border border-gray-100 overflow-hidden"
+                    onMouseEnter={() => setIsAccountOpen(true)}
+                    onMouseLeave={() => setIsAccountOpen(false)}
+                  >
+                    {/* Welcome header */}
+                    <div className="bg-gradient-to-r from-[#4caf50] to-[#45a049] text-white p-4">
+                      <h3 className="font-semibold text-lg">Welcome!</h3>
+                      <p className="text-sm opacity-90">
+                        Sign in to access your account
+                      </p>
+                    </div>
+
+                    {/* User options */}
+                    <div className="p-2">
+                      <div className="space-y-1">
+                        <Link
+                          href="/account"
+                          className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
+                        >
+                          My Account
+                        </Link>
+                        <Link
+                          href="/account/order"
+                          className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
+                        >
+                          Orders
+                        </Link>
+                        <Link
+                          href="/account/mylist"
+                          className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
+                        >
+                          My Lists
+                        </Link>
+                        <Link
+                          href="/account/rewards"
+                          className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
+                        >
+                          Rewards Credit
+                        </Link>
+                        <Link
+                          href="/account/myreview"
+                          className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
+                        >
+                          My Reviews
+                        </Link>
+                        <Link
+                          href="/account/messages"
+                          className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
+                        >
+                          Messages
+                          <span className="ml-auto bg-[#4caf50] text-white text-xs rounded-full px-2 py-1">
+                            3
+                          </span>
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Sign in button */}
+                    <div className="p-3 border-t border-gray-100 bg-gray-50">
                       <Link
-                        href="/account/order"
-                        className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
+                        href="/login"
+                        className="block w-full bg-[#4caf50] hover:bg-green-600 text-white text-center font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 shadow-sm"
                       >
+                        Sign in / Create account
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Cart */}
+              <Link
+                href="/cart"
+                className="flex items-center p-2 rounded-lg hover:bg-gray-50 relative transition-colors duration-200"
+              >
+                <div className="p-1.5 rounded-full bg-gray-100 hover:bg-green-100">
+                  <svg
+                    className="w-5 h-5 text-gray-600 hover:text-[#4caf50]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                </div>
+                <span className="absolute -top-1 -right-1 bg-[#4caf50] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
+                  0
+                </span>
+              </Link>
+
+              {/* Mobile menu button */}
+              <div className="md:hidden flex items-center">
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="p-2 rounded-md text-gray-500 hover:text-green-600 hover:bg-green-50 focus:outline-none"
+                >
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation Bar */}
+        <div className="border-t border-gray-100">
+          <div className="container mx-auto px-4">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex justify-center py-2">
+              <div className="flex items-center space-x-1">
+                {navItems.map((item, index) => (
+                  <div key={index} className="relative group">
+                    <button className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 flex items-center transition-colors duration-200">
+                      {item.name}
+                      <svg
+                        className="ml-1 h-4 w-4 transition-transform duration-200 group-hover:rotate-180"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+
+                    {/* Dropdown menu */}
+                    <div className="absolute left-0 mt-1 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
+                      <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 p-2">
+                        {item.subItems.map((subItem, subIndex) => (
+                          <a
+                            key={subIndex}
+                            href="#"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-md transition-colors duration-150"
+                          >
+                            {subItem}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile menu */}
+            {mobileMenuOpen && (
+              <div className="md:hidden bg-white">
+                <div className="px-2 pt-2 pb-3 space-y-1">
+                  {navItems.map((item, index) => (
+                    <div key={index} className="relative">
+                      <button className="w-full flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50">
+                        <div className="flex items-center">{item.name}</div>
                         <svg
-                          className="w-4 h-4 mr-3"
+                          className="h-4 w-4"
                           fill="none"
-                          stroke="currentColor"
                           viewBox="0 0 24 24"
+                          stroke="currentColor"
                         >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                            d="M9 5l7 7-7 7"
                           />
                         </svg>
-                        Orders
-                      </Link>
+                      </button>
 
-                      {/* Changed to Link component with correct href */}
-                      <Link href="/account/mylist" className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200">
-                        <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
-                        </svg>
-                        My Lists
-                      </Link>
-                      
-                      {/* Changed to Link component with correct href */}
-                      <Link href="/accounts/rewards" className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200">
-                        <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Rewards Credit
-                      </Link>
-                      
-                      {/* Changed to Link component with correct href */}
-                      <Link href="/account/myreview" className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200">
-                        <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                        </svg>
-                        My Reviews
-                      </Link>
-                      
-                      {/* Changed to Link component with correct href */}
-                      <Link href="/account/messages" className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200">
-                        <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                        </svg>
-                        Messages
-                        <span className="ml-auto bg-[#4caf50] text-white text-xs rounded-full px-2 py-1">3</span>
-                      </Link>
+                      <div className="pl-6 mt-1 space-y-1">
+                        {item.subItems.map((subItem, subIndex) => (
+                          <a
+                            key={subIndex}
+                            href="#"
+                            className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-green-600 hover:bg-green-50"
+                          >
+                            {subItem}
+                          </a>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Sign in button */}
-                  <div className="p-3 border-t border-gray-100 bg-gray-50">
-                    <Link
-                      href="/account"
-                      className="block w-full bg-[#4caf50] hover:bg-green-600 text-white text-center font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 shadow-sm"
-                    >
-                      Sign in / Create account
-                    </Link>
-                  </div>
+                  ))}
                 </div>
-              )}
-            </div>
-
-            {/* Changed to Link component */}
-            <Link href="/cart" className="flex items-center p-2 rounded-lg hover:bg-gray-50 relative transition-colors duration-200">
-              <div className="p-1.5 rounded-full bg-gray-100 hover:bg-green-100">
-                <svg className="w-5 h-5 text-gray-600 hover:text-[#4caf50]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
               </div>
-              <span className="absolute -top-1 -right-1 bg-[#4caf50] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center shadow-sm">0</span>
-            </Link>
+            )}
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <style jsx>{`
+        .group:hover .group-hover\\:visible {
+          visibility: visible;
+        }
+        .group:hover .group-hover\\:translate-y-0 {
+          transform: translateY(0);
+        }
+        .group:hover .group-hover\\:opacity-100 {
+          opacity: 1;
+        }
+      `}</style>
+    </>
   );
 };
 
