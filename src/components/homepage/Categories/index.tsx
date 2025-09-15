@@ -16,14 +16,14 @@ import {
 } from "react-icons/fa";
 
 const mainCategories = [
-  { name: "Supplements", icon: <FaAppleAlt />, link: "/categories/supplements" },
-  { name: "Sports", icon: <FaDumbbell />, link: "/categories/sports" },
-  { name: "Personal Care", icon: <FaBath />, link: "/categories/bath" },
-  { name: "Beauty", icon: <FaFemale />, link: "/categories/beauty" },
-  { name: "Grocery", icon: <FaShoppingBag />, link: "/categories/grocery" },
-  { name: "Home", icon: <FaHome />, link: "/categories/home" },
-  { name: "Baby & Kids", icon: <FaBaby />, link: "/categories/baby-kids" },
-  { name: "Pets", icon: <FaDog />, link: "/categories/pets" },
+  { name: "Supplements", icon: <FaAppleAlt />, link: "/supplements" },
+  { name: "Sports", icon: <FaDumbbell />, link: "/sports" },
+  { name: "Personal Care", icon: <FaBath />, link: "/bath" },
+  { name: "Beauty", icon: <FaFemale />, link: "/beauty" },
+  { name: "Grocery", icon: <FaShoppingBag />, link: "/grocery" },
+  { name: "Home", icon: <FaHome />, link: "/home" },
+  { name: "Baby & Kids", icon: <FaBaby />, link: "/baby-kids" },
+  { name: "Pets", icon: <FaDog />, link: "/pets" },
 ];
 
 const pillCategories = [
@@ -75,7 +75,7 @@ export default function CategoryGrid() {
 
   return (
     <section className="py-8">
-      <h2 className="text-xl font-bold text-green-800 mb-6">
+      <h2 className="text-2xl font-bold text-green-800 mb-6">
         Shop by Category
       </h2>
 

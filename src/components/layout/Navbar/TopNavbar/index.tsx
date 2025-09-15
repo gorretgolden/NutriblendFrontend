@@ -1,8 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import { NavMenu } from "../navbar.types";
+import { MenuList } from "./MenuList";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { MenuItem } from "./MenuItem";
+import InputGroup from "@/components/ui/input-group";
+import ResTopNavbar from "./ResTopNavbar";
+import CartBtn from "./CartBtn";
+import Image from 'next/image';
+import SearchWithDropdown from "@/components/homepage/Searchbar";
 
 const Header = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
@@ -70,60 +80,28 @@ const Header = () => {
   ];
 
   return (
-    <>
-      <header className="bg-white shadow-md sticky top-0 z-50">
-        {/* Main header */}
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            {/* Left section - Logo */}
-            <div className="flex items-center">
-              <div className="text-2xl font-bold text-[#4caf50]">
-                <Link href="/" className="flex items-center">
-                  <div className="relative w-12 h-12 rounded-xl overflow-hidden border-2 border-[#4caf50] hover:scale-105 transition-transform duration-300 shadow-md">
-                    <Image
-                      src="/images/logo.png"
-                      alt="Company Logo"
-                      fill
-                      className="object-contain p-1"
-                    />
-                  </div>
-                  <span className="ml-2 text-xl font-semibold hidden sm:block">
-                    NutriBlend
-                  </span>
-                </Link>
-              </div>
-            </div>
-
-            {/* Center section - Search bar */}
-            <div className="flex-1 max-w-md mx-4 lg:mx-8">
-              <div className="relative">
-                <form className="flex shadow-sm">
-                  <input
-                    type="text"
-                    placeholder="Search all of NutriBlend..."
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-[#4caf50] focus:border-transparent transition-all duration-200"
+    <header className="bg-white shadow-md sticky top-0 z-50">
+      {/* Main header */}
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          {/* Left section - Logo */}
+          <div className="flex items-center">
+            <div className="text-2xl font-bold text-[#4caf50]">
+              <Link href="/" className="flex items-center">
+                <div className="relative w-12 h-12 rounded-xl overflow-hidden border-2 border-[#4caf50] hover:scale-105 transition-transform duration-300 shadow-md">
+                  <Image
+                    src="/images/logo.png"
+                    alt="Company Logo"
+                    fill
+                    className="object-contain p-1"
                   />
-                  <button
-                    type="submit"
-                    className="bg-[#4caf50] text-white px-5 py-2.5 rounded-r-xl hover:bg-green-600 transition-colors duration-200 flex items-center justify-center"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </button>
-                </form>
-              </div>
+                </div>
+                <span className="ml-2 text-xl font-semibold hidden sm:block">NutriBlend</span>
+              </Link>
             </div>
+          </div>
+{/* Center section - Search bar with dropdown */}
+<SearchWithDropdown />
 
             {/* Right section - Account and Cart */}
             <div className="flex items-center space-x-3">

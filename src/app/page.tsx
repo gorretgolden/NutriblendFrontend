@@ -1,6 +1,6 @@
 import ProductListSec from "@/components/common/ProductListSec";
 import ProductCarousel from "@/components/common/ProductCarousel";
-import Brands from "@/components/homepage/Brands";
+import BrandsSection from "@/components/homepage/Brands";
 import DressStyle from "@/components/homepage/DressStyle";
 import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
@@ -283,8 +283,6 @@ export const specialOfferProducts: Product[] = [
   }
 ];
 
-
-
 export default function Home() {
   return (
     <>
@@ -324,6 +322,7 @@ export default function Home() {
           title="Trending Now"
           viewAllLink="/shop#top-selling"
         />
+        <BrandsSection/>
         
       </main>
     </>
