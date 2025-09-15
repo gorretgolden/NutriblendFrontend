@@ -75,7 +75,7 @@ export default function CategoryGrid() {
 
   return (
     <section className="py-8">
-      <h2 className="text-xl font-bold text-green-800 mb-6">
+      <h2 className="text-2xl font-bold text-green-800 mb-6">
         Shop by Category
       </h2>
 
