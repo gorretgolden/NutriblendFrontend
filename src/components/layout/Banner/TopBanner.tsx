@@ -72,7 +72,6 @@ const TopBanner = () => {
             {/* Show now with zoom effect */}
             <div className="hidden md:flex items-center gap-1 animate-zoom-in-out" style={{animationDelay: '1.1s'}}>
               <span className="text-sm font-bold">SHOW NOW</span>
-              <span className="text-lg font-bold">&gt;</span>
             </div>
             
             <Button

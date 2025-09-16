@@ -1,6 +1,8 @@
 import {
   newArrivalsData,
+
   specialOfferProducts,
+
   topSellingData,
 } from "@/app/page";
 import ProductListSec from "@/components/common/ProductListSec";
@@ -13,7 +15,9 @@ import { notFound } from "next/navigation";
 const data: Product[] = [
   ...newArrivalsData,
   ...topSellingData,
+
   ...specialOfferProducts,
+
 ];
 
 export default function ProductPage({
@@ -40,7 +44,9 @@ export default function ProductPage({
         {/* <Tabs /> */}
       </div>
       <div className="mb-[50px] sm:mb-20">
+
         <ProductListSec title="You might also like" data={specialOfferProducts} />
+
       </div>
     </main>
   );

@@ -1,12 +1,13 @@
 import ProductListSec from "@/components/common/ProductListSec";
 import ProductCarousel from "@/components/common/ProductCarousel";
-import Brands from "@/components/homepage/Brands";
+import BrandsSection from "@/components/homepage/Brands";
 import DressStyle from "@/components/homepage/DressStyle";
 import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
 import { Product } from "@/types/product.types";
 import { Review } from "@/types/review.types";
 import HeroCarousel, { CarouselSlide } from "@/components/homepage/imageCarousel";
+import CategoryGrid from "@/components/homepage/Categories";
 
 
 const carouselSlides: CarouselSlide[] = [
@@ -282,8 +283,6 @@ export const specialOfferProducts: Product[] = [
   }
 ];
 
-
-
 export default function Home() {
   return (
     <>
@@ -300,6 +299,11 @@ export default function Home() {
           title="Special Offers"
           viewAllLink="/recommendations"
         />
+
+        <div className="container mx-auto px-4">
+           <CategoryGrid />
+        </div>
+
         
         {/* New Arrivals Section with Carousel */}
         <ProductCarousel
@@ -318,6 +322,7 @@ export default function Home() {
           title="Trending Now"
           viewAllLink="/shop#top-selling"
         />
+        <BrandsSection/>
         
       </main>
     </>
