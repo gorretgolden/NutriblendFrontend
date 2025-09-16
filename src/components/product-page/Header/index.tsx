@@ -4,7 +4,6 @@ import { Product } from "@/types/product.types";
 import { integralCF } from "@/styles/fonts";
 import { cn } from "@/lib/utils";
 import Rating from "@/components/ui/Rating";
-import ColorSelection from "./ColorSelection";
 import SizeSelection from "./SizeSelection";
 import AddToCardSection from "./AddToCardSection";
 
@@ -19,7 +18,7 @@ const Header = ({ data }: { data: Product }) => {
           <h1
             className={cn([
               integralCF.className,
-              "text-2xl md:text-[40px] md:leading-[40px] mb-3 md:mb-3.5 capitalize",
+              "text-2xl md:text-[40px] md:leading-[40px] mb-3 md:mb-3.5 capitalize text-green-800",
             ])}
           >
             {data.title}
@@ -29,62 +28,63 @@ const Header = ({ data }: { data: Product }) => {
               initialValue={data.rating}
               allowFraction
               SVGclassName="inline-block"
-              emptyClassName="fill-gray-50"
+              emptyClassName="fill-gray-200"
+              fillClassName="fill-yellow-400"
               size={25}
               readonly
             />
-            <span className="text-black text-xs sm:text-sm ml-[11px] sm:ml-[13px] pb-0.5 sm:pb-0">
+            <span className="text-green-700 text-xs sm:text-sm ml-[11px] sm:ml-[13px] pb-0.5 sm:pb-0">
               {data.rating.toFixed(1)}
-              <span className="text-black/60">/5</span>
+              <span className="text-green-600">/5</span>
             </span>
           </div>
           <div className="flex items-center space-x-2.5 sm:space-x-3 mb-5">
             {data.discount.percentage > 0 ? (
-              <span className="font-bold text-black text-2xl sm:text-[32px]">
-                {`$${Math.round(
+              <span className="font-bold text-green-800 text-2xl sm:text-[32px]">
+                {` UGX ${Math.round(
                   data.price - (data.price * data.discount.percentage) / 100
-                )}`}
+                ).toLocaleString()}`}
               </span>
             ) : data.discount.amount > 0 ? (
-              <span className="font-bold text-black text-2xl sm:text-[32px]">
-                {`$${data.price - data.discount.amount}`}
+              <span className="font-bold text-green-800 text-2xl sm:text-[32px]">
+                {`UGX ${(data.price - data.discount.amount).toLocaleString()}`}
               </span>
             ) : (
-              <span className="font-bold text-black text-2xl sm:text-[32px]">
-                ${data.price}
+              <span className="font-bold text-green-800 text-2xl sm:text-[32px]">
+                UGX {data.price.toLocaleString()}
               </span>
             )}
             {data.discount.percentage > 0 && (
-              <span className="font-bold text-black/40 line-through text-2xl sm:text-[32px]">
-                ${data.price}
+              <span className="font-bold text-green-600/70 line-through text-2xl sm:text-[32px]">
+                UGX {data.price.toLocaleString()}
               </span>
             )}
             {data.discount.amount > 0 && (
-              <span className="font-bold text-black/40 line-through text-2xl sm:text-[32px]">
-                ${data.price}
+              <span className="font-bold text-green-600/70 line-through text-2xl sm:text-[32px]">
+                UGX {data.price.toLocaleString()}
               </span>
             )}
             {data.discount.percentage > 0 ? (
-              <span className="font-medium text-[10px] sm:text-xs py-1.5 px-3.5 rounded-full bg-[#FF3333]/10 text-[#FF3333]">
+              <span className="font-medium text-[10px] sm:text-xs py-1.5 px-3.5 rounded-full bg-green-100 text-green-700">
                 {`-${data.discount.percentage}%`}
               </span>
             ) : (
               data.discount.amount > 0 && (
-                <span className="font-medium text-[10px] sm:text-xs py-1.5 px-3.5 rounded-full bg-[#FF3333]/10 text-[#FF3333]">
-                  {`-$${data.discount.amount}`}
+                <span className="font-medium text-[10px] sm:text-xs py-1.5 px-3.5 rounded-full bg-green-100 text-green-700">
+                  {`-UGX ${data.discount.amount.toLocaleString()}`}
                 </span>
               )
             )}
           </div>
-          <p className="text-sm sm:text-base text-black/60 mb-5">
+          <p className="text-sm sm:text-base text-green-700/80 mb-5">
             This graphic t-shirt which is perfect for any occasion. Crafted from
             a soft and breathable fabric, it offers superior comfort and style.
           </p>
-          <hr className="h-[1px] border-t-black/10 mb-5" />
-          <ColorSelection />
-          <hr className="h-[1px] border-t-black/10 my-5" />
+          {/* <hr className="h-[1px] border-t-green-200 mb-5" /> */}
+          {/* <ColorSelection /> */}
+          <hr className="h-[1px] border-t-green-200 my-5" />
           <SizeSelection />
-          <hr className="hidden md:block h-[1px] border-t-black/10 my-5" />
+          <hr className="hidden md:block h-[1px] border-t-green-200 my-5" />
           <AddToCardSection data={data} />
         </div>
       </div>
