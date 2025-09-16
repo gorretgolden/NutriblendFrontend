@@ -313,45 +313,9 @@ const Header = () => {
               </div>
             </div>
 
-            {/* Mobile menu */}
-            {mobileMenuOpen && (
-              <div className="md:hidden bg-white">
-                <div className="px-2 pt-2 pb-3 space-y-1">
-                  {navItems.map((item, index) => (
-                    <div key={index} className="relative">
-                      <button className="w-full flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50">
-                        <div className="flex items-center">{item.name}</div>
-                        <svg
-                          className="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </button>
 
-                      <div className="pl-6 mt-1 space-y-1">
-                        {item.subItems.map((subItem, subIndex) => (
-                          <a
-                            key={subIndex}
-                            href="#"
-                            className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-green-600 hover:bg-green-50"
-                          >
-                            {subItem}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <CartBtn />
+
           </div>
         </div>
       </header>
