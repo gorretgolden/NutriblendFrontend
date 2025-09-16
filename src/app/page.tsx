@@ -293,8 +293,6 @@ export default function Home() {
         <HeroCarousel slides={carouselSlides} autoPlay={true} interval={5000} />
       </section>
 
-
-
         {/* SPecial Offer Section with Carousel */}
         <ProductCarousel
           products={specialOfferProducts}
@@ -306,7 +304,6 @@ export default function Home() {
            <CategoryGrid />
         </div>
 
-        
         {/* New Arrivals Section with Carousel */}
         <ProductCarousel
           products={newArrivalsData}
