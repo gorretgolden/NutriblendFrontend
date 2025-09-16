@@ -12,23 +12,41 @@ const SizeSelection = () => {
   );
   const dispatch = useAppDispatch();
 
+  // Gram variations with labels, values, and prices
+  const gramVariations = [
+    { label: "50g", value: "50g", price: 15000 },
+    { label: "100g", value: "100g", price: 25000 },
+    { label: "250g", value: "250g", price: 50000 },
+    { label: "500g", value: "500g", price: 85000 },
+    { label: "1kg", value: "1000g", price: 150000 }
+  ];
+
   return (
     <div className="flex flex-col">
-      <span className="text-sm sm:text-base text-black/60 mb-4">
-        Choose Size
+      <span className="text-sm sm:text-base text-green-800 mb-4 font-medium">
+        Choose Variation
       </span>
-      <div className="flex items-center flex-wrap lg:space-x-3">
-        {["Small", "Medium", "Large", "X-Large"].map((size, index) => (
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap gap-3">
+        {gramVariations.map((variation, index) => (
           <button
             key={index}
             type="button"
             className={cn([
-              "bg-[#F0F0F0] flex items-center justify-center px-5 lg:px-6 py-2.5 lg:py-3 text-sm lg:text-base rounded-full m-1 lg:m-0 max-h-[46px]",
-              sizeSelection === size && "bg-black font-medium text-white",
+              "bg-green-50 border border-green-200 flex flex-col items-center justify-center p-3 text-sm rounded-lg transition-all duration-200 min-w-[100px]",
+              "hover:bg-green-100 hover:border-green-400 hover:shadow-sm",
+              sizeSelection === variation.value 
+                ? "bg-green-600 border-green-600 text-white font-medium shadow-md" 
+                : "text-green-800"
             ])}
-            onClick={() => dispatch(setSizeSelection(size))}
+            onClick={() => dispatch(setSizeSelection(variation.value))}
           >
-            {size}
+            <span className="font-medium">{variation.label}</span>
+            <span className={cn([
+              "text-xs mt-1",
+              sizeSelection === variation.value ? "text-green-100" : "text-green-600"
+            ])}>
+              UGX {variation.price.toLocaleString()}
+            </span>
           </button>
         ))}
       </div>

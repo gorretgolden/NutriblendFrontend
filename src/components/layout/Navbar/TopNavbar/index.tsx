@@ -327,6 +327,11 @@ const Header = () => {
                 </div>
               </div>
             )}
+
+
+            <CartBtn />
+
+
           </div>
         </div>
       </header>
