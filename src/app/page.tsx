@@ -293,9 +293,7 @@ export default function Home() {
         <HeroCarousel slides={carouselSlides} autoPlay={true} interval={5000} />
       </section>
 
-        <div className="container mx-auto px-4">
-           <CategoryGrid />
-        </div>
+
 
         {/* SPecial Offer Section with Carousel */}
         <ProductCarousel
@@ -304,7 +302,9 @@ export default function Home() {
           viewAllLink="/recommendations"
         />
 
-        
+        <div className="container mx-auto px-4">
+           <CategoryGrid />
+        </div>
 
         
         {/* New Arrivals Section with Carousel */}
