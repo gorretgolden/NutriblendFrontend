@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -7,8 +8,7 @@ import SearchDropdown from "@/components/homepage/Searchbar";
 const Header = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  // Navigation data
+
   const navItems = [
     {
       name: 'Supplements',
@@ -247,109 +247,101 @@ const Header = () => {
                 <span className="absolute -top-1 -right-1 bg-[#4caf50] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center shadow-sm">0</span>
               </a>
 
-              {/* Mobile menu button */}
-              <div className="md:hidden flex items-center">
-                <button
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="p-2 rounded-md text-gray-500 hover:text-green-600 hover:bg-green-50 focus:outline-none"
+
+              {isAccountOpen && (
+                <div
+                  className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg z-50 border border-gray-100 overflow-hidden"
+                  onMouseEnter={() => setIsAccountOpen(true)}
+                  onMouseLeave={() => setIsAccountOpen(false)}
                 >
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </button>
-              </div>
+
+                  <div className="bg-gradient-to-r from-[#4caf50] to-[#45a049] text-white p-4">
+                    <h3 className="font-semibold text-lg">Welcome!</h3>
+                    <p className="text-sm opacity-90">Sign in to access your account</p>
+                  </div>
+
+                  <div className="p-2 space-y-1">
+                    <Link href="/account" className="block px-4 py-3 text-sm hover:bg-green-50">
+                      My Account
+                    </Link>
+                    <Link href="/account/order" className="block px-4 py-3 text-sm hover:bg-green-50">
+                      Orders
+                    </Link>
+                    <Link href="/account/mylist" className="block px-4 py-3 text-sm hover:bg-green-50">
+                      My Lists
+                    </Link>
+                    <Link href="/account/rewards" className="block px-4 py-3 text-sm hover:bg-green-50">
+                      Rewards Credit
+                    </Link>
+                    <Link href="/account/myreview" className="block px-4 py-3 text-sm hover:bg-green-50">
+                      My Reviews
+                    </Link>
+                    <Link href="/account/messages" className="flex items-center px-4 py-3 text-sm hover:bg-green-50">
+                      Messages
+                      <span className="ml-auto bg-[#4caf50] text-white text-xs rounded-full px-2 py-1">3</span>
+                    </Link>
+                  </div>
+
+                  <div className="p-3 border-t bg-gray-50">
+                    <Link
+                      href="/login"
+                      className="block w-full bg-[#4caf50] hover:bg-green-600 text-white text-center py-2.5 rounded-lg"
+                    >
+                      Sign in / Create account
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+
             </div>
+
+            {/* Cart */}
+             <CartBtn />
           </div>
         </div>
 
-        {/* Navigation Bar */}
-        <div className="border-t border-gray-100">
-          <div className="container mx-auto px-4">
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex justify-center py-2">
-              <div className="flex items-center space-x-1">
-                {navItems.map((item, index) => (
-                  <div key={index} className="relative group">
-                    <button className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 flex items-center transition-colors duration-200">
-                      {item.name}
-                      <svg className="ml-1 h-4 w-4 transition-transform duration-200 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {/* Dropdown menu */}
-                    <div className="absolute left-0 mt-1 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
-                      <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 p-2">
-                        {item.subItems.map((subItem, subIndex) => (
-                          <a
-                            key={subIndex}
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-md transition-colors duration-150"
-                          >
-                            {subItem}
-                          </a>
-                        ))}
-                      </div>
+      </div>
+
+      {/* Navigation */}
+      <div className="border-t border-gray-100">
+        <div className="container mx-auto px-4">
+          <div className="hidden md:flex justify-center py-2">
+            <div className="flex items-center space-x-1">
+              {navItems.map((item, index) => (
+                <div key={index} className="relative group">
+                  <button className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 flex items-center">
+                    {item.name}
+                    <svg
+                      className="ml-1 h-4 w-4 transition-transform group-hover:rotate-180"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div className="absolute left-0 mt-1 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
+                    <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 p-2 bg-white">
+                      {item.subItems.map((subItem, subIndex) => (
+                        <a
+                          key={subIndex}
+                          href="#"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50"
+                        >
+                          {subItem}
+                        </a>
+                      ))}
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Mobile menu */}
-            {mobileMenuOpen && (
-              <div className="md:hidden bg-white">
-                <div className="px-2 pt-2 pb-3 space-y-1">
-                  {navItems.map((item, index) => (
-                    <div key={index} className="relative">
-                      <button className="w-full flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50">
-                        <div className="flex items-center">
-                          {item.name}
-                        </div>
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                      
-                      <div className="pl-6 mt-1 space-y-1">
-                        {item.subItems.map((subItem, subIndex) => (
-                          <a
-                            key={subIndex}
-                            href="#"
-                            className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-green-600 hover:bg-green-50"
-                          >
-                            {subItem}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
                 </div>
-              </div>
-            )}
-
-
-            <CartBtn />
-
-
+              ))}
+            </div>
           </div>
+         
         </div>
-      </header>
-
-      <style jsx>{`
-        .group:hover .group-hover\\:visible {
-          visibility: visible;
-        }
-        
-        .group:hover .group-hover\\:translate-y-0 {
-          transform: translateY(0);
-        }
-        
-        .group:hover .group-hover\\:opacity-100 {
-          opacity: 1;
-        }
-      `}</style>
-    </>
+      </div>
+    </header>
   );
 };
 

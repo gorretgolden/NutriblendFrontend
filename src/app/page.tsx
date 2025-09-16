@@ -304,7 +304,6 @@ export default function Home() {
            <CategoryGrid />
         </div>
 
-        
         {/* New Arrivals Section with Carousel */}
         <ProductCarousel
           products={newArrivalsData}
