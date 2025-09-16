@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import CartBtn from './CartBtn';
 import Link from 'next/link';
 import Image from 'next/image';
 import SearchDropdown from "@/components/homepage/Searchbar";
@@ -112,7 +113,7 @@ const Header = () => {
   ];
 
   return (
-    <>
+    
       <header className="bg-white shadow-md sticky top-0 z-50">
         {/* Main header */}
         <div className="container mx-auto px-4 py-3">
@@ -238,63 +239,10 @@ const Header = () => {
                 )}
               </div>
 
-              <a href="#" className="flex items-center p-2 rounded-lg hover:bg-gray-50 relative transition-colors duration-200">
-                <div className="p-1.5 rounded-full bg-gray-100 hover:bg-green-100">
-                  <svg className="w-5 h-5 text-gray-600 hover:text-[#4caf50]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <span className="absolute -top-1 -right-1 bg-[#4caf50] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center shadow-sm">0</span>
-              </a>
-
-
-              {isAccountOpen && (
-                <div
-                  className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg z-50 border border-gray-100 overflow-hidden"
-                  onMouseEnter={() => setIsAccountOpen(true)}
-                  onMouseLeave={() => setIsAccountOpen(false)}
-                >
-
-                  <div className="bg-gradient-to-r from-[#4caf50] to-[#45a049] text-white p-4">
-                    <h3 className="font-semibold text-lg">Welcome!</h3>
-                    <p className="text-sm opacity-90">Sign in to access your account</p>
-                  </div>
-
-                  <div className="p-2 space-y-1">
-                    <Link href="/account" className="block px-4 py-3 text-sm hover:bg-green-50">
-                      My Account
-                    </Link>
-                    <Link href="/account/order" className="block px-4 py-3 text-sm hover:bg-green-50">
-                      Orders
-                    </Link>
-                    <Link href="/account/mylist" className="block px-4 py-3 text-sm hover:bg-green-50">
-                      My Lists
-                    </Link>
-                    <Link href="/account/rewards" className="block px-4 py-3 text-sm hover:bg-green-50">
-                      Rewards Credit
-                    </Link>
-                    <Link href="/account/myreview" className="block px-4 py-3 text-sm hover:bg-green-50">
-                      My Reviews
-                    </Link>
-                    <Link href="/account/messages" className="flex items-center px-4 py-3 text-sm hover:bg-green-50">
-                      Messages
-                      <span className="ml-auto bg-[#4caf50] text-white text-xs rounded-full px-2 py-1">3</span>
-                    </Link>
-                  </div>
-
-                  <div className="p-3 border-t bg-gray-50">
-                    <Link
-                      href="/login"
-                      className="block w-full bg-[#4caf50] hover:bg-green-600 text-white text-center py-2.5 rounded-lg"
-                    >
-                      Sign in / Create account
-                    </Link>
-                  </div>
-                </div>
-              )}
 
 
             </div>
+            <div>
 
             {/* Cart */}
              <CartBtn />
@@ -341,6 +289,7 @@ const Header = () => {
          
         </div>
       </div>
+      
     </header>
   );
 };
