@@ -1,4 +1,3 @@
-// components/common/ProductCarousel.tsx
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
@@ -29,7 +28,6 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
     }
   };
 
-  // Check if we need to show arrows based on content width
   useEffect(() => {
     const checkScroll = () => {
       if (carouselRef.current) {
@@ -40,13 +38,14 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
 
     checkScroll();
     window.addEventListener('resize', checkScroll);
-    
     return () => window.removeEventListener('resize', checkScroll);
   }, [products]);
 
   return (
     <section className="my-12">
-      <div className="max-w-frame mx-auto px-4 xl:px-0">
+      {/* Wider container than before */}
+      <div className="max-w-[1600px] mx-auto px-6">
+        {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-green-900">{title}</h2>
           <a 
@@ -60,12 +59,13 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
           </a>
         </div>
         
+        {/* Carousel */}
         <div className="relative">
           {showArrows && (
             <>
               <button 
                 onClick={() => scroll('left')}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-green-600 hover:text-white transition-colors"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-green-600 hover:text-white transition-colors"
                 aria-label="Previous products"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +75,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
               
               <button 
                 onClick={() => scroll('right')}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-green-600 hover:text-white transition-colors"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-green-600 hover:text-white transition-colors"
                 aria-label="Next products"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,7 +98,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
           </div>
         </div>
       </div>
-      
+
       <style jsx>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
