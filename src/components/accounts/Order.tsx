@@ -22,7 +22,7 @@ const Orders = ({ data }: OrdersProps) => {
   if (!data || data.length === 0) {
     return (
       <div className="text-center py-10 text-gray-500">
-        You have no orders yet.
+        {/* You have no orders yet. */}
       </div>
     );
   }
