@@ -294,34 +294,61 @@ export default function Home() {
       </section>
 
         {/* SPecial Offer Section with Carousel */}
-        <ProductCarousel
-          products={specialOfferProducts}
-          title="Special Offers"
-          viewAllLink="/recommendations"
-        />
+        
+        <section className="w-full">
+          <ProductCarousel
+            products={specialOfferProducts}
+            title="Special Offers"
+            viewAllLink="/recommendations"
+          />
+        </section>
+
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+        </div>
+        
 
         <div className="container mx-auto px-4">
            <CategoryGrid />
         </div>
 
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+        </div>
+        
+
         {/* New Arrivals Section with Carousel */}
-        <ProductCarousel
-          products={newArrivalsData}
-          title="New Arrivals"
-          viewAllLink="/shop#new-arrivals"
-        />
+        <section className="w-full">
+          <ProductCarousel
+            products={newArrivalsData}
+            title="New Arrivals"
+            viewAllLink="/shop#new-arrivals"
+          />
+        </section>
         
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
         
         {/* Top Selling Section with Carousel */}
-        <ProductCarousel
-          products={topSellingData}
-          title="Trending Now"
-          viewAllLink="/shop#top-selling"
-        />
+        <section className="w-full">
+          <ProductCarousel
+            products={topSellingData}
+            title="Trending Now"
+            viewAllLink="/shop#top-selling"
+          />
+        </section>
+
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+        </div>
+        
         <BrandsSection/>
+
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+        </div>
+        
         
       </main>
     </>
