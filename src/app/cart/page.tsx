@@ -13,11 +13,14 @@ import React from "react";
 import { RootState } from "@/lib/store";
 import { useAppSelector } from "@/lib/hooks/redux";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const { cart, totalPrice, adjustedTotalPrice } = useAppSelector(
     (state: RootState) => state.carts
   );
+
+  const router = useRouter(); // Initialize the router
 
   return (
     <main className="pb-20 bg-green-50 min-h-screen">
@@ -122,18 +125,28 @@ export default function CartPage() {
                 </div>
 
                 {/* Checkout Button */}
-                <Button
-                  type="button"
-                  className="w-full bg-green-600 hover:bg-green-700 text-white py-4 h-14 rounded-xl font-semibold text-lg group transition-all duration-300 hover:shadow-lg"
-                >
-                  Proceed to Checkout
-                  <FaArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                 
+                  <Button
+                    type="button"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-4 h-14 rounded-xl font-semibold text-lg group transition-all duration-300 hover:shadow-lg"
+                    onClick={() => {
+                      // Store cart data in sessionStorage before navigating
+                      sessionStorage.setItem('checkoutCart', JSON.stringify({
+                        items: cart.items,
+                        totalPrice,
+                        adjustedTotalPrice
+                      }));
+                      router.push('/cart/checkout');
+                    }}
+                  >
+                    Proceed to Checkout
+                    <FaArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
+                  </Button>
 
                 {/* Continue Shopping Link */}
                 <div className="text-center pt-2">
                   <Link 
-                    href="/shop" 
+                    href="" 
                     className="text-green-600 hover:text-green-800 text-sm font-medium transition-colors"
                   >
                     ← Continue Shopping

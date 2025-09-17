@@ -27,48 +27,36 @@ export default function HeroCarousel({
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Create a stable callback for going to the next slide
   const goToNext = useCallback(() => {
     if (isTransitioning) return;
-    
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-    
-    // Reset transitioning state after animation completes
     setTimeout(() => setIsTransitioning(false), 500);
   }, [isTransitioning, slides.length]);
 
-  // Auto-play functionality - fixed implementation
   useEffect(() => {
     if (!autoPlay || slides.length <= 1) return;
-
     const timer = setInterval(goToNext, interval);
     return () => clearInterval(timer);
   }, [autoPlay, interval, slides.length, goToNext]);
 
   const goToSlide = (index: number) => {
     if (index === currentSlide || isTransitioning) return;
-    
     setIsTransitioning(true);
     setCurrentSlide(index);
-    
-    // Reset transitioning state after animation completes
     setTimeout(() => setIsTransitioning(false), 500);
   };
 
   const goToPrev = () => {
     if (isTransitioning) return;
-    
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-    
-    // Reset transitioning state after animation completes
     setTimeout(() => setIsTransitioning(false), 500);
   };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-lg bg-white shadow-lg">
-      {/* Slides container with fade effect */}
+    <div className="relative w-full px-4 sm:px-6 lg:px-8 max-w-screen-xl mx-auto overflow-hidden rounded-lg bg-white shadow-lg">
+      {/* Slides container */}
       <div className="relative h-48 sm:h-64">
         {slides.map((slide, index) => (
           <div
@@ -78,20 +66,15 @@ export default function HeroCarousel({
             }`}
           >
             <div className={`flex h-full ${slide.layout === 'imageLeft' ? 'flex-row' : 'flex-row-reverse'}`}>
-              {/* Image side with wavy separation - visible on all screens */}
+              {/* Image side */}
               <div className="w-1/2 relative">
                 <img
                   src={slide.image}
                   alt={slide.title}
                   className="w-full h-full object-contain"
                 />
-                {/* Wavy separator - visible on all screens with responsive sizing */}
                 <div className={`absolute top-0 h-full w-4 sm:w-6 md:w-8 ${slide.layout === 'imageLeft' ? 'right-0' : 'left-0'}`}>
-                  <svg 
-                    viewBox="0 0 100 100" 
-                    preserveAspectRatio="none"
-                    className="h-full w-full"
-                  >
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
                     <path 
                       d={slide.layout === 'imageLeft' 
                         ? "M0,0 C30,0 30,100 0,100 L0,100 L0,0 Z" 
@@ -127,7 +110,7 @@ export default function HeroCarousel({
         ))}
       </div>
 
-      {/* Navigation arrows - smaller on mobile */}
+      {/* Navigation arrows */}
       {slides.length > 1 && (
         <>
           <button
@@ -151,7 +134,7 @@ export default function HeroCarousel({
         </>
       )}
 
-      {/* Indicators - smaller on mobile */}
+      {/* Indicators */}
       {slides.length > 1 && (
         <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1 sm:space-x-2">
           {slides.map((_, index) => (

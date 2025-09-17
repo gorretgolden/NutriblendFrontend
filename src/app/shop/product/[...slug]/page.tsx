@@ -1,6 +1,8 @@
 import {
   newArrivalsData,
-  relatedProductData,
+
+  specialOfferProducts,
+
   topSellingData,
 } from "@/app/page";
 import ProductListSec from "@/components/common/ProductListSec";
@@ -13,7 +15,9 @@ import { notFound } from "next/navigation";
 const data: Product[] = [
   ...newArrivalsData,
   ...topSellingData,
-  ...relatedProductData,
+
+  ...specialOfferProducts,
+
 ];
 
 export default function ProductPage({
@@ -32,15 +36,17 @@ export default function ProductPage({
   return (
     <main>
       <div className="max-w-frame mx-auto px-4 xl:px-0">
-        <hr className="h-[1px] border-t-black/10 mb-5 sm:mb-6" />
+        <hr className="h-[1px] border-t-green-200 mb-5 sm:mb-6" />
         <BreadcrumbProduct title={productData?.title ?? "product"} />
         <section className="mb-11">
           <Header data={productData} />
         </section>
-        <Tabs />
+        {/* <Tabs /> */}
       </div>
       <div className="mb-[50px] sm:mb-20">
-        <ProductListSec title="You might also like" data={relatedProductData} />
+
+        <ProductListSec title="You might also like" data={specialOfferProducts} />
+
       </div>
     </main>
   );
