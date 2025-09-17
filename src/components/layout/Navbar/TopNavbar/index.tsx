@@ -21,9 +21,8 @@ const Header = () => {
     { name: "Baby", subItems: ["Diapering", "Feeding", "Baby Gear", "Nursery", "Baby Care"] },
     { name: "Pets", subItems: ["Dog Supplies", "Cat Supplies", "Fish & Aquatics", "Bird Supplies", "Pet Toys"] },
     { name: "Brands A-Z", subItems: ["Nike", "Adidas", "Johnson & Johnson", "Procter & Gamble", "Colgate"] },
-    { name: "About Us", href: "/aboutUs" }, // ✅ Added About Us link
+    { name: "About Us", href: "/aboutUs" }, 
   ];
-
   return (
     <>
       <header className="bg-white shadow-md sticky top-0 z-50">
