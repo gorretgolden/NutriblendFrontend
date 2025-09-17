@@ -20,7 +20,7 @@ const MyList = ({ products }: MyListProps) => {
   if (!products || products.length === 0) {
     return (
       <div className="text-center py-10 text-gray-500">
-        Your list is empty.
+        {/* Your list is empty. */}
       </div>
     );
   }

@@ -22,7 +22,7 @@ const MyMessages = ({ messages }: MyMessagesProps) => {
   if (!messages || messages.length === 0) {
     return (
       <div className="text-center py-10 text-gray-500">
-        You have no messages in your inbox.
+        {/* You have no messages in your inbox. */}
       </div>
     );
   }
