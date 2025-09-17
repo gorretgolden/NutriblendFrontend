@@ -5,6 +5,7 @@ import DressStyle from "@/components/homepage/DressStyle";
 import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
 import { Product } from "@/types/product.types";
+import LiveBlogSection from "@/components/Blog/index"
 import { Review } from "@/types/review.types";
 import HeroCarousel, { CarouselSlide } from "@/components/homepage/imageCarousel";
 import CategoryGrid from "@/components/homepage/Categories";
@@ -323,7 +324,7 @@ export default function Home() {
           viewAllLink="/shop#top-selling"
         />
         <BrandsSection/>
-        
+        <LiveBlogSection/>
       </main>
     </>
   );
