@@ -21,38 +21,35 @@ const TopBanner = () => {
 
   return (
     <div className="w-full bg-gradient-to-r from-[#4caf50] from-0% to-[30%] to-black to-70% text-white">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          {/* Left side - Contact info that slides in first */}
-          <div className="flex items-center gap-2 md:gap-4 mb-2 md:mb-0 animate-slide-in-left">
-            <div className="flex items-center gap-2 bg-[#4caf50] text-white px-3 py-1 rounded-full">
+      <div className="container mx-auto px-2 py-2">
+        <div className="flex flex-row justify-between items-center flex-nowrap gap-2">
+          {/* Left side - Contact info */}
+          <div className="flex items-center gap-2 animate-slide-in-left shrink-0">
+            <div className="flex items-center gap-1 bg-[#4caf50] text-white px-2 py-0.5 rounded-full whitespace-nowrap">
               <PhoneIcon />
-              <span className="text-xs">Call For Deals</span>
-              <span className="font-mono text-sm">0200 804 020</span>
+              <span className="text-[10px]">Call For Deals</span>
+              <span className="font-mono text-[11px]">0200 804 020</span>
             </div>
           </div>
           
-          {/* Center - Brand, Bonanza and date with animations */}
-          <div className="flex items-center gap-4 mb-2 md:mb-0">
-            {/* Brand and Bonanza with falling animation */}
-            <div className="flex items-center gap-2 animate-fall-from-top" style={{animationDelay: '0.3s'}}>
-              <span className="text-xs md:text-sm font-bold bg-white text-[#4caf50] px-2 py-1 rounded">
+          {/* Center - Brand, Bonanza and date */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-1 animate-fall-from-top" style={{animationDelay: '0.3s'}}>
+              <span className="text-[10px] font-bold bg-white text-[#4caf50] px-1 py-0.5 rounded">
                 BRAND
               </span>
-              <span className="text-lg md:text-xl font-extrabold text-white">
+              <span className="text-sm font-extrabold text-white">
                 BONANZA
               </span>
             </div>
             
-            {/* Date with slide in animation */}
-            <span className="text-xs md:text-sm font-semibold animate-slide-in-right" style={{animationDelay: '0.5s'}}>
+            <span className="text-[10px] font-semibold animate-slide-in-right whitespace-nowrap" style={{animationDelay: '0.5s'}}>
               1st - 14th September
             </span>
           </div>
           
-          {/* Right side - Rotating texts, 60% off button and show now */}
-          <div className="flex items-center gap-4">
-            {/* Rotating texts with zoom effect */}
+          {/* Right side - Rotating texts, 60% off button and shop now */}
+          <div className="flex items-center gap-2 shrink-0">
             <div className="rotating-text-container animate-zoom-in-out" style={{animationDelay: '0.7s'}}>
               {rotatingTexts.map((text, index) => (
                 <div 
@@ -64,14 +61,12 @@ const TopBanner = () => {
               ))}
             </div>
             
-            {/* 60% off button - doesn't zoom */}
-            <div className="bg-[#4caf50] text-white font-bold px-3 py-1 rounded-full animate-fade-in" style={{animationDelay: '0.9s'}}>
+            <div className="bg-[#4caf50] text-white font-bold px-2 py-0.5 rounded-full animate-fade-in text-[10px] whitespace-nowrap" style={{animationDelay: '0.9s'}}>
               GET 60% OFF
             </div>
             
-            {/* Show now with zoom effect */}
             <div className="hidden md:flex items-center gap-1 animate-zoom-in-out" style={{animationDelay: '1.1s'}}>
-              <span className="text-sm font-bold">SHOW NOW</span>
+              <span className="text-sm font-bold">SHOP NOW</span>
             </div>
             
             <Button
@@ -89,133 +84,79 @@ const TopBanner = () => {
       </div>
       
       <style jsx>{`
-        /* Contact info sliding in from left */
+        /* Animations */
         @keyframes slide-in-left {
-          from {
-            opacity: 0;
-            transform: translateX(-100%);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
+          from { opacity: 0; transform: translateX(-100%); }
+          to { opacity: 1; transform: translateX(0); }
         }
-        
-        .animate-slide-in-left {
-          animation: slide-in-left 0.8s ease-out forwards;
-        }
-        
-        /* Date sliding in from right */
+        .animate-slide-in-left { animation: slide-in-left 0.8s ease-out forwards; }
+
         @keyframes slide-in-right {
-          from {
-            opacity: 0;
-            transform: translateX(100%);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
+          from { opacity: 0; transform: translateX(100%); }
+          to { opacity: 1; transform: translateX(0); }
         }
-        
-        .animate-slide-in-right {
-          animation: slide-in-right 0.8s ease-out forwards;
-        }
-        
-        /* Brand and date falling from top */
+        .animate-slide-in-right { animation: slide-in-right 0.8s ease-out forwards; }
+
         @keyframes fall-from-top {
-          0% {
-            opacity: 0;
-            transform: translateY(-100px) rotate(-5deg);
-          }
-          60% {
-            transform: translateY(10px) rotate(2deg);
-          }
-          80% {
-            transform: translateY(-5px) rotate(-1deg);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) rotate(0);
-          }
+          0% { opacity: 0; transform: translateY(-100px) rotate(-5deg); }
+          60% { transform: translateY(10px) rotate(2deg); }
+          80% { transform: translateY(-5px) rotate(-1deg); }
+          100% { opacity: 1; transform: translateY(0) rotate(0); }
         }
-        
-        .animate-fall-from-top {
-          animation: fall-from-top 1s ease-out forwards;
-        }
-        
-        /* Zoom in and out animation */
+        .animate-fall-from-top { animation: fall-from-top 1s ease-out forwards; }
+
         @keyframes zoom-in-out {
-          0% {
-            opacity: 0;
-            transform: scale(0.5);
-          }
-          50% {
-            transform: scale(1.2);
-          }
-          100% {
-            opacity: 1;
-            transform: scale(1);
-          }
+          0% { opacity: 0; transform: scale(0.5); }
+          50% { transform: scale(1.2); }
+          100% { opacity: 1; transform: scale(1); }
         }
-        
-        .animate-zoom-in-out {
-          animation: zoom-in-out 1s ease-out forwards;
-        }
-        
-        /* Fade in animation */
+        .animate-zoom-in-out { animation: zoom-in-out 1s ease-out forwards; }
+
         @keyframes fade-in {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
-        
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out forwards;
-        }
-        
-        /* Rotating text animation */
+        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+
+        /* Rotating text */
         .rotating-text-container {
           position: relative;
-          height: 24px;
-          width: 120px;
+          height: 16px;
+          width: 70px;
           overflow: hidden;
         }
-        
         .rotating-text {
           position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
           font-weight: bold;
+          font-size: 10px;
           opacity: 0;
           transform: translateY(100%);
           transition: all 0.5s ease-in-out;
+          white-space: nowrap;
         }
-        
         .rotating-text.active {
           opacity: 1;
           transform: translateY(0);
         }
-        
         .rotating-text:not(.active) {
           opacity: 0;
           transform: translateY(-100%);
         }
-        
+
+        /* Mobile tweaks */
         @media (max-width: 768px) {
-          .bg-gradient-to-r.to-\\[30\\%\\] {
-            background: linear-gradient(180deg, #4caf50 0%, #4caf50 25%, #000000 25%, #000000 100%) !important;
+          .container > div {
+            gap: 2px !important;
           }
-          
-          .rotating-text-container {
-            width: 100px;
+          .container span,
+          .container div {
+            font-size: 10px !important;
+            padding: 1px 3px !important;
           }
         }
       `}</style>

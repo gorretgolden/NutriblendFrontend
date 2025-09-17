@@ -5,6 +5,7 @@ import DressStyle from "@/components/homepage/DressStyle";
 import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
 import { Product } from "@/types/product.types";
+import LiveBlogSection from "@/components/Blog/index"
 import { Review } from "@/types/review.types";
 import HeroCarousel, { CarouselSlide } from "@/components/homepage/imageCarousel";
 import CategoryGrid from "@/components/homepage/Categories";
@@ -345,10 +346,12 @@ export default function Home() {
         
         <BrandsSection/>
 
+        <LiveBlogSection/>
+
+
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
-        
         
       </main>
     </>

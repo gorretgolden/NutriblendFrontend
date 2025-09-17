@@ -32,6 +32,7 @@ export default function RootLayout({
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>
         </Providers>
+        <Footer />
       </body>
     </html>
   );
