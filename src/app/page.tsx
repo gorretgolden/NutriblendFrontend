@@ -46,7 +46,7 @@ const carouselSlides: CarouselSlide[] = [
 export const newArrivalsData: Product[] = [
   {
     id: 1,
-    title: "T-shirt with Tape Details",
+    title: "Weight Adder",
     srcUrl: "/images/bottle1.avif",
     gallery: ["/images/bottle1.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
     price: 120,
@@ -58,7 +58,7 @@ export const newArrivalsData: Product[] = [
   },
   {
     id: 2,
-    title: "Skinny Fit Jeans",
+    title: "Fish Oil, Omega-3",
     srcUrl: "/images/bottle2.avif",
     gallery: ["/images/bottle2.avif"],
     price: 260,
@@ -70,7 +70,7 @@ export const newArrivalsData: Product[] = [
   },
   {
     id: 3,
-    title: "Chechered Shirt",
+    title: "Go glow, Shine",
     srcUrl: "/images/bottle3.avif",
     gallery: ["/images/bottle3.avif"],
     price: 180,
@@ -82,7 +82,7 @@ export const newArrivalsData: Product[] = [
   },
   {
     id: 4,
-    title: "Sleeve Striped T-shirt",
+    title: "MCT-Oil, Body SLimmer",
     srcUrl: "/images/bottle4.avif",
     gallery: ["/images/bottle4.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
     price: 160,
@@ -95,7 +95,7 @@ export const newArrivalsData: Product[] = [
  
   {
     id: 9,
-    title: "Classic Denim Jacket",
+    title: "Tea slimmer",
     srcUrl: "/images/bottle9.avif",
     gallery: ["/images/bottle9.avif"],
     price: 189,
@@ -107,7 +107,7 @@ export const newArrivalsData: Product[] = [
   },
   {
     id: 10,
-    title: "Premium Leather Boots",
+    title: "Sex Supllement",
     srcUrl: "/images/bottle10.avif",
     gallery: ["/images/bottle10.avif"],
     price: 299,
@@ -122,7 +122,7 @@ export const newArrivalsData: Product[] = [
 export const topSellingData: Product[] = [
   {
     id: 5,
-    title: "Vertical Striped Shirt",
+    title: "Anglican, Tube Bottle",
     srcUrl: "/images/bottle5.avif",
     gallery: ["/images/bottle5.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
     price: 232,
@@ -134,7 +134,7 @@ export const topSellingData: Product[] = [
   },
   {
     id: 6,
-    title: "Courage Graphic T-shirt",
+    title: "ColleganUp, Deep Clean",
     srcUrl: "/images/bottle6.avif",
     gallery: ["/images/bottle6.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
     price: 145,
@@ -146,7 +146,7 @@ export const topSellingData: Product[] = [
   },
   {
     id: 7,
-    title: "Loose Fit Bermuda Shorts",
+    title: "Feminine, Deep clean",
     srcUrl: "/images/bottle7.avif",
     gallery: ["/images/bottle7.avif"],
     price: 80,
@@ -158,7 +158,7 @@ export const topSellingData: Product[] = [
   },
   {
     id: 8,
-    title: "Faded Skinny Jeans",
+    title: "Aurora, Liposomal",
     srcUrl: "/images/bottle8.avif",
     gallery: ["/images/bottle8.avif"],
     price: 210,
@@ -171,7 +171,7 @@ export const topSellingData: Product[] = [
   
   {
     id: 11,
-    title: "Sport Performance Shorts",
+    title: "Eucerin",
     srcUrl: "/images/bottle11.avif",
     gallery: ["/images/bottle11.avif"],
     price: 75,
@@ -183,7 +183,7 @@ export const topSellingData: Product[] = [
   },
   {
     id: 12,
-    title: "Wool Blend Sweater",
+    title: "Keratin, Sleek + Smooth + Hair Mask",
     srcUrl: "/images/bottle12.avif",
     gallery: ["/images/bottle12.avif"],
     price: 145,
@@ -295,36 +295,64 @@ export default function Home() {
       </section>
 
         {/* SPecial Offer Section with Carousel */}
-        <ProductCarousel
-          products={specialOfferProducts}
-          title="Special Offers"
-          viewAllLink="/recommendations"
-        />
+        
+        <section className="w-full">
+          <ProductCarousel
+            products={specialOfferProducts}
+            title="Special Offers"
+            viewAllLink="/recommendations"
+          />
+        </section>
+
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+        </div>
+        
 
         <div className="container mx-auto px-4">
            <CategoryGrid />
         </div>
 
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+        </div>
         
+
         {/* New Arrivals Section with Carousel */}
-        <ProductCarousel
-          products={newArrivalsData}
-          title="New Arrivals"
-          viewAllLink="/shop#new-arrivals"
-        />
+        <section className="w-full">
+          <ProductCarousel
+            products={newArrivalsData}
+            title="New Arrivals"
+            viewAllLink="/shop#new-arrivals"
+          />
+        </section>
         
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
         
         {/* Top Selling Section with Carousel */}
-        <ProductCarousel
-          products={topSellingData}
-          title="Trending Now"
-          viewAllLink="/shop#top-selling"
-        />
+        <section className="w-full">
+          <ProductCarousel
+            products={topSellingData}
+            title="Trending Now"
+            viewAllLink="/shop#top-selling"
+          />
+        </section>
+
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+        </div>
+        
         <BrandsSection/>
+
         <LiveBlogSection/>
+
+
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+        </div>
+        
       </main>
     </>
   );

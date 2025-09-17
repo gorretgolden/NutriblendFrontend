@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useAppDispatch } from "@/lib/hooks/redux";
 import { addToCart } from "@/lib/features/carts/cartsSlice";
 import { Product } from "@/types/product.types";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 type ProductCardProps = {
   data: Product;
@@ -14,42 +15,55 @@ type ProductCardProps = {
 
 const ProductCard = ({ data }: ProductCardProps) => {
   const dispatch = useAppDispatch();
+  const router = useRouter(); // Initialize router
   const hasDiscount = data.discount.percentage > 0 || data.discount.amount > 0;
   const discountedPrice = data.discount.percentage > 0 
     ? Math.round(data.price - (data.price * data.discount.percentage) / 100)
     : data.price - data.discount.amount;
 
-    const handleAddToCart = (e: React.MouseEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
-  
-  // Add product to cart using Redux
-  dispatch(
-    addToCart({
-      id: data.id,
-      name: data.title, // ✅ use title as cart name
-      srcUrl: data.srcUrl,
-      price: data.price,
-      attributes: [], // or selected size/color
-      discount: data.discount ?? { amount: 0, percentage: 0 },
-      quantity: 1,
-    })
-  );
-}; // ✅ properly close the function
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Add product to cart using Redux
+    dispatch(
+      addToCart({
+        id: data.id,
+        name: data.title,
+        srcUrl: data.srcUrl,
+        price: data.price,
+        attributes: [],
+        discount: data.discount ?? { amount: 0, percentage: 0 },
+        quantity: 1,
+      })
+    );
+  };
 
-
+  // Function to handle image click navigation
+  const handleImageClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Navigate to product detail page
+    router.push(`/shop/product/${data.id}/${data.title.split(" ").join("-")}`);
+  };
 
   return (
     <div className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 h-full flex flex-col relative">
       <div className="bg-green-50 rounded-t-lg w-full aspect-square flex items-center justify-center p-4 relative overflow-hidden">
-        <Image
-          src={data.srcUrl}
-          width={200}
-          height={200}
-          className="object-contain group-hover:scale-105 transition-all duration-300"
-          alt={data.title}
-          priority
-        />
+        {/* Make the entire image area clickable */}
+        <div 
+          className="w-full h-full flex items-center justify-center cursor-pointer"
+          onClick={handleImageClick}
+        >
+          <Image
+            src={data.srcUrl}
+            width={200}
+            height={200}
+            className="object-contain group-hover:scale-105 transition-all duration-300"
+            alt={data.title}
+            priority
+          />
+        </div>
+        
         {hasDiscount && (
           <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10">
             {data.discount.percentage > 0 
@@ -61,8 +75,9 @@ const ProductCard = ({ data }: ProductCardProps) => {
         {/* Add to Cart Button - Slides up from bottom of image */}
         <div className="absolute bottom-0 left-0 right-0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
           <button 
-           onClick={handleAddToCart}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 flex items-center justify-center gap-2">
+            onClick={handleAddToCart}
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 flex items-center justify-center gap-2"
+          >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
@@ -82,10 +97,9 @@ const ProductCard = ({ data }: ProductCardProps) => {
         {/* Product Name (short version) */}
         <Link 
           href={`/shop/product/${data.id}/${data.title.split(" ").join("-")}`}
+          className="text-black text-base font-semibold mb-2 line-clamp-1 hover:text-green-700 transition-colors"
         >
-          <h3 className="text-black text-base font-semibold mb-2 line-clamp-1">
-            {data.title.split(',')[0]}
-          </h3>
+          {data.title.split(',')[0]}
         </Link>
         
         {/* Full Product Name (full version) */}
