@@ -36,27 +36,28 @@ const Header = () => {
   return (
     <>
       <header className="bg-white shadow-md sticky top-0 z-50">
-        {/* Main header */}
-        <div className="container mx-auto px-3 py-2 md:py-3">
-          <div className="flex items-center justify-between">
-            {/* Logo + Brand */}
-            <div className="flex items-center">
-              <div className="font-bold text-[#4caf50]">
-                <Link href="/" className="flex items-center">
-                  <div className="relative w-8 h-8 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[#4caf50] hover:scale-105 transition-transform duration-300 shadow-md">
-                    <Image
-                      src="/images/logo.png"
-                      alt="Company Logo"
-                      fill
-                      className="object-contain p-1"
-                    />
-                  </div>
-                  <span className="ml-1 md:ml-2 text-sm md:text-xl font-semibold whitespace-nowrap">
-                    NutriBlend
-                  </span>
-                </Link>
-              </div>
+  {/* Main header */}
+  <div className="container mx-auto px-3 py-2 md:py-3">
+    <div className="flex items-center justify-between">
+      {/* Logo + Brand */}
+      <div className="flex items-center">
+        <div className="font-bold text-[#4caf50]">
+          <Link href="/" className="flex items-center">
+            <div className="relative w-8 h-8 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[#4caf50] hover:scale-105 transition-transform duration-300 shadow-md">
+              <Image
+                src="/images/logo.png"
+                alt="Company Logo"
+                fill
+                className="object-contain p-1"
+              />
             </div>
+            {/* Brand name (hidden on mobile, visible from md and up) */}
+            <span className="hidden md:inline ml-2 text-xl font-semibold whitespace-nowrap">
+              NutriBlend
+            </span>
+          </Link>
+        </div>
+      </div>
 
             {/* Search bar */}
             <div className="flex-1 px-2">

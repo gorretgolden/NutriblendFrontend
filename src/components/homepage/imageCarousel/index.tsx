@@ -56,59 +56,61 @@ export default function HeroCarousel({
 
   return (
     <div className="relative w-full px-4 sm:px-6 lg:px-8 max-w-screen-xl mx-auto overflow-hidden rounded-lg bg-white shadow-lg">
-      {/* Slides container */}
-      <div className="relative h-48 sm:h-64">
-        {slides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-          >
-            <div className={`flex h-full ${slide.layout === 'imageLeft' ? 'flex-row' : 'flex-row-reverse'}`}>
-              {/* Image side */}
-              <div className="w-1/2 relative">
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="w-full h-full object-contain"
-                />
-                <div className={`absolute top-0 h-full w-4 sm:w-6 md:w-8 ${slide.layout === 'imageLeft' ? 'right-0' : 'left-0'}`}>
-                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
-                    <path 
-                      d={slide.layout === 'imageLeft' 
-                        ? "M0,0 C30,0 30,100 0,100 L0,100 L0,0 Z" 
-                        : "M100,0 C70,0 70,100 100,100 L100,100 L100,0 Z"
-                      } 
-                      fill="#4CAF50"
-                    />
-                  </svg>
-                </div>
-              </div>
-              
-              {/* Text content side */}
-              <div className="w-1/2 flex items-center justify-center p-4 sm:p-6 bg-gray-50">
-                <div className="max-w-xs text-center">
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-2 sm:mb-3">
-                    {slide.title}
-                  </h2>
-                  <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-3 sm:mb-4">
-                    {slide.subtitle}
-                  </p>
-                  {slide.ctaText && (
-                    <a
-                      href={slide.ctaLink || '#'}
-                      className="inline-block bg-[#4CAF50] hover:bg-[#43A047] text-white text-xs sm:text-sm font-medium py-2 px-4 sm:py-2 sm:px-6 rounded-full transition-colors shadow-md hover:shadow-lg"
-                    >
-                      {slide.ctaText}
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
+  {/* Slides container */}
+<div className="relative h-64 sm:h-80 md:h-96 lg:h-[300px] xl:h-[320px]">
+  {slides.map((slide, index) => (
+    <div
+      key={slide.id}
+      className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ${
+        index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
+    >
+      <div className={`flex h-full ${slide.layout === 'imageLeft' ? 'flex-row' : 'flex-row-reverse'}`}>
+        {/* Image side */}
+        <div className="w-1/2 relative">
+          <img
+            src={slide.image}
+            alt={slide.title}
+            className="w-full h-full object-contain"
+          />
+          <div className={`absolute top-0 h-full w-4 sm:w-6 md:w-8 ${slide.layout === 'imageLeft' ? 'right-0' : 'left-0'}`}>
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+              <path 
+                d={slide.layout === 'imageLeft' 
+                  ? "M0,0 C30,0 30,100 0,100 L0,100 L0,0 Z" 
+                  : "M100,0 C70,0 70,100 100,100 L100,100 L100,0 Z"
+                } 
+                fill="#4CAF50"
+              />
+            </svg>
           </div>
-        ))}
+        </div>
+
+        {/* Text content side */}
+        <div className="w-1/2 flex items-center justify-center p-4 sm:p-6 bg-gray-50">
+          <div className="max-w-xs text-center">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-2 sm:mb-3">
+              {slide.title}
+            </h2>
+            <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-3 sm:mb-4">
+              {slide.subtitle}
+            </p>
+            {slide.ctaText && (
+              <a
+                href={slide.ctaLink || '#'}
+                className="inline-block bg-[#4CAF50] hover:bg-[#43A047] text-white text-xs sm:text-sm font-medium py-2 px-4 sm:py-2 sm:px-6 rounded-full transition-colors shadow-md hover:shadow-lg"
+              >
+                {slide.ctaText}
+              </a>
+            )}
+          </div>
+        </div>
       </div>
+    </div>
+  ))}
+</div>
+
+
 
       {/* Navigation arrows */}
       {slides.length > 1 && (
