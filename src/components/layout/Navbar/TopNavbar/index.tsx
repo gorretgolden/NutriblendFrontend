@@ -23,6 +23,15 @@ const Header = () => {
     { name: "Brands A-Z", subItems: ["Nike", "Adidas", "Johnson & Johnson", "Procter & Gamble", "Colgate"] },
     { name: "About Us", href: "/aboutUs" }, 
   ];
+    // Account menu data: Now a structured array of objects
+  const accountLinks = [
+    { label: "My Account", href: "/account" },
+    { label: "Orders", href: "/account/order" },
+    { label: "My Lists", href: "/account/mylist" },
+    // { label: "Rewards Credit", href: "/account/rewards" },
+    { label: "My Reviews", href: "/account/MyReview" },
+    { label: "Messages", href: "/account/message" },
+  ];
 
   return (
     <>
@@ -105,14 +114,14 @@ const Header = () => {
                     </div>
                     <div className="p-2">
                       <div className="space-y-1">
-                        {["My Account","Orders","My Lists","Rewards Credit","My Reviews","Messages"].map((label, idx) => (
+                        {accountLinks.map((item, idx) => (
                           <Link
                             key={idx}
-                            href="#"
+                            href={item.href}
                             className="flex items-center px-3 py-2 md:px-4 md:py-3 text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
                           >
-                            {label}
-                            {label === "Messages" && (
+                            {item.label}
+                            {item.label === "Messages" && (
                               <span className="ml-auto bg-[#4caf50] text-white text-[10px] md:text-xs rounded-full px-1.5 py-0.5">3</span>
                             )}
                           </Link>
