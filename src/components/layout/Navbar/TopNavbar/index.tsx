@@ -3,12 +3,16 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import LoginModal from '../../SignIn/SignIn';
+import SignUpModal from "../../SignIn/signup";
 import SearchWithDropdown from "@/components/homepage/Searchbar";
+import CartBtn from "./CartBtn";
 
 const Header = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [signUpOpen, setSignUpOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // Navigation data
   const navItems = [
@@ -23,41 +27,62 @@ const Header = () => {
     { name: "Brands A-Z", subItems: ["Nike", "Adidas", "Johnson & Johnson", "Procter & Gamble", "Colgate"] },
     { name: "About Us", href: "/aboutUs" }, 
   ];
-    // Account menu data: Now a structured array of objects
+  
+  // Account menu data
   const accountLinks = [
     { label: "My Account", href: "/account" },
     { label: "Orders", href: "/account/order" },
     { label: "My Lists", href: "/account/mylist" },
-    // { label: "Rewards Credit", href: "/account/rewards" },
     { label: "My Reviews", href: "/account/MyReview" },
     { label: "Messages", href: "/account/message" },
   ];
 
+  // Modal control functions
+  const openLoginModal = () => {
+    setSignUpOpen(false);
+    setLoginOpen(true);
+  };
+
+  const openSignUpModal = () => {
+    setLoginOpen(false);
+    setSignUpOpen(true);
+  };
+
+  const closeModals = () => {
+    setLoginOpen(false);
+    setSignUpOpen(false);
+  };
+
+  const handleProfileOpen = () => {
+  setIsProfileOpen(true);
+  console.log("Opening profile...");
+};
+
   return (
     <>
       <header className="bg-white shadow-md sticky top-0 z-50">
-  {/* Main header */}
-  <div className="container mx-auto px-3 py-2 md:py-3">
-    <div className="flex items-center justify-between">
-      {/* Logo + Brand */}
-      <div className="flex items-center">
-        <div className="font-bold text-[#4caf50]">
-          <Link href="/" className="flex items-center">
-            <div className="relative w-8 h-8 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[#4caf50] hover:scale-105 transition-transform duration-300 shadow-md">
-              <Image
-                src="/images/logo.png"
-                alt="Company Logo"
-                fill
-                className="object-contain p-1"
-              />
+        {/* Main header */}
+        <div className="container mx-auto px-3 py-2 md:py-3">
+          <div className="flex items-center justify-between">
+            {/* Logo + Brand */}
+            <div className="flex items-center">
+              <div className="font-bold text-[#4caf50]">
+                <Link href="/" className="flex items-center">
+                  <div className="relative w-8 h-8 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[#4caf50] hover:scale-105 transition-transform duration-300 shadow-md">
+                    <Image
+                      src="/images/logo.png"
+                      alt="Company Logo"
+                      fill
+                      className="object-contain p-1"
+                    />
+                  </div>
+                  {/* Brand name (hidden on mobile, visible from md and up) */}
+                  <span className="hidden md:inline ml-2 text-xl font-semibold whitespace-nowrap">
+                    NutriBlend
+                  </span>
+                </Link>
+              </div>
             </div>
-            {/* Brand name (hidden on mobile, visible from md and up) */}
-            <span className="hidden md:inline ml-2 text-xl font-semibold whitespace-nowrap">
-              NutriBlend
-            </span>
-          </Link>
-        </div>
-      </div>
 
             {/* Search bar */}
             <div className="flex-1 px-2">
@@ -131,7 +156,7 @@ const Header = () => {
                     </div>
                     <div className="p-2 md:p-3 border-t border-gray-100 bg-gray-50">
                       <button
-                        onClick={() => setLoginOpen(true)}
+                        onClick={openLoginModal}
                         className="block w-full bg-[#4caf50] hover:bg-green-600 text-white text-center font-medium py-2 md:py-2.5 px-3 md:px-4 rounded-lg transition-colors duration-200 shadow-sm text-sm md:text-base"
                       >
                         Sign in / Create account
@@ -139,8 +164,8 @@ const Header = () => {
                     </div>
                   </div>
                 )}
-                <LoginModal visible={loginOpen} onClose={() => setLoginOpen(false)} />
               </div>
+              <CartBtn/>
 
               {/* Mobile menu button */}
               <div className="md:hidden flex items-center">
@@ -190,12 +215,11 @@ const Header = () => {
                       </>
                     ) : (
                        <Link
-    href={item.href || "/aboutUs"} // Uses /about if available
-    className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors duration-200"
-  >
-
-    {item.name}
-  </Link>
+                         href={item.href || "/aboutUs"}
+                         className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors duration-200"
+                       >
+                         {item.name}
+                       </Link>
                     )}
                   </div>
                 ))}
@@ -229,7 +253,7 @@ const Header = () => {
                           </div>
                         </>
                       ) : (
-                        <></> // ✅ Removed redundant Link for mobile items without subItems
+                        <></>
                       )}
                     </div>
                   ))}
@@ -239,6 +263,19 @@ const Header = () => {
           </div>
         </div>
       </header>
+
+      {/* Modals */}
+      <LoginModal 
+        visible={loginOpen} 
+        onClose={closeModals}
+        onSwitchToSignUp={openSignUpModal}
+      />
+      <SignUpModal 
+      visible={signUpOpen} 
+      onClose={closeModals}
+      onSwitchToLogin={openLoginModal}
+      onProfileOpen={handleProfileOpen}
+    />
 
       <style jsx>{`
         .group:hover .group-hover\\:visible {
