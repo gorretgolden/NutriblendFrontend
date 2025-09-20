@@ -72,25 +72,25 @@ const SignUpModal = ({ visible, onClose, onSwitchToLogin, onProfileOpen }: SignU
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-md md:p-8">
-          {/* Close (X) button */}
+      <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-2 py-6">
+      <div className="relative w-full max-w-md rounded-lg bg-white p-4 sm:p-6 md:p-8 shadow-md">
+        {/* Close (X) button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
+        >
+          ✕
+        </button>
+
+        {/* Cancel link */}
+        <div className="mb-6 text-left">
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
+            className="font-medium text-[#4caf50] hover:text-[#43a047]"
           >
-            ✕
+            Cancel
           </button>
-
-          {/* Cancel link */}
-          <div className="mb-6 text-left">
-            <button
-              onClick={onClose}
-              className="font-medium text-[#4caf50] hover:text-[#43a047]"
-            >
-              Cancel
-            </button>
-          </div>
+        </div>
 
           {/* Title + Description */}
           <div className="mb-4 text-left">
