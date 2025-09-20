@@ -13,107 +13,167 @@ import React from "react";
 import { RootState } from "@/lib/store";
 import { useAppSelector } from "@/lib/hooks/redux";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const { cart, totalPrice, adjustedTotalPrice } = useAppSelector(
     (state: RootState) => state.carts
   );
 
+  const router = useRouter(); // Initialize the router
+
   return (
-    <main className="pb-20">
-      <div className="max-w-frame mx-auto px-4 xl:px-0">
+    <main className="pb-20 bg-green-50 min-h-screen">
+      <div className="max-w-frame mx-auto px-4 xl:px-0 py-8">
         {cart && cart.items.length > 0 ? (
           <>
             <BreadcrumbCart />
             <h2
               className={cn([
                 integralCF.className,
-                "font-bold text-[32px] md:text-[40px] text-black uppercase mb-5 md:mb-6",
+                "font-bold text-[32px] md:text-[40px] text-green-800 uppercase mb-6 md:mb-8",
               ])}
             >
-              your cart
+              Your Shopping Cart
             </h2>
-            <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 items-start">
-              <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
-                {cart?.items.map((product, idx, arr) => (
-                  <React.Fragment key={idx}>
-                    <ProductCard data={product} />
-                    {arr.length - 1 !== idx && (
-                      <hr className="border-t-black/10" />
-                    )}
-                  </React.Fragment>
-                ))}
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+              {/* Cart Items Section */}
+              <div className="w-full lg:w-2/3 bg-white p-5 md:p-6 flex-col space-y-5 rounded-2xl shadow-lg border border-green-100">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-xl font-semibold text-green-900">
+                    Cart Items ({cart.items.length})
+                  </h3>
+                  <span className="text-green-600 font-medium">
+                    Total: UGX {Math.round(adjustedTotalPrice)}
+                  </span>
+                </div>
+                
+                <div className="space-y-4">
+                  {cart.items.map((product, idx, arr) => (
+                    <React.Fragment key={idx}>
+                      <ProductCard data={product} />
+                      {arr.length - 1 !== idx && (
+                        <hr className="border-t-green-100" />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
               </div>
-              <div className="w-full lg:max-w-[505px] p-5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
-                <h6 className="text-xl md:text-2xl font-bold text-black">
+
+              {/* Order Summary Section */}
+              <div className="w-full lg:w-1/3 bg-white p-5 md:p-6 flex-col space-y-5 rounded-2xl shadow-lg border border-green-100 sticky top-6">
+                <h3 className="text-xl font-semibold text-green-900 border-b border-green-100 pb-3">
                   Order Summary
-                </h6>
-                <div className="flex flex-col space-y-5">
+                </h3>
+                
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="md:text-xl text-black/60">Subtotal</span>
-                    <span className="md:text-xl font-bold">${totalPrice}</span>
+                    <span className="text-green-700">Subtotal</span>
+                    <span className="font-semibold">UGX {totalPrice.toLocaleString()}</span>
                   </div>
+                  
                   <div className="flex items-center justify-between">
-                    <span className="md:text-xl text-black/60">
+                    <span className="text-green-700">
                       Discount (-
                       {Math.round(
                         ((totalPrice - adjustedTotalPrice) / totalPrice) * 100
                       )}
                       %)
                     </span>
-                    <span className="md:text-xl font-bold text-red-600">
-                      -${Math.round(totalPrice - adjustedTotalPrice)}
+                    <span className="font-semibold text-green-600">
+                      -UGX {Math.round(totalPrice - adjustedTotalPrice).toLocaleString()}
                     </span>
                   </div>
+                  
                   <div className="flex items-center justify-between">
-                    <span className="md:text-xl text-black/60">
-                      Delivery Fee
-                    </span>
-                    <span className="md:text-xl font-bold">Free</span>
+                    <span className="text-green-700">Delivery Fee</span>
+                    <span className="font-semibold text-green-600">Free</span>
                   </div>
-                  <hr className="border-t-black/10" />
+                  
+                  <hr className="border-t-green-100" />
+                  
                   <div className="flex items-center justify-between">
-                    <span className="md:text-xl text-black">Total</span>
-                    <span className="text-xl md:text-2xl font-bold">
-                      ${Math.round(adjustedTotalPrice)}
+                    <span className="text-lg font-semibold text-green-900">Total</span>
+                    <span className="text-xl font-bold text-green-800">
+                      UGX {Math.round(adjustedTotalPrice).toLocaleString()}
                     </span>
                   </div>
                 </div>
-                <div className="flex space-x-3">
-                  <InputGroup className="bg-[#F0F0F0]">
-                    <InputGroup.Text>
-                      <MdOutlineLocalOffer className="text-black/40 text-2xl" />
-                    </InputGroup.Text>
-                    <InputGroup.Input
-                      type="text"
-                      name="code"
-                      placeholder="Add promo code"
-                      className="bg-transparent placeholder:text-black/40"
-                    />
-                  </InputGroup>
+
+                {/* Promo Code Section */}
+                <div className="pt-2">
+                  <h4 className="text-sm font-medium text-green-700 mb-3">Have a promo code?</h4>
+                  <div className="flex gap-2">
+                    <InputGroup className="bg-green-50 border-green-200">
+                      <InputGroup.Text>
+                        <MdOutlineLocalOffer className="text-green-500 text-xl" />
+                      </InputGroup.Text>
+                      <InputGroup.Input
+                        type="text"
+                        name="code"
+                        placeholder="Enter promo code"
+                        className="bg-transparent placeholder:text-green-400 text-green-800"
+                      />
+                    </InputGroup>
+                    <Button
+                      type="button"
+                      className="bg-green-600 hover:bg-green-700 text-white rounded-full px-4 h-12 transition-colors"
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Checkout Button */}
+                 
                   <Button
                     type="button"
-                    className="bg-black rounded-full w-full max-w-[119px] h-[48px]"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-4 h-14 rounded-xl font-semibold text-lg group transition-all duration-300 hover:shadow-lg"
+                    onClick={() => {
+                      // Store cart data in sessionStorage before navigating
+                      sessionStorage.setItem('checkoutCart', JSON.stringify({
+                        items: cart.items,
+                        totalPrice,
+                        adjustedTotalPrice
+                      }));
+                      router.push('/cart/checkout');
+                    }}
                   >
-                    Apply
+                    Proceed to Checkout
+                    <FaArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
                   </Button>
+
+                {/* Continue Shopping Link */}
+                <div className="text-center pt-2">
+                  <Link 
+                    href="" 
+                    className="text-green-600 hover:text-green-800 text-sm font-medium transition-colors"
+                  >
+                    ← Continue Shopping
+                  </Link>
                 </div>
-                <Button
-                  type="button"
-                  className="text-sm md:text-base font-medium bg-black rounded-full w-full py-4 h-[54px] md:h-[60px] group"
-                >
-                  Go to Checkout{" "}
-                  <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
-                </Button>
               </div>
             </div>
           </>
         ) : (
-          <div className="flex items-center flex-col text-gray-300 mt-32">
-            <TbBasketExclamation strokeWidth={1} className="text-6xl" />
-            <span className="block mb-4">Your shopping cart is empty.</span>
-            <Button className="rounded-full w-24" asChild>
-              <Link href="/shop">Shop</Link>
+          // Empty Cart State
+          <div className="flex flex-col items-center justify-center text-center py-20 px-4">
+            <div className="bg-green-100 p-6 rounded-full mb-6">
+              <TbBasketExclamation strokeWidth={1} className="text-6xl text-green-600" />
+            </div>
+            <h3 className="text-2xl font-semibold text-green-900 mb-3">
+              Your cart is empty
+            </h3>
+            <p className="text-green-600 mb-8 max-w-md">
+              Looks like you haven't added any items to your cart yet. Start shopping to find amazing products!
+            </p>
+            <Button 
+              className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8 py-6 text-lg font-semibold transition-colors"
+              asChild
+            >
+              <Link href="/shop">
+                Start Shopping
+              </Link>
             </Button>
           </div>
         )}

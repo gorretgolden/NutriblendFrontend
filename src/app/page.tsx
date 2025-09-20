@@ -1,17 +1,54 @@
 import ProductListSec from "@/components/common/ProductListSec";
-import Brands from "@/components/homepage/Brands";
+import ProductCarousel from "@/components/common/ProductCarousel";
+import BrandsSection from "@/components/homepage/Brands";
 import DressStyle from "@/components/homepage/DressStyle";
 import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
 import { Product } from "@/types/product.types";
+import LiveBlogSection from "@/components/Blog/index"
 import { Review } from "@/types/review.types";
+import HeroCarousel, { CarouselSlide } from "@/components/homepage/imageCarousel";
+import CategoryGrid from "@/components/homepage/Categories";
+
+
+const carouselSlides: CarouselSlide[] = [
+  {
+    id: 1,
+    image: '/images/one.avif',
+    title: 'Liquid Chlorophyll',
+    subtitle: 'Health benefits and side effects',
+    ctaText: 'Shop Now',
+    ctaLink: '/products/chlorophyll',
+    layout: 'imageLeft' 
+  },
+  {
+    id: 2,
+    image: '/images/43.avif',
+    title: 'Plant-Based Proteins',
+    subtitle: 'Fuel your body the natural way',
+    ctaText: 'Discover',
+    ctaLink: '/products/proteins',
+    layout: 'imageRight' 
+  },
+  {
+    id: 3,
+    image: '/images/156.avif',
+    title: 'Essential Vitamins',
+    subtitle: 'Boost your immune system',
+    ctaText: 'Explore',
+    ctaLink: '/products/vitamins',
+    layout: 'imageLeft' 
+  }
+];
+
+
 
 export const newArrivalsData: Product[] = [
   {
     id: 1,
-    title: "T-shirt with Tape Details",
-    srcUrl: "/images/pic1.png",
-    gallery: ["/images/pic1.png", "/images/pic10.png", "/images/pic11.png"],
+    title: "Weight Adder",
+    srcUrl: "/images/bottle1.avif",
+    gallery: ["/images/bottle1.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
     price: 120,
     discount: {
       amount: 0,
@@ -21,9 +58,9 @@ export const newArrivalsData: Product[] = [
   },
   {
     id: 2,
-    title: "Skinny Fit Jeans",
-    srcUrl: "/images/pic2.png",
-    gallery: ["/images/pic2.png"],
+    title: "Fish Oil, Omega-3",
+    srcUrl: "/images/bottle2.avif",
+    gallery: ["/images/bottle2.avif"],
     price: 260,
     discount: {
       amount: 0,
@@ -33,9 +70,9 @@ export const newArrivalsData: Product[] = [
   },
   {
     id: 3,
-    title: "Chechered Shirt",
-    srcUrl: "/images/pic3.png",
-    gallery: ["/images/pic3.png"],
+    title: "Go glow, Shine",
+    srcUrl: "/images/bottle3.avif",
+    gallery: ["/images/bottle3.avif"],
     price: 180,
     discount: {
       amount: 0,
@@ -45,9 +82,9 @@ export const newArrivalsData: Product[] = [
   },
   {
     id: 4,
-    title: "Sleeve Striped T-shirt",
-    srcUrl: "/images/pic4.png",
-    gallery: ["/images/pic4.png", "/images/pic10.png", "/images/pic11.png"],
+    title: "MCT-Oil, Body SLimmer",
+    srcUrl: "/images/bottle4.avif",
+    gallery: ["/images/bottle4.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
     price: 160,
     discount: {
       amount: 0,
@@ -55,14 +92,39 @@ export const newArrivalsData: Product[] = [
     },
     rating: 4.5,
   },
+ 
+  {
+    id: 9,
+    title: "Tea slimmer",
+    srcUrl: "/images/bottle9.avif",
+    gallery: ["/images/bottle9.avif"],
+    price: 189,
+    discount: {
+      amount: 0,
+      percentage: 15,
+    },
+    rating: 4.2,
+  },
+  {
+    id: 10,
+    title: "Sex Supllement",
+    srcUrl: "/images/bottle10.avif",
+    gallery: ["/images/bottle10.avif"],
+    price: 299,
+    discount: {
+      amount: 0,
+      percentage: 0,
+    },
+    rating: 4.8,
+  }
 ];
 
 export const topSellingData: Product[] = [
   {
     id: 5,
-    title: "Vertical Striped Shirt",
-    srcUrl: "/images/pic5.png",
-    gallery: ["/images/pic5.png", "/images/pic10.png", "/images/pic11.png"],
+    title: "Anglican, Tube Bottle",
+    srcUrl: "/images/bottle5.avif",
+    gallery: ["/images/bottle5.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
     price: 232,
     discount: {
       amount: 0,
@@ -72,9 +134,9 @@ export const topSellingData: Product[] = [
   },
   {
     id: 6,
-    title: "Courage Graphic T-shirt",
-    srcUrl: "/images/pic6.png",
-    gallery: ["/images/pic6.png", "/images/pic10.png", "/images/pic11.png"],
+    title: "ColleganUp, Deep Clean",
+    srcUrl: "/images/bottle6.avif",
+    gallery: ["/images/bottle6.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
     price: 145,
     discount: {
       amount: 0,
@@ -84,9 +146,9 @@ export const topSellingData: Product[] = [
   },
   {
     id: 7,
-    title: "Loose Fit Bermuda Shorts",
-    srcUrl: "/images/pic7.png",
-    gallery: ["/images/pic7.png"],
+    title: "Feminine, Deep clean",
+    srcUrl: "/images/bottle7.avif",
+    gallery: ["/images/bottle7.avif"],
     price: 80,
     discount: {
       amount: 0,
@@ -96,9 +158,9 @@ export const topSellingData: Product[] = [
   },
   {
     id: 8,
-    title: "Faded Skinny Jeans",
-    srcUrl: "/images/pic8.png",
-    gallery: ["/images/pic8.png"],
+    title: "Aurora, Liposomal",
+    srcUrl: "/images/bottle8.avif",
+    gallery: ["/images/bottle8.avif"],
     price: 210,
     discount: {
       amount: 0,
@@ -106,130 +168,191 @@ export const topSellingData: Product[] = [
     },
     rating: 4.5,
   },
-];
-
-export const relatedProductData: Product[] = [
+  
   {
-    id: 12,
-    title: "Polo with Contrast Trims",
-    srcUrl: "/images/pic12.png",
-    gallery: ["/images/pic12.png", "/images/pic10.png", "/images/pic11.png"],
-    price: 242,
+    id: 11,
+    title: "Eucerin",
+    srcUrl: "/images/bottle11.avif",
+    gallery: ["/images/bottle11.avif"],
+    price: 75,
     discount: {
       amount: 0,
-      percentage: 20,
+      percentage: 10,
     },
-    rating: 4.0,
+    rating: 4.3,
   },
   {
-    id: 13,
-    title: "Gradient Graphic T-shirt",
-    srcUrl: "/images/pic13.png",
-    gallery: ["/images/pic13.png", "/images/pic10.png", "/images/pic11.png"],
+    id: 12,
+    title: "Keratin, Sleek + Smooth + Hair Mask",
+    srcUrl: "/images/bottle12.avif",
+    gallery: ["/images/bottle12.avif"],
     price: 145,
+    discount: {
+      amount: 0,
+      percentage: 25,
+    },
+    rating: 4.6,
+  }
+];
+
+
+export const specialOfferProducts: Product[] = [
+  {
+    id: 20,
+    title: "DHA 700 Fish Oil, Ultra-Concentrated",
+    srcUrl: "/images/bottle1.avif",
+    gallery: ["/images/bottle1.avif"],
+    price: 29093,
+    discount: {
+      amount: 0,
+      percentage: 29,
+    },
+    rating: 5,
+    reviews: 12616,
+    brand: "California Gold Nutrition"
+  },
+  {
+    id: 21,
+    title: "Omega-3 Premium Fish Oil, 100 Softgels",
+    srcUrl: "/images/bottle2.avif",
+    gallery: ["/images/bottle2.avif"],
+    price: 48497,
     discount: {
       amount: 0,
       percentage: 0,
     },
-    rating: 3.5,
+    rating: 5,
+    reviews: 458474,
+    brand: "California Gold Nutrition"
   },
   {
-    id: 14,
-    title: "Polo with Tipping Details",
-    srcUrl: "/images/pic14.png",
-    gallery: ["/images/pic14.png"],
-    price: 180,
+    id: 22,
+    title: "Omega 800 Ultra-Concentrated Fish Oil",
+    srcUrl: "/images/bottle3.avif",
+    gallery: ["/images/bottle3.avif"],
+    price: 39426,
+    discount: {
+      amount: 0,
+      percentage: 0,
+    },
+    rating: 5,
+    reviews: 120548,
+    brand: "California Gold Nutrition"
+  },
+  {
+    id: 23,
+    title: "Omega-3 Fish Oil, 1,000 mg, 180 Softgels",
+    srcUrl: "/images/bottle4.avif",
+    gallery: ["/images/bottle4.avif"],
+    price: 34210,
+    discount: {
+      amount: 0,
+      percentage: 0,
+    },
+    rating: 5,
+    reviews: 139472,
+    brand: "NOW Foods"
+  },
+ 
+  {
+    id: 24,
+    title: "Vitamin D3 Supplement, 1000IU",
+    srcUrl: "/images/bottle13.avif",
+    gallery: ["/images/bottle13.avif"],
+    price: 15999,
+    discount: {
+      amount: 0,
+      percentage: 15,
+    },
+    rating: 4.7,
+    reviews: 89234,
+    brand: "Nature's Bounty"
+  },
+  {
+    id: 25,
+    title: "Probiotic Complex, 30 Capsules",
+    srcUrl: "/images/bottle14.avif",
+    gallery: ["/images/bottle14.avif"],
+    price: 24999,
     discount: {
       amount: 0,
       percentage: 0,
     },
     rating: 4.5,
-  },
-  {
-    id: 15,
-    title: "Black Striped T-shirt",
-    srcUrl: "/images/pic15.png",
-    gallery: ["/images/pic15.png"],
-    price: 150,
-    discount: {
-      amount: 0,
-      percentage: 30,
-    },
-    rating: 5.0,
-  },
-];
-
-export const reviewsData: Review[] = [
-  {
-    id: 1,
-    user: "Alex K.",
-    content:
-      '"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.”',
-    rating: 5,
-    date: "August 14, 2023",
-  },
-  {
-    id: 2,
-    user: "Sarah M.",
-    content: `"I'm blown away by the quality and style of the clothes I received from Shop.co. From casual wear to elegant dresses, every piece I've bought has exceeded my expectations.”`,
-    rating: 5,
-    date: "August 15, 2023",
-  },
-  {
-    id: 3,
-    user: "Ethan R.",
-    content: `"This t-shirt is a must-have for anyone who appreciates good design. The minimalistic yet stylish pattern caught my eye, and the fit is perfect. I can see the designer's touch in every aspect of this shirt."`,
-    rating: 5,
-    date: "August 16, 2023",
-  },
-  {
-    id: 4,
-    user: "Olivia P.",
-    content: `"As a UI/UX enthusiast, I value simplicity and functionality. This t-shirt not only represents those principles but also feels great to wear. It's evident that the designer poured their creativity into making this t-shirt stand out."`,
-    rating: 5,
-    date: "August 17, 2023",
-  },
-  {
-    id: 5,
-    user: "Liam K.",
-    content: `"This t-shirt is a fusion of comfort and creativity. The fabric is soft, and the design speaks volumes about the designer's skill. It's like wearing a piece of art that reflects my passion for both design and fashion."`,
-    rating: 5,
-    date: "August 18, 2023",
-  },
-  {
-    id: 6,
-    user: "Samantha D.",
-    content: `"I absolutely love this t-shirt! The design is unique and the fabric feels so comfortable. As a fellow designer, I appreciate the attention to detail. It's become my favorite go-to shirt."`,
-    rating: 5,
-    date: "August 19, 2023",
-  },
+    reviews: 67321,
+    brand: "Garden of Life"
+  }
 ];
 
 export default function Home() {
   return (
     <>
-      <Header />
-      <Brands />
       <main className="my-[50px] sm:my-[72px]">
-        <ProductListSec
-          title="NEW ARRIVALS"
-          data={newArrivalsData}
-          viewAllLink="/shop#new-arrivals"
-        />
+
+        {/* Hero Carousel Section */}
+       <section className="mb-12">
+        <HeroCarousel slides={carouselSlides} autoPlay={true} interval={5000} />
+      </section>
+
+        {/* SPecial Offer Section with Carousel */}
+        
+        <section className="w-full">
+          <ProductCarousel
+            products={specialOfferProducts}
+            title="Special Offers"
+            viewAllLink="/recommendations"
+          />
+        </section>
+
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
-        <div className="mb-[50px] sm:mb-20">
-          <ProductListSec
-            title="top selling"
-            data={topSellingData}
+        
+
+        <div className="container mx-auto px-4">
+           <CategoryGrid />
+        </div>
+
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+        </div>
+        
+
+        {/* New Arrivals Section with Carousel */}
+        <section className="w-full">
+          <ProductCarousel
+            products={newArrivalsData}
+            title="New Arrivals"
+            viewAllLink="/shop#new-arrivals"
+          />
+        </section>
+        
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+        </div>
+        
+        {/* Top Selling Section with Carousel */}
+        <section className="w-full">
+          <ProductCarousel
+            products={topSellingData}
+            title="Trending Now"
             viewAllLink="/shop#top-selling"
           />
+        </section>
+
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
-        <div className="mb-[50px] sm:mb-20">
-          <DressStyle />
+        
+        <BrandsSection/>
+
+        <LiveBlogSection/>
+
+
+        <div className="max-w-frame mx-auto px-4 xl:px-0">
+          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
-        <Reviews data={reviewsData} />
+        
       </main>
     </>
   );
