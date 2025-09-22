@@ -77,9 +77,6 @@ const Header = () => {
                     />
                   </div>
                   {/* Brand name (hidden on mobile, visible from md and up) */}
-                  <span className="hidden md:inline ml-2 text-xl font-semibold whitespace-nowrap">
-                    NutriBlend
-                  </span>
                 </Link>
               </div>
             </div>
