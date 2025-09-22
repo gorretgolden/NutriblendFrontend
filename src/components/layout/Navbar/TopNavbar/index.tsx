@@ -41,9 +41,6 @@ const Header = () => {
                       className="object-contain p-1"
                     />
                   </div>
-                  <span className="ml-1 md:ml-2 text-sm md:text-xl font-semibold whitespace-nowrap">
-                    NutriBlend
-                  </span>
                 </Link>
               </div>
             </div>
