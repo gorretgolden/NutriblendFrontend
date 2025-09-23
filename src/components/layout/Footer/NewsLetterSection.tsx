@@ -1,52 +1,32 @@
-import { Button } from "@/components/ui/button";
-import InputGroup from "@/components/ui/input-group";
-import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
-import Image from "next/image";
 import React from "react";
 
 const NewsLetterSection = () => {
   return (
-    <div className="relative grid grid-cols-1 md:grid-cols-2 py-9 md:py-11 px-6 md:px-16 max-w-frame mx-auto bg-black rounded-[20px]">
-      <p
-        className={cn([
-          integralCF.className,
-          "font-bold text-[32px] md:text-[40px] text-white mb-9 md:mb-0",
-        ])}
-      >
-        STAY UP TO DATE ABOUT OUR LATEST OFFERS
-      </p>
-      <div className="flex items-center">
-        <div className="flex flex-col w-full max-w-[349px] mx-auto">
-          <InputGroup className="flex bg-white mb-[14px]">
-            <InputGroup.Text>
-              <Image
-                priority
-                src="/icons/envelope.svg"
-                height={20}
-                width={20}
-                alt="email"
-                className="min-w-5 min-h-5"
-              />
-            </InputGroup.Text>
-            <InputGroup.Input
-              type="email"
-              name="email"
-              placeholder="Enter your email address"
-              className="bg-transparent placeholder:text-black/40 placeholder:text-sm sm:placeholder:text-base"
-            />
-          </InputGroup>
-          <Button
-            variant="secondary"
-            className="text-sm sm:text-base font-medium bg-white h-12 rounded-full px-4 py-3"
-            aria-label="Subscribe to Newsletter"
-            type="button"
-          >
-            Subscribe to Newsletter
-          </Button>
+    <header className="bg-green-600 text-white text-center py-12 px-4">
+      {/* Heading */}
+      <h1 className="text-3xl md:text-4xl font-bold mb-4">
+        SUBSCRIBE TO OUR NEWSLETTER
+      </h1>
+      <p className="text-lg mb-6">Want something extra?</p>
+
+      {/* Subscription Form */}
+      <form className="max-w-md mx-auto bg-white shadow-md p-6 rounded-2xl">
+        <div className="mb-4">
+          <input
+            type="email"
+            placeholder="Your Email"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
+          />
         </div>
-      </div>
-    </div>
+        <button
+          type="submit"
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+        >
+          SUBSCRIBE
+        </button>
+      </form>
+    </header>
   );
 };
 

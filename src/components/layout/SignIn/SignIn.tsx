@@ -1,13 +1,14 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 type LoginModalProps = {
   visible: boolean;
   onClose: () => void;
+  onSwitchToSignUp: () => void;
 };
 
-const LoginModal = ({ visible, onClose }: LoginModalProps) => {
+const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => {
   useEffect(() => {
     if (visible) {
       document.body.style.overflow = "hidden";
@@ -19,7 +20,7 @@ const LoginModal = ({ visible, onClose }: LoginModalProps) => {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
       <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-md md:p-8">
         {/* Close (X) button */}
         <button
@@ -67,6 +68,20 @@ const LoginModal = ({ visible, onClose }: LoginModalProps) => {
           </button>
         </form>
 
+        {/* Sign up link for users without account */}
+       
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{" "}
+            <button
+              onClick={onSwitchToSignUp}
+              className="font-medium text-[#4caf50] hover:text-[#43a047] underline"
+            >
+              Sign up
+            </button>
+          </p>
+        </div>
+
         {/* Need Help */}
         <div className="mt-4 text-sm">
           <a
@@ -105,6 +120,7 @@ const LoginModal = ({ visible, onClose }: LoginModalProps) => {
           <label htmlFor="keep-signed-in">Keep me signed in</label>
           <span className="text-gray-400">ⓘ</span>
         </div>
+
 
         {/* Terms */}
         <p className="mt-6 text-left text-xs leading-snug text-gray-400">

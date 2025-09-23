@@ -17,12 +17,13 @@ const Header = ({ data }: { data: Product }) => {
         <div>
           <h1
             className={cn([
-              integralCF.className,
-              "text-2xl md:text-[40px] md:leading-[40px] mb-3 md:mb-3.5 capitalize text-green-800",
+              "text-2xl md:text-[40px] md:leading-[40px] mb-3 md:mb-3.5 capitalize text-dark-800 font-extrabold",
             ])}
           >
             {data.title}
           </h1>
+
+
           <div className="flex items-center mb-3 sm:mb-3.5">
             <Rating
               initialValue={data.rating}
@@ -55,7 +56,7 @@ const Header = ({ data }: { data: Product }) => {
               </span>
             )}
             {data.discount.percentage > 0 && (
-              <span className="font-bold text-green-600/70 line-through text-2xl sm:text-[32px]">
+              <span className="font-bold text-dark-600/70 line-through text-2xl sm:text-[32px]">
                 UGX {data.price.toLocaleString()}
               </span>
             )}
@@ -76,7 +77,7 @@ const Header = ({ data }: { data: Product }) => {
               )
             )}
           </div>
-          <p className="text-sm sm:text-base text-green-700/80 mb-5">
+          <p className="text-sm sm:text-base text-dark-700/80 mb-5">
             This graphic t-shirt which is perfect for any occasion. Crafted from
             a soft and breathable fabric, it offers superior comfort and style.
           </p>

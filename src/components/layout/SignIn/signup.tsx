@@ -1,0 +1,469 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+type SignUpModalProps = {
+  visible: boolean;
+  onClose: () => void;
+  onSwitchToLogin: () => void;
+  onProfileOpen: () => void;
+};
+
+// Uganda regions and sample districts
+const regions: Record<string, string[]> = {
+  Central: ["Kampala", "Mukono", "Wakiso", "Masaka"],
+  Eastern: ["Jinja", "Mbale", "Soroti", "Tororo"],
+  Northern: ["Gulu", "Arua", "Lira", "Kitgum"],
+  Western: ["Mbarara", "Fort Portal", "Kabale", "Kasese"],
+};
+
+const SignUpModal = ({
+  visible,
+  onClose,
+  onSwitchToLogin,
+  onProfileOpen,
+}: SignUpModalProps) => {
+  const router = useRouter(); // ✅ moved inside component
+
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    newsletter: true,
+    terms: false,
+    region: "",
+    district: "",
+    location: "",
+  });
+  
+  // Add these two separate states
+const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  useEffect(() => {
+    if (visible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [visible]);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const target = e.currentTarget;
+
+    if (target instanceof HTMLInputElement && target.type === "checkbox") {
+      setFormData((prev) => ({
+        ...prev,
+        [target.name]: target.checked,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [target.name]: target.value,
+      }));
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.terms) {
+      alert("Please agree to the Terms and Conditions");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    console.log("Account created:", formData);
+    setShowSuccessToast(true);
+  };
+
+  if (!visible) return null;
+
+  return (
+    <>
+      {/* Overlay */}
+      <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 px-2 py-6">
+        <div className="relative w-full max-w-3xl rounded-lg bg-white p-6 sm:p-8 md:p-10 shadow-md">
+          {/* Logo + Close */}
+          <div className="flex justify-center mb-6 relative">
+            <img
+              src="/images/logo.png"
+              alt="App Logo"
+              className="h-20 md:h-24 border-2 border-[#4caf50] rounded-full p-2 shadow-lg"
+            />
+            <button
+              onClick={onClose}
+              className="absolute right-2 top-2 text-gray-800 hover:text-[#4caf50] text-2xl font-bold"
+            >
+              ×
+            </button>
+          </div>
+
+          {/* Title */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-gray-800">
+              Create your account
+            </h1>
+            <p className="mt-1 text-sm text-gray-600">
+              Fill in the details below to get started.
+            </p>
+          </div>
+
+          {/* Form */}
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            {/* Personal Info */}
+            <div className="col-span-2">
+              <h2 className="text-lg font-semibold text-gray-700 mb-2">
+                Personal Information
+              </h2>
+            </div>
+
+            <div>
+              <input
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            <div>
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            <div>
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone Number"
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            {/* Delivery Info */}
+            <div className="col-span-2 mt-4">
+              <h2 className="text-lg font-semibold text-gray-700 mb-2">
+                Delivery Information
+              </h2>
+            </div>
+
+            <div>
+              <select
+                name="region"
+                value={formData.region}
+                onChange={handleInputChange}
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+                required
+              >
+                <option value="">Select Region</option>
+                {Object.keys(regions).map((region) => (
+                  <option key={region} value={region}>
+                    {region}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <select
+                name="district"
+                value={formData.district}
+                onChange={handleInputChange}
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+                required
+                disabled={!formData.region}
+              >
+                <option value="">
+                  {formData.region
+                    ? "Select District"
+                    : "Select Region first"}
+                </option>
+                {formData.region &&
+                  regions[formData.region].map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            <div className="col-span-2">
+              <input
+                type="text"
+                name="location"
+                placeholder="Specific Location"
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+                value={formData.location}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            {/* Security */}
+            <div className="col-span-2 mt-4">
+              <h2 className="text-lg font-semibold text-gray-700 mb-2">
+                Account Security
+              </h2>
+            </div>
+
+            {/* Password Field */}
+            {/* Password Field */}
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] pr-10"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                minLength={8}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#4caf50]"
+              >
+                {showPassword ? (
+                  // Eye Off icon
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M13.875 18.825A10.05 10.05 0 0112 
+                        19c-4.478 0-8.268-2.943-9.542-7a9.957 
+                        9.957 0 012.293-3.95m2.071-1.957A9.956 
+                        9.956 0 0112 5c4.478 0 8.268 2.943 
+                        9.542 7a9.956 9.956 0 01-4.132 
+                        5.411M15 12a3 3 0 11-6 0 3 3 
+                        0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M3 3l18 18" />
+                  </svg>
+                ) : (
+                  // Eye Open icon
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 
+                        2.943 9.542 7-1.274 4.057-5.064 
+                        7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                )}
+              </button>
+            </div>
+
+            {/* Confirm Password Field */}
+            <div className="relative mt-3">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] pr-10"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#4caf50]"
+              >
+                {showConfirmPassword ? (
+                  // Eye Off
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M13.875 18.825A10.05 10.05 0 0112 
+                        19c-4.478 0-8.268-2.943-9.542-7a9.957 
+                        9.957 0 012.293-3.95m2.071-1.957A9.956 
+                        9.956 0 0112 5c4.478 0 8.268 2.943 
+                        9.542 7a9.956 9.956 0 01-4.132 
+                        5.411M15 12a3 3 0 11-6 0 3 3 
+                        0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M3 3l18 18" />
+                  </svg>
+                ) : (
+                  // Eye Open
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 
+                        2.943 9.542 7-1.274 4.057-5.064 
+                        7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                )}
+              </button>
+            </div>
+
+
+            {/* Checkboxes */}
+            <div className="col-span-2">
+  <label className="flex items-center mb-2">
+    <input
+      type="checkbox"
+      id="newsletter"
+      name="newsletter"
+      className="h-5 w-5 mr-2 appearance-none border border-gray-400 rounded-sm checked:bg-[#4caf50] checked:border-[#4caf50] checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center"
+      checked={formData.newsletter}
+      onChange={handleInputChange}
+    />
+    <span className="text-sm text-gray-600">
+      Send me special offers
+    </span>
+  </label>
+
+  <label className="flex items-center">
+    <input
+      type="checkbox"
+      id="terms"
+      name="terms"
+      className="h-5 w-5 mr-2 appearance-none border border-gray-400 rounded-sm checked:bg-[#4caf50] checked:border-[#4caf50] checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center"
+      checked={formData.terms}
+      onChange={handleInputChange}
+      required
+    />
+    <span className="text-sm text-gray-600">
+      I agree to the{" "}
+      <a href="#" className="text-[#4caf50]">Terms</a>{" "}
+      &{" "}
+      <a href="#" className="text-[#4caf50]">Privacy</a>
+    </span>
+  </label>
+</div>
+
+
+            {/* Submit */}
+            <div className="col-span-2">
+              <button
+                type="submit"
+                className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047]"
+              >
+                Create Account
+              </button>
+            </div>
+
+            {/* Switch to Login */}
+            <div className="col-span-2 text-center mt-4">
+              <p className="text-sm text-gray-600">
+                Already have an account?{" "}
+                <button
+                  type="button"
+                  onClick={onSwitchToLogin}
+                  className="text-[#4caf50] font-semibold hover:underline"
+                >
+                  Sign in
+                </button>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Success Toast */}
+      {showSuccessToast && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-4 animate-fade-in-up">
+            <div className="flex items-center mb-4">
+              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                <svg
+                  className="w-5 h-5 text-green-800"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
+                </svg>
+              </div>
+              <h3 className="ml-3 text-lg font-medium text-gray-900">
+                Account Created Successfully!
+              </h3>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Your account has been created. You can now access your profile and
+              start shopping.
+            </p>
+            <div className="flex space-x-3 justify-end">
+              {/* Continue Shopping → /shop */}
+              <button
+                onClick={() => {
+                  setShowSuccessToast(false);
+                  onClose();
+                  router.push("/#");
+                }}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+              >
+                Continue Shopping
+              </button>
+
+              {/* View Profile → /profile */}
+              <button
+                onClick={() => {
+                  setShowSuccessToast(false);
+                  onClose();
+                  router.push("/account");
+                }}
+                className="px-4 py-2 bg-[#265728] text-white rounded-md hover:bg-[#043a07] transition-colors"
+              >
+                View Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(1rem);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fade-in-up 0.3s ease-out;
+        }
+      `}</style>
+    </>
+  );
+};
+
+export default SignUpModal;
