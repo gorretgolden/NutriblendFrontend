@@ -47,8 +47,8 @@ const ProductCard = ({ data }: ProductCardProps) => {
   };
 
   return (
-    <div className="group bg-white rounded-lg overflow-hidden shadow-lg shadow-green-700 hover:shadow-green-900 transition-all duration-300 h-full flex flex-col relative">
-  <div className="bg-white-50 rounded-t-lg w-full aspect-square flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="group bg-white rounded-lg overflow-hidden shadow-md shadow-green-700 hover:shadow-green-900 transition-all duration-300 flex flex-col relative max-h-[420px]">
+  <div className="bg-white-50 rounded-t-lg w-full h-[180px] flex items-center justify-center p-2 relative overflow-hidden">
     {/* Make the entire image area clickable */}
     <div 
       className="w-full h-full flex items-center justify-center cursor-pointer"
