@@ -8,6 +8,7 @@ import { MyList } from "@/components/accounts";
 import MyReview from "@/components/accounts/MyReview";
 import MyMessages from "@/components/accounts/messages";
 import AccountOverview from "@/components/accounts/MyAccountOverview";
+import MyAccount from "@/components/accounts/MyAccountManagement";
 
 const AccountPage = () => {
   const [activeSection, setActiveSection] = useState("overview");
@@ -27,6 +28,8 @@ const AccountPage = () => {
       case "overview":
       default:
         return <AccountOverview />;
+  
+        
     }
   };
 

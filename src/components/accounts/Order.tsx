@@ -22,13 +22,13 @@ const Orders = ({ data }: OrdersProps) => {
   if (!data || data.length === 0) {
     return (
       <div className="text-center py-10 text-gray-500">
-        {/* You have no orders yet. */}
+        You have no orders yet.
       </div>
     );
   }
 
   return (
-    <section className="overflow-hidden">
+    <section className="w-full">
       <motion.div
         initial={{ y: 50, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
@@ -37,21 +37,21 @@ const Orders = ({ data }: OrdersProps) => {
       >
         <h2 className="text-2xl font-semibold mb-6">My Orders</h2>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((order) => (
             <Card
               key={order.id}
-              className="shadow-lg rounded-2xl border border-gray-100 hover:shadow-xl transition"
+              className="shadow-lg rounded-2xl border border-gray-100 hover:shadow-xl transition min-w-[250px]"
             >
               <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <FaBox className="text-blue-500" />
-                    {order.productName}
+                <CardTitle className="flex items-center justify-between text-sm md:text-base">
+                  <span className="flex items-center gap-2 truncate max-w-[70%]">
+                    <FaBox className="text-blue-500 flex-shrink-0" />
+                    <span className="truncate">{order.productName}</span>
                   </span>
                   <span
                     className={cn(
-                      "text-xs px-2 py-1 rounded-full font-medium",
+                      "text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap",
                       order.status === "Pending" &&
                         "bg-yellow-100 text-yellow-700",
                       order.status === "Shipped" &&
