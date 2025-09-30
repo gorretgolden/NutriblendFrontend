@@ -5,13 +5,12 @@ import Link from "next/link";
 import { Search } from "lucide-react"; // for search icon
 
 const brands = [
-  { name: "Pfizer", image: "/images/pfizer.png", href: "/products/pfizer" },
-  { name: "GSK", image: "/images/GSK.jpg", href: "/products/GSK" },
-  { name: "AstraZeneca", image: "/images/astra.jpg", href: "/products/astra" },
-  { name: "Johnson & Johnson", image: "/images/johnson.jpg", href: "/products/johnson" },
-  { name: "Roche", image: "/images/rosche.png", href: "/products/rocshe" },
-  { name: "Bayer", image: "/images/bayer.png", href: "/products/bayer" },
-  // ...more
+  { name: "Pfizer", image: "/images/pfizer.png", href: "/products?brand=Pfizer" },
+  { name: "GSK", image: "/images/GSK.jpg", href: "/products?brand=GSK" },
+  { name: "AstraZeneca", image: "/images/astra.jpg", href: "/products?brand=AstraZeneca" },
+  { name: "Johnson & Johnson", image: "/images/johnson.jpg", href: "/products?brand=Johnson%20%26%20Johnson" },
+  { name: "Roche", image: "/images/rosche.png", href: "/products?brand=Roche" },
+  { name: "Bayer", image: "/images/bayer.png", href: "/products?brand=Bayer" },
 ];
 
 export default function BrandsPage() {
