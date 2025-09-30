@@ -3,13 +3,12 @@
 import Link from "next/link";
 
 const brands = [
-  { name: "Pfizer", image: "/images/pfizer.png", href: "/brands/pfizer" },
-  { name: "GSK", image: "/images/GSK.jpg", href: "/brands/GSK" },
-  { name: "AstraZeneca", image: "/images/astra.jpg", href: "/brands/astra" },
-  { name: "Johnson & Johnson", image: "/images/johnson.jpg", href: "/brands/johnson" },
-  { name: "Roche", image: "/images/rosche.png", href: "/brands/rocshe" },
-  { name: "Bayer", image: "/images/bayer.png", href: "/brands/bayer" },
-  
+  { name: "Pfizer", image: "/images/pfizer.png", href: "/products?brand=Pfizer" },
+  { name: "GSK", image: "/images/GSK.jpg", href: "/products?brand=GSK" },
+  { name: "AstraZeneca", image: "/images/astra.jpg", href: "/products?brand=AstraZeneca" },
+  { name: "Johnson & Johnson", image: "/images/johnson.jpg", href: "/products?brand=Johnson%20%26%20Johnson" },
+  { name: "Roche", image: "/images/rosche.png", href: "/products?brand=Roche" },
+  { name: "Bayer", image: "/images/bayer.png", href: "/products?brand=Bayer" },
 ];
 
 export default function BrandsSection() {
