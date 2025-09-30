@@ -8,10 +8,13 @@ import { cn } from "@/lib/utils";
 import { FaBox, FaList, FaStar, FaEnvelope } from "react-icons/fa";
 
 const navItems = [
+
   { name: "Orders", href: "/account/order", icon: FaBox },
   { name: "My Lists", href: "/account/mylist", icon: FaList },
   { name: "Reviews", href: "/account/myreview", icon: FaStar },
   { name: "Messages", href: "/account/messages", icon: FaEnvelope },
+  
+  { name: "Account Management", href: "/account/manage", icon: FaEnvelope },
 ];
 
 const Sidebar = () => {

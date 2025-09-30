@@ -35,6 +35,7 @@ const Header = () => {
     { label: "My Lists", href: "/account/mylist" },
     { label: "My Reviews", href: "/account/MyReview" },
     { label: "Messages", href: "/account/message" },
+    { lqbel: "account Management", href: "/account/manage" },
   ];
 
   // Modal control functions
