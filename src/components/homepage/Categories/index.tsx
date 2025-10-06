@@ -16,14 +16,14 @@ import {
 } from "react-icons/fa";
 
 const mainCategories = [
-  { name: "Supplements", icon: <FaAppleAlt />, link: "/supplements" },
-  { name: "Sports", icon: <FaDumbbell />, link: "/sports" },
-  { name: "Personal Care", icon: <FaBath />, link: "/bath" },
-  { name: "Beauty", icon: <FaFemale />, link: "/beauty" },
-  { name: "Grocery", icon: <FaShoppingBag />, link: "/grocery" },
-  { name: "Home", icon: <FaHome />, link: "/home" },
-  { name: "Baby & Kids", icon: <FaBaby />, link: "/baby-kids" },
-  { name: "Pets", icon: <FaDog />, link: "/pets" },
+  { name: "Supplements", icon: <FaAppleAlt />, link: "/products?category=Supplements" },
+  { name: "Sports", icon: <FaDumbbell />, link: "/products?category=Sports" },
+  { name: "Personal Care", icon: <FaBath />, link: "/products?category=Personal%20Care" },
+  { name: "Beauty", icon: <FaFemale />, link: "/products?category=Beauty" },
+  { name: "Grocery", icon: <FaShoppingBag />, link: "/products?category=Grocery" },
+  { name: "Home", icon: <FaHome />, link: "/products?category=Home" },
+  { name: "Baby & Kids", icon: <FaBaby />, link: "/products?category=Baby%20%26%20Kids" },
+  { name: "Pets", icon: <FaDog />, link: "/products?category=Pets" },
 ];
 
 const pillCategories = [
@@ -163,12 +163,12 @@ export default function CategoryGrid() {
         >
           {pillCategories.map((pill, index) => (
             <Link
-              key={index}
-              href={`/categories/${pill.toLowerCase().replace(/ & /g, "-").replace(/\s+/g, "-")}`}
-              className="flex-shrink-0 bg-gray-100 text-gray-800 px-4 py-2 rounded-full hover:bg-green-50 hover:text-green-700 transition cursor-pointer whitespace-nowrap"
-            >
-              {pill}
-            </Link>
+  key={index}
+  href={`/products?category=${encodeURIComponent(pill)}`}
+  className="flex-shrink-0 bg-gray-100 text-gray-800 px-4 py-2 rounded-full hover:bg-green-50 hover:text-green-700 transition cursor-pointer whitespace-nowrap"
+>
+  {pill}
+</Link>
           ))}
         </div>
 

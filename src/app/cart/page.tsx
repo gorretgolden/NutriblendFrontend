@@ -23,7 +23,7 @@ export default function CartPage() {
   const router = useRouter(); // Initialize the router
 
   return (
-    <main className="pb-20 bg-green-50 min-h-screen">
+    <main className="pb-20 bg-white-50 min-h-screen">
       <div className="max-w-frame mx-auto px-4 xl:px-0 py-8">
         {cart && cart.items.length > 0 ? (
           <>
@@ -31,7 +31,7 @@ export default function CartPage() {
             <h2
               className={cn([
                 integralCF.className,
-                "font-bold text-[32px] md:text-[40px] text-green-800 uppercase mb-6 md:mb-8",
+                "font-bold text-[32px] md:text-[40px] text-dark-800 uppercase mb-6 md:mb-8",
               ])}
             >
               Your Shopping Cart
@@ -62,7 +62,7 @@ export default function CartPage() {
 
               {/* Order Summary Section */}
               <div className="w-full lg:w-1/3 bg-white p-5 md:p-6 flex-col space-y-5 rounded-2xl shadow-lg border border-green-100 sticky top-6">
-                <h3 className="text-xl font-semibold text-green-900 border-b border-green-100 pb-3">
+                <h3 className="text-xl font-semibold text-dark-900 border-b border-green-100 pb-3">
                   Order Summary
                 </h3>
                 
@@ -93,8 +93,8 @@ export default function CartPage() {
                   <hr className="border-t-green-100" />
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-semibold text-green-900">Total</span>
-                    <span className="text-xl font-bold text-green-800">
+                    <span className="text-lg font-semibold text-dark-900">Total</span>
+                    <span className="text-xl font-bold text-dark-800">
                       UGX {Math.round(adjustedTotalPrice).toLocaleString()}
                     </span>
                   </div>
@@ -102,7 +102,7 @@ export default function CartPage() {
 
                 {/* Promo Code Section */}
                 <div className="pt-2">
-                  <h4 className="text-sm font-medium text-green-700 mb-3">Have a promo code?</h4>
+                  <h4 className="text-sm font-medium text-dark-700 mb-3">Have a promo code?</h4>
                   <div className="flex gap-2">
                     <InputGroup className="bg-green-50 border-green-200">
                       <InputGroup.Text>
@@ -112,7 +112,7 @@ export default function CartPage() {
                         type="text"
                         name="code"
                         placeholder="Enter promo code"
-                        className="bg-transparent placeholder:text-green-400 text-green-800"
+                        className="bg-transparent placeholder:text-dark-400 text-green-800"
                       />
                     </InputGroup>
                     <Button

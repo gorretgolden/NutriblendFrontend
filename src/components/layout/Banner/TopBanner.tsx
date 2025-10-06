@@ -20,7 +20,7 @@ const TopBanner = () => {
   }, [rotatingTexts.length]);
 
   return (
-    <div className="w-full bg-gradient-to-r from-[#4caf50] from-0% to-[30%] to-black to-70% text-white">
+    <div className="w-full bg-black  text-white" >
       <div className="container mx-auto px-2 py-2">
         <div className="flex flex-row justify-between items-center flex-nowrap gap-2">
           {/* Left side - Contact info */}

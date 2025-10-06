@@ -20,7 +20,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
       <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-md md:p-8">
         {/* Close (X) button */}
         <button

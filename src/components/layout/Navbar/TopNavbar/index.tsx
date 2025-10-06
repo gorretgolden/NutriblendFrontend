@@ -35,6 +35,7 @@ const Header = () => {
     { label: "My Lists", href: "/account/mylist" },
     { label: "My Reviews", href: "/account/MyReview" },
     { label: "Messages", href: "/account/message" },
+    { lqbel: "account Management", href: "/account/manage" },
   ];
 
   // Modal control functions
@@ -77,9 +78,6 @@ const Header = () => {
                     />
                   </div>
                   {/* Brand name (hidden on mobile, visible from md and up) */}
-                  <span className="hidden md:inline ml-2 text-xl font-semibold whitespace-nowrap">
-                    NutriBlend
-                  </span>
                 </Link>
               </div>
             </div>

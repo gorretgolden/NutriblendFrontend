@@ -23,7 +23,7 @@ const SizeSelection = () => {
 
   return (
     <div className="flex flex-col">
-      <span className="text-sm sm:text-base text-green-800 mb-4 font-medium">
+      <span className="text-sm sm:text-base text-dark-800 mb-4 font-medium">
         Choose Variation
       </span>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap gap-3">
@@ -32,18 +32,18 @@ const SizeSelection = () => {
             key={index}
             type="button"
             className={cn([
-              "bg-green-50 border border-green-200 flex flex-col items-center justify-center p-3 text-sm rounded-lg transition-all duration-200 min-w-[100px]",
+              "bg-white-50 border border-green-400 flex flex-col items-center justify-center p-3 text-sm rounded-lg transition-all duration-200 min-w-[100px]",
               "hover:bg-green-100 hover:border-green-400 hover:shadow-sm",
               sizeSelection === variation.value 
                 ? "bg-green-600 border-green-600 text-white font-medium shadow-md" 
-                : "text-green-800"
+                : "text-dark-800"
             ])}
             onClick={() => dispatch(setSizeSelection(variation.value))}
           >
             <span className="font-medium">{variation.label}</span>
             <span className={cn([
               "text-xs mt-1",
-              sizeSelection === variation.value ? "text-green-100" : "text-green-600"
+              sizeSelection === variation.value ? "text-dark-100" : "text-dark-600"
             ])}>
               UGX {variation.price.toLocaleString()}
             </span>
