@@ -1,6 +1,5 @@
-// src/components/accounts/MyList.tsx
 import React from "react";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import Image from "next/image";
 
 export type Product = {
@@ -24,33 +23,37 @@ const MyList = ({ products }: MyListProps) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {products.map((product) => (
-        <Card 
-          key={product.id} 
-          className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200"
+        <Card
+          key={product.id}
+          className="flex flex-col items-center justify-between rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-4"
         >
-          {/* Image Section */}
-          <div className="relative w-full h-40 sm:h-48 bg-gray-50">
+          {/* Product Image */}
+          <div className="relative w-32 h-32 sm:w-36 sm:h-36 bg-gray-50 rounded-md overflow-hidden">
             <Image
               src={product.imageUrl}
               alt={product.name}
               fill
               className="object-contain p-2"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              priority
             />
           </div>
 
-          {/* Content */}
-          <CardContent className="p-3 sm:p-4">
-            <CardTitle className="text-base sm:text-lg font-semibold line-clamp-2">
+          {/* Product Info */}
+          <div className="text-center mt-3">
+            <h3 className="text-sm sm:text-base font-semibold text-gray-800 line-clamp-2">
               {product.name}
-            </CardTitle>
-            <p className="text-lg sm:text-xl font-bold mt-2 text-gray-800">
+            </h3>
+            <p className="text-lg font-bold text-green-600 mt-1">
               ${product.price.toFixed(2)}
             </p>
-          </CardContent>
+          </div>
+
+          {/* Action */}
+          <button className="mt-3 bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-green-700 transition">
+            Add to Cart
+          </button>
         </Card>
       ))}
     </div>

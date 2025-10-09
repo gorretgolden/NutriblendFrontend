@@ -1,10 +1,10 @@
-// src/components/accounts/MyMessages.tsx
+"use client";
 
 import React from "react";
+import * as motion from "framer-motion/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-// Define the type for a message, so you can import it on the page
 export type Message = {
   id: string;
   sender: string;
@@ -21,46 +21,79 @@ type MyMessagesProps = {
 const MyMessages = ({ messages }: MyMessagesProps) => {
   if (!messages || messages.length === 0) {
     return (
-      <div className="text-center py-10 text-gray-500">
-        {/* You have no messages in your inbox. */}
+      <div className="text-center py-16 text-gray-400 italic">
+        You have no messages in your inbox.
       </div>
     );
   }
 
   return (
-    <div className="grid gap-4">
-      <h2 className="text-2xl font-semibold mb-2">My Messages</h2>
-      {messages.map((message) => (
-        <Card
-          key={message.id}
-          className={cn(
-            "p-4 hover:shadow-lg transition-shadow duration-200 cursor-pointer",
-            message.isRead ? "bg-white" : "bg-green-50"
-          )}
-        >
-          <CardContent className="p-0">
-            <div className="flex items-center justify-between">
-              <span className={cn(
-                "text-sm font-medium",
-                message.isRead ? "text-gray-500" : "text-[#4caf50]"
-              )}>
-                {message.isRead ? "Read" : "Unread"}
-              </span>
-              <span className="text-xs text-gray-400">{message.date}</span>
-            </div>
-            <h3 className={cn(
-              "font-semibold mt-1",
-              message.isRead ? "text-gray-800" : "text-gray-900"
-            )}>
-              {message.subject}
-            </h3>
-            <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-              {message.preview}
-            </p>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+    <section className="w-full">
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <h2 className="text-3xl font-bold text-gray-800 mb-8 tracking-tight">
+          My Messages
+        </h2>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {messages.map((message) => (
+            <motion.div
+              key={message.id}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 250 }}
+            >
+              <Card
+                className={cn(
+                  "rounded-2xl border border-gray-100 bg-white shadow-md hover:shadow-2xl transition-all duration-300 relative overflow-visible",
+                  message.isRead ? "bg-white" : "bg-green-50"
+                )}
+              >
+                {/* Top status strip */}
+                <div
+                  className={cn(
+                    "absolute top-0 left-0 w-full h-1 rounded-t-2xl",
+                    message.isRead ? "bg-gray-200" : "bg-green-500"
+                  )}
+                ></div>
+
+                <CardContent className="p-5">
+                  {/* Status & Date */}
+                  <div className="flex items-center justify-between mb-2">
+                    <span
+                      className={cn(
+                        "text-sm font-medium",
+                        message.isRead ? "text-gray-500" : "text-green-700"
+                      )}
+                    >
+                      {message.isRead ? "Read" : "Unread"}
+                    </span>
+                    <span className="text-xs text-gray-400">{message.date}</span>
+                  </div>
+
+                  {/* Subject */}
+                  <h3
+                    className={cn(
+                      "font-semibold text-gray-800 mb-2 truncate",
+                      message.isRead ? "text-gray-800" : "text-gray-900"
+                    )}
+                  >
+                    {message.subject}
+                  </h3>
+
+                  {/* Full Preview */}
+                  <p className="text-sm text-gray-700">{message.preview}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </section>
   );
 };
 
