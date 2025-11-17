@@ -5,8 +5,14 @@ const MellonHardware = () => {
     <div className="min-h-screen flex flex-col">
 
       {/* Hero Section */}
-      <section className="bg-[#4caf50] text-white py-9 text-center">
-        <div className="container mx-auto px-4">
+            <section
+        className="relative py-24 text-center text-white bg-cover bg-center"
+        style={{ backgroundImage: "url('images/About.PNG')" }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black opacity-40"></div>
+
+        <div className="relative container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             About NutriBlend Haven
           </h1>
