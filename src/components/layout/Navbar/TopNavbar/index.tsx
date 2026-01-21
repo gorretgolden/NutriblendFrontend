@@ -7,12 +7,20 @@ import SignUpModal from "../../SignIn/signup";
 import SearchWithDropdown from "@/components/homepage/Searchbar";
 import CartBtn from "./CartBtn";
 
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
+import { logoutUser } from "@/lib/features/auth/authSlice";
+
+// ... imports ...
+
 const Header = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [signUpOpen, setSignUpOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const { user } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
 
   // Navigation data
   const navItems = [
@@ -25,9 +33,9 @@ const Header = () => {
     { name: "Baby", subItems: ["Diapering", "Feeding", "Baby Gear", "Nursery", "Baby Care"] },
     { name: "Pets", subItems: ["Dog Supplies", "Cat Supplies", "Fish & Aquatics", "Bird Supplies", "Pet Toys"] },
     { name: "Brands A-Z", subItems: ["Nike", "Adidas", "Johnson & Johnson", "Procter & Gamble", "Colgate"] },
-    { name: "About Us", href: "/aboutUs" }, 
+    { name: "About Us", href: "/aboutUs" },
   ];
-  
+
   // Account menu data
   const accountLinks = [
     { label: "My Account", href: "/account" },
@@ -55,9 +63,14 @@ const Header = () => {
   };
 
   const handleProfileOpen = () => {
-  setIsProfileOpen(true);
-  console.log("Opening profile...");
-};
+    setIsProfileOpen(true);
+    console.log("Opening profile...");
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    setIsAccountOpen(false);
+  };
 
   return (
     <>
@@ -111,7 +124,9 @@ const Header = () => {
                       />
                     </svg>
                   </div>
-                  <span className="hidden md:inline text-sm font-medium">Account</span>
+                  <span className="hidden md:inline text-sm font-medium">
+                    {user ? `Hi, ${user.first_name}` : "Account"}
+                  </span>
                   <svg
                     className="ml-1 w-3 h-3 text-gray-400 transition-transform duration-200"
                     fill="currentColor"
@@ -133,8 +148,12 @@ const Header = () => {
                     onMouseLeave={() => setIsAccountOpen(false)}
                   >
                     <div className="bg-gradient-to-r from-[#4caf50] to-[#45a049] text-white p-3 md:p-4">
-                      <h3 className="font-semibold text-base md:text-lg">Welcome!</h3>
-                      <p className="text-xs md:text-sm opacity-90">Sign in to access your account</p>
+                      <h3 className="font-semibold text-base md:text-lg">
+                        {user ? `Welcome, ${user.first_name}!` : "Welcome!"}
+                      </h3>
+                      <p className="text-xs md:text-sm opacity-90">
+                        {user ? "Happy to see you again" : "Sign in to access your account"}
+                      </p>
                     </div>
                     <div className="p-2">
                       <div className="space-y-1">
@@ -153,17 +172,26 @@ const Header = () => {
                       </div>
                     </div>
                     <div className="p-2 md:p-3 border-t border-gray-100 bg-gray-50">
-                      <button
-                        onClick={openLoginModal}
-                        className="block w-full bg-[#4caf50] hover:bg-green-600 text-white text-center font-medium py-2 md:py-2.5 px-3 md:px-4 rounded-lg transition-colors duration-200 shadow-sm text-sm md:text-base"
-                      >
-                        Sign in / Create account
-                      </button>
+                      {user ? (
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full bg-red-500 hover:bg-red-600 text-white text-center font-medium py-2 md:py-2.5 px-3 md:px-4 rounded-lg transition-colors duration-200 shadow-sm text-sm md:text-base"
+                        >
+                          Sign Out
+                        </button>
+                      ) : (
+                        <button
+                          onClick={openLoginModal}
+                          className="block w-full bg-[#4caf50] hover:bg-green-600 text-white text-center font-medium py-2 md:py-2.5 px-3 md:px-4 rounded-lg transition-colors duration-200 shadow-sm text-sm md:text-base"
+                        >
+                          Sign in / Create account
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}
               </div>
-              <CartBtn/>
+              <CartBtn />
 
               {/* Mobile menu button */}
               <div className="md:hidden flex items-center">
@@ -212,12 +240,12 @@ const Header = () => {
                         </div>
                       </>
                     ) : (
-                       <Link
-                         href={item.href || "/aboutUs"}
-                         className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors duration-200"
-                       >
-                         {item.name}
-                       </Link>
+                      <Link
+                        href={item.href || "/aboutUs"}
+                        className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors duration-200"
+                      >
+                        {item.name}
+                      </Link>
                     )}
                   </div>
                 ))}
@@ -263,17 +291,17 @@ const Header = () => {
       </header>
 
       {/* Modals */}
-      <LoginModal 
-        visible={loginOpen} 
+      <LoginModal
+        visible={loginOpen}
         onClose={closeModals}
         onSwitchToSignUp={openSignUpModal}
       />
-      <SignUpModal 
-      visible={signUpOpen} 
-      onClose={closeModals}
-      onSwitchToLogin={openLoginModal}
-      onProfileOpen={handleProfileOpen}
-    />
+      <SignUpModal
+        visible={signUpOpen}
+        onClose={closeModals}
+        onSwitchToLogin={openLoginModal}
+        onProfileOpen={handleProfileOpen}
+      />
 
       <style jsx>{`
         .group:hover .group-hover\\:visible {

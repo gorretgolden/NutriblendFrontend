@@ -1,15 +1,11 @@
 import ProductListSec from "@/components/common/ProductListSec";
 import ProductCarousel from "@/components/common/ProductCarousel";
 import BrandsSection from "@/components/homepage/Brands";
-import DressStyle from "@/components/homepage/DressStyle";
-import Header from "@/components/homepage/Header";
-import Reviews from "@/components/homepage/Reviews";
-import { Product } from "@/types/product.types";
-import LiveBlogSection from "@/components/Blog/index"
-import { Review } from "@/types/review.types";
 import HeroCarousel, { CarouselSlide } from "@/components/homepage/imageCarousel";
 import CategoryGrid from "@/components/homepage/Categories";
-
+import LiveBlogSection from "@/components/Blog/index";
+import { Product } from "@/types/product.types";
+import { apiClient, getImageUrl, type Product as ApiProduct } from "@/lib/api/client";
 
 const carouselSlides: CarouselSlide[] = [
   {
@@ -19,7 +15,7 @@ const carouselSlides: CarouselSlide[] = [
     subtitle: 'Health benefits and side effects',
     ctaText: 'Shop Now',
     ctaLink: '/products/chlorophyll',
-    layout: 'imageLeft' 
+    layout: 'imageLeft'
   },
   {
     id: 2,
@@ -28,7 +24,7 @@ const carouselSlides: CarouselSlide[] = [
     subtitle: 'Fuel your body the natural way',
     ctaText: 'Discover',
     ctaLink: '/products/proteins',
-    layout: 'imageRight' 
+    layout: 'imageRight'
   },
   {
     id: 3,
@@ -37,322 +33,134 @@ const carouselSlides: CarouselSlide[] = [
     subtitle: 'Boost your immune system',
     ctaText: 'Explore',
     ctaLink: '/products/vitamins',
-    layout: 'imageLeft' 
+    layout: 'imageLeft'
   }
 ];
 
+import { newArrivalsFallback, topSellingFallback, specialOffersFallback } from "@/data/home-fallbacks";
 
+// Helper to transform API product to UI product
+const transformProduct = (p: ApiProduct): Product => {
+  const primaryImage = p.images?.find(img => img.is_primary) || p.images?.[0];
+  const imageUrl = primaryImage ? getImageUrl(primaryImage.image_path) : '/images/placeholder.jpg';
 
-export const newArrivalsData: Product[] = [
-  {
-    id: 1,
-    title: "Weight Adder",
-    srcUrl: "/images/bottle1.avif",
-    gallery: ["/images/bottle1.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
-    price: 120,
+  return {
+    id: p.id,
+    title: p.name,
+    srcUrl: imageUrl,
+    gallery: p.images?.map(img => getImageUrl(img.image_path)) || [imageUrl],
+    price: p.price,
     discount: {
       amount: 0,
-      percentage: 0,
+      percentage: p.discount_percentage || 0,
     },
-    rating: 4.5,
-  },
-  {
-    id: 2,
-    title: "Fish Oil, Omega-3",
-    srcUrl: "/images/bottle2.avif",
-    gallery: ["/images/bottle2.avif"],
-    price: 260,
-    discount: {
-      amount: 0,
-      percentage: 20,
-    },
-    rating: 3.5,
-  },
-  {
-    id: 3,
-    title: "Go glow, Shine",
-    srcUrl: "/images/bottle3.avif",
-    gallery: ["/images/bottle3.avif"],
-    price: 180,
-    discount: {
-      amount: 0,
-      percentage: 0,
-    },
-    rating: 4.5,
-  },
-  {
-    id: 4,
-    title: "MCT-Oil, Body SLimmer",
-    srcUrl: "/images/bottle4.avif",
-    gallery: ["/images/bottle4.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
-    price: 160,
-    discount: {
-      amount: 0,
-      percentage: 30,
-    },
-    rating: 4.5,
-  },
- 
-  {
-    id: 9,
-    title: "Tea slimmer",
-    srcUrl: "/images/bottle9.avif",
-    gallery: ["/images/bottle9.avif"],
-    price: 189,
-    discount: {
-      amount: 0,
-      percentage: 15,
-    },
-    rating: 4.2,
-  },
-  {
-    id: 10,
-    title: "Sex Supllement",
-    srcUrl: "/images/bottle10.avif",
-    gallery: ["/images/bottle10.avif"],
-    price: 299,
-    discount: {
-      amount: 0,
-      percentage: 0,
-    },
-    rating: 4.8,
+    rating: 5, // Default rating as API doesn't return average rating yet
+    brand: p.brand?.name
+  };
+};
+
+async function getHomePageData() {
+  try {
+    // parallel fetching with timeout/error protection
+    const [newArrivalsReq, topSellingReq, specialOffersReq] = await Promise.all([
+      apiClient.getProducts({ sort: 'created_at', per_page: 8 }).catch(() => ({ status: false, data: null })),
+      apiClient.getProducts({ sort: 'sales_count', per_page: 8 }).catch(() => ({ status: false, data: null })),
+      apiClient.getProducts({ is_featured: true, per_page: 8 }).catch(() => ({ status: false, data: null }))
+    ]);
+
+    const newArrivals = (newArrivalsReq.status && newArrivalsReq.data?.data?.length)
+      ? newArrivalsReq.data.data.map(transformProduct)
+      : newArrivalsFallback;
+
+    const topSelling = (topSellingReq.status && topSellingReq.data?.data?.length)
+      ? topSellingReq.data.data.map(transformProduct)
+      : topSellingFallback;
+
+    const specialOffers = (specialOffersReq.status && specialOffersReq.data?.data?.length)
+      ? specialOffersReq.data.data.map(transformProduct)
+      : specialOffersFallback;
+
+    return { newArrivals, topSelling, specialOffers };
+
+  } catch (error) {
+    console.error("Failed to fetch homepage data, using fallback:", error);
+    return {
+      newArrivals: newArrivalsFallback,
+      topSelling: topSellingFallback,
+      specialOffers: specialOffersFallback
+    };
   }
-];
+}
 
-export const topSellingData: Product[] = [
-  {
-    id: 5,
-    title: "Anglican, Tube Bottle",
-    srcUrl: "/images/bottle5.avif",
-    gallery: ["/images/bottle5.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
-    price: 232,
-    discount: {
-      amount: 0,
-      percentage: 20,
-    },
-    rating: 5.0,
-  },
-  {
-    id: 6,
-    title: "ColleganUp, Deep Clean",
-    srcUrl: "/images/bottle6.avif",
-    gallery: ["/images/bottle6.avif", "/images/bottle10.avif", "/images/bottle11.avif"],
-    price: 145,
-    discount: {
-      amount: 0,
-      percentage: 0,
-    },
-    rating: 4.0,
-  },
-  {
-    id: 7,
-    title: "Feminine, Deep clean",
-    srcUrl: "/images/bottle7.avif",
-    gallery: ["/images/bottle7.avif"],
-    price: 80,
-    discount: {
-      amount: 0,
-      percentage: 0,
-    },
-    rating: 3.0,
-  },
-  {
-    id: 8,
-    title: "Aurora, Liposomal",
-    srcUrl: "/images/bottle8.avif",
-    gallery: ["/images/bottle8.avif"],
-    price: 210,
-    discount: {
-      amount: 0,
-      percentage: 0,
-    },
-    rating: 4.5,
-  },
-  
-  {
-    id: 11,
-    title: "Eucerin",
-    srcUrl: "/images/bottle11.avif",
-    gallery: ["/images/bottle11.avif"],
-    price: 75,
-    discount: {
-      amount: 0,
-      percentage: 10,
-    },
-    rating: 4.3,
-  },
-  {
-    id: 12,
-    title: "Keratin, Sleek + Smooth + Hair Mask",
-    srcUrl: "/images/bottle12.avif",
-    gallery: ["/images/bottle12.avif"],
-    price: 145,
-    discount: {
-      amount: 0,
-      percentage: 25,
-    },
-    rating: 4.6,
-  }
-];
+export default async function Home() {
+  const { newArrivals, topSelling, specialOffers } = await getHomePageData();
 
-
-export const specialOfferProducts: Product[] = [
-  {
-    id: 20,
-    title: "DHA 700 Fish Oil, Ultra-Concentrated",
-    srcUrl: "/images/bottle1.avif",
-    gallery: ["/images/bottle1.avif"],
-    price: 29093,
-    discount: {
-      amount: 0,
-      percentage: 29,
-    },
-    rating: 5,
-    reviews: 12616,
-    brand: "California Gold Nutrition"
-  },
-  {
-    id: 21,
-    title: "Omega-3 Premium Fish Oil, 100 Softgels",
-    srcUrl: "/images/bottle2.avif",
-    gallery: ["/images/bottle2.avif"],
-    price: 48497,
-    discount: {
-      amount: 0,
-      percentage: 0,
-    },
-    rating: 5,
-    reviews: 458474,
-    brand: "California Gold Nutrition"
-  },
-  {
-    id: 22,
-    title: "Omega 800 Ultra-Concentrated Fish Oil",
-    srcUrl: "/images/bottle3.avif",
-    gallery: ["/images/bottle3.avif"],
-    price: 39426,
-    discount: {
-      amount: 0,
-      percentage: 0,
-    },
-    rating: 5,
-    reviews: 120548,
-    brand: "California Gold Nutrition"
-  },
-  {
-    id: 23,
-    title: "Omega-3 Fish Oil, 1,000 mg, 180 Softgels",
-    srcUrl: "/images/bottle4.avif",
-    gallery: ["/images/bottle4.avif"],
-    price: 34210,
-    discount: {
-      amount: 0,
-      percentage: 0,
-    },
-    rating: 5,
-    reviews: 139472,
-    brand: "NOW Foods"
-  },
- 
-  {
-    id: 24,
-    title: "Vitamin D3 Supplement, 1000IU",
-    srcUrl: "/images/bottle13.avif",
-    gallery: ["/images/bottle13.avif"],
-    price: 15999,
-    discount: {
-      amount: 0,
-      percentage: 15,
-    },
-    rating: 4.7,
-    reviews: 89234,
-    brand: "Nature's Bounty"
-  },
-  {
-    id: 25,
-    title: "Probiotic Complex, 30 Capsules",
-    srcUrl: "/images/bottle14.avif",
-    gallery: ["/images/bottle14.avif"],
-    price: 24999,
-    discount: {
-      amount: 0,
-      percentage: 0,
-    },
-    rating: 4.5,
-    reviews: 67321,
-    brand: "Garden of Life"
-  }
-];
-
-export default function Home() {
   return (
     <>
       <main className="my-[50px] sm:my-[72px]">
 
         {/* Hero Carousel Section */}
-       <section className="mb-12">
-        <HeroCarousel slides={carouselSlides} autoPlay={true} interval={5000} />
-      </section>
+        <section className="mb-12">
+          <HeroCarousel slides={carouselSlides} autoPlay={true} interval={5000} />
+        </section>
 
-        {/* SPecial Offer Section with Carousel */}
-        
+        {/* Special Offer Section with Carousel */}
         <section className="w-full">
           <ProductCarousel
-            products={specialOfferProducts}
+            products={specialOffers}
             title="Special Offers"
-            viewAllLink="/recommendations"
+            viewAllLink="/shop?is_featured=true"
           />
         </section>
 
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
-        
 
         <div className="container mx-auto px-4">
-           <CategoryGrid />
+          <CategoryGrid />
         </div>
 
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
-        
+
 
         {/* New Arrivals Section with Carousel */}
         <section className="w-full">
           <ProductCarousel
-            products={newArrivalsData}
+            products={newArrivals}
             title="New Arrivals"
-            viewAllLink="/shop#new-arrivals"
+            viewAllLink="/shop?sort=created_at"
           />
         </section>
-        
+
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
-        
+
         {/* Top Selling Section with Carousel */}
         <section className="w-full">
           <ProductCarousel
-            products={topSellingData}
+            products={topSelling}
             title="Trending Now"
-            viewAllLink="/shop#top-selling"
+            viewAllLink="/shop?sort=popular"
           />
         </section>
 
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
-        
-        <BrandsSection/>
 
-        <LiveBlogSection/>
+        <BrandsSection />
+
+        <LiveBlogSection />
 
 
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
-        
+
       </main>
     </>
   );

@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
+import { registerUser } from "@/lib/features/auth/authSlice";
 
 type SignUpModalProps = {
   visible: boolean;
@@ -23,12 +25,15 @@ const SignUpModal = ({
   onSwitchToLogin,
   onProfileOpen,
 }: SignUpModalProps) => {
-  const router = useRouter(); // ✅ moved inside component
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector((state) => state.auth);
 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    email: "", // Added email field
     phone: "",
     password: "",
     confirmPassword: "",
@@ -38,10 +43,9 @@ const SignUpModal = ({
     district: "",
     location: "",
   });
-  
-  // Add these two separate states
-const [showPassword, setShowPassword] = useState(false);
-const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -69,7 +73,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.terms) {
@@ -82,15 +86,26 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
       return;
     }
 
-    console.log("Account created:", formData);
-    setShowSuccessToast(true);
+    // Prepare data for API
+    const apiData = {
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      password: formData.password,
+      password_confirmation: formData.confirmPassword
+    };
+
+    const resultAction = await dispatch(registerUser(apiData));
+    if (registerUser.fulfilled.match(resultAction)) {
+      setShowSuccessToast(true);
+    }
   };
 
   if (!visible) return null;
 
   return (
     <>
-      {/* Overlay */}
       <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 px-2 py-6">
         <div className="relative w-full max-w-3xl rounded-lg bg-white p-6 sm:p-8 md:p-10 shadow-md">
           {/* Logo + Close */}
@@ -108,7 +123,6 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
             </button>
           </div>
 
-          {/* Title */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-800">
               Create your account
@@ -118,7 +132,12 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
             </p>
           </div>
 
-          {/* Form */}
+          {error && (
+            <div className="mb-4 rounded bg-red-50 p-3 text-sm text-red-600">
+              {error}
+            </div>
+          )}
+
           <form
             onSubmit={handleSubmit}
             className="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -149,6 +168,18 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
                 placeholder="Last Name"
                 className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
                 value={formData.lastName}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            <div>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+                value={formData.email}
                 onChange={handleInputChange}
                 required
               />
@@ -233,7 +264,6 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
             </div>
 
             {/* Password Field */}
-            {/* Password Field */}
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -251,30 +281,14 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#4caf50]"
               >
                 {showPassword ? (
-                  // Eye Off icon
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M13.875 18.825A10.05 10.05 0 0112 
-                        19c-4.478 0-8.268-2.943-9.542-7a9.957 
-                        9.957 0 012.293-3.95m2.071-1.957A9.956 
-                        9.956 0 0112 5c4.478 0 8.268 2.943 
-                        9.542 7a9.956 9.956 0 01-4.132 
-                        5.411M15 12a3 3 0 11-6 0 3 3 
-                        0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M3 3l18 18" />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.957 9.957 0 012.293-3.95m2.071-1.957A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.132 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
                   </svg>
                 ) : (
-                  // Eye Open icon
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 
-                        2.943 9.542 7-1.274 4.057-5.064 
-                        7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
                 )}
               </button>
@@ -297,30 +311,14 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#4caf50]"
               >
                 {showConfirmPassword ? (
-                  // Eye Off
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M13.875 18.825A10.05 10.05 0 0112 
-                        19c-4.478 0-8.268-2.943-9.542-7a9.957 
-                        9.957 0 012.293-3.95m2.071-1.957A9.956 
-                        9.956 0 0112 5c4.478 0 8.268 2.943 
-                        9.542 7a9.956 9.956 0 01-4.132 
-                        5.411M15 12a3 3 0 11-6 0 3 3 
-                        0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M3 3l18 18" />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.957 9.957 0 012.293-3.95m2.071-1.957A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.132 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
                   </svg>
                 ) : (
-                  // Eye Open
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 
-                        2.943 9.542 7-1.274 4.057-5.064 
-                        7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
                 )}
               </button>
@@ -329,47 +327,47 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
             {/* Checkboxes */}
             <div className="col-span-2">
-  <label className="flex items-center mb-2">
-    <input
-      type="checkbox"
-      id="newsletter"
-      name="newsletter"
-      className="h-5 w-5 mr-2 appearance-none border border-gray-400 rounded-sm checked:bg-[#4caf50] checked:border-[#4caf50] checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center"
-      checked={formData.newsletter}
-      onChange={handleInputChange}
-    />
-    <span className="text-sm text-gray-600">
-      Send me special offers
-    </span>
-  </label>
+              <label className="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  id="newsletter"
+                  name="newsletter"
+                  className="h-5 w-5 mr-2 appearance-none border border-gray-400 rounded-sm checked:bg-[#4caf50] checked:border-[#4caf50] checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center"
+                  checked={formData.newsletter}
+                  onChange={handleInputChange}
+                />
+                <span className="text-sm text-gray-600">
+                  Send me special offers
+                </span>
+              </label>
 
-  <label className="flex items-center">
-    <input
-      type="checkbox"
-      id="terms"
-      name="terms"
-      className="h-5 w-5 mr-2 appearance-none border border-gray-400 rounded-sm checked:bg-[#4caf50] checked:border-[#4caf50] checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center"
-      checked={formData.terms}
-      onChange={handleInputChange}
-      required
-    />
-    <span className="text-sm text-gray-600">
-      I agree to the{" "}
-      <a href="#" className="text-[#4caf50]">Terms</a>{" "}
-      &{" "}
-      <a href="#" className="text-[#4caf50]">Privacy</a>
-    </span>
-  </label>
-</div>
-
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  name="terms"
+                  className="h-5 w-5 mr-2 appearance-none border border-gray-400 rounded-sm checked:bg-[#4caf50] checked:border-[#4caf50] checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center"
+                  checked={formData.terms}
+                  onChange={handleInputChange}
+                  required
+                />
+                <span className="text-sm text-gray-600">
+                  I agree to the{" "}
+                  <a href="#" className="text-[#4caf50]">Terms</a>{" "}
+                  &{" "}
+                  <a href="#" className="text-[#4caf50]">Privacy</a>
+                </span>
+              </label>
+            </div>
 
             {/* Submit */}
             <div className="col-span-2">
               <button
                 type="submit"
-                className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047]"
+                disabled={isLoading}
+                className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047] disabled:opacity-50"
               >
-                Create Account
+                {isLoading ? "Creating Account..." : "Create Account"}
               </button>
             </div>
 
@@ -390,7 +388,6 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
         </div>
       </div>
 
-      {/* Success Toast */}
       {showSuccessToast && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
           <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-4 animate-fade-in-up">
@@ -419,7 +416,6 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
               start shopping.
             </p>
             <div className="flex space-x-3 justify-end">
-              {/* Continue Shopping → /shop */}
               <button
                 onClick={() => {
                   setShowSuccessToast(false);
@@ -431,7 +427,6 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
                 Continue Shopping
               </button>
 
-              {/* View Profile → /profile */}
               <button
                 onClick={() => {
                   setShowSuccessToast(false);

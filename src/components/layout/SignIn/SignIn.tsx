@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
+import { loginUser } from "@/lib/features/auth/authSlice";
 
 type LoginModalProps = {
   visible: boolean;
@@ -9,6 +11,11 @@ type LoginModalProps = {
 };
 
 const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => {
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector((state) => state.auth);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   useEffect(() => {
     if (visible) {
       document.body.style.overflow = "hidden";
@@ -16,6 +23,14 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
       document.body.style.overflow = "";
     }
   }, [visible]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const resultAction = await dispatch(loginUser({ email, password }));
+    if (loginUser.fulfilled.match(resultAction)) {
+      onClose();
+    }
+  };
 
   if (!visible) return null;
 
@@ -51,25 +66,46 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
           </p>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 rounded bg-red-50 p-3 text-sm text-red-600">
+            {error}
+          </div>
+        )}
+
         {/* Form */}
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <input
               type="text"
-              placeholder="Email or mobile number"
+              placeholder="Email"
               className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <button
             type="submit"
-            className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047]"
+            disabled={isLoading}
+            className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047] disabled:opacity-50"
           >
-            Continue
+            {isLoading ? "Signing in..." : "Continue"}
           </button>
         </form>
 
         {/* Sign up link for users without account */}
-       
+
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}
@@ -143,7 +179,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
 
         {/* Footer text */}
         <p className="mt-10 text-center text-xs leading-snug text-gray-400 md:mt-1">
-          © Copyright 1997-2025 iHerb, LLC. All rights reserved. 
+          © Copyright 1997-2025 iHerb, LLC. All rights reserved.
         </p>
       </div>
     </div>
