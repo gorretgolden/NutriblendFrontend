@@ -1,38 +1,17 @@
-import { compareArrays } from "@/lib/utils";
-import { Discount } from "@/types/product.types";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { apiClient, CartItem as ApiCartItem, CartSummary } from "@/lib/api/client";
 
-const calcAdjustedTotalPrice = (
-  totalPrice: number,
-  data: CartItem,
-  quantity?: number
-): number => {
-  const discount = data.discount || { amount: 0, percentage: 0 };
-
-  const adjustedPrice =
-    discount.percentage > 0
-      ? Math.round(data.price - (data.price * discount.percentage) / 100)
-      : discount.amount > 0
-      ? Math.round(data.price - discount.amount)
-      : data.price;
-
-  return adjustedPrice * (quantity ?? data.quantity);
-};
-
-export type RemoveCartItem = {
-  id: number;
-  attributes: string[];
-};
+// ==================== Types ====================
 
 export type CartItem = {
   id: number;
   name: string;
   srcUrl: string;
   price: number;
-  attributes: string[];
-  discount?: Discount;
   quantity: number;
+  product_id: number;
+  variation_id?: number;
 };
 
 export type Cart = {
@@ -40,166 +19,259 @@ export type Cart = {
   totalQuantities: number;
 };
 
-// Define a type for the slice state
 interface CartsState {
   cart: Cart | null;
   totalPrice: number;
-  adjustedTotalPrice: number;
-  action: "update" | "add" | "delete" | null;
+  isLoading: boolean;
+  error: string | null;
+  isSynced: boolean; // Whether cart is synced with backend
 }
 
-// Define the initial state using that type
+// ==================== Initial State ====================
+
 const initialState: CartsState = {
   cart: null,
   totalPrice: 0,
-  adjustedTotalPrice: 0,
-  action: null,
+  isLoading: false,
+  error: null,
+  isSynced: false,
 };
+
+// ==================== Async Thunks ====================
+
+// Fetch cart from backend (for logged-in users)
+export const fetchCart = createAsyncThunk(
+  "cart/fetch",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await apiClient.getCart();
+      if (response.status && response.data) {
+        return response.data;
+      }
+      return rejectWithValue(response.message || "Failed to fetch cart");
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to fetch cart");
+    }
+  }
+);
+
+// Add to cart (backend for logged-in, local for guests)
+export const addToCartAsync = createAsyncThunk(
+  "cart/add",
+  async (
+    item: { product_id: number; quantity: number; variation_id?: number },
+    { getState, rejectWithValue }
+  ) => {
+    try {
+      // Check if user is authenticated
+      const state: any = getState();
+      const isAuthenticated = state.auth?.isAuthenticated;
+
+      if (isAuthenticated) {
+        // Add to backend cart
+        const response = await apiClient.addToCart(item);
+        if (response.status && response.data) {
+          return { item: response.data, backend: true };
+        }
+        return rejectWithValue(response.message || "Failed to add to cart");
+      } else {
+        // Add to local cart
+        return { item, backend: false };
+      }
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to add to cart");
+    }
+  }
+);
+
+// Remove from cart
+export const removeFromCartAsync = createAsyncThunk(
+  "cart/remove",
+  async (itemId: number, { getState, rejectWithValue }) => {
+    try {
+      const state: any = getState();
+      const isAuthenticated = state.auth?.isAuthenticated;
+
+      if (isAuthenticated) {
+        const response = await apiClient.removeFromCart(itemId);
+        if (response.status) {
+          return { itemId, backend: true };
+        }
+        return rejectWithValue(response.message || "Failed to remove from cart");
+      } else {
+        return { itemId, backend: false };
+      }
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to remove from cart");
+    }
+  }
+);
+
+// Update cart item quantity
+export const updateCartItemAsync = createAsyncThunk(
+  "cart/update",
+  async (
+    { itemId, quantity }: { itemId: number; quantity: number },
+    { getState, rejectWithValue }
+  ) => {
+    try {
+      const state: any = getState();
+      const isAuthenticated = state.auth?.isAuthenticated;
+
+      if (isAuthenticated) {
+        const response = await apiClient.updateCartItem(itemId, quantity);
+        if (response.status && response.data) {
+          return { item: response.data, backend: true };
+        }
+        return rejectWithValue(response.message || "Failed to update cart");
+      } else {
+        return { itemId, quantity, backend: false };
+      }
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to update cart");
+    }
+  }
+);
+
+// Clear cart
+export const clearCartAsync = createAsyncThunk(
+  "cart/clear",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const state: any = getState();
+      const isAuthenticated = state.auth?.isAuthenticated;
+
+      if (isAuthenticated) {
+        const response = await apiClient.clearCart();
+        if (response.status) {
+          return { backend: true };
+        }
+        return rejectWithValue(response.message || "Failed to clear cart");
+      } else {
+        return { backend: false };
+      }
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to clear cart");
+    }
+  }
+);
+
+// ==================== Slice ====================
 
 export const cartsSlice = createSlice({
   name: "carts",
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<CartItem>) => {
-      // if cart is empty then add
+    // Local cart actions (for guests)
+    addToCartLocal: (state, action: PayloadAction<CartItem>) => {
       if (state.cart === null) {
         state.cart = {
           items: [action.payload],
           totalQuantities: action.payload.quantity,
         };
-        state.totalPrice =
-          state.totalPrice + action.payload.price * action.payload.quantity;
-        state.adjustedTotalPrice =
-          state.adjustedTotalPrice +
-          calcAdjustedTotalPrice(state.totalPrice, action.payload);
+        state.totalPrice = action.payload.price * action.payload.quantity;
         return;
       }
 
-      // check item in cart
-      const isItemInCart = state.cart.items.find(
-        (item) =>
-          action.payload.id === item.id &&
-          compareArrays(action.payload.attributes, item.attributes)
+      const existingItem = state.cart.items.find(
+        (item) => item.product_id === action.payload.product_id &&
+          item.variation_id === action.payload.variation_id
       );
 
-      if (isItemInCart) {
-        state.cart = {
-          ...state.cart,
-          items: state.cart.items.map((eachCartItem) => {
-            if (
-              eachCartItem.id === action.payload.id
-                ? !compareArrays(
-                    eachCartItem.attributes,
-                    isItemInCart.attributes
-                  )
-                : eachCartItem.id !== action.payload.id
-            )
-              return eachCartItem;
-
-            return {
-              ...isItemInCart,
-              quantity: action.payload.quantity + isItemInCart.quantity,
-            };
-          }),
-          totalQuantities: state.cart.totalQuantities + action.payload.quantity,
-        };
-        state.totalPrice =
-          state.totalPrice + action.payload.price * action.payload.quantity;
-        state.adjustedTotalPrice =
-          state.adjustedTotalPrice +
-          calcAdjustedTotalPrice(state.totalPrice, action.payload);
-        return;
-      }
-
-      state.cart = {
-        ...state.cart,
-        items: [...state.cart.items, action.payload],
-        totalQuantities: state.cart.totalQuantities + action.payload.quantity,
-      };
-      state.totalPrice =
-        state.totalPrice + action.payload.price * action.payload.quantity;
-      state.adjustedTotalPrice =
-        state.adjustedTotalPrice +
-        calcAdjustedTotalPrice(state.totalPrice, action.payload);
-    },
-    removeCartItem: (state, action: PayloadAction<RemoveCartItem>) => {
-      if (state.cart === null) return;
-
-      // check item in cart
-      const isItemInCart = state.cart.items.find(
-        (item) =>
-          action.payload.id === item.id &&
-          compareArrays(action.payload.attributes, item.attributes)
-      );
-
-      if (isItemInCart) {
-        state.cart = {
-          ...state.cart,
-          items: state.cart.items
-            .map((eachCartItem) => {
-              if (
-                eachCartItem.id === action.payload.id
-                  ? !compareArrays(
-                      eachCartItem.attributes,
-                      isItemInCart.attributes
-                    )
-                  : eachCartItem.id !== action.payload.id
-              )
-                return eachCartItem;
-
-              return {
-                ...isItemInCart,
-                quantity: eachCartItem.quantity - 1,
-              };
-            })
-            .filter((item) => item.quantity > 0),
-          totalQuantities: state.cart.totalQuantities - 1,
-        };
-
-        state.totalPrice = state.totalPrice - isItemInCart.price * 1;
-        state.adjustedTotalPrice =
-          state.adjustedTotalPrice -
-          calcAdjustedTotalPrice(isItemInCart.price, isItemInCart, 1);
+      if (existingItem) {
+        state.cart.items = state.cart.items.map((item) =>
+          item.id === existingItem.id
+            ? { ...item, quantity: item.quantity + action.payload.quantity }
+            : item
+        );
+        state.cart.totalQuantities += action.payload.quantity;
+        state.totalPrice += action.payload.price * action.payload.quantity;
+      } else {
+        state.cart.items.push(action.payload);
+        state.cart.totalQuantities += action.payload.quantity;
+        state.totalPrice += action.payload.price * action.payload.quantity;
       }
     },
-    remove: (
-      state,
-      action: PayloadAction<RemoveCartItem & { quantity: number }>
-    ) => {
+
+    removeFromCartLocal: (state, action: PayloadAction<number>) => {
       if (!state.cart) return;
 
-      // check item in cart
-      const isItemInCart = state.cart.items.find(
-        (item) =>
-          action.payload.id === item.id &&
-          compareArrays(action.payload.attributes, item.attributes)
-      );
-
-      if (!isItemInCart) return;
-
-      state.cart = {
-        ...state.cart,
-        items: state.cart.items.filter((pItem) => {
-          return pItem.id === action.payload.id
-            ? !compareArrays(pItem.attributes, isItemInCart.attributes)
-            : pItem.id !== action.payload.id;
-        }),
-        totalQuantities: state.cart.totalQuantities - isItemInCart.quantity,
-      };
-      state.totalPrice =
-        state.totalPrice - isItemInCart.price * isItemInCart.quantity;
-      state.adjustedTotalPrice =
-        state.adjustedTotalPrice -
-        calcAdjustedTotalPrice(
-          isItemInCart.price,
-          isItemInCart,
-          isItemInCart.quantity
-        );
+      const item = state.cart.items.find((i) => i.id === action.payload);
+      if (item) {
+        state.cart.items = state.cart.items.filter((i) => i.id !== action.payload);
+        state.cart.totalQuantities -= item.quantity;
+        state.totalPrice -= item.price * item.quantity;
+      }
     },
+
+    clearCartLocal: (state) => {
+      state.cart = null;
+      state.totalPrice = 0;
+    },
+  },
+  extraReducers: (builder) => {
+    // Fetch cart
+    builder.addCase(fetchCart.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchCart.fulfilled, (state, action: any) => {
+      state.isLoading = false;
+      state.isSynced = true;
+      // Transform backend cart to local format
+      if (action.payload.items) {
+        state.cart = {
+          items: action.payload.items.map((item: ApiCartItem) => ({
+            id: item.id,
+            name: item.product.name,
+            srcUrl: item.product.images?.[0]?.image_path || "",
+            price: item.product.price,
+            quantity: item.quantity,
+            product_id: item.product_id,
+            variation_id: item.variation_id,
+          })),
+          totalQuantities: action.payload.items.reduce(
+            (sum: number, item: ApiCartItem) => sum + item.quantity,
+            0
+          ),
+        };
+        state.totalPrice = action.payload.subtotal || 0;
+      }
+    });
+    builder.addCase(fetchCart.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload as string;
+    });
+
+    // Add to cart
+    builder.addCase(addToCartAsync.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(addToCartAsync.fulfilled, (state, action: any) => {
+      state.isLoading = false;
+      if (action.payload.backend) {
+        // Backend cart updated, refetch
+        state.isSynced = false;
+      } else {
+        // Local cart, update state
+        // Handle local cart update
+      }
+    });
+    builder.addCase(addToCartAsync.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload as string;
+    });
+
+    // Clear cart
+    builder.addCase(clearCartAsync.fulfilled, (state) => {
+      state.cart = null;
+      state.totalPrice = 0;
+      state.isSynced = true;
+    });
   },
 });
 
-export const { addToCart, removeCartItem, remove } = cartsSlice.actions;
+export const { addToCartLocal, removeFromCartLocal, clearCartLocal } = cartsSlice.actions;
 
 export default cartsSlice.reducer;
