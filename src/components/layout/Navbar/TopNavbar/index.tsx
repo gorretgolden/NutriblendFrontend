@@ -27,9 +27,26 @@ const Header = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        // Check cache first
+        const cached = localStorage.getItem('categories_cache');
+        if (cached) {
+          const { data, timestamp } = JSON.parse(cached);
+          // Cache for 10 minutes
+          if (Date.now() - timestamp < 10 * 60 * 1000) {
+            setCategories(data);
+            return;
+          }
+        }
+
+        // Fetch from API
         const response = await apiClient.getCategoriesTree();
         if (response.status && response.data) {
           setCategories(response.data);
+          // Cache the response
+          localStorage.setItem('categories_cache', JSON.stringify({
+            data: response.data,
+            timestamp: Date.now()
+          }));
         }
       } catch (error) {
         console.error("Failed to fetch categories", error);

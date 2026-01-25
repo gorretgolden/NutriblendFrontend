@@ -1,11 +1,16 @@
 'use client';
 import { Button } from "@/components/ui/button";
 import React, { useState, useEffect } from "react";
+import { apiClient } from "@/lib/api/client";
+
+const CACHE_KEY = 'top_banner_settings';
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 const TopBanner = () => {
   const [currentText, setCurrentText] = useState(0);
   const [settings, setSettings] = useState<any>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const defaultTexts = ["Great Price", "Great Quality", "Live Now"];
   const rotatingTexts = settings?.top_banner_rotating_texts || defaultTexts;
@@ -13,15 +18,39 @@ const TopBanner = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
+        // Check cache first
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const { data, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setSettings(data);
+            if (data.top_banner_is_active === false) {
+              setIsVisible(false);
+            }
+            setIsLoading(false);
+            return;
+          }
+        }
+
+        // Fetch from API
         const response = await apiClient.getPublicSettings();
         if (response.status && response.data) {
           setSettings(response.data);
           if (response.data.top_banner_is_active === false) {
             setIsVisible(false);
           }
+
+          // Cache the response
+          localStorage.setItem(CACHE_KEY, JSON.stringify({
+            data: response.data,
+            timestamp: Date.now()
+          }));
         }
       } catch (error) {
         console.error("Failed to fetch top banner settings", error);
+        // Use defaults on error
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchSettings();

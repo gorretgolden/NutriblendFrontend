@@ -162,10 +162,30 @@ const DynamicPage: React.FC<DynamicPageProps> = ({ slug, type }) => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#4caf50] mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading page content...</p>
+            <div className="min-h-screen bg-white">
+                {/* Hero Skeleton */}
+                <div className="bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer h-48" />
+
+                {/* Content Skeleton */}
+                <div className="max-w-4xl mx-auto px-4 py-12 space-y-8">
+                    {/* Title Skeleton */}
+                    <div className="space-y-4">
+                        <div className="h-10 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer rounded w-3/4" />
+                        <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer rounded w-full" />
+                        <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer rounded w-5/6" />
+                    </div>
+
+                    {/* Feature Grid Skeleton */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+                        {[1, 2, 3, 4].map((i) => (
+                            <div key={i} className="bg-white rounded-lg shadow-lg p-6 space-y-4">
+                                <div className="h-12 w-12 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer rounded-full" />
+                                <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer rounded w-4/5" />
+                                <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer rounded w-full" />
+                                <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer rounded w-3/4" />
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         );
@@ -173,18 +193,38 @@ const DynamicPage: React.FC<DynamicPageProps> = ({ slug, type }) => {
 
     if (error || !pageData) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
                 <div className="text-center max-w-md mx-auto px-4">
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-4">
-                        <h2 className="text-2xl font-bold text-red-600 mb-2">Oops!</h2>
-                        <p className="text-red-700 mb-4">{error || 'Page not found'}</p>
+                    {/* Error Icon */}
+                    <div className="mb-6 flex justify-center">
+                        <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center">
+                            <svg className="w-12 h-12 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
                     </div>
-                    <button
-                        onClick={() => window.location.reload()}
-                        className="bg-[#4caf50] text-white px-8 py-3 rounded-lg hover:bg-[#45a049] transition-colors font-semibold"
-                    >
-                        Retry
-                    </button>
+
+                    {/* Error Message */}
+                    <h2 className="text-3xl font-bold text-gray-800 mb-4">Oops! Something went wrong</h2>
+                    <p className="text-gray-600 mb-8 text-lg">
+                        {error || 'We couldn\'t find the page you\'re looking for.'}
+                    </p>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="bg-[#4caf50] text-white px-8 py-3 rounded-lg hover:bg-[#45a049] transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                        >
+                            Try Again
+                        </button>
+                        <button
+                            onClick={() => window.location.href = '/'}
+                            className="bg-white text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-50 transition-all duration-300 font-semibold border-2 border-gray-200 hover:border-gray-300"
+                        >
+                            Go Home
+                        </button>
+                    </div>
                 </div>
             </div>
         );
