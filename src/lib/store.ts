@@ -4,18 +4,20 @@ import storage from "@/components/storage";
 import productsReducer from "./features/products/productsSlice";
 import cartsReducer from "./features/carts/cartsSlice";
 import authReducer from "./features/auth/authSlice";
+import wishlistReducer from "./features/wishlist/wishlistSlice";
 
 const persistConfig = {
   key: "root",
   storage,
   version: 1,
-  whitelist: ["carts"],
+  whitelist: ["carts", "wishlist"],
 };
 
 const rootReducer = combineReducers({
   products: productsReducer,
   carts: cartsReducer,
   auth: authReducer,
+  wishlist: wishlistReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
