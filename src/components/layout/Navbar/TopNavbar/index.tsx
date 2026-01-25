@@ -1,11 +1,12 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import LoginModal from '../../SignIn/SignIn';
 import SignUpModal from "../../SignIn/signup";
 import SearchWithDropdown from "@/components/homepage/Searchbar";
 import CartBtn from "./CartBtn";
+import { apiClient } from "@/lib/api/client";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { logoutUser } from "@/lib/features/auth/authSlice";
@@ -45,7 +46,7 @@ const Header = () => {
   }));
 
   // Navigation data (Append About Us to dynamic categories)
-  const navItems = [
+  const navItems: { name: string; href?: string; subItems?: string[] | null }[] = [
     ...dynamicNavItems,
     { name: "About Us", href: "/aboutUs" },
   ];
@@ -233,7 +234,7 @@ const Header = () => {
               <div className="flex items-center space-x-1">
                 {navItems.map((item, index) => (
                   <div key={index} className="relative group">
-                    {item.subItems ? (
+                    {item.subItems && item.subItems.length > 0 ? (
                       <>
                         <button className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 flex items-center transition-colors duration-200">
                           {item.name}
@@ -244,7 +245,7 @@ const Header = () => {
 
                         <div className="absolute left-0 mt-1 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
                           <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 p-2 bg-white">
-                            {item.subItems.map((subItem, subIndex) => (
+                            {item.subItems.map((subItem: string, subIndex: number) => (
                               <a
                                 key={subIndex}
                                 href="#"
@@ -258,7 +259,7 @@ const Header = () => {
                       </>
                     ) : (
                       <Link
-                        href={item.href || "/aboutUs"}
+                        href={item.href || "#"}
                         className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors duration-200"
                       >
                         {item.name}
@@ -275,7 +276,7 @@ const Header = () => {
                 <div className="px-2 pt-2 pb-3 space-y-1">
                   {navItems.map((item, index) => (
                     <div key={index} className="relative">
-                      {item.subItems ? (
+                      {item.subItems && item.subItems.length > 0 ? (
                         <>
                           <button className="w-full flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50">
                             <div className="flex items-center">{item.name}</div>
@@ -284,7 +285,7 @@ const Header = () => {
                             </svg>
                           </button>
                           <div className="pl-6 mt-1 space-y-1">
-                            {item.subItems.map((subItem, subIndex) => (
+                            {item.subItems.map((subItem: string, subIndex: number) => (
                               <a
                                 key={subIndex}
                                 href="#"
@@ -296,7 +297,12 @@ const Header = () => {
                           </div>
                         </>
                       ) : (
-                        <></>
+                        <Link
+                          href={item.href || "#"}
+                          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50"
+                        >
+                          {item.name}
+                        </Link>
                       )}
                     </div>
                   ))}
