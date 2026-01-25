@@ -35,48 +35,73 @@ const Orders = ({ data }: OrdersProps) => {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="text-2xl font-semibold mb-6">My Orders</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-8 tracking-tight">
+          My Orders
+        </h2>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((order) => (
-            <Card
+            <motion.div
               key={order.id}
-              className="shadow-lg rounded-2xl border border-gray-100 hover:shadow-xl transition min-w-[250px]"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 250 }}
             >
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between text-sm md:text-base">
-                  <span className="flex items-center gap-2 truncate max-w-[70%]">
-                    <FaBox className="text-blue-500 flex-shrink-0" />
-                    <span className="truncate">{order.productName}</span>
-                  </span>
-                  <span
-                    className={cn(
-                      "text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap",
-                      order.status === "Pending" &&
-                        "bg-yellow-100 text-yellow-700",
-                      order.status === "Shipped" &&
-                        "bg-blue-100 text-blue-700",
-                      order.status === "Delivered" &&
-                        "bg-green-100 text-green-700",
-                      order.status === "Cancelled" &&
-                        "bg-red-100 text-red-700"
-                    )}
-                  >
-                    {order.status}
-                  </span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm space-y-2">
-                <p className="flex items-center gap-2">
-                  <FaCalendarAlt className="text-gray-400" />
-                  {order.orderDate}
-                </p>
-                <p className="flex items-center gap-2">
-                  <FaDollarSign className="text-gray-400" />
-                  ${order.amount.toFixed(2)}
-                </p>
-              </CardContent>
-            </Card>
+              <Card
+                className={cn(
+                  "rounded-2xl border border-gray-100 bg-white shadow-md hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
+                )}
+              >
+                {/* Colored status strip at the top */}
+                <div
+                  className={cn(
+                    "absolute top-0 left-0 w-full h-1 rounded-t-2xl",
+                    order.status === "Pending" && "bg-green-500",
+                    order.status === "Shipped" && "bg-green-500",
+                    order.status === "Delivered" && "bg-green-500",
+                    order.status === "Cancelled" && "bg-red-500"
+                  )}
+                ></div>
+
+                <CardHeader className="pt-6">
+                  <CardTitle className="flex items-center justify-between text-base font-semibold text-gray-800">
+                    <span className="flex items-center gap-2 truncate max-w-[70%]">
+                      <FaBox className="text-indigo-500 flex-shrink-0" />
+                      <span className="truncate">{order.productName}</span>
+                    </span>
+
+                    <span
+                      className={cn(
+                        "text-xs px-2 py-1 rounded-full font-semibold whitespace-nowrap",
+                        order.status === "Pending" &&
+                          "bg-green-500 text-green-800",
+                        order.status === "Shipped" &&
+                          "bg-green-100 text-green-800",
+                        order.status === "Delivered" &&
+                          "bg-green-100 text-green-800",
+                        order.status === "Cancelled" &&
+                          "bg-red-100 text-red-800"
+                      )}
+                    >
+                      {order.status}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent className="text-sm space-y-3 text-gray-600 pb-5">
+                  <p className="flex items-center gap-2">
+                    <FaCalendarAlt className="text-gray-400" />
+                    <span className="font-medium">{order.orderDate}</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <FaDollarSign className="text-gray-400" />
+                    <span className="font-semibold text-gray-800">
+                      ${order.amount.toFixed(2)}
+                    </span>
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </motion.div>

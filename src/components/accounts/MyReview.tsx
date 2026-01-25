@@ -1,9 +1,10 @@
 "use client";
+
 import React, { useState } from "react";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { FaStar, FaEdit, FaTrash, FaUserCircle } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
+import * as motion from "framer-motion/client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { FaStar, FaUserCircle } from "react-icons/fa";
 
 export type Review = {
   id: string;
@@ -24,7 +25,7 @@ const MyReview = ({ reviews }: MyReviewProps) => {
 
   if (!reviews || reviews.length === 0) {
     return (
-      <div className="text-center py-10 text-gray-500">
+      <div className="text-center py-16 text-gray-400 italic">
         You haven’t written any reviews yet.
       </div>
     );
@@ -35,119 +36,98 @@ const MyReview = ({ reviews }: MyReviewProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">My Reviews</h2>
-        <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full self-start sm:self-auto">
-          {reviews.length} {reviews.length === 1 ? "Review" : "Reviews"}
-        </span>
-      </div>
+    <section className="w-full">
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <h2 className="text-3xl font-bold text-gray-800 mb-8 tracking-tight">
+          My Reviews
+        </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        {reviews.map((review) => {
-          const isExpanded = expandedReview === review.id;
-          const isLongComment = review.comment.length > 150;
-          const displayComment =
-            isExpanded || !isLongComment
-              ? review.comment
-              : `${review.comment.substring(0, 150)}...`;
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {reviews.map((review) => {
+            const isExpanded = expandedReview === review.id;
+            const isLongComment = review.comment.length > 150;
+            const displayComment =
+              isExpanded || !isLongComment
+                ? review.comment
+                : `${review.comment.substring(0, 150)}...`;
 
-          return (
-            <Card
-              key={review.id}
-              className="p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-200 border-border/40 flex flex-col"
-            >
-              <div className="flex flex-col sm:flex-row gap-4">
-                {/* Product/Reviewer Image */}
-                <div className="flex-shrink-0">
-                  {review.productImage ? (
-                    <img
-                      src={review.productImage}
-                      alt={review.productName}
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
-                      <FaUserCircle className="text-2xl text-blue-400" />
-                    </div>
+            return (
+              <motion.div
+                key={review.id}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 250 }}
+              >
+                <Card
+                  className={cn(
+                    "rounded-2xl border border-gray-100 bg-white shadow-md hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
                   )}
-                </div>
+                >
+                  {/* Product Image */}
+                  <div className="absolute top-0 left-0 w-full h-1 bg-green-500 rounded-t-2xl"></div>
 
-                <div className="flex-grow">
-                  {/* Header with product name and rating */}
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
-                    <CardTitle className="text-lg font-semibold text-gray-900">
-                      {review.productName}
+                  <CardHeader className="pt-6">
+                    <CardTitle className="flex items-center gap-3 text-base font-semibold text-gray-800">
+                      {review.productImage ? (
+                        <img
+                          src={review.productImage}
+                          alt={review.productName}
+                          className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center border border-gray-200">
+                          <FaUserCircle className="text-2xl text-green-400" />
+                        </div>
+                      )}
+                      <span className="truncate">{review.productName}</span>
                     </CardTitle>
-                    <div className="flex items-center bg-yellow-50 px-2 py-1 rounded-full self-start sm:self-auto">
-                      <div className="flex items-center text-yellow-400 mr-1">
-                        {[...Array(5)].map((_, i) => (
-                          <FaStar
-                            key={i}
-                            className={cn(
-                              "text-sm",
-                              i < review.rating
-                                ? "fill-current"
-                                : "text-gray-300"
-                            )}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm font-medium text-yellow-700 ml-1">
-                        {review.rating}.0
-                      </span>
-                    </div>
-                  </div>
+                  </CardHeader>
 
-                  {/* Review comment */}
-                  <CardContent className="p-0 mb-4">
-                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+                  <CardContent className="text-sm space-y-3 text-gray-600 pb-5">
+                    {/* Rating */}
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar
+                          key={i}
+                          className={cn(
+                            "text-sm",
+                            i < review.rating ? "text-yellow-400" : "text-gray-300"
+                          )}
+                        />
+                      ))}
+                      <span className="ml-2 text-gray-800 font-medium">{review.rating}.0</span>
+                    </div>
+
+                    {/* Comment */}
+                    <p className="text-gray-700">
                       {displayComment}
                       {isLongComment && (
                         <button
                           onClick={() => toggleExpand(review.id)}
-                          className="text-blue-500 hover:text-blue-700 font-medium ml-1 text-sm"
+                          className="text-green-500 hover:text-green-700 font-medium ml-1 text-sm"
                         >
                           {isExpanded ? "Show less" : "Read more"}
                         </button>
                       )}
                     </p>
+
+                    {/* Metadata */}
+                    <p className="text-xs text-gray-500">
+                      Reviewed by <span className="font-medium text-gray-800">{review.reviewerName}</span> • {review.date}
+                    </p>
                   </CardContent>
-
-                  {/* Footer with metadata and actions */}
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 pt-3 border-t border-gray-100">
-                    <div className="text-xs text-gray-500">
-                      Reviewed by{" "}
-                      <span className="font-medium">{review.reviewerName}</span>{" "}
-                      • {review.date}
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 gap-1 text-xs sm:text-sm"
-                      >
-                        <FaEdit className="text-sm" />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 gap-1 text-red-500 hover:text-red-700 text-xs sm:text-sm"
-                      >
-                        <FaTrash className="text-sm" />
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
-    </div>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
+      </motion.div>
+    </section>
   );
 };
 
