@@ -1,9 +1,9 @@
 // app/about-us/page.tsx
 import React from 'react';
-import AboutUs from '@/components/About/AboutUs';
+import DynamicPage from '@/components/common/DynamicPage';
 
 const AboutUsPage = () => {
-  return <AboutUs />;
+  return <DynamicPage type="about" />;
 };
 
 export default AboutUsPage;

@@ -188,6 +188,31 @@ export interface Notification {
     created_at: string;
 }
 
+export interface Page {
+    id: number;
+    title: string;
+    slug: string;
+    content: PageContent[];
+    meta_title?: string;
+    meta_description?: string;
+    type: 'about' | 'contact' | 'faq' | 'terms' | 'privacy' | 'custom';
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface PageContent {
+    type: 'hero' | 'text' | 'features' | 'faq_item' | 'contact_info';
+    heading?: string;
+    text?: string;
+    items?: Array<{
+        title: string;
+        description?: string;
+        icon?: string;
+    }>;
+    contact_details?: Record<string, string>;
+}
+
 // ==================== API Client Class ====================
 
 class NutriBlendApiClient {
@@ -543,6 +568,21 @@ class NutriBlendApiClient {
         return this.request<void>('/notifications/mark-all-read', {
             method: 'POST',
         });
+    }
+
+    // ==================== Pages ====================
+
+    async getPages(type?: string): Promise<ApiResponse<Page[]>> {
+        const queryParams = type ? `?type=${type}` : '';
+        return this.request<Page[]>(`/pages${queryParams}`);
+    }
+
+    async getPage(slug: string): Promise<ApiResponse<Page>> {
+        return this.request<Page>(`/pages/${slug}`);
+    }
+
+    async getPageByType(type: 'about' | 'contact' | 'faq' | 'terms' | 'privacy'): Promise<ApiResponse<Page>> {
+        return this.request<Page>(`/pages/type/${type}`);
     }
 
     // ==================== Settings ====================

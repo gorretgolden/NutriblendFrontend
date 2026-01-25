@@ -4,23 +4,42 @@ import React, { useState, useEffect } from "react";
 
 const TopBanner = () => {
   const [currentText, setCurrentText] = useState(0);
-  
-  const rotatingTexts = [
-    "Great Price",
-    "Great Quality",
-    "Live Now"
-  ];
+  const [settings, setSettings] = useState<any>(null);
+  const [isVisible, setIsVisible] = useState(true);
+
+  const defaultTexts = ["Great Price", "Great Quality", "Live Now"];
+  const rotatingTexts = settings?.top_banner_rotating_texts || defaultTexts;
 
   useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await apiClient.getPublicSettings();
+        if (response.status && response.data) {
+          setSettings(response.data);
+          if (response.data.top_banner_is_active === false) {
+            setIsVisible(false);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch top banner settings", error);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  useEffect(() => {
+    if (rotatingTexts.length === 0) return;
     const interval = setInterval(() => {
       setCurrentText((prev) => (prev + 1) % rotatingTexts.length);
     }, 3000);
-    
+
     return () => clearInterval(interval);
   }, [rotatingTexts.length]);
 
+  if (!isVisible) return null;
+
   return (
-    <div className="w-full bg-black  text-white" >
+    <div className="w-full bg-black text-white" >
       <div className="container mx-auto px-2 py-2">
         <div className="flex flex-row justify-between items-center flex-nowrap gap-2">
           {/* Left side - Contact info */}
@@ -28,31 +47,31 @@ const TopBanner = () => {
             <div className="flex items-center gap-1 bg-[#4caf50] text-white px-2 py-0.5 rounded-full whitespace-nowrap">
               <PhoneIcon />
               <span className="text-[10px]">Call For Deals</span>
-              <span className="font-mono text-[11px]">0200 804 020</span>
+              <span className="font-mono text-[11px]">{settings?.top_banner_phone || "0200 804 020"}</span>
             </div>
           </div>
-          
+
           {/* Center - Brand, Bonanza and date */}
           <div className="flex items-center gap-2 shrink-0">
-            <div className="flex items-center gap-1 animate-fall-from-top" style={{animationDelay: '0.3s'}}>
+            <div className="flex items-center gap-1 animate-fall-from-top" style={{ animationDelay: '0.3s' }}>
               <span className="text-[10px] font-bold bg-white text-[#4caf50] px-1 py-0.5 rounded">
-                BRAND
+                BANNER
               </span>
-              <span className="text-sm font-extrabold text-white">
-                BONANZA
+              <span className="text-sm font-extrabold text-white uppercase">
+                {settings?.top_banner_event_name || "BONANZA"}
               </span>
             </div>
-            
-            <span className="text-[10px] font-semibold animate-slide-in-right whitespace-nowrap" style={{animationDelay: '0.5s'}}>
-              1st - 14th September
+
+            <span className="text-[10px] font-semibold animate-slide-in-right whitespace-nowrap" style={{ animationDelay: '0.5s' }}>
+              {settings?.top_banner_event_date || "1st - 14th September"}
             </span>
           </div>
-          
+
           {/* Right side - Rotating texts, 60% off button and shop now */}
           <div className="flex items-center gap-2 shrink-0">
-            <div className="rotating-text-container animate-zoom-in-out" style={{animationDelay: '0.7s'}}>
-              {rotatingTexts.map((text, index) => (
-                <div 
+            <div className="rotating-text-container animate-zoom-in-out" style={{ animationDelay: '0.7s' }}>
+              {rotatingTexts.map((text: string, index: number) => (
+                <div
                   key={index}
                   className={`rotating-text ${index === currentText ? 'active' : ''}`}
                 >
@@ -60,19 +79,20 @@ const TopBanner = () => {
                 </div>
               ))}
             </div>
-            
-            <div className="bg-[#4caf50] text-white font-bold px-2 py-0.5 rounded-full animate-fade-in text-[10px] whitespace-nowrap" style={{animationDelay: '0.9s'}}>
-              GET 60% OFF
+
+            <div className="bg-[#4caf50] text-white font-bold px-2 py-0.5 rounded-full animate-fade-in text-[10px] whitespace-nowrap" style={{ animationDelay: '0.9s' }}>
+              {settings?.top_banner_discount_text || "GET 60% OFF"}
             </div>
-            
-            <div className="hidden md:flex items-center gap-1 animate-zoom-in-out" style={{animationDelay: '1.1s'}}>
+
+            <div className="hidden md:flex items-center gap-1 animate-zoom-in-out" style={{ animationDelay: '1.1s' }}>
               <span className="text-sm font-bold">SHOP NOW</span>
             </div>
-            
+
             <Button
               variant="ghost"
+              onClick={() => setIsVisible(false)}
               className="hover:bg-transparent text-white hover:text-[#4caf50] transition-colors animate-fade-in"
-              style={{animationDelay: '1.3s'}}
+              style={{ animationDelay: '1.3s' }}
               size="icon"
               type="button"
               aria-label="close banner"
@@ -82,7 +102,7 @@ const TopBanner = () => {
           </div>
         </div>
       </div>
-      
+
       <style jsx>{`
         /* Animations */
         @keyframes slide-in-left {
