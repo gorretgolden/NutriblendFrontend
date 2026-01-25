@@ -128,23 +128,6 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
           </a>
         </div>
 
-        {/* Divider */}
-        <div className="relative my-5 flex items-center text-gray-400">
-          <div className="flex-grow border-t border-gray-200"></div>
-          <span className="mx-2 text-sm">or</span>
-          <div className="flex-grow border-t border-gray-200"></div>
-        </div>
-
-        {/* Google Sign In */}
-        <button className="flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-600 transition-colors duration-300 hover:bg-gray-50">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_and_wordmark_of_Google_G_Suite_in_2020.png"
-            alt="Google icon"
-            className="h-5 w-5"
-          />
-          Sign In with Google
-        </button>
-
         {/* Keep signed in */}
         <div className="mt-6 flex items-center justify-start gap-2 text-sm text-gray-600">
           <input

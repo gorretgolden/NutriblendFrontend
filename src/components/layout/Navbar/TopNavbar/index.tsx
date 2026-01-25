@@ -191,20 +191,26 @@ const Header = () => {
                       </p>
                     </div>
                     <div className="p-2">
-                      <div className="space-y-1">
-                        {accountLinks.map((item, idx) => (
-                          <Link
-                            key={idx}
-                            href={item.href}
-                            className="flex items-center px-3 py-2 md:px-4 md:py-3 text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
-                          >
-                            {item.label}
-                            {item.label === "Messages" && (
-                              <span className="ml-auto bg-[#4caf50] text-white text-[10px] md:text-xs rounded-full px-1.5 py-0.5">3</span>
-                            )}
-                          </Link>
-                        ))}
-                      </div>
+                      {user ? (
+                        <div className="space-y-1">
+                          {accountLinks.map((item, idx) => (
+                            <Link
+                              key={idx}
+                              href={item.href}
+                              className="flex items-center px-3 py-2 md:px-4 md:py-3 text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
+                            >
+                              {item.label}
+                              {item.label === "Messages" && (
+                                <span className="ml-auto bg-[#4caf50] text-white text-[10px] md:text-xs rounded-full px-1.5 py-0.5">3</span>
+                              )}
+                            </Link>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-4 text-gray-500 text-sm">
+                          Please sign in to access your account features
+                        </div>
+                      )}
                     </div>
                     <div className="p-2 md:p-3 border-t border-gray-100 bg-gray-50">
                       {user ? (
