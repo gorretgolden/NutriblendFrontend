@@ -372,6 +372,10 @@ class NutriBlendApiClient {
         return this.request<Category[]>('/categories');
     }
 
+    async getCategoriesTree(): Promise<ApiResponse<Category[]>> {
+        return this.request<Category[]>('/categories/tree');
+    }
+
     async getBrands(): Promise<ApiResponse<Brand[]>> {
         return this.request<Brand[]>('/brands');
     }

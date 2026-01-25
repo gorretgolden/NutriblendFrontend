@@ -18,23 +18,40 @@ const Header = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [signUpOpen, setSignUpOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
 
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
-  // Navigation data
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await apiClient.getCategoriesTree();
+        if (response.status && response.data) {
+          setCategories(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Format categories for navigation
+  const dynamicNavItems = categories.map(cat => ({
+    name: cat.name,
+    href: `/shop?category_id=${cat.id}`,
+    subItems: cat.children?.length > 0 ? cat.children.map((child: any) => child.name) : null
+  }));
+
+  // Navigation data (Append About Us to dynamic categories)
   const navItems = [
-    { name: "Supplements", subItems: ["Vitamins & Minerals", "Protein Powders", "Pre-Workout", "Weight Management", "Omega & Fish Oils"] },
-    { name: "Sports", subItems: ["Fitness Accessories", "Yoga & Pilates", "Team Sports", "Water Sports", "Outdoor Recreation"] },
-    { name: "Bath", subItems: ["Bath Oils & Salts", "Body Wash & Shower Gel", "Loofahs & Sponges", "Bathrobes & Towels"] },
-    { name: "Beauty", subItems: ["Skincare", "Makeup", "Hair Care", "Fragrance", "Men's Grooming"] },
-    { name: "Grocery", subItems: ["Fresh Produce", "Dairy & Eggs", "Meat & Seafood", "Bakery", "Beverages"] },
-    { name: "Home", subItems: ["Furniture", "Kitchen & Dining", "Bedding", "Home Decor", "Lighting"] },
-    { name: "Baby", subItems: ["Diapering", "Feeding", "Baby Gear", "Nursery", "Baby Care"] },
-    { name: "Pets", subItems: ["Dog Supplies", "Cat Supplies", "Fish & Aquatics", "Bird Supplies", "Pet Toys"] },
-    { name: "Brands A-Z", subItems: ["Nike", "Adidas", "Johnson & Johnson", "Procter & Gamble", "Colgate"] },
+    ...dynamicNavItems,
     { name: "About Us", href: "/aboutUs" },
   ];
+
+  // If no categories yet, ensure we have a fallback for initial render
+  const displayItems = navItems.length > 0 ? navItems : [{ name: "About Us", href: "/aboutUs" }];
 
   // Account menu data
   const accountLinks = [
@@ -43,7 +60,7 @@ const Header = () => {
     { label: "My Lists", href: "/account/mylist" },
     { label: "My Reviews", href: "/account/MyReview" },
     { label: "Messages", href: "/account/message" },
-    { lqbel: "account Management", href: "/account/manage" },
+    { label: "Account Management", href: "/account/manage" },
   ];
 
   // Modal control functions
