@@ -62,14 +62,13 @@ const Header = () => {
     subItems: cat.children?.length > 0 ? cat.children.map((child: any) => child.name) : null
   }));
 
-  // Navigation data (Append About Us to dynamic categories)
+  // Navigation data
   const navItems: { name: string; href?: string; subItems?: string[] | null }[] = [
     ...dynamicNavItems,
-    { name: "About Us", href: "/aboutUs" },
   ];
 
   // If no categories yet, ensure we have a fallback for initial render
-  const displayItems = navItems.length > 0 ? navItems : [{ name: "About Us", href: "/aboutUs" }];
+  const displayItems = navItems.length > 0 ? navItems : [{ name: "Shop", href: "/shop" }];
 
   // Account menu data
   const accountLinks = [

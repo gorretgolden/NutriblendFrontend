@@ -61,8 +61,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
             Sign in or create account
           </h1>
           <p className="mt-2 text-sm leading-snug text-gray-600">
-            Enter your email or mobile number. If you already have a T-Mobile
-            account, we'll ask for your password after.
+            Enter your email to sign in. If you're new, we'll help you create a NutriBlend Haven account in seconds.
           </p>
         </div>
 
@@ -162,7 +161,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
 
         {/* Footer text */}
         <p className="mt-10 text-center text-xs leading-snug text-gray-400 md:mt-1">
-          © Copyright 1997-2025 iHerb, LLC. All rights reserved.
+          © 2025 NutriBlend Haven. All rights reserved.
         </p>
       </div>
     </div>

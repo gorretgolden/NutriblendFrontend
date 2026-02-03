@@ -62,10 +62,11 @@ const transformProduct = (p: ApiProduct): Product => {
 async function getHomePageData() {
   try {
     // parallel fetching with timeout/error protection
-    const [newArrivalsReq, topSellingReq, specialOffersReq] = await Promise.all([
+    const [newArrivalsReq, topSellingReq, specialOffersReq, settingsReq] = await Promise.all([
       apiClient.getProducts({ sort: 'created_at', per_page: 8 }).catch(() => ({ status: false, data: null })),
       apiClient.getProducts({ sort: 'sales_count', per_page: 8 }).catch(() => ({ status: false, data: null })),
-      apiClient.getProducts({ is_featured: true, per_page: 8 }).catch(() => ({ status: false, data: null }))
+      apiClient.getProducts({ is_featured: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
+      apiClient.getPublicSettings().catch(() => ({ status: false, data: null }))
     ]);
 
     const newArrivals = (newArrivalsReq.status && newArrivalsReq.data?.data?.length)
@@ -80,20 +81,26 @@ async function getHomePageData() {
       ? specialOffersReq.data.data.map(transformProduct)
       : specialOffersFallback;
 
-    return { newArrivals, topSelling, specialOffers };
+    // Hero slides from backend or fallback
+    const dynamicSlides = (settingsReq.status && settingsReq.data?.hero_carousel?.length)
+      ? settingsReq.data.hero_carousel
+      : carouselSlides;
+
+    return { newArrivals, topSelling, specialOffers, heroSlides: dynamicSlides };
 
   } catch (error) {
     console.error("Failed to fetch homepage data, using fallback:", error);
     return {
       newArrivals: newArrivalsFallback,
       topSelling: topSellingFallback,
-      specialOffers: specialOffersFallback
+      specialOffers: specialOffersFallback,
+      heroSlides: carouselSlides
     };
   }
 }
 
 export default async function Home() {
-  const { newArrivals, topSelling, specialOffers } = await getHomePageData();
+  const { newArrivals, topSelling, specialOffers, heroSlides } = await getHomePageData();
 
   return (
     <>
@@ -101,7 +108,7 @@ export default async function Home() {
 
         {/* Hero Carousel Section */}
         <section className="mb-12">
-          <HeroCarousel slides={carouselSlides} autoPlay={true} interval={5000} />
+          <HeroCarousel slides={heroSlides} autoPlay={true} interval={5000} />
         </section>
 
         {/* Special Offer Section with Carousel */}
