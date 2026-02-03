@@ -12,6 +12,11 @@ export type CartItem = {
   quantity: number;
   product_id: number;
   variation_id?: number;
+  attributes?: string[];
+  discount?: {
+    amount: number;
+    percentage: number;
+  };
 };
 
 export type Cart = {
@@ -102,10 +107,10 @@ export const addToCart = createAsyncThunk(
   }
 );
 
-// Remove from cart
-export const removeFromCartAsync = createAsyncThunk(
+// Remove from cart (Unified)
+export const removeFromCart = createAsyncThunk(
   "cart/remove",
-  async (itemId: number, { getState, rejectWithValue }) => {
+  async (itemId: number, { getState, dispatch, rejectWithValue }) => {
     try {
       const state: any = getState();
       const isAuthenticated = state.auth?.isAuthenticated;
@@ -117,6 +122,7 @@ export const removeFromCartAsync = createAsyncThunk(
         }
         return rejectWithValue(response.message || "Failed to remove from cart");
       } else {
+        dispatch(removeFromCartLocal(itemId));
         return { itemId, backend: false };
       }
     } catch (error: any) {
@@ -124,6 +130,10 @@ export const removeFromCartAsync = createAsyncThunk(
     }
   }
 );
+
+// Alias or specific quantity reduction if needed (optional, keeping it simple for now)
+export const removeCartItem = removeFromCart;
+export const remove = removeFromCart;
 
 // Update cart item quantity
 export const updateCartItemAsync = createAsyncThunk(

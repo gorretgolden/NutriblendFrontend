@@ -11,6 +11,7 @@ import {
   CartItem,
   remove,
   removeCartItem,
+  updateCartItemAsync,
 } from "@/lib/features/carts/cartsSlice";
 import { useAppDispatch } from "@/lib/hooks/redux";
 
@@ -53,11 +54,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
             className="h-8 w-8 hover:bg-red-50 transition-colors"
             onClick={() =>
               dispatch(
-                remove({
-                  id: data.id,
-                  attributes: data.attributes,
-                  quantity: data.quantity,
-                })
+                remove(data.id)
               )
             }
           >
@@ -120,16 +117,8 @@ const ProductCard = ({ data }: ProductCardProps) => {
             onAdd={() => dispatch(addToCart({ ...data, quantity: 1 }))}
             onRemove={() =>
               data.quantity === 1
-                ? dispatch(
-                    remove({
-                      id: data.id,
-                      attributes: data.attributes,
-                      quantity: data.quantity,
-                    })
-                  )
-                : dispatch(
-                    removeCartItem({ id: data.id, attributes: data.attributes })
-                  )
+                ? dispatch(remove(data.id))
+                : dispatch(updateCartItemAsync({ itemId: data.id, quantity: data.quantity - 1 }))
             }
             isZeroDelete
             className="px-4 py-2 max-h-10 bg-white border border-green-200 rounded-full min-w-[110px] max-w-[130px]"
