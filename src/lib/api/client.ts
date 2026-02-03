@@ -607,7 +607,14 @@ export const getImageUrl = (path: string): string => {
     if (path.startsWith('http')) return path;
 
     const baseUrl = process.env.NEXT_PUBLIC_ASSET_URL || 'http://localhost:8000';
-    return `${baseUrl}${path.startsWith('/') ? path : '/' + path}`;
+
+    // If it's a local path and doesn't start with /storage/, add it
+    let finalPath = path.startsWith('/') ? path : '/' + path;
+    if (!finalPath.startsWith('/storage/') && !finalPath.startsWith('/images/')) {
+        finalPath = '/storage' + finalPath;
+    }
+
+    return `${baseUrl}${finalPath}`;
 };
 
 export const formatPrice = (

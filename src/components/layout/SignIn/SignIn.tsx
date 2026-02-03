@@ -103,6 +103,23 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
           </button>
         </form>
 
+        <div className="mt-6 flex items-center justify-between">
+          <hr className="w-full border-gray-300" />
+          <span className="px-2 text-xs text-gray-500 uppercase">Or</span>
+          <hr className="w-full border-gray-300" />
+        </div>
+
+        <button
+          onClick={() => {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            window.location.href = `${baseUrl}/api/v1/auth/google/redirect`;
+          }}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50"
+        >
+          <Image src="/images/google-icon.png" alt="Google" width={20} height={20} />
+          Continue with Google
+        </button>
+
         {/* Sign up link for users without account */}
 
         <div className="mt-6 text-center">
