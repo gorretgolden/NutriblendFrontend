@@ -16,6 +16,12 @@ export const transformProduct = (p: ApiProduct): Product => {
             percentage: p.discount_percentage || 0,
         },
         rating: 5, // Default rating as API doesn't return average rating yet
-        brand: p.brand?.name
+        brand: p.brand?.name,
+        variations: p.variations?.map(v => ({
+            id: v.id,
+            name: v.name,
+            price: v.price,
+            stock: v.stock_quantity
+        }))
     };
 };

@@ -112,26 +112,29 @@ export default function SearchWithDropdown() {
       {/* Search Form */}
       <form
         onSubmit={handleSearch}
-        className="flex shadow-lg rounded-3xl overflow-hidden border border-gray-200 transition-all duration-200 focus-within:ring-2 focus-within:ring-[#4caf50]"
+        className="flex shadow-lg rounded-full overflow-hidden border border-green-100 bg-white/50 backdrop-blur-sm transition-all duration-300 focus-within:ring-4 focus-within:ring-green-500/20 focus-within:border-green-300 group shadow-green-900/5 hover:shadow-green-900/10"
       >
+        <div className="flex items-center pl-5 md:pl-6">
+          <svg className="w-5 h-5 text-gray-400 group-focus-within:text-green-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
         <input
           type="text"
-          placeholder="Search products..."
+          placeholder="Search for supplements, proteins..."
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          className={`w-full outline-none text-gray-700 text-base ${inputPadding}`}
+          className={`w-full outline-none text-gray-700 bg-transparent text-sm md:text-base ${inputPadding} pl-3`}
         />
         <button
           type="submit"
-          className={`flex items-center justify-center bg-[#4caf50] text-white ${buttonPadding} hover:bg-green-600 transition-colors duration-200`}
+          className={`flex items-center justify-center bg-green-500 text-white ${buttonPadding} hover:bg-green-600 transition-all duration-300 font-semibold active:scale-95`}
         >
-          <svg className={iconSize} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+          Search
         </button>
       </form>
 
@@ -151,7 +154,7 @@ export default function SearchWithDropdown() {
                   {searchResults.map((product) => (
                     <Link
                       key={product.id}
-                      href={`/shop/product/${product.slug}`}
+                      href={`/shop/product/${product.id}/${product.slug}`}
                       onClick={() => {
                         setOpen(false);
                         setSearchQuery("");

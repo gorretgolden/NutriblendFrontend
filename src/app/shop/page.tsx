@@ -43,6 +43,8 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const apiParams: any = {
     page,
     per_page: 9, // Grid layout fits 3 columns usually
+    category_id: searchParams.category_id ? Number(searchParams.category_id) : undefined,
+    search: searchParams.search || undefined,
     sort: sort === 'most-popular' ? 'sales_count'
       : sort === 'low-price' ? 'price_asc'
         : sort === 'high-price' ? 'price_desc'

@@ -94,23 +94,26 @@ export default function BrandsSection() {
             href={`/shop?brand_id=${brand.id}`}
             className={`${i >= 3 ? "hidden sm:block" : "block"} 
                         relative w-full h-28 sm:h-32 md:h-36 lg:h-40 
-                        bg-gray-100 rounded-xl overflow-hidden shadow-md group hover:shadow-lg transition-all duration-300`}
+                        bg-white border border-green-50 rounded-2xl overflow-hidden shadow-sm group hover:shadow-xl hover:border-green-200 transition-all duration-500 hover:-translate-y-1`}
           >
             {/* Logo fills rectangle */}
             {brand.logo ? (
               <img
                 src={getImageUrl(brand.logo)}
                 alt={brand.name}
-                className="absolute inset-0 w-full h-full object-contain p-4 group-hover:opacity-70 transition"
+                className="absolute inset-0 w-full h-full object-contain p-6 group-hover:scale-110 transition-transform duration-500"
               />
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-gray-400 font-bold text-xl">
+              <div className="absolute inset-0 flex items-center justify-center text-green-800/30 font-bold text-lg group-hover:text-green-600 transition-colors">
                 {brand.name}
               </div>
             )}
 
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-green-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
             {/* Name visible only on hover */}
-            <span className="absolute bottom-0 left-0 right-0 bg-green-600 text-white text-xs sm:text-sm font-medium text-center py-1 opacity-0 group-hover:opacity-100 transition">
+            <span className="absolute bottom-2 left-2 right-2 text-white text-[10px] sm:text-xs font-bold text-center tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
               {brand.name}
             </span>
           </Link>

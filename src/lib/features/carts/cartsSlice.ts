@@ -22,6 +22,8 @@ export type Cart = {
 interface CartsState {
   cart: Cart | null;
   totalPrice: number;
+  adjustedTotalPrice: number;
+  promoCode: string | null;
   isLoading: boolean;
   error: string | null;
   isSynced: boolean; // Whether cart is synced with backend
@@ -32,6 +34,8 @@ interface CartsState {
 const initialState: CartsState = {
   cart: null,
   totalPrice: 0,
+  adjustedTotalPrice: 0,
+  promoCode: null,
   isLoading: false,
   error: null,
   isSynced: false,
@@ -55,28 +59,42 @@ export const fetchCart = createAsyncThunk(
   }
 );
 
-// Add to cart (backend for logged-in, local for guests)
-export const addToCartAsync = createAsyncThunk(
+// Unified addToCart thunk
+export const addToCart = createAsyncThunk(
   "cart/add",
   async (
-    item: { product_id: number; quantity: number; variation_id?: number },
-    { getState, rejectWithValue }
+    item: { product_id: number; quantity: number; variation_id?: number;[key: string]: any },
+    { getState, dispatch, rejectWithValue }
   ) => {
     try {
-      // Check if user is authenticated
       const state: any = getState();
       const isAuthenticated = state.auth?.isAuthenticated;
 
       if (isAuthenticated) {
         // Add to backend cart
-        const response = await apiClient.addToCart(item);
+        const response = await apiClient.addToCart({
+          product_id: item.product_id,
+          quantity: item.quantity,
+          variation_id: item.variation_id
+        });
         if (response.status && response.data) {
           return { item: response.data, backend: true };
         }
         return rejectWithValue(response.message || "Failed to add to cart");
       } else {
-        // Add to local cart
-        return { item, backend: false };
+        // Form the local cart item
+        const localItem: CartItem = {
+          id: Date.now(), // Temp ID for guests
+          product_id: item.product_id,
+          variation_id: item.variation_id,
+          quantity: item.quantity,
+          name: item.name || "Product",
+          price: item.price || 0,
+          srcUrl: item.srcUrl || ""
+        };
+
+        dispatch(addToCartLocal(localItem));
+        return { item: localItem, backend: false };
       }
     } catch (error: any) {
       return rejectWithValue(error.message || "Failed to add to cart");
@@ -169,44 +187,50 @@ export const cartsSlice = createSlice({
           items: [action.payload],
           totalQuantities: action.payload.quantity,
         };
-        state.totalPrice = action.payload.price * action.payload.quantity;
-        return;
-      }
-
-      const existingItem = state.cart.items.find(
-        (item) => item.product_id === action.payload.product_id &&
-          item.variation_id === action.payload.variation_id
-      );
-
-      if (existingItem) {
-        state.cart.items = state.cart.items.map((item) =>
-          item.id === existingItem.id
-            ? { ...item, quantity: item.quantity + action.payload.quantity }
-            : item
-        );
-        state.cart.totalQuantities += action.payload.quantity;
-        state.totalPrice += action.payload.price * action.payload.quantity;
       } else {
-        state.cart.items.push(action.payload);
-        state.cart.totalQuantities += action.payload.quantity;
-        state.totalPrice += action.payload.price * action.payload.quantity;
+        const existingItem = state.cart.items.find(
+          (item) => item.product_id === action.payload.product_id &&
+            item.variation_id === action.payload.variation_id
+        );
+
+        if (existingItem) {
+          state.cart.items = state.cart.items.map((item) =>
+            item.id === existingItem.id
+              ? { ...item, quantity: item.quantity + action.payload.quantity }
+              : item
+          );
+        } else {
+          state.cart.items.push(action.payload);
+        }
+        state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
       }
+
+      state.totalPrice = state.cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      state.adjustedTotalPrice = state.totalPrice; // Basic sync
     },
 
     removeFromCartLocal: (state, action: PayloadAction<number>) => {
       if (!state.cart) return;
 
-      const item = state.cart.items.find((i) => i.id === action.payload);
-      if (item) {
-        state.cart.items = state.cart.items.filter((i) => i.id !== action.payload);
-        state.cart.totalQuantities -= item.quantity;
-        state.totalPrice -= item.price * item.quantity;
-      }
+      state.cart.items = state.cart.items.filter((i) => i.id !== action.payload);
+      state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
+      state.totalPrice = state.cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      state.adjustedTotalPrice = state.totalPrice;
     },
 
     clearCartLocal: (state) => {
       state.cart = null;
       state.totalPrice = 0;
+      state.adjustedTotalPrice = 0;
+      state.promoCode = null;
+    },
+
+    setPromoCode: (state, action: PayloadAction<string | null>) => {
+      state.promoCode = action.payload;
+    },
+
+    setAdjustedPrice: (state, action: PayloadAction<number>) => {
+      state.adjustedTotalPrice = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -236,6 +260,7 @@ export const cartsSlice = createSlice({
           ),
         };
         state.totalPrice = action.payload.subtotal || 0;
+        state.adjustedTotalPrice = action.payload.total || state.totalPrice;
       }
     });
     builder.addCase(fetchCart.rejected, (state, action) => {
@@ -244,21 +269,20 @@ export const cartsSlice = createSlice({
     });
 
     // Add to cart
-    builder.addCase(addToCartAsync.pending, (state) => {
+    builder.addCase(addToCart.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(addToCartAsync.fulfilled, (state, action: any) => {
+    builder.addCase(addToCart.fulfilled, (state, action: any) => {
       state.isLoading = false;
       if (action.payload.backend) {
         // Backend cart updated, refetch
         state.isSynced = false;
       } else {
-        // Local cart, update state
-        // Handle local cart update
+        // Local cart, state already updated by dispatch(addToCartLocal)
       }
     });
-    builder.addCase(addToCartAsync.rejected, (state, action) => {
+    builder.addCase(addToCart.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload as string;
     });
@@ -272,6 +296,12 @@ export const cartsSlice = createSlice({
   },
 });
 
-export const { addToCartLocal, removeFromCartLocal, clearCartLocal } = cartsSlice.actions;
+export const {
+  addToCartLocal,
+  removeFromCartLocal,
+  clearCartLocal,
+  setPromoCode,
+  setAdjustedPrice
+} = cartsSlice.actions;
 
 export default cartsSlice.reducer;

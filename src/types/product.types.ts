@@ -22,4 +22,10 @@ export type Product = {
   reviews?: number;
   reviewList?: Review[];
   brand?: string;
+  variations?: {
+    id: number;
+    name: string;
+    price: number;
+    stock: number;
+  }[];
 };

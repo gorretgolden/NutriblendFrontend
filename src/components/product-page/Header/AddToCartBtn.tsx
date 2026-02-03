@@ -8,7 +8,7 @@ import React from "react";
 
 const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
   const dispatch = useAppDispatch();
-  const { sizeSelection, colorSelection } = useAppSelector(
+  const { sizeSelection, colorSelection, selectedVariationId } = useAppSelector(
     (state: RootState) => state.products
   );
 
@@ -19,12 +19,11 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
       onClick={() =>
         dispatch(
           addToCart({
-            id: data.id,
+            product_id: data.id,
+            variation_id: selectedVariationId,
             name: data.title,
             srcUrl: data.srcUrl,
             price: data.price,
-            attributes: [sizeSelection, colorSelection.name],
-            discount: data.discount,
             quantity: data.quantity,
           })
         )

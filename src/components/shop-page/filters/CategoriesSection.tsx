@@ -1,47 +1,56 @@
+"use client";
+
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
-
-type Category = {
-  title: string;
-  slug: string;
-};
-
-const categoriesData: Category[] = [
-  {
-    title: "T-shirts",
-    slug: "/shop?category=t-shirts",
-  },
-  {
-    title: "Shorts",
-    slug: "/shop?category=shorts",
-  },
-  {
-    title: "Shirts",
-    slug: "/shop?category=shirts",
-  },
-  {
-    title: "Hoodie",
-    slug: "/shop?category=hoodie",
-  },
-  {
-    title: "Jeans",
-    slug: "/shop?category=jeans",
-  },
-];
+import { apiClient, Category } from "@/lib/api/client";
+import Skeleton from "@/components/common/Skeleton";
 
 const CategoriesSection = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await apiClient.getCategories();
+        if (response.status && response.data) {
+          setCategories(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col space-y-2 py-4">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <Skeleton key={i} className="h-8 w-full" />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col space-y-0.5 text-black/60">
-      {categoriesData.map((category, idx) => (
+      {categories.map((category) => (
         <Link
-          key={idx}
-          href={category.slug}
-          className="flex items-center justify-between py-2"
+          key={category.id}
+          href={`/shop?category_id=${category.id}`}
+          className="flex items-center justify-between py-2 hover:text-green-700 transition-colors"
         >
-          {category.title} <MdKeyboardArrowRight />
+          {category.name} <MdKeyboardArrowRight />
         </Link>
       ))}
+      {categories.length === 0 && (
+        <p className="text-sm py-2">No categories found</p>
+      )}
     </div>
   );
 };

@@ -109,7 +109,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-white shadow-md sticky top-0 z-50">
+      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-green-50/50">
         {/* Main header */}
         <div className="container mx-auto px-3 py-2 md:py-3">
           <div className="flex items-center justify-between">
@@ -259,20 +259,20 @@ const Header = () => {
                   <div key={index} className="relative group">
                     {item.subItems && item.subItems.length > 0 ? (
                       <>
-                        <button className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 flex items-center transition-colors duration-200">
+                        <button className="px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50/50 flex items-center transition-all duration-300 active:scale-95 group-hover:bg-green-50">
                           {item.name}
-                          <svg className="ml-1 h-4 w-4 transition-transform duration-200 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          <svg className="ml-1.5 h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                           </svg>
                         </button>
 
-                        <div className="absolute left-0 mt-1 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
-                          <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 p-2 bg-white">
+                        <div className="absolute left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50">
+                          <div className="rounded-2xl shadow-xl ring-1 ring-black ring-opacity-5 p-2 bg-white/95 backdrop-blur-sm border border-green-50">
                             {item.subItems.map((subItem: string, subIndex: number) => (
                               <a
                                 key={subIndex}
                                 href="#"
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-md transition-colors duration-150"
+                                className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-600 hover:text-white rounded-xl transition-all duration-200"
                               >
                                 {subItem}
                               </a>
@@ -283,7 +283,7 @@ const Header = () => {
                     ) : (
                       <Link
                         href={item.href || "#"}
-                        className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors duration-200"
+                        className="px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50/50 transition-all duration-300 active:scale-95 whitespace-nowrap"
                       >
                         {item.name}
                       </Link>

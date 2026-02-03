@@ -10,6 +10,7 @@ export type Color = {
 interface ProductsState {
   colorSelection: Color;
   sizeSelection: string;
+  selectedVariationId: number | null;
 }
 
 // Define the initial state using that type
@@ -19,6 +20,7 @@ const initialState: ProductsState = {
     code: "bg-[#4F4631]",
   },
   sizeSelection: "Large",
+  selectedVariationId: null,
 };
 
 export const productsSlice = createSlice({
@@ -32,9 +34,12 @@ export const productsSlice = createSlice({
     setSizeSelection: (state, action: PayloadAction<string>) => {
       state.sizeSelection = action.payload;
     },
+    setSelectedVariationId: (state, action: PayloadAction<number | null>) => {
+      state.selectedVariationId = action.payload;
+    },
   },
 });
 
-export const { setColorSelection, setSizeSelection } = productsSlice.actions;
+export const { setColorSelection, setSizeSelection, setSelectedVariationId } = productsSlice.actions;
 
 export default productsSlice.reducer;
