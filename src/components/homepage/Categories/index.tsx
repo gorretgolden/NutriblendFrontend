@@ -51,7 +51,8 @@ export default function CategoryGrid() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        // Check cache first
+        // Check cache first (Disabled for repair)
+        /*
         const cached = localStorage.getItem('homepage_categories_cache');
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
@@ -62,6 +63,7 @@ export default function CategoryGrid() {
             return;
           }
         }
+        */
 
         const response = await apiClient.getCategoriesTree();
         if (response.status && response.data) {
@@ -120,8 +122,8 @@ export default function CategoryGrid() {
         <div className="grid grid-cols-2 md:flex md:gap-10 gap-4 px-2">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <div key={i} className="flex flex-col items-center">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer" />
-              <div className="mt-3 h-4 w-20 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer rounded" />
+              <div className="w-32 h-32 rounded-full animate-shimmer" />
+              <div className="mt-3 h-4 w-20 animate-shimmer rounded" />
             </div>
           ))}
         </div>
@@ -134,6 +136,12 @@ export default function CategoryGrid() {
       <h2 className="text-2xl font-bold text-green-800 mb-6">
         Shop by Category
       </h2>
+
+      {categories.length === 0 && !loading && (
+        <div className="py-10 text-center text-gray-500 bg-gray-50 rounded-xl border border-dashed">
+          <p>No categories found. Please check backend settings.</p>
+        </div>
+      )}
 
       {/* Desktop/Large screens: scrollable categories with arrows */}
       <div className="relative mb-6 hidden md:block">
