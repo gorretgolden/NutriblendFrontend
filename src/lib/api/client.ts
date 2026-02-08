@@ -264,6 +264,16 @@ class NutriBlendApiClient {
         }
     }
 
+    private async post<T>(
+        endpoint: string,
+        body: any
+    ): Promise<ApiResponse<T>> {
+        return this.request<T>(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(body),
+        });
+    }
+
     // ==================== Authentication ====================
 
     async register(userData: {
@@ -594,6 +604,11 @@ class NutriBlendApiClient {
 
     async getPublicSettings(): Promise<ApiResponse<Record<string, any>>> {
         return this.request<Record<string, any>>('/settings/public');
+    }
+
+    // Newsletter subscription
+    async subscribeToNewsletter(email: string): Promise<ApiResponse> {
+        return this.post('/newsletters/subscribe', { email });
     }
 }
 

@@ -11,7 +11,7 @@ const NewsLetterSection = () => {
     setIsLoading(true);
 
     try {
-      const response = await apiClient.post('/newsletter/subscribe', { email });
+      const response = await apiClient.subscribeToNewsletter(email);
       if (response.status) {
         toast.success(response.message || "Subscribed successfully!");
         setEmail("");

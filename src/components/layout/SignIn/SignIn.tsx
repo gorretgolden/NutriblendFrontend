@@ -197,7 +197,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
 
         {/* Footer text */}
         <p className="mt-10 text-center text-xs leading-snug text-gray-400 md:mt-1">
-          © 2025 NutriBlend Haven. All rights reserved.
+          © {new Date().getFullYear()} NutriBlend Haven. All rights reserved.
         </p>
       </div>
     </div>
