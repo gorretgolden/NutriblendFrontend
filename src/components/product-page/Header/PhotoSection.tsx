@@ -12,6 +12,11 @@ const PhotoSection = ({ data }: { data: Product }) => {
   const imageRef = useRef<HTMLDivElement>(null);
   const magnifierSize = 150;
 
+  // Update selected image when data changes (essential for client-side navigation)
+  useEffect(() => {
+    setSelected(data.srcUrl);
+  }, [data.srcUrl]);
+
   // Handle touch events for mobile zoom
   const handleTouch = (e: React.TouchEvent) => {
     if (e.touches.length === 2) {
@@ -27,11 +32,11 @@ const PhotoSection = ({ data }: { data: Product }) => {
   // Handle mouse move for magnifier
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!imageRef.current) return;
-    
+
     const { left, top, width, height } = imageRef.current.getBoundingClientRect();
     const x = ((e.clientX - left) / width) * 100;
     const y = ((e.clientY - top) / height) * 100;
-    
+
     setMagnifierPosition({ x, y });
   };
 
@@ -59,8 +64,8 @@ const PhotoSection = ({ data }: { data: Product }) => {
               className={`
                 rounded-[13px] xl:rounded-[20px] w-full max-w-[111px] xl:max-w-[152px] max-h-[106px] xl:max-h-[167px] xl:min-h-[167px] 
                 aspect-square overflow-hidden border-2 transition-all duration-300
-                ${selected === photo 
-                  ? 'border-green-500 bg-green-50 shadow-md' 
+                ${selected === photo
+                  ? 'border-green-500 bg-green-50 shadow-md'
                   : 'border-green-100 bg-green-50 hover:border-green-300 hover:bg-green-100'
                 }
               `}
@@ -95,9 +100,8 @@ const PhotoSection = ({ data }: { data: Product }) => {
             src={selected}
             width={444}
             height={530}
-            className={`rounded-md w-full h-full object-contain transition-transform duration-300 ${
-              isZoomed ? 'scale-150' : 'hover:scale-110'
-            }`}
+            className={`rounded-md w-full h-full object-contain transition-transform duration-300 ${isZoomed ? 'scale-150' : 'hover:scale-110'
+              }`}
             alt={data.title}
             priority
             unoptimized

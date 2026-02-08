@@ -29,7 +29,7 @@ interface ShopPageProps {
   searchParams: {
     page?: string;
     sort?: string;
-    category?: string;
+    category_id?: string;
     min_price?: string;
     max_price?: string;
   };
