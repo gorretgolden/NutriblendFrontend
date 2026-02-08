@@ -3,14 +3,27 @@
 
 import React, { useState } from "react";
 import { FiUser, FiMapPin, FiMail, FiEdit2, FiPlus, FiHome } from "react-icons/fi";
+import { useAppSelector } from "@/lib/hooks/redux";
 
 const AccountOverview = () => {
+  const { user } = useAppSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    address: "No default shipping address available."
+    name: user ? `${user.first_name} ${user.last_name || ""}`.trim() : "",
+    email: user?.email || "",
+    address: user?.address || "No default shipping address available."
   });
+
+  // Update effect if user loads later
+  useEffect(() => {
+    if (user) {
+      setUserData({
+        name: `${user.first_name} ${user.last_name || ""}`.trim(),
+        email: user.email,
+        address: user.address || "No default shipping address available."
+      });
+    }
+  }, [user]);
 
   const handleEditToggle = () => setIsEditing(!isEditing);
 
@@ -25,7 +38,7 @@ const AccountOverview = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 sm:mb-10 gap-4">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Account Overview</h2>
-          <button 
+          <button
             onClick={handleEditToggle}
             className="flex items-center justify-center gap-2 px-4 py-2 sm:px-5 sm:py-3 bg-white border border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-all shadow-sm hover:shadow-md text-sm sm:text-base"
           >
@@ -47,7 +60,7 @@ const AccountOverview = () => {
                 <p className="text-gray-500 text-xs sm:text-sm">Your personal information</p>
               </div>
             </div>
-            
+
             {isEditing ? (
               <div className="space-y-4 sm:space-y-6">
                 <div>
@@ -90,6 +103,17 @@ const AccountOverview = () => {
                     <p className="text-gray-800 text-base sm:text-lg font-semibold truncate">{userData.email}</p>
                   </div>
                 </div>
+                {user?.phone && (
+                  <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-indigo-50 rounded-xl">
+                    <svg className="text-green-600" size={18} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    <div>
+                      <p className="text-gray-600 text-xs sm:text-sm">Phone Number</p>
+                      <p className="text-gray-800 text-base sm:text-lg font-semibold truncate">{user.phone}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -105,7 +129,7 @@ const AccountOverview = () => {
                 <p className="text-gray-500 text-xs sm:text-sm">Your shipping information</p>
               </div>
             </div>
-            
+
             <div className="mb-6 sm:mb-8 p-4 sm:p-5 bg-amber-50 rounded-xl border border-amber-100">
               <p className="text-gray-700 font-medium mb-2 sm:mb-3">Your default shipping address:</p>
               <div className="flex items-start gap-2 sm:gap-3">
@@ -113,7 +137,7 @@ const AccountOverview = () => {
                 <p className="text-gray-600 text-sm sm:text-base">{userData.address}</p>
               </div>
             </div>
-            
+
             <button className="flex items-center justify-center gap-2 sm:gap-3 w-full px-5 py-3 sm:px-6 sm:py-4 bg-gradient-to-r from-green-600 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-400 transition-all shadow-md hover:shadow-lg text-sm sm:text-base">
               <FiPlus size={18} />
               Add Default Address

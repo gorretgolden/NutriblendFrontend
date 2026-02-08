@@ -508,6 +508,7 @@ class NutriBlendApiClient {
         delivery_address: string;
         discount_code?: string;
         notes?: string;
+        payment_method?: string;
     }): Promise<ApiResponse<Order>> {
         return this.request<Order>('/orders', {
             method: 'POST',

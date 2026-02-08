@@ -24,7 +24,7 @@ export default function Checkout() {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadingRegions, setLoadingRegions] = useState(true);
-  const [paymentMethod, setPaymentMethod] = useState('pod');
+  const [paymentMethod, setPaymentMethod] = useState('cod');
 
   // Check authentication
   useEffect(() => {
@@ -151,7 +151,7 @@ export default function Checkout() {
 
       const orderData = {
         items: cart.items.map((item: any) => ({
-          product_id: item.id,
+          product_id: item.product_id,
           quantity: item.quantity,
           variation_id: item.variation_id,
         })),
@@ -160,6 +160,7 @@ export default function Checkout() {
         delivery_address: address,
         discount_code: discountCode || undefined,
         notes: notes || undefined,
+        payment_method: paymentMethod,
       };
 
       const response = await apiClient.createOrder(orderData);
@@ -298,14 +299,14 @@ export default function Checkout() {
             <div className="bg-white rounded-2xl shadow-lg border border-green-100 p-6">
               <h2 className="text-xl font-semibold text-green-900 mb-4">3. PAYMENT METHOD</h2>
               <div className="space-y-4">
-                <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center ${paymentMethod === 'pod' ? 'border-green-600 bg-green-50' : 'border-green-100'}`}>
+                <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center ${paymentMethod === 'cod' ? 'border-green-600 bg-green-50' : 'border-green-100'}`}>
                   <input
                     type="radio"
                     className="h-5 w-5 text-green-600"
-                    checked={paymentMethod === 'pod'}
-                    onChange={() => setPaymentMethod('pod')}
+                    checked={paymentMethod === 'cod'}
+                    onChange={() => setPaymentMethod('cod')}
                   />
-                  <span className="ml-3 text-sm font-medium text-green-800">Pay on Delivery</span>
+                  <span className="ml-3 text-sm font-medium text-green-800">Cash on Delivery (COD)</span>
                 </label>
               </div>
             </div>

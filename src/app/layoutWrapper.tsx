@@ -1,7 +1,11 @@
 // src/app/LayoutWrapper.tsx
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useAppDispatch } from "@/lib/hooks/redux";
+import { setCredentials } from "@/lib/features/auth/authSlice";
+import { toast } from "sonner";
 import TopBanner from "@/components/layout/Banner/TopBanner";
 import TopNavbar from "@/components/layout/Navbar/TopNavbar";
 import Header from "@/components/homepage/Header";
@@ -9,6 +13,36 @@ import Footer from "@/components/layout/Footer";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
+
+  // Handle Google Social Login Callback
+  useEffect(() => {
+    const token = searchParams.get('token');
+    const userJson = searchParams.get('user');
+
+    if (token && userJson) {
+      try {
+        const user = JSON.parse(userJson);
+        dispatch(setCredentials({ user, token }));
+
+        // Save to localStorage (apiClient should also handle this but slice needs it)
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user', userJson);
+
+        toast.success("Successfully logged in with Google!");
+
+        // Clean URL
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.delete('token');
+        nextUrl.searchParams.delete('user');
+        window.history.replaceState({}, '', nextUrl.pathname);
+      } catch (error) {
+        console.error("Error parsing social login data:", error);
+      }
+    }
+  }, [searchParams, dispatch]);
 
   // Hide these on checkout page
   const hideLayoutRoutes = ["/cart/checkout"];
