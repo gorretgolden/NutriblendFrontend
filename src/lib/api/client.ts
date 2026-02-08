@@ -606,11 +606,15 @@ export const getImageUrl = (path: string): string => {
     if (!path) return '/images/placeholder.jpg';
     if (path.startsWith('http')) return path;
 
+    // If it's a local frontend image, return it as is
+    if (path.startsWith('/images/')) return path;
+    if (path.startsWith('images/')) return '/' + path;
+
     const baseUrl = process.env.NEXT_PUBLIC_ASSET_URL || 'http://localhost:8000';
 
-    // If it's a local path and doesn't start with /storage/, add it
+    // If it's a backend storage path, ensure it starts with /storage/
     let finalPath = path.startsWith('/') ? path : '/' + path;
-    if (!finalPath.startsWith('/storage/') && !finalPath.startsWith('/images/')) {
+    if (!finalPath.startsWith('/storage/')) {
         finalPath = '/storage' + finalPath;
     }
 

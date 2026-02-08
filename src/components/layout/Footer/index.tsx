@@ -15,7 +15,7 @@ const Footer = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await apiClient.get('/settings/public');
+        const response = await apiClient.getPublicSettings();
         if (response.status) {
           setSettings(response.data);
         }

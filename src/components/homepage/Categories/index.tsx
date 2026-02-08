@@ -53,7 +53,7 @@ export default function CategoryGrid() {
       try {
         // Check cache first (Disabled for repair)
         /*
-        const cached = localStorage.getItem('homepage_categories_cache');
+        const cached = localStorage.getItem('homepage_categories_cache_v2');
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
           if (Date.now() - timestamp < 10 * 60 * 1000) {
@@ -75,7 +75,7 @@ export default function CategoryGrid() {
           setSubcategories(subs.slice(0, 15)); // Limit to 15 subcategories
 
           // Cache the response
-          localStorage.setItem('homepage_categories_cache', JSON.stringify({
+          localStorage.setItem('homepage_categories_cache_v2', JSON.stringify({
             data: { categories: cats, subcategories: subs.slice(0, 15) },
             timestamp: Date.now()
           }));

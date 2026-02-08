@@ -38,7 +38,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
     );
   };
 
-  const productSlug = data.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+  const productSlug = data.slug;
 
   // Function to handle image click navigation
   const handleImageClick = (e: React.MouseEvent) => {

@@ -8,6 +8,7 @@ export const transformProduct = (p: ApiProduct): Product => {
     return {
         id: p.id,
         title: p.name,
+        slug: p.slug,
         srcUrl: imageUrl,
         gallery: p.images?.map(img => getImageUrl(img.image_path)) || [imageUrl],
         price: p.price,

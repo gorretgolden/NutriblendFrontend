@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { apiClient } from "@/lib/api/client";
+import { apiClient, getImageUrl } from "@/lib/api/client";
 
 export default function SearchWithDropdown() {
   const [open, setOpen] = useState(false);
@@ -28,7 +28,7 @@ export default function SearchWithDropdown() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const cached = localStorage.getItem('search_categories_cache');
+        const cached = localStorage.getItem('search_categories_cache_v2');
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
           if (Date.now() - timestamp < 10 * 60 * 1000) {
@@ -40,7 +40,7 @@ export default function SearchWithDropdown() {
         const response = await apiClient.getCategoriesTree();
         if (response.status && response.data) {
           setCategories(response.data);
-          localStorage.setItem('search_categories_cache', JSON.stringify({
+          localStorage.setItem('search_categories_cache_v2', JSON.stringify({
             data: response.data,
             timestamp: Date.now()
           }));
@@ -164,7 +164,7 @@ export default function SearchWithDropdown() {
                       <div className="w-12 h-12 bg-gray-100 rounded flex-shrink-0">
                         {product.images?.[0] && (
                           <img
-                            src={product.images[0].image_path}
+                            src={getImageUrl(product.images[0].image_path)}
                             alt={product.name}
                             className="w-full h-full object-cover rounded"
                           />

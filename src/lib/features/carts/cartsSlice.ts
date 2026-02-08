@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { apiClient, CartItem as ApiCartItem, CartSummary } from "@/lib/api/client";
+import { apiClient, CartItem as ApiCartItem, CartSummary, getImageUrl } from "@/lib/api/client";
 
 // ==================== Types ====================
 
@@ -258,7 +258,7 @@ export const cartsSlice = createSlice({
           items: action.payload.items.map((item: ApiCartItem) => ({
             id: item.id,
             name: item.product.name,
-            srcUrl: item.product.images?.[0]?.image_path || "",
+            srcUrl: getImageUrl(item.product.images?.[0]?.image_path || ""),
             price: item.product.price,
             quantity: item.quantity,
             product_id: item.product_id,

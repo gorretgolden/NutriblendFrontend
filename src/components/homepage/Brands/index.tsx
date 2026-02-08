@@ -12,7 +12,7 @@ export default function BrandsSection() {
     const fetchBrands = async () => {
       try {
         // Check cache first
-        const cached = localStorage.getItem('brands_cache');
+        const cached = localStorage.getItem('brands_cache_v2');
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
           if (Date.now() - timestamp < 15 * 60 * 1000) { // 15 minutes
@@ -27,7 +27,7 @@ export default function BrandsSection() {
           setBrands(response.data.slice(0, 6)); // Show first 6 brands
 
           // Cache the response
-          localStorage.setItem('brands_cache', JSON.stringify({
+          localStorage.setItem('brands_cache_v2', JSON.stringify({
             data: response.data.slice(0, 6),
             timestamp: Date.now()
           }));

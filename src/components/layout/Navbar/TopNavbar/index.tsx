@@ -28,7 +28,7 @@ const Header = () => {
     const fetchCategories = async () => {
       try {
         // Check cache first
-        const cached = localStorage.getItem('categories_cache');
+        const cached = localStorage.getItem('categories_cache_v2');
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
           // Cache for 10 minutes
@@ -43,7 +43,7 @@ const Header = () => {
         if (response.status && response.data) {
           setCategories(response.data);
           // Cache the response
-          localStorage.setItem('categories_cache', JSON.stringify({
+          localStorage.setItem('categories_cache_v2', JSON.stringify({
             data: response.data,
             timestamp: Date.now()
           }));
@@ -59,7 +59,10 @@ const Header = () => {
   const dynamicNavItems = categories.map(cat => ({
     name: cat.name,
     href: `/shop?category_id=${cat.id}`,
-    subItems: cat.children?.length > 0 ? cat.children.map((child: any) => child.name) : null
+    subItems: cat.children?.length > 0 ? cat.children.map((child: any) => ({
+      name: child.name,
+      href: `/shop?category_id=${child.id}`
+    })) : null
   }));
 
   // Navigation data
@@ -267,14 +270,14 @@ const Header = () => {
 
                         <div className="absolute left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50">
                           <div className="rounded-2xl shadow-xl ring-1 ring-black ring-opacity-5 p-2 bg-white/95 backdrop-blur-sm border border-green-50">
-                            {item.subItems.map((subItem: string, subIndex: number) => (
-                              <a
+                            {item.subItems.map((subItem: any, subIndex: number) => (
+                              <Link
                                 key={subIndex}
-                                href="#"
+                                href={subItem.href}
                                 className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-600 hover:text-white rounded-xl transition-all duration-200"
                               >
-                                {subItem}
-                              </a>
+                                {subItem.name}
+                              </Link>
                             ))}
                           </div>
                         </div>
@@ -307,14 +310,15 @@ const Header = () => {
                             </svg>
                           </button>
                           <div className="pl-6 mt-1 space-y-1">
-                            {item.subItems.map((subItem: string, subIndex: number) => (
-                              <a
+                            {item.subItems.map((subItem: any, subIndex: number) => (
+                              <Link
                                 key={subIndex}
-                                href="#"
+                                href={subItem.href}
                                 className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-green-600 hover:bg-green-50"
+                                onClick={() => setMobileMenuOpen(false)}
                               >
-                                {subItem}
-                              </a>
+                                {subItem.name}
+                              </Link>
                             ))}
                           </div>
                         </>
