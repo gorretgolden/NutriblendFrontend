@@ -58,6 +58,8 @@ export interface Product {
     category?: Category;
     brand?: Brand;
     variations?: ProductVariation[];
+    average_rating?: number;
+    review_count?: number;
     created_at: string;
     updated_at: string;
 }
