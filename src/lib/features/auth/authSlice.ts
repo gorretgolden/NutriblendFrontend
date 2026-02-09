@@ -9,10 +9,32 @@ interface AuthState {
     error: string | null;
 }
 
+const getInitialAuth = () => {
+    if (typeof window === 'undefined') return { user: null, token: null, isAuthenticated: false };
+
+    const token = localStorage.getItem('auth_token');
+    const userJson = localStorage.getItem('user');
+
+    if (token && userJson) {
+        try {
+            return {
+                user: JSON.parse(userJson),
+                token,
+                isAuthenticated: true
+            };
+        } catch (e) {
+            return { user: null, token: null, isAuthenticated: false };
+        }
+    }
+    return { user: null, token: null, isAuthenticated: false };
+};
+
+const auth = getInitialAuth();
+
 const initialState: AuthState = {
-    user: null,
-    token: null,
-    isAuthenticated: false,
+    user: auth.user,
+    token: auth.token,
+    isAuthenticated: auth.isAuthenticated,
     isLoading: false,
     error: null,
 };

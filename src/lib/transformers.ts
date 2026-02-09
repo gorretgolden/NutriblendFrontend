@@ -2,15 +2,27 @@ import { Product } from "@/types/product.types";
 import { Product as ApiProduct, getImageUrl } from "@/lib/api/client";
 
 export const transformProduct = (p: ApiProduct): Product => {
-    const primaryImage = p.images?.find(img => img.is_primary) || p.images?.[0];
-    const imageUrl = primaryImage ? getImageUrl(primaryImage.image_path) : '/images/placeholder.jpg';
+    const images = p.images || [];
+    const primaryImage = images.find((img: any) => typeof img === 'object' && img.is_primary) || images[0];
+
+    let imageUrl = '/images/placeholder.jpg';
+    if (primaryImage) {
+        if (typeof primaryImage === 'string') {
+            imageUrl = getImageUrl(primaryImage);
+        } else if (typeof primaryImage === 'object' && primaryImage.image_path) {
+            imageUrl = getImageUrl(primaryImage.image_path);
+        }
+    }
 
     return {
         id: p.id,
         title: p.name,
         slug: p.slug,
         srcUrl: imageUrl,
-        gallery: p.images?.map(img => getImageUrl(img.image_path)) || [imageUrl],
+        gallery: images.map((img: any) => {
+            if (typeof img === 'string') return getImageUrl(img);
+            return getImageUrl(img.image_path);
+        }) || [imageUrl],
         price: p.price,
         discount: {
             amount: 0,

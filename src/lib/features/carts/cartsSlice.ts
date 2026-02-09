@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { apiClient, CartItem as ApiCartItem, CartSummary, getImageUrl } from "@/lib/api/client";
+import { toast } from "sonner";
 
 // ==================== Types ====================
 
@@ -258,7 +259,11 @@ export const cartsSlice = createSlice({
           items: action.payload.items.map((item: ApiCartItem) => ({
             id: item.id,
             name: item.product.name,
-            srcUrl: getImageUrl(item.product.images?.[0]?.image_path || ""),
+            srcUrl: (() => {
+              const firstImg = item.product.images?.[0];
+              if (!firstImg) return "/images/placeholder.jpg";
+              return typeof firstImg === 'string' ? getImageUrl(firstImg) : getImageUrl(firstImg.image_path);
+            })(),
             price: item.product.price,
             quantity: item.quantity,
             product_id: item.product_id,
@@ -302,6 +307,53 @@ export const cartsSlice = createSlice({
       state.cart = null;
       state.totalPrice = 0;
       state.isSynced = true;
+      toast.success("Cart cleared!");
+    });
+
+    // Remove from cart
+    builder.addCase(removeFromCart.fulfilled, (state, action) => {
+      state.isLoading = false;
+      if (action.payload.backend) {
+        state.isSynced = false; // Trigger refetch
+      } else {
+        if (state.cart) {
+          state.cart.items = state.cart.items.filter(i => i.id !== action.payload.itemId);
+          state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
+          state.totalPrice = state.cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+          state.adjustedTotalPrice = state.totalPrice;
+        }
+      }
+      toast.info("Item removed from cart");
+    });
+
+    // Update cart
+    builder.addCase(updateCartItemAsync.fulfilled, (state, action: any) => {
+      state.isLoading = false;
+      if (action.payload.backend) {
+        state.isSynced = false; // Trigger refetch
+      } else {
+        const { itemId, quantity } = action.payload;
+        if (state.cart) {
+          state.cart.items = state.cart.items.map(item =>
+            item.id === itemId ? { ...item, quantity } : item
+          );
+          state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
+          state.totalPrice = state.cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+          state.adjustedTotalPrice = state.totalPrice;
+        }
+      }
+    });
+
+    builder.addCase(updateCartItemAsync.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload as string;
+      toast.error(state.error || "Failed to update quantity");
+    });
+
+    builder.addCase(removeFromCart.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload as string;
+      toast.error(state.error || "Failed to remove item");
     });
   },
 });

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/lib/hooks/redux";
 import { setCredentials } from "@/lib/features/auth/authSlice";
+import { fetchCart } from "@/lib/features/carts/cartsSlice";
 import { toast } from "sonner";
 import TopBanner from "@/components/layout/Banner/TopBanner";
 import TopNavbar from "@/components/layout/Navbar/TopNavbar";
@@ -16,6 +17,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
+  const isAuthenticated = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
 
   // Handle Google Social Login Callback
   useEffect(() => {
@@ -43,6 +45,13 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       }
     }
   }, [searchParams, dispatch]);
+
+  // Fetch cart on mount if authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchCart());
+    }
+  }, [isAuthenticated, dispatch]);
 
   // Hide these on checkout page
   const hideLayoutRoutes = ["/cart/checkout"];

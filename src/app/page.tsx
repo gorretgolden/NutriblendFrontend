@@ -14,7 +14,7 @@ const carouselSlides: CarouselSlide[] = [
     title: 'Liquid Chlorophyll',
     subtitle: 'Health benefits and side effects',
     ctaText: 'Shop Now',
-    ctaLink: '/products/chlorophyll',
+    ctaLink: '/shop',
     layout: 'imageLeft'
   },
   {
@@ -23,7 +23,7 @@ const carouselSlides: CarouselSlide[] = [
     title: 'Plant-Based Proteins',
     subtitle: 'Fuel your body the natural way',
     ctaText: 'Discover',
-    ctaLink: '/products/proteins',
+    ctaLink: '/shop',
     layout: 'imageRight'
   },
   {
@@ -32,7 +32,7 @@ const carouselSlides: CarouselSlide[] = [
     title: 'Essential Vitamins',
     subtitle: 'Boost your immune system',
     ctaText: 'Explore',
-    ctaLink: '/products/vitamins',
+    ctaLink: '/shop',
     layout: 'imageLeft'
   }
 ];

@@ -254,8 +254,26 @@ class NutriBlendApiClient {
             };
 
             const response = await fetch(url, config);
-            const data: ApiResponse<T> = await response.json();
 
+            // Handle logical errors before parsing JSON
+            if (!response.ok) {
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    return {
+                        status: false,
+                        message: errorData.message || `Error: ${response.status} ${response.statusText}`,
+                        errors: errorData.errors
+                    };
+                }
+
+                return {
+                    status: false,
+                    message: `Server error: ${response.status} ${response.statusText}`,
+                };
+            }
+
+            const data: ApiResponse<T> = await response.json();
             return data;
         } catch (error) {
             console.error('API Error:', error);
