@@ -1,6 +1,6 @@
 import { apiClient } from "@/lib/api/client";
 import React, { useState } from "react";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 
 const NewsLetterSection = () => {
   const [email, setEmail] = useState("");
