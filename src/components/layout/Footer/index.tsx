@@ -10,6 +10,7 @@ import { apiClient } from "@/lib/api/client";
 
 const Footer = () => {
   const [settings, setSettings] = useState<any>(null);
+  const [pages, setPages] = useState<any[]>([]);
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
@@ -23,7 +24,21 @@ const Footer = () => {
         console.error("Failed to fetch settings", error);
       }
     };
+
+    const fetchPages = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/pages`);
+        const data = await response.json();
+        if (data.status) {
+          setPages(data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch pages", error);
+      }
+    };
+
     fetchSettings();
+    fetchPages();
   }, []);
 
   return (
@@ -82,44 +97,37 @@ const Footer = () => {
               </h3>
               <ul className="space-y-3">
                 <li>
-                  <Link href="/aboutUs" className="text-gray-700 hover:text-[#4caf50] transition-colors">
-                    About Us
-                  </Link>
-                </li>
-                <li>
                   <Link href="/shop" className="text-gray-700 hover:text-[#4caf50] transition-colors">
                     Shop
                   </Link>
                 </li>
-                <li>
-                  <Link href="/contact" className="text-gray-700 hover:text-[#4caf50] transition-colors">
-                    Contact Us
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/faq" className="text-gray-700 hover:text-[#4caf50] transition-colors">
-                    FAQs
-                  </Link>
-                </li>
+                {pages
+                  .filter(page => ['about', 'contact', 'faq'].includes(page.type))
+                  .map((page) => (
+                    <li key={page.id}>
+                      <Link href={`/${page.slug}`} className="text-gray-700 hover:text-[#4caf50] transition-colors">
+                        {page.title}
+                      </Link>
+                    </li>
+                  ))}
               </ul>
             </div>
 
-            {/* Products */}
+            {/* Customer Service */}
             <div>
               <h3 className="text-[#4caf50] mb-5 text-lg font-semibold relative pb-2.5 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-[#4caf50]">
                 Customer Service
               </h3>
               <ul className="space-y-3">
-                <li>
-                  <Link href="/terms" className="text-gray-700 hover:text-[#4caf50] transition-colors">
-                    Terms & Conditions
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/privacy" className="text-gray-700 hover:text-[#4caf50] transition-colors">
-                    Privacy Policy
-                  </Link>
-                </li>
+                {pages
+                  .filter(page => ['terms', 'privacy'].includes(page.type))
+                  .map((page) => (
+                    <li key={page.id}>
+                      <Link href={`/${page.slug}`} className="text-gray-700 hover:text-[#4caf50] transition-colors">
+                        {page.title}
+                      </Link>
+                    </li>
+                  ))}
                 <li>
                   <Link href="/account/order" className="text-gray-700 hover:text-[#4caf50] transition-colors">
                     Track Order

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { loginUser } from "@/lib/features/auth/authSlice";
+import { toast } from "sonner";
 
 type LoginModalProps = {
   visible: boolean;
@@ -28,6 +29,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
     e.preventDefault();
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
+      toast.success("Signed in successfully!");
       onClose();
     }
   };

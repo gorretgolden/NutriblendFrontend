@@ -8,6 +8,7 @@ import { useAppDispatch } from "@/lib/hooks/redux";
 import { addToCart } from "@/lib/features/carts/cartsSlice";
 import { Product } from "@/types/product.types";
 import { useRouter } from "next/navigation"; // Import useRouter
+import { toast } from "sonner";
 
 type ProductCardProps = {
   data: Product;
@@ -36,6 +37,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         quantity: 1,
       })
     );
+    toast.success(`${data.title} added to cart!`);
   };
 
   const productSlug = data.slug;
