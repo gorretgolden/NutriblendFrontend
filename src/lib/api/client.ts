@@ -59,7 +59,8 @@ export interface Product {
     brand_id?: number;
     is_featured: boolean;
     is_active: boolean;
-    images: ProductImage[];
+    images: any[]; // JSON array of storage path strings OR ProductImage objects
+    product_images?: ProductImage[]; // Related ProductImage records from API
     category?: Category;
     brand?: Brand;
     variations?: ProductVariation[];
@@ -72,9 +73,12 @@ export interface Product {
 export interface ProductImage {
     id: number;
     product_id: number;
-    image_path: string;
+    image_path?: string;
+    image_url?: string;
+    alt_text?: string;
     is_primary: boolean;
-    sort_order: number;
+    sort_order?: number;
+    position?: number;
 }
 
 export interface ProductVariation {
@@ -105,20 +109,25 @@ export interface Brand {
 
 export interface CartItem {
     id: number;
-    user_id: number;
     product_id: number;
+    product_name: string;
     variation_id?: number;
+    variation_name?: string;
     quantity: number;
-    product: Product;
+    price: number;
+    subtotal: number;
+    product_image?: string;
+    // Legacy support
+    product?: Product;
     variation?: ProductVariation;
 }
 
 export interface CartSummary {
     items: CartItem[];
-    subtotal: number;
-    tax: number;
     total: number;
     item_count: number;
+    subtotal?: number;
+    tax?: number;
 }
 
 export interface Region {
@@ -360,11 +369,22 @@ class NutriBlendApiClient {
     }
 
     async getProfile(): Promise<ApiResponse<User>> {
-        return this.request<User>('/auth/profile');
+        return this.request<User>('/me');
     }
 
     async updateProfile(data: Partial<User>): Promise<ApiResponse<User>> {
-        return this.request<User>('/auth/profile', {
+        return this.request<User>('/me', {
+            method: 'PUT',
+            body: JSON.stringify(data),
+        });
+    }
+
+    async changePassword(data: {
+        old_password: string;
+        password: string;
+        password_confirmation: string;
+    }): Promise<ApiResponse<void>> {
+        return this.request<void>('/me/password', {
             method: 'PUT',
             body: JSON.stringify(data),
         });
@@ -633,7 +653,7 @@ class NutriBlendApiClient {
 
     // Newsletter subscription
     async subscribeToNewsletter(email: string): Promise<ApiResponse> {
-        return this.post('/newsletters/subscribe', { email });
+        return this.post('/newsletter/subscribe', { email });
     }
 }
 

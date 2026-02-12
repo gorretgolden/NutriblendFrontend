@@ -264,13 +264,18 @@ export const cartsSlice = createSlice({
         state.cart = {
           items: action.payload.items.map((item: ApiCartItem) => ({
             id: item.id,
-            name: item.product.name,
+            name: item.product_name || item.product?.name || 'Unknown Product',
             srcUrl: (() => {
-              const firstImg = item.product.images?.[0];
+              // New format: product_image is a direct URL
+              if (item.product_image) {
+                return getImageUrl(item.product_image);
+              }
+              // Legacy format: product.images array
+              const firstImg = item.product?.images?.[0];
               if (!firstImg) return "/images/placeholder.jpg";
-              return typeof firstImg === 'string' ? getImageUrl(firstImg) : getImageUrl(firstImg.image_path);
+              return typeof firstImg === 'string' ? getImageUrl(firstImg) : getImageUrl(firstImg.image_path || firstImg.image_url || '');
             })(),
-            price: item.product.price,
+            price: item.price || item.product?.price || 0,
             quantity: item.quantity,
             product_id: item.product_id,
             variation_id: item.variation_id,
@@ -280,7 +285,7 @@ export const cartsSlice = createSlice({
             0
           ),
         };
-        state.totalPrice = action.payload.subtotal || 0;
+        state.totalPrice = action.payload.total || action.payload.subtotal || 0;
         state.adjustedTotalPrice = action.payload.total || state.totalPrice;
       }
     });
