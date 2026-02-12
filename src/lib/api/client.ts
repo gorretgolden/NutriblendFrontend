@@ -33,13 +33,18 @@ export interface PaginatedResponse<T> {
 
 export interface User {
     id: number;
+    name?: string;
     first_name: string;
     last_name: string;
     email: string;
     phone: string;
-    role: string;
-    created_at: string;
-    updated_at: string;
+    contact?: string;
+    role?: string;
+    profile_photo?: string;
+    address?: string;
+    status?: string;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export interface Product {

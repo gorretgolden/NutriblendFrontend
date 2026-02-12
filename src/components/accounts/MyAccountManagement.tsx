@@ -1,8 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
+import { fetchUserProfile } from "@/lib/features/auth/authSlice";
+import { apiClient } from "@/lib/api/client";
+import { toast } from "sonner";
 
 export default function MyAccountManagement() {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -12,6 +19,20 @@ export default function MyAccountManagement() {
   });
 
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Load user data into form when component mounts or user changes
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.name || `${user.first_name || ""} ${user.last_name || ""}`.trim(),
+        email: user.email || "",
+        phone: user.phone || user.contact || "",
+        company: "",
+        password: "",
+      });
+    }
+  }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -20,9 +41,37 @@ export default function MyAccountManagement() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("✅ Your account details have been updated successfully!");
+    setIsSaving(true);
+
+    try {
+      const updateData: Record<string, string> = {
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+      };
+
+      // Only include password if provided
+      if (formData.password) {
+        updateData.password = formData.password;
+      }
+
+      const response = await apiClient.updateProfile(updateData);
+
+      if (response.status) {
+        toast.success("Account details updated successfully!");
+        // Refetch profile to update Redux state
+        dispatch(fetchUserProfile());
+        setFormData((prev) => ({ ...prev, password: "" }));
+      } else {
+        toast.error(response.message || "Failed to update account details");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update account details");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleDeleteAccount = () => {
@@ -31,9 +80,19 @@ export default function MyAccountManagement() {
         "Are you sure you want to delete your account? This action cannot be undone. ❗"
       )
     ) {
-      alert("🗑️ Account deletion process initiated. We're sorry to see you go!");
+      toast.info("Account deletion process initiated. We're sorry to see you go!");
     }
   };
+
+  // Generate initials from name
+  const initials = formData.fullName
+    ? formData.fullName
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
+    : "?";
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -41,7 +100,7 @@ export default function MyAccountManagement() {
         {/* Header */}
         <div className="text-center mb-10">
           <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-md">
-            JD
+            {initials}
           </div>
           <h1 className="text-3xl font-bold text-gray-800">Account Settings</h1>
           <p className="text-gray-600 mt-2">
@@ -150,9 +209,10 @@ export default function MyAccountManagement() {
             <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                disabled={isSaving}
+                className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50"
               >
-                💾 Save Changes
+                {isSaving ? "Saving..." : "💾 Save Changes"}
               </button>
 
               <button

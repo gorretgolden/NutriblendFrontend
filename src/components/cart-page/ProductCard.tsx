@@ -9,8 +9,7 @@ import { Button } from "../ui/button";
 import {
   addToCart,
   CartItem,
-  remove,
-  removeCartItem,
+  removeFromCart,
   updateCartItemAsync,
 } from "@/lib/features/carts/cartsSlice";
 import { useAppDispatch } from "@/lib/hooks/redux";
@@ -53,9 +52,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
             size="icon"
             className="h-8 w-8 hover:bg-red-50 transition-colors"
             onClick={() =>
-              dispatch(
-                remove(data.id)
-              )
+              dispatch(removeFromCart(data.id))
             }
           >
             <PiTrashFill className="text-xl text-red-500 hover:text-red-600" />
@@ -117,7 +114,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
             onAdd={() => dispatch(addToCart({ ...data, quantity: 1 }))}
             onRemove={() =>
               data.quantity === 1
-                ? dispatch(remove(data.id))
+                ? dispatch(removeFromCart(data.id))
                 : dispatch(updateCartItemAsync({ itemId: data.id, quantity: data.quantity - 1 }))
             }
             isZeroDelete

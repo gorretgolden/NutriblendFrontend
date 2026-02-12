@@ -1,7 +1,7 @@
 // src/components/accounts/AccountOverview.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiUser, FiMapPin, FiMail, FiEdit2, FiPlus, FiHome } from "react-icons/fi";
 import { useAppSelector } from "@/lib/hooks/redux";
 

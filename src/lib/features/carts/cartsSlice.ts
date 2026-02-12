@@ -84,6 +84,8 @@ export const addToCart = createAsyncThunk(
           variation_id: item.variation_id
         });
         if (response.status && response.data) {
+          // Refetch cart from backend to stay in sync
+          dispatch(fetchCart());
           return { item: response.data, backend: true };
         }
         return rejectWithValue(response.message || "Failed to add to cart");
@@ -119,6 +121,8 @@ export const removeFromCart = createAsyncThunk(
       if (isAuthenticated) {
         const response = await apiClient.removeFromCart(itemId);
         if (response.status) {
+          // Refetch cart from backend to stay in sync
+          dispatch(fetchCart());
           return { itemId, backend: true };
         }
         return rejectWithValue(response.message || "Failed to remove from cart");
@@ -141,7 +145,7 @@ export const updateCartItemAsync = createAsyncThunk(
   "cart/update",
   async (
     { itemId, quantity }: { itemId: number; quantity: number },
-    { getState, rejectWithValue }
+    { getState, dispatch, rejectWithValue }
   ) => {
     try {
       const state: any = getState();
@@ -150,6 +154,8 @@ export const updateCartItemAsync = createAsyncThunk(
       if (isAuthenticated) {
         const response = await apiClient.updateCartItem(itemId, quantity);
         if (response.status && response.data) {
+          // Refetch cart from backend to stay in sync
+          dispatch(fetchCart());
           return { item: response.data, backend: true };
         }
         return rejectWithValue(response.message || "Failed to update cart");
@@ -291,15 +297,15 @@ export const cartsSlice = createSlice({
     builder.addCase(addToCart.fulfilled, (state, action: any) => {
       state.isLoading = false;
       if (action.payload.backend) {
-        // Backend cart updated, refetch
+        // Backend cart updated, fetchCart() was dispatched to refetch
         state.isSynced = false;
-      } else {
-        // Local cart, state already updated by dispatch(addToCartLocal)
       }
+      // Local cart is already updated by dispatch(addToCartLocal)
     });
     builder.addCase(addToCart.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload as string;
+      toast.error(state.error || "Failed to add to cart");
     });
 
     // Clear cart
@@ -314,7 +320,8 @@ export const cartsSlice = createSlice({
     builder.addCase(removeFromCart.fulfilled, (state, action) => {
       state.isLoading = false;
       if (action.payload.backend) {
-        state.isSynced = false; // Trigger refetch
+        // Backend cart updated, fetchCart() was dispatched to refetch
+        state.isSynced = false;
       } else {
         if (state.cart) {
           state.cart.items = state.cart.items.filter(i => i.id !== action.payload.itemId);
@@ -323,14 +330,15 @@ export const cartsSlice = createSlice({
           state.adjustedTotalPrice = state.totalPrice;
         }
       }
-      toast.info("Item removed from cart");
+      toast.success("Item removed from cart");
     });
 
     // Update cart
     builder.addCase(updateCartItemAsync.fulfilled, (state, action: any) => {
       state.isLoading = false;
       if (action.payload.backend) {
-        state.isSynced = false; // Trigger refetch
+        // Backend cart updated, fetchCart() was dispatched to refetch
+        state.isSynced = false;
       } else {
         const { itemId, quantity } = action.payload;
         if (state.cart) {

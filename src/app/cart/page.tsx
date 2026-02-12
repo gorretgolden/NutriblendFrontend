@@ -47,7 +47,7 @@ export default function CartPage() {
                     Total: UGX {Math.round(adjustedTotalPrice)}
                   </span>
                 </div>
-                
+
                 <div className="space-y-4">
                   {cart.items.map((product, idx, arr) => (
                     <React.Fragment key={idx}>
@@ -65,13 +65,13 @@ export default function CartPage() {
                 <h3 className="text-xl font-semibold text-dark-900 border-b border-green-100 pb-3">
                   Order Summary
                 </h3>
-                
+
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-green-700">Subtotal</span>
                     <span className="font-semibold">UGX {totalPrice.toLocaleString()}</span>
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <span className="text-green-700">
                       Discount (-
@@ -84,14 +84,14 @@ export default function CartPage() {
                       -UGX {Math.round(totalPrice - adjustedTotalPrice).toLocaleString()}
                     </span>
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <span className="text-green-700">Delivery Fee</span>
                     <span className="font-semibold text-green-600">Free</span>
                   </div>
-                  
+
                   <hr className="border-t-green-100" />
-                  
+
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-semibold text-dark-900">Total</span>
                     <span className="text-xl font-bold text-dark-800">
@@ -125,28 +125,28 @@ export default function CartPage() {
                 </div>
 
                 {/* Checkout Button */}
-                 
-                  <Button
-                    type="button"
-                    className="w-full bg-green-600 hover:bg-green-700 text-white py-4 h-14 rounded-xl font-semibold text-lg group transition-all duration-300 hover:shadow-lg"
-                    onClick={() => {
-                      // Store cart data in sessionStorage before navigating
-                      sessionStorage.setItem('checkoutCart', JSON.stringify({
-                        items: cart.items,
-                        totalPrice,
-                        adjustedTotalPrice
-                      }));
-                      router.push('/cart/checkout');
-                    }}
-                  >
-                    Proceed to Checkout
-                    <FaArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
-                  </Button>
+
+                <Button
+                  type="button"
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-4 h-14 rounded-xl font-semibold text-lg group transition-all duration-300 hover:shadow-lg"
+                  onClick={() => {
+                    // Store cart data in sessionStorage before navigating
+                    sessionStorage.setItem('checkoutCart', JSON.stringify({
+                      items: cart.items,
+                      totalPrice,
+                      adjustedTotalPrice
+                    }));
+                    router.push('/cart/checkout');
+                  }}
+                >
+                  Proceed to Checkout
+                  <FaArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
+                </Button>
 
                 {/* Continue Shopping Link */}
                 <div className="text-center pt-2">
-                  <Link 
-                    href="" 
+                  <Link
+                    href="/shop"
                     className="text-green-600 hover:text-green-800 text-sm font-medium transition-colors"
                   >
                     ← Continue Shopping
@@ -167,7 +167,7 @@ export default function CartPage() {
             <p className="text-green-600 mb-8 max-w-md">
               Looks like you haven't added any items to your cart yet. Start shopping to find amazing products!
             </p>
-            <Button 
+            <Button
               className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8 py-6 text-lg font-semibold transition-colors"
               asChild
             >

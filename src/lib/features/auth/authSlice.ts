@@ -135,6 +135,11 @@ const authSlice = createSlice({
             state.user = action.payload.user;
             state.token = action.payload.token;
             state.isAuthenticated = true;
+            // Persist to localStorage
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('auth_token', action.payload.token);
+                localStorage.setItem('user', JSON.stringify(action.payload.user));
+            }
         });
         builder.addCase(loginUser.rejected, (state, action) => {
             state.isLoading = false;
@@ -151,6 +156,11 @@ const authSlice = createSlice({
             state.user = action.payload.user;
             state.token = action.payload.token;
             state.isAuthenticated = true;
+            // Persist to localStorage
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('auth_token', action.payload.token);
+                localStorage.setItem('user', JSON.stringify(action.payload.user));
+            }
         });
         builder.addCase(registerUser.rejected, (state, action) => {
             state.isLoading = false;
@@ -162,12 +172,21 @@ const authSlice = createSlice({
             state.user = null;
             state.token = null;
             state.isAuthenticated = false;
+            // Clear localStorage
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user');
+            }
         });
 
         // Fetch Profile
         builder.addCase(fetchUserProfile.fulfilled, (state, action) => {
             state.user = action.payload;
             state.isAuthenticated = true;
+            // Persist updated profile to localStorage
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('user', JSON.stringify(action.payload));
+            }
         });
     },
 });
