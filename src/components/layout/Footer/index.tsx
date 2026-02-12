@@ -27,7 +27,7 @@ const Footer = () => {
 
     const fetchPages = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/pages`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages`);
         const data = await response.json();
         if (data.status) {
           setPages(data.data);

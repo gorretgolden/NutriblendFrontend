@@ -23,21 +23,24 @@ const ProductCard = ({ data }: ProductCardProps) => {
     ? Math.round(data.price - (data.price * (data.discount?.percentage ?? 0)) / 100)
     : data.price - (data.discount?.amount ?? 0);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // Add product to cart using Redux unified thunk
-    dispatch(
-      addToCart({
-        product_id: data.id,
-        name: data.title,
-        srcUrl: data.srcUrl,
-        price: data.price,
-        quantity: 1,
-      })
-    );
-    toast.success(`${data.title} added to cart!`);
+    try {
+      const result = await dispatch(
+        addToCart({
+          product_id: data.id,
+          name: data.title,
+          srcUrl: data.srcUrl,
+          price: data.price,
+          quantity: 1,
+        })
+      ).unwrap();
+      toast.success(`${data.title} added to cart!`);
+    } catch (error: any) {
+      toast.error(error || "Failed to add to cart. Please try again.");
+    }
   };
 
   const productSlug = data.slug;
