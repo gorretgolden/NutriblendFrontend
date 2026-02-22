@@ -111,20 +111,46 @@ export default async function Home() {
         {/* Trust/Perks Banner */}
         <section className="max-w-[1600px] mx-auto px-6 mb-8 md:mb-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {[
-              { icon: "🚚", title: "Free Delivery", desc: "Orders over 100K UGX" },
-              { icon: "🔒", title: "Secure Payment", desc: "100% safe checkout" },
-              { icon: "🔄", title: "Easy Returns", desc: "14-day return policy" },
-              { icon: "💬", title: "24/7 Support", desc: "Always here to help" },
-            ].map((perk, i) => (
-              <div key={i} className="flex items-center gap-3 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-4 md:p-5 hover:shadow-lg hover:shadow-green-100/50 transition-all duration-300 group">
-                <span className="text-2xl md:text-3xl group-hover:scale-110 transition-transform duration-300">{perk.icon}</span>
-                <div>
-                  <p className="font-bold text-green-900 text-sm md:text-base">{perk.title}</p>
-                  <p className="text-green-600/70 text-xs md:text-sm">{perk.desc}</p>
-                </div>
+            {/* Free Delivery */}
+            <div className="flex items-center gap-3 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-4 md:p-5 hover:shadow-lg hover:shadow-green-100/50 transition-all duration-300 group">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-600 transition-colors duration-300 flex-shrink-0">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-green-600 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
               </div>
-            ))}
+              <div>
+                <p className="font-bold text-green-900 text-sm md:text-base">Free Delivery</p>
+                <p className="text-green-600/70 text-xs md:text-sm">Orders over 100K UGX</p>
+              </div>
+            </div>
+            {/* Secure Payment */}
+            <div className="flex items-center gap-3 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-4 md:p-5 hover:shadow-lg hover:shadow-green-100/50 transition-all duration-300 group">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-600 transition-colors duration-300 flex-shrink-0">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-green-600 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+              </div>
+              <div>
+                <p className="font-bold text-green-900 text-sm md:text-base">Secure Payment</p>
+                <p className="text-green-600/70 text-xs md:text-sm">100% safe checkout</p>
+              </div>
+            </div>
+            {/* Easy Returns */}
+            <div className="flex items-center gap-3 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-4 md:p-5 hover:shadow-lg hover:shadow-green-100/50 transition-all duration-300 group">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-600 transition-colors duration-300 flex-shrink-0">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-green-600 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              </div>
+              <div>
+                <p className="font-bold text-green-900 text-sm md:text-base">Easy Returns</p>
+                <p className="text-green-600/70 text-xs md:text-sm">14-day return policy</p>
+              </div>
+            </div>
+            {/* 24/7 Support */}
+            <div className="flex items-center gap-3 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-4 md:p-5 hover:shadow-lg hover:shadow-green-100/50 transition-all duration-300 group">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-600 transition-colors duration-300 flex-shrink-0">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-green-600 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+              </div>
+              <div>
+                <p className="font-bold text-green-900 text-sm md:text-base">24/7 Support</p>
+                <p className="text-green-600/70 text-xs md:text-sm">Always here to help</p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -134,7 +160,7 @@ export default async function Home() {
             products={specialOffers}
             title="Special Offers"
             subtitle="Exclusive deals handpicked for you"
-            badge="🔥 HOT"
+            badge="HOT"
             viewAllLink="/shop?is_featured=true"
           />
         </section>
@@ -157,7 +183,7 @@ export default async function Home() {
             products={newArrivals}
             title="New Arrivals"
             subtitle="Fresh additions to our collection"
-            badge="✨ NEW"
+            badge="NEW"
             viewAllLink="/shop?is_new_arrival=true"
           />
         </section>
@@ -172,7 +198,7 @@ export default async function Home() {
             products={topSelling}
             title="Trending Now"
             subtitle="What everyone's loving right now"
-            badge="📈 TRENDING"
+            badge="TRENDING"
             viewAllLink="/shop?sort=popular"
           />
         </section>
