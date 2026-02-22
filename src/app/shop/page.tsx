@@ -32,6 +32,14 @@ interface ShopPageProps {
     category_id?: string;
     min_price?: string;
     max_price?: string;
+    search?: string;
+    is_special_offer?: string;
+    is_trending?: string;
+    is_recommended?: string;
+    is_new_arrival?: string;
+    on_sale?: string;
+    is_featured?: string;
+    brand_id?: string;
   };
 }
 
@@ -42,14 +50,31 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   // Prepare API params
   const apiParams: any = {
     page,
-    per_page: 9, // Grid layout fits 3 columns usually
+    per_page: 9,
     category_id: searchParams.category_id ? Number(searchParams.category_id) : undefined,
+    brand_id: searchParams.brand_id ? Number(searchParams.brand_id) : undefined,
     search: searchParams.search || undefined,
+    is_special_offer: searchParams.is_special_offer === 'true' ? true : undefined,
+    is_trending: searchParams.is_trending === 'true' ? true : undefined,
+    is_recommended: searchParams.is_recommended === 'true' ? true : undefined,
+    is_new_arrival: searchParams.is_new_arrival === 'true' ? true : undefined,
+    on_sale: searchParams.on_sale === 'true' ? true : undefined,
+    is_featured: searchParams.is_featured === 'true' ? true : undefined,
     sort: sort === 'most-popular' ? 'sales_count'
       : sort === 'low-price' ? 'price_asc'
         : sort === 'high-price' ? 'price_desc'
           : 'created_at'
   };
+
+  // Dynamic page title based on active filter
+  const pageTitle = searchParams.is_special_offer === 'true' ? 'Special Offers'
+    : searchParams.is_trending === 'true' ? 'Trending Now'
+      : searchParams.is_recommended === 'true' ? 'Recommended For You'
+        : searchParams.is_new_arrival === 'true' ? 'New Arrivals'
+          : searchParams.on_sale === 'true' ? 'On Sale'
+            : searchParams.is_featured === 'true' ? 'Featured Products'
+              : searchParams.search ? `Search: "${searchParams.search}"`
+                : 'All Products';
 
   // Fetch data
   let products: Product[] = [];
@@ -100,7 +125,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
           <div className="flex flex-col w-full space-y-5">
             <div className="flex flex-col lg:flex-row lg:justify-between">
               <div className="flex items-center justify-between">
-                <h1 className="font-bold text-2xl md:text-[32px]">All Products</h1>
+                <h1 className="font-bold text-2xl md:text-[32px]">{pageTitle}</h1>
                 <MobileFilters />
               </div>
               <div className="flex flex-col sm:items-center sm:flex-row">
