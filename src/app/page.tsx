@@ -2,7 +2,7 @@ import ProductCarousel from "@/components/common/ProductCarousel";
 import BrandsSection from "@/components/homepage/Brands";
 import HeroCarousel, { CarouselSlide } from "@/components/homepage/imageCarousel";
 import CategoryGrid from "@/components/homepage/Categories";
-import LiveBlogSection from "@/components/Blog/index";
+import WellnessHub from "@/components/Blog/index";
 import { Product } from "@/types/product.types";
 import { apiClient } from "@/lib/api/client";
 import { transformProduct } from "@/lib/transformers";
@@ -42,7 +42,7 @@ async function getHomePageData() {
     const [newArrivalsReq, topSellingReq, specialOffersReq, settingsReq] = await Promise.all([
       apiClient.getProducts({ is_new_arrival: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
       apiClient.getProducts({ sort: 'sales_count', per_page: 8 }).catch(() => ({ status: false, data: null })),
-      apiClient.getProducts({ is_featured: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
+      apiClient.getProducts({ on_sale: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
       apiClient.getPublicSettings().catch(() => ({ status: false, data: null }))
     ]);
 
@@ -140,7 +140,7 @@ export default async function Home() {
             title="Special Offers"
             subtitle="Exclusive deals handpicked for you"
             badge="HOT"
-            viewAllLink="/shop?is_featured=true"
+            viewAllLink="/shop?on_sale=true"
           />
         </section>
 
@@ -188,7 +188,7 @@ export default async function Home() {
 
         <BrandsSection />
 
-        <LiveBlogSection />
+        <WellnessHub />
 
         <div className="max-w-[1600px] mx-auto px-6">
           <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
