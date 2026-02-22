@@ -29,32 +29,35 @@ const NewsLetterSection = () => {
   };
 
   return (
-    <section className="relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-green-700 via-emerald-600 to-teal-700" />
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-emerald-300 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-200 rounded-full blur-3xl" />
-      </div>
+    <section className="relative overflow-hidden min-h-[320px] flex items-center">
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url('/images/43.avif')`,
+        }}
+      />
 
-      {/* Decorative Pattern */}
+      {/* Dark green overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-green-900/90 via-emerald-800/85 to-teal-900/90" />
+
+      {/* Subtle pattern overlay */}
       <div className="absolute inset-0 opacity-5" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
       }} />
 
-      <div className="relative z-10 max-w-[1600px] mx-auto px-6 py-16 md:py-20">
+      <div className="relative z-10 max-w-[1600px] mx-auto px-6 py-16 md:py-20 w-full">
         <div className="max-w-2xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm px-4 py-1.5 rounded-full mb-6">
-            <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
-            <span className="text-green-100 text-xs font-semibold tracking-wider uppercase">Newsletter</span>
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-1.5 rounded-full mb-6 border border-white/10">
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            <span className="text-green-200 text-xs font-semibold tracking-wider uppercase">Newsletter</span>
           </div>
 
           <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4 tracking-tight leading-tight">
-            Stay in the <span className="text-green-200">Loop</span>
+            Stay in the <span className="text-green-300">Loop</span>
           </h2>
-          <p className="text-green-100/80 text-base md:text-lg mb-8 max-w-lg mx-auto leading-relaxed">
+          <p className="text-white/70 text-base md:text-lg mb-8 max-w-lg mx-auto leading-relaxed">
             Get exclusive deals, new product announcements, and health tips delivered right to your inbox.
           </p>
 
@@ -72,13 +75,13 @@ const NewsLetterSection = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white/95 backdrop-blur-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-300 focus:bg-white transition-all duration-300 text-sm font-medium shadow-lg shadow-black/10"
+                className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white/95 backdrop-blur-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:bg-white transition-all duration-300 text-sm font-medium shadow-lg shadow-black/10"
               />
             </div>
             <button
               type="submit"
               disabled={isLoading}
-              className="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3.5 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-sm whitespace-nowrap flex items-center justify-center gap-2"
+              className="bg-green-500 hover:bg-green-400 text-white font-bold py-3.5 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-green-900/30 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-sm whitespace-nowrap flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
@@ -99,7 +102,7 @@ const NewsLetterSection = () => {
             </button>
           </form>
 
-          <p className="text-green-200/50 text-xs mt-4">
+          <p className="text-white/30 text-xs mt-5">
             No spam, ever. Unsubscribe anytime.
           </p>
         </div>

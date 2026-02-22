@@ -9,8 +9,27 @@ import wishlistReducer from "./features/wishlist/wishlistSlice";
 const persistConfig = {
   key: "root",
   storage,
-  version: 1,
+  version: 2,
   whitelist: ["carts", "wishlist"],
+  migrate: (state: any) => {
+    // v2: Reset cart to fix stale totalQuantities (521 bug)
+    if (state && state._persist && state._persist.version < 2) {
+      return Promise.resolve({
+        ...state,
+        carts: {
+          cart: null,
+          totalPrice: 0,
+          adjustedTotalPrice: 0,
+          promoCode: null,
+          isLoading: false,
+          error: null,
+          isSynced: false,
+        },
+        _persist: { ...state._persist, version: 2 },
+      });
+    }
+    return Promise.resolve(state);
+  },
 };
 
 const rootReducer = combineReducers({
