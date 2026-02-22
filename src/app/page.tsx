@@ -39,10 +39,11 @@ const carouselSlides: CarouselSlide[] = [
 ];
 async function getHomePageData() {
   try {
-    const [newArrivalsReq, topSellingReq, specialOffersReq, settingsReq] = await Promise.all([
+    const [newArrivalsReq, trendingReq, specialOffersReq, recommendedReq, settingsReq] = await Promise.all([
       apiClient.getProducts({ is_new_arrival: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
-      apiClient.getProducts({ sort: 'sales_count', per_page: 8 }).catch(() => ({ status: false, data: null })),
+      apiClient.getProducts({ is_trending: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
       apiClient.getProducts({ is_special_offer: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
+      apiClient.getProducts({ is_recommended: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
       apiClient.getPublicSettings().catch(() => ({ status: false, data: null }))
     ]);
 
@@ -50,33 +51,40 @@ async function getHomePageData() {
       ? newArrivalsReq.data.data.map(transformProduct)
       : newArrivalsFallback;
 
-    const topSelling = (topSellingReq.status && topSellingReq.data?.data?.length)
-      ? topSellingReq.data.data.map(transformProduct)
-      : topSellingFallback;
+    // Trending: only show if admin has marked products as trending
+    const trending = (trendingReq.status && trendingReq.data?.data?.length)
+      ? trendingReq.data.data.map(transformProduct)
+      : null;
 
     const specialOffers = (specialOffersReq.status && specialOffersReq.data?.data?.length)
       ? specialOffersReq.data.data.map(transformProduct)
       : specialOffersFallback;
 
+    // Recommended: only show if admin has marked products as recommended
+    const recommended = (recommendedReq.status && recommendedReq.data?.data?.length)
+      ? recommendedReq.data.data.map(transformProduct)
+      : null;
+
     const dynamicSlides = (settingsReq.status && settingsReq.data?.hero_carousel?.length)
       ? settingsReq.data.hero_carousel
       : carouselSlides;
 
-    return { newArrivals, topSelling, specialOffers, heroSlides: dynamicSlides };
+    return { newArrivals, trending, specialOffers, recommended, heroSlides: dynamicSlides };
 
   } catch (error) {
     console.error("Failed to fetch homepage data, using fallback:", error);
     return {
       newArrivals: newArrivalsFallback,
-      topSelling: topSellingFallback,
+      trending: null,
       specialOffers: specialOffersFallback,
+      recommended: null,
       heroSlides: carouselSlides
     };
   }
 }
 
 export default async function Home() {
-  const { newArrivals, topSelling, specialOffers, heroSlides } = await getHomePageData();
+  const { newArrivals, trending, specialOffers, recommended, heroSlides } = await getHomePageData();
 
   return (
     <>
@@ -171,20 +179,43 @@ export default async function Home() {
           <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
         </div>
 
-        {/* Trending Now */}
-        <section className="w-full">
-          <ProductCarousel
-            products={topSelling}
-            title="Trending Now"
-            subtitle="What everyone's loving right now"
-            badge="TRENDING"
-            viewAllLink="/shop?sort=popular"
-          />
-        </section>
+        {/* Trending Now — only shown if admin has marked products as trending */}
+        {trending && trending.length > 0 && (
+          <>
+            <section className="w-full">
+              <ProductCarousel
+                products={trending}
+                title="Trending Now"
+                subtitle="What everyone's loving right now"
+                badge="TRENDING"
+                viewAllLink="/shop?is_trending=true"
+              />
+            </section>
 
-        <div className="max-w-[1600px] mx-auto px-6">
-          <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
-        </div>
+            <div className="max-w-[1600px] mx-auto px-6">
+              <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
+            </div>
+          </>
+        )}
+
+        {/* Recommended For You — only shown if admin has marked products */}
+        {recommended && recommended.length > 0 && (
+          <>
+            <section className="w-full">
+              <ProductCarousel
+                products={recommended}
+                title="Recommended For You"
+                subtitle="Products we think you'll love"
+                badge="PICK"
+                viewAllLink="/shop?is_recommended=true"
+              />
+            </section>
+
+            <div className="max-w-[1600px] mx-auto px-6">
+              <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
+            </div>
+          </>
+        )}
 
         <BrandsSection />
 

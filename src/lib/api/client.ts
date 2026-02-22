@@ -405,6 +405,8 @@ class NutriBlendApiClient {
         is_new_arrival?: boolean;
         on_sale?: boolean;
         is_special_offer?: boolean;
+        is_trending?: boolean;
+        is_recommended?: boolean;
         sort?: string;
     }): Promise<ApiResponse<PaginatedResponse<Product>>> {
         const queryParams = new URLSearchParams();
