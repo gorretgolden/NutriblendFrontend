@@ -401,6 +401,7 @@ class NutriBlendApiClient {
         min_price?: number;
         max_price?: number;
         is_featured?: boolean;
+        is_new_arrival?: boolean;
         sort?: string;
     }): Promise<ApiResponse<PaginatedResponse<Product>>> {
         const queryParams = new URLSearchParams();

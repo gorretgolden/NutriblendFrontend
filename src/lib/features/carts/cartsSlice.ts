@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { apiClient, CartItem as ApiCartItem, CartSummary, getImageUrl } from "@/lib/api/client";
+import { apiClient, getImageUrl } from "@/lib/api/client";
 import { toast } from "sonner";
 
 // ==================== Types ====================
@@ -32,7 +32,40 @@ interface CartsState {
   promoCode: string | null;
   isLoading: boolean;
   error: string | null;
-  isSynced: boolean; // Whether cart is synced with backend
+  isSynced: boolean;
+}
+
+// ==================== Helper ====================
+
+/**
+ * Transform a backend cart response into local Cart state.
+ * Backend returns: { items: [...], total: number, item_count: number }
+ */
+function transformBackendCart(backendCart: any): { cart: Cart; totalPrice: number } {
+  const items: CartItem[] = (backendCart.items || []).map((item: any) => ({
+    id: item.id,
+    name: item.product_name || item.product?.name || "Unknown Product",
+    srcUrl: (() => {
+      if (item.product_image) return getImageUrl(item.product_image);
+      const firstImg = item.product?.images?.[0];
+      if (!firstImg) return "/images/placeholder.jpg";
+      return typeof firstImg === "string"
+        ? getImageUrl(firstImg)
+        : getImageUrl(firstImg.image_path || firstImg.image_url || "");
+    })(),
+    price: item.price || item.product?.price || 0,
+    quantity: item.quantity,
+    product_id: item.product_id,
+    variation_id: item.variation_id,
+  }));
+
+  const totalQuantities = items.length;
+  const totalPrice = backendCart.total || backendCart.subtotal || items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  return {
+    cart: { items, totalQuantities },
+    totalPrice,
+  };
 }
 
 // ==================== Initial State ====================
@@ -81,24 +114,24 @@ export const addToCart = createAsyncThunk(
         const response = await apiClient.addToCart({
           product_id: item.product_id,
           quantity: item.quantity,
-          variation_id: item.variation_id
+          variation_id: item.variation_id,
         });
+
         if (response.status && response.data) {
-          // Refetch cart from backend to stay in sync
-          dispatch(fetchCart());
-          return { item: response.data, backend: true };
+          // Return the full backend cart directly — reducer will update state
+          return { backendCart: response.data, backend: true };
         }
         return rejectWithValue(response.message || "Failed to add to cart");
       } else {
         // Form the local cart item
         const localItem: CartItem = {
-          id: Date.now(), // Temp ID for guests
+          id: Date.now(),
           product_id: item.product_id,
           variation_id: item.variation_id,
           quantity: item.quantity,
           name: item.name || "Product",
           price: item.price || 0,
-          srcUrl: item.srcUrl || ""
+          srcUrl: item.srcUrl || "",
         };
 
         dispatch(addToCartLocal(localItem));
@@ -120,10 +153,13 @@ export const removeFromCart = createAsyncThunk(
 
       if (isAuthenticated) {
         const response = await apiClient.removeFromCart(itemId);
+        if (response.status && response.data) {
+          return { backendCart: response.data, backend: true };
+        }
         if (response.status) {
-          // Refetch cart from backend to stay in sync
+          // Some responses might not include data, refetch
           dispatch(fetchCart());
-          return { itemId, backend: true };
+          return { itemId, backend: true, refetching: true };
         }
         return rejectWithValue(response.message || "Failed to remove from cart");
       } else {
@@ -136,7 +172,7 @@ export const removeFromCart = createAsyncThunk(
   }
 );
 
-// Alias or specific quantity reduction if needed (optional, keeping it simple for now)
+// Alias
 export const removeCartItem = removeFromCart;
 export const remove = removeFromCart;
 
@@ -154,9 +190,7 @@ export const updateCartItemAsync = createAsyncThunk(
       if (isAuthenticated) {
         const response = await apiClient.updateCartItem(itemId, quantity);
         if (response.status && response.data) {
-          // Refetch cart from backend to stay in sync
-          dispatch(fetchCart());
-          return { item: response.data, backend: true };
+          return { backendCart: response.data, backend: true };
         }
         return rejectWithValue(response.message || "Failed to update cart");
       } else {
@@ -202,11 +236,12 @@ export const cartsSlice = createSlice({
       if (state.cart === null) {
         state.cart = {
           items: [action.payload],
-          totalQuantities: action.payload.quantity,
+          totalQuantities: 1,
         };
       } else {
         const existingItem = state.cart.items.find(
-          (item) => item.product_id === action.payload.product_id &&
+          (item) =>
+            item.product_id === action.payload.product_id &&
             item.variation_id === action.payload.variation_id
         );
 
@@ -219,19 +254,25 @@ export const cartsSlice = createSlice({
         } else {
           state.cart.items.push(action.payload);
         }
-        state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
+        state.cart.totalQuantities = state.cart.items.length;
       }
 
-      state.totalPrice = state.cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      state.adjustedTotalPrice = state.totalPrice; // Basic sync
+      state.totalPrice = state.cart.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      state.adjustedTotalPrice = state.totalPrice;
     },
 
     removeFromCartLocal: (state, action: PayloadAction<number>) => {
       if (!state.cart) return;
 
       state.cart.items = state.cart.items.filter((i) => i.id !== action.payload);
-      state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
-      state.totalPrice = state.cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      state.cart.totalQuantities = state.cart.items.length;
+      state.totalPrice = state.cart.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
       state.adjustedTotalPrice = state.totalPrice;
     },
 
@@ -251,7 +292,7 @@ export const cartsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Fetch cart
+    // ===== Fetch cart =====
     builder.addCase(fetchCart.pending, (state) => {
       state.isLoading = true;
       state.error = null;
@@ -259,99 +300,82 @@ export const cartsSlice = createSlice({
     builder.addCase(fetchCart.fulfilled, (state, action: any) => {
       state.isLoading = false;
       state.isSynced = true;
-      // Transform backend cart to local format
-      if (action.payload.items) {
-        state.cart = {
-          items: action.payload.items.map((item: ApiCartItem) => ({
-            id: item.id,
-            name: item.product_name || item.product?.name || 'Unknown Product',
-            srcUrl: (() => {
-              // New format: product_image is a direct URL
-              if (item.product_image) {
-                return getImageUrl(item.product_image);
-              }
-              // Legacy format: product.images array
-              const firstImg = item.product?.images?.[0];
-              if (!firstImg) return "/images/placeholder.jpg";
-              return typeof firstImg === 'string' ? getImageUrl(firstImg) : getImageUrl(firstImg.image_path || firstImg.image_url || '');
-            })(),
-            price: item.price || item.product?.price || 0,
-            quantity: item.quantity,
-            product_id: item.product_id,
-            variation_id: item.variation_id,
-          })),
-          totalQuantities: action.payload.items.reduce(
-            (sum: number, item: ApiCartItem) => sum + item.quantity,
-            0
-          ),
-        };
-        state.totalPrice = action.payload.total || action.payload.subtotal || 0;
-        state.adjustedTotalPrice = action.payload.total || state.totalPrice;
-      }
+      const { cart, totalPrice } = transformBackendCart(action.payload);
+      state.cart = cart;
+      state.totalPrice = totalPrice;
+      state.adjustedTotalPrice = totalPrice;
     });
     builder.addCase(fetchCart.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload as string;
     });
 
-    // Add to cart
+    // ===== Add to cart =====
     builder.addCase(addToCart.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
     builder.addCase(addToCart.fulfilled, (state, action: any) => {
       state.isLoading = false;
-      if (action.payload.backend) {
-        // Backend cart updated, fetchCart() was dispatched to refetch
-        state.isSynced = false;
+      if (action.payload.backend && action.payload.backendCart) {
+        // Immediately update local state from backend response
+        const { cart, totalPrice } = transformBackendCart(action.payload.backendCart);
+        state.cart = cart;
+        state.totalPrice = totalPrice;
+        state.adjustedTotalPrice = totalPrice;
+        state.isSynced = true;
       }
-      // Local cart is already updated by dispatch(addToCartLocal)
+      // Local cart is already updated by dispatch(addToCartLocal) for guests
     });
     builder.addCase(addToCart.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload as string;
-      toast.error(state.error || "Failed to add to cart");
     });
 
-    // Clear cart
+    // ===== Clear cart =====
     builder.addCase(clearCartAsync.fulfilled, (state) => {
       state.cart = null;
       state.totalPrice = 0;
+      state.adjustedTotalPrice = 0;
       state.isSynced = true;
       toast.success("Cart cleared!");
     });
 
-    // Remove from cart
-    builder.addCase(removeFromCart.fulfilled, (state, action) => {
+    // ===== Remove from cart =====
+    builder.addCase(removeFromCart.fulfilled, (state, action: any) => {
       state.isLoading = false;
-      if (action.payload.backend) {
-        // Backend cart updated, fetchCart() was dispatched to refetch
-        state.isSynced = false;
-      } else {
-        if (state.cart) {
-          state.cart.items = state.cart.items.filter(i => i.id !== action.payload.itemId);
-          state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
-          state.totalPrice = state.cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-          state.adjustedTotalPrice = state.totalPrice;
-        }
+      if (action.payload.backend && action.payload.backendCart) {
+        const { cart, totalPrice } = transformBackendCart(action.payload.backendCart);
+        state.cart = cart;
+        state.totalPrice = totalPrice;
+        state.adjustedTotalPrice = totalPrice;
+        state.isSynced = true;
+      } else if (!action.payload.backend) {
+        // Local cart already updated by dispatch(removeFromCartLocal)
       }
       toast.success("Item removed from cart");
     });
 
-    // Update cart
+    // ===== Update cart =====
     builder.addCase(updateCartItemAsync.fulfilled, (state, action: any) => {
       state.isLoading = false;
-      if (action.payload.backend) {
-        // Backend cart updated, fetchCart() was dispatched to refetch
-        state.isSynced = false;
-      } else {
+      if (action.payload.backend && action.payload.backendCart) {
+        const { cart, totalPrice } = transformBackendCart(action.payload.backendCart);
+        state.cart = cart;
+        state.totalPrice = totalPrice;
+        state.adjustedTotalPrice = totalPrice;
+        state.isSynced = true;
+      } else if (!action.payload.backend) {
         const { itemId, quantity } = action.payload;
         if (state.cart) {
-          state.cart.items = state.cart.items.map(item =>
+          state.cart.items = state.cart.items.map((item) =>
             item.id === itemId ? { ...item, quantity } : item
           );
-          state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
-          state.totalPrice = state.cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+          state.cart.totalQuantities = state.cart.items.length;
+          state.totalPrice = state.cart.items.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          );
           state.adjustedTotalPrice = state.totalPrice;
         }
       }
@@ -376,7 +400,7 @@ export const {
   removeFromCartLocal,
   clearCartLocal,
   setPromoCode,
-  setAdjustedPrice
+  setAdjustedPrice,
 } = cartsSlice.actions;
 
 export default cartsSlice.reducer;
