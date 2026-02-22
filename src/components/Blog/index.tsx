@@ -76,8 +76,8 @@ const WellnessHub = () => {
               id: page.id,
               title: page.title,
               slug: page.slug,
-              image: page.content?.image || page.content?.featured_image || '/images/bottle2.avif',
-              excerpt: page.meta_description || page.content?.excerpt || '',
+              image: page.featured_image || page.content?.featured_image || '/images/bottle2.avif',
+              excerpt: page.excerpt || page.meta_description || '',
             }));
           if (mapped.length > 0) setArticles(mapped);
         }
