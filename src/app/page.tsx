@@ -4,7 +4,9 @@ import HeroCarousel, { CarouselSlide } from "@/components/homepage/imageCarousel
 import CategoryGrid from "@/components/homepage/Categories";
 import LiveBlogSection from "@/components/Blog/index";
 import { Product } from "@/types/product.types";
-import { apiClient, getImageUrl, type Product as ApiProduct } from "@/lib/api/client";
+import { apiClient } from "@/lib/api/client";
+import { transformProduct } from "@/lib/transformers";
+import { newArrivalsFallback, topSellingFallback, specialOffersFallback } from "@/data/home-fallbacks";
 
 const carouselSlides: CarouselSlide[] = [
   {
@@ -35,29 +37,6 @@ const carouselSlides: CarouselSlide[] = [
     layout: 'imageLeft'
   }
 ];
-
-import { newArrivalsFallback, topSellingFallback, specialOffersFallback } from "@/data/home-fallbacks";
-
-// Helper to transform API product to UI product
-const transformProduct = (p: ApiProduct): Product => {
-  const primaryImage = p.images?.find(img => img.is_primary) || p.images?.[0];
-  const imageUrl = primaryImage ? getImageUrl(primaryImage.image_path) : '/images/placeholder.jpg';
-
-  return {
-    id: p.id,
-    title: p.name,
-    srcUrl: imageUrl,
-    gallery: p.images?.map(img => getImageUrl(img.image_path)) || [imageUrl],
-    price: p.price,
-    discount: {
-      amount: 0,
-      percentage: p.discount_percentage || 0,
-    },
-    rating: 5,
-    brand: p.brand?.name
-  };
-};
-
 async function getHomePageData() {
   try {
     const [newArrivalsReq, topSellingReq, specialOffersReq, settingsReq] = await Promise.all([

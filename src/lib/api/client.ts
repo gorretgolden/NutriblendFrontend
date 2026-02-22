@@ -51,6 +51,7 @@ export interface Product {
     id: number;
     name: string;
     slug: string;
+    short_description?: string;
     description: string;
     price: number;
     discount_percentage?: number;

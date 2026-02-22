@@ -77,10 +77,16 @@ const Header = ({ data }: { data: Product }) => {
               )
             )}
           </div>
-          <p className="text-sm sm:text-base text-dark-700/80 mb-5">
-            This graphic t-shirt which is perfect for any occasion. Crafted from
-            a soft and breathable fabric, it offers superior comfort and style.
-          </p>
+          {data.shortDescription ? (
+            <p className="text-sm sm:text-base text-dark-700/80 mb-5">
+              {data.shortDescription}
+            </p>
+          ) : data.description ? (
+            <div
+              className="text-sm sm:text-base text-dark-700/80 mb-5 prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: data.description }}
+            />
+          ) : null}
           {/* <hr className="h-[1px] border-t-green-200 mb-5" /> */}
           {/* <ColorSelection /> */}
           <hr className="h-[1px] border-t-green-200 my-5" />

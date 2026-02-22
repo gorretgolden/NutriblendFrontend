@@ -53,6 +53,8 @@ export const transformProduct = (p: ApiProduct): Product => {
         },
         rating: p.average_rating || 0,
         brand: p.brand?.name,
+        description: p.description || '',
+        shortDescription: p.short_description || '',
         variations: p.variations?.map(v => ({
             id: v.id,
             name: v.name,

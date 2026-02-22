@@ -14,7 +14,7 @@ export type Review = {
 export type Product = {
   id: number;
   title: string;
-  slug: string;
+  slug?: string;
   srcUrl: string;
   gallery?: string[];
   price: number;
@@ -23,6 +23,8 @@ export type Product = {
   reviews?: number;
   reviewList?: Review[];
   brand?: string;
+  description?: string;
+  shortDescription?: string;
   variations?: {
     id: number;
     name: string;
