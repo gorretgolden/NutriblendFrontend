@@ -42,7 +42,7 @@ async function getHomePageData() {
     const [newArrivalsReq, topSellingReq, specialOffersReq, settingsReq] = await Promise.all([
       apiClient.getProducts({ is_new_arrival: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
       apiClient.getProducts({ sort: 'sales_count', per_page: 8 }).catch(() => ({ status: false, data: null })),
-      apiClient.getProducts({ on_sale: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
+      apiClient.getProducts({ is_special_offer: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
       apiClient.getPublicSettings().catch(() => ({ status: false, data: null }))
     ]);
 
@@ -140,7 +140,7 @@ export default async function Home() {
             title="Special Offers"
             subtitle="Exclusive deals handpicked for you"
             badge="HOT"
-            viewAllLink="/shop?on_sale=true"
+            viewAllLink="/shop?is_special_offer=true"
           />
         </section>
 
