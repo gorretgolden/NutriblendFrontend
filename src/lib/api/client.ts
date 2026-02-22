@@ -262,6 +262,7 @@ class NutriBlendApiClient {
             const url = `${this.baseURL}${endpoint}`;
             const config: RequestInit = {
                 ...options,
+                cache: 'no-store' as RequestCache, // Prevent Next.js from caching API responses
                 headers: {
                     ...this.getAuthHeaders(),
                     ...options.headers,

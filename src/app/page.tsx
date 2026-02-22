@@ -37,6 +37,10 @@ const carouselSlides: CarouselSlide[] = [
     layout: 'imageLeft'
   }
 ];
+
+// Revalidate homepage data every 60 seconds
+export const revalidate = 60;
+
 async function getHomePageData() {
   try {
     const [newArrivalsReq, trendingReq, specialOffersReq, recommendedReq, settingsReq] = await Promise.all([
