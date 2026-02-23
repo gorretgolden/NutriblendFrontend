@@ -43,7 +43,7 @@ function AccountOverview() {
               <div>
                 <p className="text-xs text-gray-500">Full Name</p>
                 <p className="text-sm font-semibold text-gray-800">
-                  {user?.first_name} {user?.last_name}
+                  {user?.first_name || user?.name?.split(' ')[0] || ''} {user?.last_name || (user?.name?.split(' ').slice(1).join(' ') || '')}
                 </p>
               </div>
             </div>
@@ -550,11 +550,11 @@ const AccountPage = () => {
               {user && (
                 <div className="mb-4 pb-4 border-b border-gray-100">
                   <div className="w-16 h-16 mx-auto mb-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
-                    {(user.first_name?.[0] || "").toUpperCase()}
-                    {(user.last_name?.[0] || "").toUpperCase()}
+                    {(user.first_name?.[0] || user.name?.[0] || "").toUpperCase()}
+                    {(user.last_name?.[0] || user.name?.split(' ')[1]?.[0] || "").toUpperCase()}
                   </div>
                   <p className="text-center font-semibold text-gray-800">
-                    {user.first_name} {user.last_name}
+                    {user.first_name || user.name?.split(' ')[0] || ''} {user.last_name || (user.name?.split(' ').slice(1).join(' ') || '')}
                   </p>
                   <p className="text-center text-sm text-gray-500">{user.email}</p>
                 </div>

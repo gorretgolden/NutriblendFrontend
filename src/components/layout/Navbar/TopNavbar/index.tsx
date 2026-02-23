@@ -162,7 +162,7 @@ const Header = () => {
                     </svg>
                   </div>
                   <span className="hidden md:inline text-sm font-medium">
-                    {user ? `Hi, ${user.first_name}` : "Account"}
+                    {user ? `Hi, ${user.first_name || user.name?.split(' ')[0] || 'User'}` : "Account"}
                   </span>
                   <svg
                     className="ml-1 w-3 h-3 text-gray-400 transition-transform duration-200"
@@ -186,7 +186,7 @@ const Header = () => {
                   >
                     <div className="bg-gradient-to-r from-[#4caf50] to-[#45a049] text-white p-3 md:p-4">
                       <h3 className="font-semibold text-base md:text-lg">
-                        {user ? `Welcome, ${user.first_name}!` : "Welcome!"}
+                        {user ? `Welcome, ${user.first_name || user.name?.split(' ')[0] || 'User'}!` : "Welcome!"}
                       </h3>
                       <p className="text-xs md:text-sm opacity-90">
                         {user ? "Happy to see you again" : "Sign in to access your account"}

@@ -225,7 +225,7 @@ export default function Checkout() {
             <div className="bg-white rounded-2xl shadow-lg border border-green-100 p-6 mb-6">
               <h2 className="text-xl font-semibold text-green-900 mb-4">1. CUSTOMER INFORMATION</h2>
               <div className="text-green-800">
-                <p className="font-semibold text-green-600">{user?.first_name} {user?.last_name}</p>
+                <p className="font-semibold text-green-600">{user?.first_name || user?.name?.split(' ')[0]} {user?.last_name || (user?.name?.split(' ').slice(1).join(' ') || '')}</p>
                 <p>{user?.email} | {user?.phone}</p>
               </div>
             </div>
