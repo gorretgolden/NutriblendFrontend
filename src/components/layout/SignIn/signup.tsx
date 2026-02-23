@@ -399,7 +399,8 @@ const SignUpModal = ({
               <button
                 type="button"
                 onClick={() => {
-                  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+                  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+                  const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
                   window.location.href = `${baseUrl}/auth/google/redirect`;
                 }}
                 className="flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50"

@@ -121,9 +121,9 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
 
         <button
           onClick={() => {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            // Extract the domain part of the API URL to redirect to /api/v1/social/google/redirect or similar
-            // Usually the backend route for social login redirect
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            // Strip /api/v1 suffix since Google OAuth uses web routes
+            const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
             window.location.href = `${baseUrl}/auth/google/redirect`;
           }}
           className="mt-4 flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50"
