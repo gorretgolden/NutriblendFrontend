@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import LayoutWrapper from "./layoutWrapper";
 import HolyLoader from "holy-loader";
 import Providers from "./providers";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nutriblendhaven.com'),
@@ -124,6 +125,7 @@ export default function RootLayout({
           <LayoutWrapper>{children}</LayoutWrapper>
         </Providers>
         <Footer />
+        <Toaster position="top-right" richColors closeButton duration={3000} />
       </body>
     </html>
   );

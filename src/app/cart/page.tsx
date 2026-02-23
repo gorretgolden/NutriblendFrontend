@@ -3,24 +3,56 @@
 import BreadcrumbCart from "@/components/cart-page/BreadcrumbCart";
 import ProductCard from "@/components/cart-page/ProductCard";
 import { Button } from "@/components/ui/button";
-import InputGroup from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
 import { integralCF } from "@/styles/fonts";
 import { FaArrowRight } from "react-icons/fa6";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { TbBasketExclamation } from "react-icons/tb";
-import React from "react";
+import React, { useState } from "react";
 import { RootState } from "@/lib/store";
 import { useAppSelector } from "@/lib/hooks/redux";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { apiClient } from "@/lib/api/client";
 
 export default function CartPage() {
   const { cart, totalPrice, adjustedTotalPrice } = useAppSelector(
     (state: RootState) => state.carts
   );
 
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
+  const isAuthenticated = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
+
+  const [promoCode, setPromoCode] = useState("");
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoApplied, setPromoApplied] = useState(false);
+  const [discountAmount, setDiscountAmount] = useState(0);
+
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim()) {
+      toast.error("Please enter a promo code");
+      return;
+    }
+    try {
+      setPromoLoading(true);
+      const response = await apiClient.validateDiscount({
+        code: promoCode,
+        total_amount: adjustedTotalPrice,
+      });
+      if (response.status && response.data) {
+        setDiscountAmount(response.data.discount_amount);
+        setPromoApplied(true);
+        toast.success(`Promo applied! You save UGX ${response.data.discount_amount.toLocaleString()}`);
+      } else {
+        toast.error(response.message || "Invalid promo code");
+      }
+    } catch {
+      toast.error("Failed to apply promo code");
+    } finally {
+      setPromoLoading(false);
+    }
+  };
 
   return (
     <main className="pb-20 bg-white-50 min-h-screen">
@@ -31,7 +63,7 @@ export default function CartPage() {
             <h2
               className={cn([
                 integralCF.className,
-                "font-bold text-[32px] md:text-[40px] text-dark-800 uppercase mb-6 md:mb-8",
+                "font-bold text-[24px] md:text-[28px] text-dark-800 uppercase mb-6 md:mb-8",
               ])}
             >
               Your Shopping Cart
@@ -100,28 +132,32 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                {/* Promo Code Section */}
                 <div className="pt-2">
                   <h4 className="text-sm font-medium text-dark-700 mb-3">Have a promo code?</h4>
                   <div className="flex gap-2">
-                    <InputGroup className="bg-green-50 border-green-200">
-                      <InputGroup.Text>
-                        <MdOutlineLocalOffer className="text-green-500 text-xl" />
-                      </InputGroup.Text>
-                      <InputGroup.Input
+                    <div className="flex-1 flex items-center bg-green-50 border border-green-200 rounded-full px-4 h-12">
+                      <MdOutlineLocalOffer className="text-green-500 text-xl mr-2 flex-shrink-0" />
+                      <input
                         type="text"
-                        name="code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)}
                         placeholder="Enter promo code"
-                        className="bg-transparent placeholder:text-dark-400 text-green-800"
+                        className="bg-transparent placeholder:text-dark-400 text-green-800 outline-none w-full"
+                        disabled={promoApplied}
                       />
-                    </InputGroup>
+                    </div>
                     <Button
                       type="button"
                       className="bg-green-600 hover:bg-green-700 text-white rounded-full px-4 h-12 transition-colors"
+                      onClick={handleApplyPromo}
+                      disabled={promoLoading || promoApplied}
                     >
-                      Apply
+                      {promoLoading ? "..." : promoApplied ? "Applied" : "Apply"}
                     </Button>
                   </div>
+                  {promoApplied && (
+                    <p className="text-green-600 text-xs mt-2">Discount: -UGX {discountAmount.toLocaleString()}</p>
+                  )}
                 </div>
 
                 {/* Checkout Button */}
@@ -130,7 +166,12 @@ export default function CartPage() {
                   type="button"
                   className="w-full bg-green-600 hover:bg-green-700 text-white py-4 h-14 rounded-xl font-semibold text-lg group transition-all duration-300 hover:shadow-lg"
                   onClick={() => {
-                    // Store cart data in sessionStorage before navigating
+                    if (!isAuthenticated) {
+                      sessionStorage.setItem('returnUrl', '/cart/checkout');
+                      toast.error("Please login to proceed to checkout");
+                      router.push('/login');
+                      return;
+                    }
                     sessionStorage.setItem('checkoutCart', JSON.stringify({
                       items: cart.items,
                       totalPrice,

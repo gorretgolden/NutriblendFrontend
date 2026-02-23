@@ -59,18 +59,14 @@ const ProductCard = ({ data }: ProductCardProps) => {
           </Button>
         </div>
 
-        <div className="mb-1">
-          <span className="text-green-700 text-xs md:text-sm mr-1">Size:</span>
-          <span className="text-green-600 text-xs md:text-sm">
-            {data.attributes?.[0] ?? "N/A"}
-          </span>
-        </div>
-        <div className="mb-3">
-          <span className="text-green-700 text-xs md:text-sm mr-1">Color:</span>
-          <span className="text-green-600 text-xs md:text-sm">
-            {data.attributes?.[1] ?? "N/A"}
-          </span>
-        </div>
+        {(data.attributes?.[0] || data.variation_name) && (
+          <div className="mb-3">
+            <span className="text-green-700 text-xs md:text-sm mr-1">Variation:</span>
+            <span className="text-green-600 text-xs md:text-sm">
+              {data.variation_name || data.attributes?.[0] || "Standard"}
+            </span>
+          </div>
+        )}
 
         <div className="flex items-center flex-wrap justify-between">
           <div className="flex items-center space-x-2">

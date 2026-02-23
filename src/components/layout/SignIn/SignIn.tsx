@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { loginUser } from "@/lib/features/auth/authSlice";
 import { toast } from "sonner";
@@ -13,6 +14,7 @@ type LoginModalProps = {
 
 const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { isLoading, error } = useAppSelector((state) => state.auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,6 +33,12 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
     if (loginUser.fulfilled.match(resultAction)) {
       toast.success("Signed in successfully!");
       onClose();
+      // Check for returnUrl (e.g., from checkout redirect)
+      const returnUrl = sessionStorage.getItem("returnUrl");
+      if (returnUrl) {
+        sessionStorage.removeItem("returnUrl");
+        router.push(returnUrl);
+      }
     }
   };
 

@@ -13,6 +13,7 @@ export type CartItem = {
   quantity: number;
   product_id: number;
   variation_id?: number;
+  variation_name?: string;
   attributes?: string[];
   discount?: {
     amount: number;
