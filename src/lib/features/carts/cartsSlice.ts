@@ -54,14 +54,14 @@ function transformBackendCart(backendCart: any): { cart: Cart; totalPrice: numbe
         ? getImageUrl(firstImg)
         : getImageUrl(firstImg.image_path || firstImg.image_url || "");
     })(),
-    price: item.price || item.product?.price || 0,
-    quantity: item.quantity,
+    price: Number(item.price || item.product?.price || 0),
+    quantity: Number(item.quantity),
     product_id: item.product_id,
     variation_id: item.variation_id,
   }));
 
   const totalQuantities = items.length;
-  const totalPrice = backendCart.total || backendCart.subtotal || items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = Number(backendCart.total || backendCart.subtotal || items.reduce((sum, item) => sum + item.price * item.quantity, 0));
 
   return {
     cart: { items, totalQuantities },
@@ -249,7 +249,7 @@ export const cartsSlice = createSlice({
         if (existingItem) {
           state.cart.items = state.cart.items.map((item) =>
             item.id === existingItem.id
-              ? { ...item, quantity: item.quantity + action.payload.quantity }
+              ? { ...item, quantity: Number(item.quantity) + Number(action.payload.quantity) }
               : item
           );
         } else {

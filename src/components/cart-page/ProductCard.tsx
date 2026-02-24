@@ -7,7 +7,6 @@ import Link from "next/link";
 import CartCounter from "@/components/ui/CartCounter";
 import { Button } from "../ui/button";
 import {
-  addToCart,
   CartItem,
   removeFromCart,
   updateCartItemAsync,
@@ -107,7 +106,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
           <CartCounter
             initialValue={data.quantity}
-            onAdd={() => dispatch(addToCart({ ...data, quantity: 1 }))}
+            onAdd={() => dispatch(updateCartItemAsync({ itemId: data.id, quantity: data.quantity + 1 }))}
             onRemove={() =>
               data.quantity === 1
                 ? dispatch(removeFromCart(data.id))

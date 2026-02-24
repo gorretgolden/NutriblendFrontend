@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
@@ -20,13 +20,14 @@ const CartCounter = ({
   className,
   initialValue = 1,
 }: CartCounterProps) => {
-  const [counter, setCounter] = useState<number>(initialValue);
+  // Use the initialValue prop directly — no local state.
+  // The parent (Redux) is the single source of truth for quantity.
+  const counter = initialValue;
 
   const addToCart = () => {
     if (onAdd) {
       onAdd(counter + 1);
     }
-    setCounter(counter + 1);
   };
 
   const remove = () => {
@@ -35,8 +36,6 @@ const CartCounter = ({
     if (onRemove) {
       onRemove(counter - 1);
     }
-    if (counter - 1 <= 0) return;
-    setCounter(counter - 1);
   };
 
   return (
@@ -56,7 +55,7 @@ const CartCounter = ({
         <FaMinus />
       </Button>
       <span className="font-medium text-green-900 text-sm sm:text-base">
-        {!isZeroDelete ? counter : initialValue}
+        {counter}
       </span>
       <Button
         variant="ghost"
