@@ -63,8 +63,9 @@ export default function MyAccountManagement() {
       });
 
       if (response.status) {
+        // Await profile refresh so Redux + localStorage are fully updated
+        await dispatch(fetchUserProfile()).unwrap();
         toast.success("Profile updated successfully!");
-        dispatch(fetchUserProfile());
       } else {
         toast.error(response.message || "Failed to update profile");
       }
