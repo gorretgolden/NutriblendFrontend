@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 export default function Checkout() {
   const router = useRouter();
-  const { cart, adjustedTotalPrice } = useAppSelector((state) => state.carts);
+  const { cart, adjustedTotalPrice, isLoading: cartLoading } = useAppSelector((state) => state.carts);
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   const [regions, setRegions] = useState<Region[]>([]);
@@ -26,7 +26,7 @@ export default function Checkout() {
   const [loadingRegions, setLoadingRegions] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState('cod');
 
-  // Check authentication
+  // Check authentication — only redirect if cart is definitely empty (not still loading)
   useEffect(() => {
     if (!isAuthenticated) {
       toast.error("Please login to checkout");
@@ -34,12 +34,12 @@ export default function Checkout() {
       return;
     }
 
-    if (!cart || cart.items.length === 0) {
+    if (!cartLoading && cart && cart.items.length === 0) {
       toast.error("Your cart is empty");
       router.push('/cart');
       return;
     }
-  }, [isAuthenticated, cart, router]);
+  }, [isAuthenticated, cart, cartLoading, router]);
 
   // Fetch regions
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function Checkout() {
       }
     }
 
-    if (isAuthenticated && cart?.items.length > 0) {
+    if (isAuthenticated && cart?.items && cart.items.length > 0) {
       fetchRegions();
     }
   }, [isAuthenticated, cart]);
@@ -150,7 +150,7 @@ export default function Checkout() {
       setLoading(true);
 
       const orderData = {
-        items: cart.items.map((item: any) => ({
+        items: (cart?.items || []).map((item: any) => ({
           product_id: item.product_id,
           quantity: item.quantity,
           variation_id: item.variation_id,
@@ -184,7 +184,7 @@ export default function Checkout() {
     }
   };
 
-  if (!cart || !isAuthenticated) {
+  if (!cart || !isAuthenticated || cartLoading) {
     return (
       <div className="min-h-screen bg-green-50 flex items-center justify-center">
         <Loader2 className="w-12 h-12 text-green-600 animate-spin" />
@@ -256,14 +256,27 @@ export default function Checkout() {
                   <label className="block text-sm font-medium text-green-700 mb-2">Town</label>
                   <select
                     value={selectedTown || ""}
-                    onChange={(e) => setSelectedTown(Number(e.target.value))}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (!val) {
+                        setSelectedTown(null);
+                        setDeliveryFee(0);
+                        return;
+                      }
+                      const townId = Number(val);
+                      setSelectedTown(townId);
+                      const selectedTownObj = towns.find(t => t.id === townId);
+                      if (selectedTownObj?.delivery_fee) {
+                        setDeliveryFee(selectedTownObj.delivery_fee);
+                      }
+                    }}
                     className="w-full border border-green-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
                     disabled={!selectedRegion || towns.length === 0}
                   >
                     <option value="">Select Town</option>
                     {towns.map((town) => (
                       <option key={town.id} value={town.id}>
-                        {town.name} (Fee: UGX {town.delivery_fee.toLocaleString()})
+                        {town.name}{town.delivery_fee ? ` (Fee: UGX ${Number(town.delivery_fee).toLocaleString()})` : ''}
                       </option>
                     ))}
                   </select>
