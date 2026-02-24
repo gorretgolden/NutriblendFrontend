@@ -18,7 +18,7 @@ const NewsLetterSection = () => {
       const response = await apiClient.subscribeToNewsletter(email);
       if (response.status) {
         setIsSubscribed(true);
-        toast.success(response.message || "Welcome aboard! 🎉 You've been subscribed successfully.");
+        toast.success(response.message || "Welcome aboard! You've been subscribed successfully.");
       } else {
         toast.error(response.message || "Failed to subscribe.");
       }
@@ -75,7 +75,7 @@ const NewsLetterSection = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h3 className="text-white text-lg font-bold mb-2">You&apos;re Subscribed! 🎉</h3>
+                  <h3 className="text-white text-lg font-bold mb-2">You&apos;re Subscribed!</h3>
                   <p className="text-white/50 text-sm mb-4">
                     Welcome to the NutriBlend Haven community! Check your inbox for a welcome surprise.
                   </p>
