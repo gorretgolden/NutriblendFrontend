@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import MyAccount from "@/components/accounts/MyAccountManagement";
 import { FiUser, FiBox, FiHeart, FiStar, FiMail, FiSettings, FiLogOut } from "react-icons/fi";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
@@ -324,12 +324,12 @@ function ReviewsSection() {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        // Use notifications as a proxy for activity, or fetch reviews
-        // The API doesn't have a dedicated user-reviews endpoint,
-        // so we'll display a helpful message
-        setReviews([]);
+        const response = await apiClient.getMyReviews();
+        if (response.status && response.data) {
+          setReviews(Array.isArray(response.data) ? response.data : []);
+        }
       } catch {
-        // silently fail
+        // silently fail — endpoint may not exist yet
       } finally {
         setLoading(false);
       }
@@ -499,10 +499,18 @@ function MessagesSection() {
 // Main Account Page
 // ============================================================
 const AccountPage = () => {
-  const [activeSection, setActiveSection] = useState("overview");
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'overview';
+  const [activeSection, setActiveSection] = useState(initialTab);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+
+  // Sync tab with URL when searchParams change
+  useEffect(() => {
+    const tab = searchParams.get('tab') || 'overview';
+    setActiveSection(tab);
+  }, [searchParams]);
 
   useEffect(() => {
     if (!isAuthenticated) {

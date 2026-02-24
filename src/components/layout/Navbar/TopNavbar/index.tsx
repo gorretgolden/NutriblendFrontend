@@ -75,12 +75,12 @@ const Header = () => {
 
   // Account menu data
   const accountLinks = [
-    { label: "My Account", href: "/account" },
-    { label: "Orders", href: "/account/order" },
-    { label: "My Lists", href: "/account/mylist" },
-    { label: "My Reviews", href: "/account/MyReview" },
-    { label: "Messages", href: "/account/message" },
-    { label: "Account Management", href: "/account/manage" },
+    { label: "My Account", href: "/account?tab=overview" },
+    { label: "Orders", href: "/account?tab=orders" },
+    { label: "My Lists", href: "/account?tab=wishlist" },
+    { label: "My Reviews", href: "/account?tab=reviews" },
+    { label: "Messages", href: "/account?tab=messages" },
+    { label: "Account Management", href: "/account?tab=account" },
   ];
 
   // Modal control functions

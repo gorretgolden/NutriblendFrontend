@@ -47,6 +47,20 @@ export interface User {
     updated_at?: string;
 }
 
+export interface Region {
+    id: number;
+    name: string;
+    status?: string;
+}
+
+export interface Town {
+    id: number;
+    name: string;
+    region_id: number;
+    delivery_fee: number;
+    status?: string;
+}
+
 export interface Product {
     id: number;
     name: string;
@@ -483,6 +497,12 @@ class NutriBlendApiClient {
 
     async getCartSummary(): Promise<ApiResponse<CartSummary>> {
         return this.request<CartSummary>('/cart/summary');
+    }
+
+    // ==================== Reviews (User) ====================
+
+    async getMyReviews(): Promise<ApiResponse<any[]>> {
+        return this.request<any[]>('/reviews/my');
     }
 
     // ==================== Wishlist ====================

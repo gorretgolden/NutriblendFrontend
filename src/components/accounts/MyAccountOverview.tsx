@@ -9,7 +9,7 @@ const AccountOverview = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
-    name: user ? `${user.first_name} ${user.last_name || ""}`.trim() : "",
+    name: user ? (user.first_name ? `${user.first_name} ${user.last_name || ""}`.trim() : user.name || "") : "",
     email: user?.email || "",
     address: user?.address || "No default shipping address available."
   });
@@ -18,7 +18,7 @@ const AccountOverview = () => {
   useEffect(() => {
     if (user) {
       setUserData({
-        name: `${user.first_name} ${user.last_name || ""}`.trim(),
+        name: user.first_name ? `${user.first_name} ${user.last_name || ""}`.trim() : user.name || "",
         email: user.email,
         address: user.address || "No default shipping address available."
       });
