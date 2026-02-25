@@ -45,8 +45,8 @@ const NewsLetterSection = () => {
         backgroundSize: '24px 24px',
       }} />
 
-      <div className="relative z-10 max-w-[1600px] mx-auto px-6 py-16 md:py-24">
-        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-20">
+      <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 py-10 sm:py-16 md:py-24">
+        <div className="flex flex-col lg:flex-row items-center gap-6 sm:gap-10 lg:gap-20">
 
           {/* Left side: content */}
           <div className="flex-1 text-center lg:text-left">

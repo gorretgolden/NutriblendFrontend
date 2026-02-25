@@ -51,9 +51,9 @@ const Footer = () => {
 
       {/* Footer */}
       <footer className="w-full bg-gray-50 border-t border-gray-100">
-        <div className="max-w-[1600px] mx-auto px-6">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
           {/* Footer Content */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-14">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 py-8 sm:py-14">
             {/* Brand Section */}
             <div>
               <h3 className="text-gray-900 mb-4 text-lg font-extrabold tracking-tight">
@@ -182,7 +182,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-200">
-          <div className="max-w-[1600px] mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-gray-400 text-xs">
               © {currentYear} {settings?.name || "NutriBlend Haven"}. All rights reserved.
             </p>
@@ -203,7 +203,7 @@ const Footer = () => {
       {/* WhatsApp Floating Button */}
       <a
         href={`https://wa.me/${settings?.phone?.replace(/\+/g, '') || "256700000000"}`}
-        className="fixed w-14 h-14 bottom-8 right-6 bg-[#25d366] text-white rounded-2xl text-2xl shadow-xl shadow-green-500/30 z-50 flex items-center justify-center transition-all hover:bg-[#128C7E] hover:scale-110 hover:shadow-2xl"
+        className="fixed w-12 h-12 sm:w-14 sm:h-14 bottom-6 right-4 sm:bottom-8 sm:right-6 bg-[#25d366] text-white rounded-2xl text-xl sm:text-2xl shadow-xl shadow-green-500/30 z-50 flex items-center justify-center transition-all hover:bg-[#128C7E] hover:scale-110 hover:shadow-2xl"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"

@@ -203,7 +203,7 @@ export default function SearchWithDropdown() {
               {categories.slice(0, 9).map((category) => (
                 <Link
                   key={category.id}
-                  href={`/shop?category_id=${category.id}`}
+                  href={`/shop?category=${category.slug}`}
                   className="block bg-gray-50 hover:bg-[#4caf50] hover:text-white p-3 sm:p-4 rounded-xl text-sm font-medium text-center transition-colors duration-200"
                   onClick={() => setOpen(false)}
                 >

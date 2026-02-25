@@ -97,7 +97,7 @@ export default async function Home() {
         </section>
 
         {/* Trust/Perks Banner */}
-        <section className="max-w-[1600px] mx-auto px-6 mb-8 md:mb-14">
+        <section className="max-w-[1600px] mx-auto px-4 sm:px-6 mb-8 md:mb-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {/* Free Delivery */}
             <div className="flex items-center gap-3 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-4 md:p-5 hover:shadow-lg hover:shadow-green-100/50 transition-all duration-300 group">
@@ -155,17 +155,17 @@ export default async function Home() {
               />
             </section>
 
-            <div className="max-w-[1600px] mx-auto px-6">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
               <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
             </div>
           </>
         )}
 
-        <div className="max-w-[1600px] mx-auto px-6">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
           <CategoryGrid />
         </div>
 
-        <div className="max-w-[1600px] mx-auto px-6">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
           <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
         </div>
 
@@ -182,7 +182,7 @@ export default async function Home() {
               />
             </section>
 
-            <div className="max-w-[1600px] mx-auto px-6">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
               <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
             </div>
           </>
@@ -201,7 +201,7 @@ export default async function Home() {
               />
             </section>
 
-            <div className="max-w-[1600px] mx-auto px-6">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
               <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
             </div>
           </>
@@ -220,7 +220,7 @@ export default async function Home() {
               />
             </section>
 
-            <div className="max-w-[1600px] mx-auto px-6">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
               <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
             </div>
           </>
@@ -230,7 +230,7 @@ export default async function Home() {
 
         <WellnessHub />
 
-        <div className="max-w-[1600px] mx-auto px-6">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
           <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
         </div>
 

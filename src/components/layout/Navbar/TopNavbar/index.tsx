@@ -87,10 +87,10 @@ const Header = () => {
   // Format categories for navigation
   const dynamicNavItems = categories.map(cat => ({
     name: cat.name,
-    href: `/shop?category_id=${cat.id}`,
+    href: `/shop?category=${cat.slug}`,
     subItems: cat.children?.length > 0 ? cat.children.map((child: any) => ({
       name: child.name,
-      href: `/shop?category_id=${child.id}`
+      href: `/shop?category=${child.slug}`
     })) : null
   }));
 
@@ -529,7 +529,7 @@ const Header = () => {
                   {categories.slice(0, 8).map((category) => (
                     <Link
                       key={category.id}
-                      href={`/shop?category_id=${category.id}`}
+                      href={`/shop?category=${category.slug}`}
                       className="bg-gray-50 hover:bg-green-500 hover:text-white p-3 rounded-xl text-sm font-medium text-center transition-colors duration-200"
                       onClick={() => { setMobileSearchOpen(false); setSearchQuery(""); }}
                     >
@@ -706,7 +706,7 @@ function DesktopSearchBar({
               {categories.slice(0, 9).map((category) => (
                 <Link
                   key={category.id}
-                  href={`/shop?category_id=${category.id}`}
+                  href={`/shop?category=${category.slug}`}
                   className="block bg-gray-50 hover:bg-[#4caf50] hover:text-white p-3 sm:p-4 rounded-xl text-sm font-medium text-center transition-colors duration-200"
                   onClick={() => setOpen(false)}
                 >

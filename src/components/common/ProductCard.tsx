@@ -52,11 +52,11 @@ const ProductCard = ({ data }: ProductCardProps) => {
   };
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-gray-100/80 shadow-sm hover:shadow-xl hover:shadow-green-900/8 transition-all duration-500 flex flex-col relative h-full hover:-translate-y-1">
+    <div className="group bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-gray-100/80 shadow-sm hover:shadow-xl hover:shadow-green-900/8 transition-all duration-500 flex flex-col relative h-full hover:-translate-y-1">
       {/* Image Container */}
-      <div className="bg-gradient-to-b from-gray-50 to-white rounded-t-2xl w-full h-[230px] flex items-center justify-center p-5 relative overflow-hidden">
+      <div className="bg-gradient-to-b from-gray-50 to-white rounded-t-xl sm:rounded-t-2xl w-full h-[160px] sm:h-[200px] md:h-[230px] flex items-center justify-center p-3 sm:p-5 relative overflow-hidden">
         {/* Wishlist Heart Button */}
-        <div className="absolute top-3 left-3 z-10">
+        <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">
           <WishlistButton productId={data.id} productName={data.title} variant="card" />
         </div>
 
@@ -68,7 +68,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
             src={data.srcUrl}
             width={200}
             height={200}
-            className="object-contain group-hover:scale-105 transition-transform duration-700 ease-out"
+            className="object-contain max-h-full group-hover:scale-105 transition-transform duration-700 ease-out"
             alt={data.title}
             priority
           />
@@ -76,20 +76,20 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
         {/* Discount Badge */}
         {hasDiscount && (
-          <span className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-rose-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg z-10 shadow-lg shadow-red-200/50">
+          <span className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-gradient-to-r from-red-500 to-rose-500 text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg z-10 shadow-lg shadow-red-200/50">
             {data.discount.percentage > 0
               ? `-${data.discount.percentage}%`
               : `-${data.discount.amount.toLocaleString()}`}
           </span>
         )}
 
-        {/* Quick Add Button - Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none flex items-end justify-center pb-4">
+        {/* Quick Add Button - Overlay (hidden on mobile, tap to go to product) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none hidden sm:flex items-end justify-center pb-4">
           <button
             onClick={handleAddToCart}
-            className="pointer-events-auto bg-green-600 hover:bg-green-700 text-white py-2.5 px-6 rounded-xl flex items-center justify-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl shadow-green-600/30 active:scale-95 font-semibold text-sm"
+            className="pointer-events-auto bg-green-600 hover:bg-green-700 text-white py-2 px-5 sm:py-2.5 sm:px-6 rounded-xl flex items-center justify-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl shadow-green-600/30 active:scale-95 font-semibold text-xs sm:text-sm"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
             </svg>
             Add to Cart
@@ -98,10 +98,10 @@ const ProductCard = ({ data }: ProductCardProps) => {
       </div>
 
       {/* Content */}
-      <div className="p-4 md:p-5 flex flex-col flex-grow">
+      <div className="p-3 sm:p-4 md:p-5 flex flex-col flex-grow">
         {/* Brand */}
         {data.brand && (
-          <p className="text-green-600 text-[10px] font-bold uppercase tracking-widest mb-1.5 opacity-70">
+          <p className="text-green-600 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-1 sm:mb-1.5 opacity-70">
             {data.brand}
           </p>
         )}
@@ -109,39 +109,47 @@ const ProductCard = ({ data }: ProductCardProps) => {
         {/* Product Name */}
         <Link
           href={`/shop/product/${data.id}/${productSlug}`}
-          className="text-gray-800 text-sm md:text-base font-bold mb-2 line-clamp-2 hover:text-green-600 transition-colors duration-200 leading-snug"
+          className="text-gray-800 text-xs sm:text-sm md:text-base font-bold mb-1.5 sm:mb-2 line-clamp-2 hover:text-green-600 transition-colors duration-200 leading-snug"
         >
           {data.title.split(',')[0]}
         </Link>
 
         {/* Rating */}
-        <div className="flex items-center mb-3">
+        <div className="flex items-center mb-2 sm:mb-3">
           <Rating
             initialValue={data.rating}
             allowFraction
             SVGclassName="inline-block"
             emptyClassName="fill-gray-200"
             fillClassName="fill-amber-400"
-            size={13}
+            size={11}
             readonly
           />
-          <span className="text-gray-400 text-[10px] ml-1.5 font-medium">
+          <span className="text-gray-400 text-[9px] sm:text-[10px] ml-1 sm:ml-1.5 font-medium">
             ({data.reviews?.toLocaleString() || '0'})
           </span>
         </div>
 
         {/* Price */}
-        <div className="flex items-center gap-2.5 mt-auto">
-          <span className="font-extrabold text-gray-900 text-lg">
-            <span className="text-[10px] font-bold text-gray-400 mr-0.5">UGX</span>
+        <div className="flex items-center gap-1.5 sm:gap-2.5 mt-auto flex-wrap">
+          <span className="font-extrabold text-gray-900 text-sm sm:text-base md:text-lg">
+            <span className="text-[9px] sm:text-[10px] font-bold text-gray-400 mr-0.5">UGX</span>
             {hasDiscount ? discountedPrice.toLocaleString() : data.price.toLocaleString()}
           </span>
           {hasDiscount && (
-            <span className="text-gray-400 text-xs line-through decoration-red-400/60">
+            <span className="text-gray-400 text-[10px] sm:text-xs line-through decoration-red-400/60">
               {data.price.toLocaleString()}
             </span>
           )}
         </div>
+
+        {/* Mobile Add to Cart button */}
+        <button
+          onClick={handleAddToCart}
+          className="sm:hidden mt-2 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-xs font-semibold active:scale-95 transition-all"
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   );

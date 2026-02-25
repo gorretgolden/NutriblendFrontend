@@ -42,7 +42,7 @@ const CategoriesSection = () => {
       {categories.map((category) => (
         <Link
           key={category.id}
-          href={`/shop?category_id=${category.id}`}
+          href={`/shop?category=${category.slug}`}
           className="flex items-center justify-between py-2 hover:text-green-700 transition-colors"
         >
           {category.name} <MdKeyboardArrowRight />
