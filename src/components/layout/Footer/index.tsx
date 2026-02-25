@@ -98,16 +98,24 @@ const Footer = () => {
                     New Arrivals
                   </Link>
                 </li>
-                {pages
-                  .filter(page => ['about', 'contact', 'faq'].includes(page.type))
-                  .map((page) => (
-                    <li key={page.id}>
-                      <Link href={`/${page.slug}`} className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group">
-                        <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />
-                        {page.title}
-                      </Link>
-                    </li>
-                  ))}
+                <li>
+                  <Link href="/aboutUs" className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/faq" className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />
+                    Frequently Asked Questions
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -117,16 +125,18 @@ const Footer = () => {
                 Customer Service
               </h3>
               <ul className="space-y-2.5">
-                {pages
-                  .filter(page => ['terms', 'privacy'].includes(page.type))
-                  .map((page) => (
-                    <li key={page.id}>
-                      <Link href={`/${page.slug}`} className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group">
-                        <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />
-                        {page.title}
-                      </Link>
-                    </li>
-                  ))}
+                <li>
+                  <Link href="/privacy" className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/terms" className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />
+                    Terms and Conditions
+                  </Link>
+                </li>
                 <li>
                   <Link href="/account/order" className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />
