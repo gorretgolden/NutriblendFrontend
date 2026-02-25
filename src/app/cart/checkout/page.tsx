@@ -101,7 +101,7 @@ export default function Checkout() {
           town_id: selectedTown!,
         });
         if (response.status && response.data) {
-          setDeliveryFee(response.data.fee);
+          setDeliveryFee(Number(response.data.fee) || 0);
         }
       } catch (error) {
         console.error("Error calculating delivery fee:", error);
@@ -158,6 +158,7 @@ export default function Checkout() {
         delivery_region_id: selectedRegion,
         delivery_town_id: selectedTown,
         delivery_address: address,
+        delivery_fee: Number(deliveryFee) || 0,
         discount_code: discountCode || undefined,
         notes: notes || undefined,
         payment_method: paymentMethod,
@@ -192,8 +193,8 @@ export default function Checkout() {
     );
   }
 
-  const subtotal = adjustedTotalPrice;
-  const finalTotal = subtotal + deliveryFee - discountAmount;
+  const subtotal = Number(adjustedTotalPrice) || 0;
+  const finalTotal = subtotal + Number(deliveryFee) - Number(discountAmount);
 
   return (
     <div className="min-h-screen bg-green-50">
