@@ -71,12 +71,12 @@ export default function CartPage() {
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
               {/* Cart Items Section */}
               <div className="w-full lg:w-2/3 bg-white p-5 md:p-6 flex-col space-y-5 rounded-2xl shadow-lg border border-green-100">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xl font-semibold text-green-900">
+                <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                  <h3 className="text-lg sm:text-xl font-semibold text-green-900">
                     Cart Items ({cart.items.length})
                   </h3>
-                  <span className="text-green-600 font-medium">
-                    Total: UGX {Math.round(adjustedTotalPrice)}
+                  <span className="text-green-600 font-medium text-sm sm:text-base">
+                    Total: UGX {Math.round(adjustedTotalPrice).toLocaleString()}
                   </span>
                 </div>
 
