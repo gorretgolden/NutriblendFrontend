@@ -84,10 +84,10 @@ const ProductCard = ({ data }: ProductCardProps) => {
         )}
 
         {/* Quick Add Button - Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-4">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none flex items-end justify-center pb-4">
           <button
             onClick={handleAddToCart}
-            className="bg-green-600 hover:bg-green-700 text-white py-2.5 px-6 rounded-xl flex items-center justify-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl shadow-green-600/30 active:scale-95 font-semibold text-sm"
+            className="pointer-events-auto bg-green-600 hover:bg-green-700 text-white py-2.5 px-6 rounded-xl flex items-center justify-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl shadow-green-600/30 active:scale-95 font-semibold text-sm"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
