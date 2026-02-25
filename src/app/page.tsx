@@ -161,7 +161,7 @@ export default async function Home() {
           </>
         )}
 
-        <div className="container mx-auto px-4">
+        <div className="max-w-[1600px] mx-auto px-6">
           <CategoryGrid />
         </div>
 
