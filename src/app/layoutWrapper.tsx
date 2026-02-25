@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/lib/hooks/redux";
 import { setCredentials } from "@/lib/features/auth/authSlice";
 import { fetchCart } from "@/lib/features/carts/cartsSlice";
+import { fetchWishlist } from "@/lib/features/wishlist/wishlistSlice";
 import { toast } from "sonner";
 import TopBanner from "@/components/layout/Banner/TopBanner";
 import TopNavbar from "@/components/layout/Navbar/TopNavbar";
@@ -50,6 +51,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(fetchCart());
+      dispatch(fetchWishlist());
     }
   }, [isAuthenticated, dispatch]);
 

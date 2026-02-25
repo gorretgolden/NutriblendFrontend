@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch } from "@/lib/hooks/redux";
 import { addToCart } from "@/lib/features/carts/cartsSlice";
+import WishlistButton from "@/components/ui/WishlistButton";
 import { Product } from "@/types/product.types";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -54,6 +55,11 @@ const ProductCard = ({ data }: ProductCardProps) => {
     <div className="group bg-white rounded-2xl overflow-hidden border border-gray-100/80 shadow-sm hover:shadow-xl hover:shadow-green-900/8 transition-all duration-500 flex flex-col relative h-full hover:-translate-y-1">
       {/* Image Container */}
       <div className="bg-gradient-to-b from-gray-50 to-white rounded-t-2xl w-full h-[230px] flex items-center justify-center p-5 relative overflow-hidden">
+        {/* Wishlist Heart Button */}
+        <div className="absolute top-3 left-3 z-10">
+          <WishlistButton productId={data.id} productName={data.title} variant="card" />
+        </div>
+
         <div
           className="w-full h-full flex items-center justify-center cursor-pointer"
           onClick={handleImageClick}

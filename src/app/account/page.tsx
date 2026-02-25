@@ -7,6 +7,7 @@ import MyAccount from "@/components/accounts/MyAccountManagement";
 import { FiUser, FiBox, FiHeart, FiStar, FiMail, FiSettings, FiLogOut } from "react-icons/fi";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
 import { fetchUserProfile } from "@/lib/features/auth/authSlice";
+import { fetchWishlist, removeFromWishlistAsync } from "@/lib/features/wishlist/wishlistSlice";
 import { apiClient, getImageUrl, formatPrice } from "@/lib/api/client";
 import { toast } from "sonner";
 import Image from "next/image";
@@ -205,28 +206,17 @@ function OrdersSection() {
 }
 
 // ============================================================
-// Dynamic Wishlist
+// Dynamic Wishlist (uses Redux for cross-app sync)
 // ============================================================
 function WishlistSection() {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const { items, isLoading: loading } = useAppSelector((state: any) => state.wishlist);
 
-  const fetchWishlist = useCallback(async () => {
-    try {
-      const response = await apiClient.getWishlist();
-      if (response.status && response.data) {
-        setItems(Array.isArray(response.data) ? response.data : []);
-      }
-    } catch {
-      // silently fail
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  useEffect(() => {
+    dispatch(fetchWishlist());
+  }, [dispatch]);
 
-  useEffect(() => { fetchWishlist(); }, [fetchWishlist]);
-
-  if (loading) {
+  if (loading && items.length === 0) {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
@@ -253,6 +243,8 @@ function WishlistSection() {
           const imageUrl = getImageUrl(
             product.product_images?.[0]?.image_url ||
             product.product_images?.[0]?.image_path ||
+            product.images?.[0]?.image_url ||
+            product.images?.[0]?.image_path ||
             (Array.isArray(product.images) ? product.images[0] : null)
           );
 
@@ -294,8 +286,7 @@ function WishlistSection() {
                 <button
                   onClick={async () => {
                     try {
-                      await apiClient.removeFromWishlist(product.id);
-                      setItems(prev => prev.filter(i => i.id !== item.id));
+                      await dispatch(removeFromWishlistAsync(item.product_id || product.id)).unwrap();
                       toast.success("Removed from wishlist");
                     } catch {
                       toast.error("Failed to remove");
