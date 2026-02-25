@@ -6,7 +6,6 @@ import WellnessHub from "@/components/Blog/index";
 import { Product } from "@/types/product.types";
 import { apiClient } from "@/lib/api/client";
 import { transformProduct } from "@/lib/transformers";
-import { newArrivalsFallback, topSellingFallback, specialOffersFallback } from "@/data/home-fallbacks";
 
 const carouselSlides: CarouselSlide[] = [
   {
@@ -53,18 +52,16 @@ async function getHomePageData() {
 
     const newArrivals = (newArrivalsReq.status && newArrivalsReq.data?.data?.length)
       ? newArrivalsReq.data.data.map(transformProduct)
-      : newArrivalsFallback;
+      : null;
 
-    // Trending: only show if admin has marked products as trending
     const trending = (trendingReq.status && trendingReq.data?.data?.length)
       ? trendingReq.data.data.map(transformProduct)
       : null;
 
     const specialOffers = (specialOffersReq.status && specialOffersReq.data?.data?.length)
       ? specialOffersReq.data.data.map(transformProduct)
-      : specialOffersFallback;
+      : null;
 
-    // Recommended: only show if admin has marked products as recommended
     const recommended = (recommendedReq.status && recommendedReq.data?.data?.length)
       ? recommendedReq.data.data.map(transformProduct)
       : null;
@@ -76,11 +73,11 @@ async function getHomePageData() {
     return { newArrivals, trending, specialOffers, recommended, heroSlides: dynamicSlides };
 
   } catch (error) {
-    console.error("Failed to fetch homepage data, using fallback:", error);
+    console.error("Failed to fetch homepage data:", error);
     return {
-      newArrivals: newArrivalsFallback,
+      newArrivals: null,
       trending: null,
-      specialOffers: specialOffersFallback,
+      specialOffers: null,
       recommended: null,
       heroSlides: carouselSlides
     };
@@ -145,20 +142,24 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Special Offers */}
-        <section className="w-full">
-          <ProductCarousel
-            products={specialOffers}
-            title="Special Offers"
-            subtitle="Exclusive deals handpicked for you"
-            badge="HOT"
-            viewAllLink="/shop?is_special_offer=true"
-          />
-        </section>
+        {/* Special Offers — only shown if admin has marked products */}
+        {specialOffers && specialOffers.length > 0 && (
+          <>
+            <section className="w-full">
+              <ProductCarousel
+                products={specialOffers}
+                title="Special Offers"
+                subtitle="Exclusive deals handpicked for you"
+                badge="HOT"
+                viewAllLink="/shop?is_special_offer=true"
+              />
+            </section>
 
-        <div className="max-w-[1600px] mx-auto px-6">
-          <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
-        </div>
+            <div className="max-w-[1600px] mx-auto px-6">
+              <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
+            </div>
+          </>
+        )}
 
         <div className="container mx-auto px-4">
           <CategoryGrid />
@@ -168,20 +169,24 @@ export default async function Home() {
           <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
         </div>
 
-        {/* New Arrivals Section */}
-        <section className="w-full">
-          <ProductCarousel
-            products={newArrivals}
-            title="New Arrivals"
-            subtitle="Fresh additions to our collection"
-            badge="NEW"
-            viewAllLink="/shop?is_new_arrival=true"
-          />
-        </section>
+        {/* New Arrivals — only shown if admin has marked products */}
+        {newArrivals && newArrivals.length > 0 && (
+          <>
+            <section className="w-full">
+              <ProductCarousel
+                products={newArrivals}
+                title="New Arrivals"
+                subtitle="Fresh additions to our collection"
+                badge="NEW"
+                viewAllLink="/shop?is_new_arrival=true"
+              />
+            </section>
 
-        <div className="max-w-[1600px] mx-auto px-6">
-          <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
-        </div>
+            <div className="max-w-[1600px] mx-auto px-6">
+              <div className="h-px bg-gradient-to-r from-transparent via-green-200 to-transparent my-8 md:my-12" />
+            </div>
+          </>
+        )}
 
         {/* Trending Now — only shown if admin has marked products as trending */}
         {trending && trending.length > 0 && (
