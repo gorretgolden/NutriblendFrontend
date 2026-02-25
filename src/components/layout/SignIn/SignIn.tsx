@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { loginUser } from "@/lib/features/auth/authSlice";
+import { clearCartLocal, fetchCart } from "@/lib/features/carts/cartsSlice";
+import { clearWishlist, fetchWishlist } from "@/lib/features/wishlist/wishlistSlice";
 import { toast } from "sonner";
 
 type LoginModalProps = {
@@ -31,6 +33,12 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
     e.preventDefault();
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
+      // Clear stale data from previous session
+      dispatch(clearCartLocal());
+      dispatch(clearWishlist());
+      // Fetch this user's cart and wishlist from backend
+      dispatch(fetchCart());
+      dispatch(fetchWishlist());
       toast.success("Signed in successfully!");
       onClose();
       // Check for returnUrl (e.g., from checkout redirect)
