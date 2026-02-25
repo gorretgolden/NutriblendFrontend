@@ -81,24 +81,24 @@ const TopBanner = () => {
           </div>
 
           {/* Center - Brand, Bonanza and date */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="hidden sm:flex items-center gap-2 shrink-0">
             <div className="flex items-center gap-1 animate-fall-from-top" style={{ animationDelay: '0.3s' }}>
               <span className="text-[10px] font-bold bg-white text-[#4caf50] px-1 py-0.5 rounded">
                 BANNER
               </span>
               <span className="text-sm font-extrabold text-white uppercase">
-                {settings?.top_banner_event_name || "BONANZA"}
+                {settings?.top_banner_event_name || "LAUNCH BONAZA"}
               </span>
             </div>
 
             <span className="text-[10px] font-semibold animate-slide-in-right whitespace-nowrap" style={{ animationDelay: '0.5s' }}>
-              {settings?.top_banner_event_date || "1st - 14th September"}
+              {settings?.top_banner_event_date || "1st March"}
             </span>
           </div>
 
-          {/* Right side - Rotating texts, 60% off button and shop now */}
+          {/* Right side - Rotating texts, discount and shop now */}
           <div className="flex items-center gap-2 shrink-0">
-            <div className="rotating-text-container animate-zoom-in-out" style={{ animationDelay: '0.7s' }}>
+            <div className="hidden sm:block rotating-text-container animate-zoom-in-out" style={{ animationDelay: '0.7s' }}>
               {rotatingTexts.map((text: string, index: number) => (
                 <div
                   key={index}
@@ -120,9 +120,8 @@ const TopBanner = () => {
             <Button
               variant="ghost"
               onClick={() => setIsVisible(false)}
-              className="hover:bg-transparent text-white hover:text-[#4caf50] transition-colors animate-fade-in"
+              className="hover:bg-transparent text-white hover:text-[#4caf50] transition-colors animate-fade-in p-1 h-auto w-auto"
               style={{ animationDelay: '1.3s' }}
-              size="icon"
               type="button"
               aria-label="close banner"
             >
