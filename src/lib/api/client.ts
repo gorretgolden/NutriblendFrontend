@@ -69,6 +69,7 @@ export interface Product {
     description: string;
     price: number;
     discount_percentage?: number;
+    discount_amount?: number;
     stock_quantity: number;
     category_id: number;
     brand_id?: number;

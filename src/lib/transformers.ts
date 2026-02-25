@@ -48,7 +48,7 @@ export const transformProduct = (p: ApiProduct): Product => {
         gallery: allImages.length > 0 ? allImages : [imageUrl],
         price: p.price,
         discount: {
-            amount: 0,
+            amount: p.discount_amount || 0,
             percentage: p.discount_percentage || 0,
         },
         rating: p.average_rating || 0,
