@@ -13,6 +13,37 @@ export const sanitizeHtml = (input: string): string => {
 };
 
 /**
+ * Sanitize rich HTML for safe rendering via dangerouslySetInnerHTML.
+ * Strips dangerous tags (script, iframe, object, embed, form) and
+ * event handlers (onclick, onerror, etc.) while preserving safe
+ * formatting tags like p, b, i, ul, li, br, a, span, div, h1-h6, etc.
+ */
+export const sanitizeRichHtml = (html: string): string => {
+    if (!html) return '';
+
+    // Remove dangerous tags and their content
+    let clean = html
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<iframe\b[^>]*>.*?<\/iframe>/gi, '')
+        .replace(/<object\b[^>]*>.*?<\/object>/gi, '')
+        .replace(/<embed\b[^>]*\/?>/gi, '')
+        .replace(/<form\b[^>]*>.*?<\/form>/gi, '')
+        .replace(/<input\b[^>]*\/?>/gi, '')
+        .replace(/<textarea\b[^>]*>.*?<\/textarea>/gi, '')
+        .replace(/<button\b[^>]*>.*?<\/button>/gi, '');
+
+    // Remove event handlers (onclick, onerror, onload, etc.)
+    clean = clean.replace(/\s+on\w+\s*=\s*(['"])[^'"]*\1/gi, '');
+    clean = clean.replace(/\s+on\w+\s*=\s*[^\s>]*/gi, '');
+
+    // Remove javascript: and data: URIs in attributes
+    clean = clean.replace(/href\s*=\s*(['"])javascript:[^'"]*\1/gi, 'href=$1#$1');
+    clean = clean.replace(/src\s*=\s*(['"])data:[^'"]*\1/gi, 'src=$1$1');
+
+    return clean;
+};
+
+/**
  * Sanitize user input for safe display
  */
 export const sanitizeInput = (input: string): string => {

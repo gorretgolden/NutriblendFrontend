@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Rating from "@/components/ui/Rating";
 import SizeSelection from "./SizeSelection";
 import AddToCardSection from "./AddToCardSection";
+import { sanitizeRichHtml } from "@/lib/utils/security";
 
 const Header = ({ data }: { data: Product }) => {
   return (
@@ -84,7 +85,7 @@ const Header = ({ data }: { data: Product }) => {
           ) : data.description ? (
             <div
               className="text-sm sm:text-base text-dark-700/80 mb-5 prose prose-sm max-w-none"
-              dangerouslySetInnerHTML={{ __html: data.description }}
+              dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(data.description) }}
             />
           ) : null}
           {/* <hr className="h-[1px] border-t-green-200 mb-5" /> */}
