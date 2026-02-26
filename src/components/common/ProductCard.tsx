@@ -4,7 +4,7 @@ import React from "react";
 import Rating from "../ui/Rating";
 import Image from "next/image";
 import Link from "next/link";
-import { useAppDispatch } from "@/lib/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { addToCart } from "@/lib/features/carts/cartsSlice";
 import WishlistButton from "@/components/ui/WishlistButton";
 import { Product } from "@/types/product.types";
@@ -24,9 +24,20 @@ const ProductCard = ({ data }: ProductCardProps) => {
     ? Math.round(data.price - (data.price * (data.discount?.percentage ?? 0)) / 100)
     : data.price - (data.discount?.amount ?? 0);
 
+  // Check if product is already in cart
+  const cartItems = useAppSelector((state) => state.carts.cart?.items ?? []);
+  const isInCart = cartItems.some(
+    (item) => item.product_id === data.id
+  );
+
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (isInCart) {
+      router.push("/cart");
+      return;
+    }
 
     try {
       const result = await dispatch(
@@ -87,12 +98,27 @@ const ProductCard = ({ data }: ProductCardProps) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none hidden sm:flex items-end justify-center pb-4">
           <button
             onClick={handleAddToCart}
-            className="pointer-events-auto bg-green-600 hover:bg-green-700 text-white py-2 px-5 sm:py-2.5 sm:px-6 rounded-xl flex items-center justify-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl shadow-green-600/30 active:scale-95 font-semibold text-xs sm:text-sm"
+            className={`pointer-events-auto py-2 px-5 sm:py-2.5 sm:px-6 rounded-xl flex items-center justify-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl active:scale-95 font-semibold text-xs sm:text-sm ${
+              isInCart
+                ? "bg-white text-green-700 border-2 border-green-500 shadow-green-200/30"
+                : "bg-green-600 hover:bg-green-700 text-white shadow-green-600/30"
+            }`}
           >
-            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-            </svg>
-            Add to Cart
+            {isInCart ? (
+              <>
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+                In Cart
+              </>
+            ) : (
+              <>
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                </svg>
+                Add to Cart
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -143,12 +169,25 @@ const ProductCard = ({ data }: ProductCardProps) => {
           )}
         </div>
 
-        {/* Mobile Add to Cart button */}
+        {/* Mobile Add to Cart / In Cart button */}
         <button
           onClick={handleAddToCart}
-          className="sm:hidden mt-2 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-xs font-semibold active:scale-95 transition-all"
+          className={`sm:hidden mt-2 w-full py-2 rounded-lg text-xs font-semibold active:scale-95 transition-all flex items-center justify-center gap-1.5 ${
+            isInCart
+              ? "bg-green-50 text-green-700 border border-green-200"
+              : "bg-green-600 hover:bg-green-700 text-white"
+          }`}
         >
-          Add to Cart
+          {isInCart ? (
+            <>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+              In Cart — View
+            </>
+          ) : (
+            "Add to Cart"
+          )}
         </button>
       </div>
     </div>
