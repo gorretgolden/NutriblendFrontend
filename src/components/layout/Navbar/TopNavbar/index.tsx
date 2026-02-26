@@ -186,6 +186,15 @@ const Header = () => {
     setMobileSearchOpen(false);
   }, []);
 
+  // Listen for global 'open-login-modal' events (e.g. from Footer account links)
+  useEffect(() => {
+    const handleOpenLoginModal = () => {
+      openLoginModal();
+    };
+    window.addEventListener('open-login-modal', handleOpenLoginModal);
+    return () => window.removeEventListener('open-login-modal', handleOpenLoginModal);
+  }, []);
+
   return (
     <>
       <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-green-50/50">

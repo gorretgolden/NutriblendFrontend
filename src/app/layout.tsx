@@ -123,8 +123,8 @@ export default function RootLayout({
         <HolyLoader color="#8e44ad" height="3px" speed={200} easing="ease-in-out" />
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>
+          <Footer />
         </Providers>
-        <Footer />
         <Toaster position="top-right" richColors closeButton duration={3000} />
       </body>
     </html>

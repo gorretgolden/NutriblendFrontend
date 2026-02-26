@@ -1,14 +1,18 @@
 'use client';
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import NewsLetterSection from "./NewsLetterSection";
 import { FaWhatsapp, FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
 import { apiClient } from "@/lib/api/client";
+import { useAppSelector } from "@/lib/hooks/redux";
 
 const Footer = () => {
   const [settings, setSettings] = useState<any>(null);
   const [pages, setPages] = useState<any[]>([]);
   const currentYear = new Date().getFullYear();
+  const router = useRouter();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -37,6 +41,14 @@ const Footer = () => {
     fetchSettings();
     fetchPages();
   }, []);
+
+  const handleAccountLink = (e: React.MouseEvent, href: string) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      // Dispatch a custom event to open the login modal
+      window.dispatchEvent(new CustomEvent('open-login-modal'));
+    }
+  };
 
   const socialLinks = [
     { icon: FaFacebookF, url: settings?.facebook_url, label: 'Facebook' },
@@ -138,13 +150,21 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/account/order" className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group">
+                  <Link
+                    href="/account?tab=orders"
+                    onClick={(e) => handleAccountLink(e, '/account?tab=orders')}
+                    className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group"
+                  >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />
                     Track Order
                   </Link>
                 </li>
                 <li>
-                  <Link href="/account" className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group">
+                  <Link
+                    href="/account"
+                    onClick={(e) => handleAccountLink(e, '/account')}
+                    className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group"
+                  >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />
                     My Account
                   </Link>
