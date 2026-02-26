@@ -111,6 +111,9 @@ export interface Category {
     slug: string;
     description?: string;
     image_path?: string;
+    icon?: string;
+    color?: string;
+    icon_emoji?: string;
     parent_id?: number;
     is_active: boolean;
 }
