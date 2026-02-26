@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from "@/lib/hooks/redux";
 import { apiClient, type Region, type Town } from "@/lib/api/client";
@@ -201,205 +200,242 @@ export default function Checkout() {
   const finalTotal = subtotal + Number(deliveryFee) - Number(discountAmount);
 
   return (
-    <div className="min-h-screen bg-green-50">
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
         <div className="max-w-frame mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-green-600">Checkout</div>
-          <div className="flex items-center text-green-600">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+          <div className="flex items-center gap-3">
+            <button onClick={() => router.back()} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900">Checkout</h1>
+          </div>
+          <div className="flex items-center gap-1.5 text-gray-500 text-sm">
+            <svg className="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
             </svg>
-            Secure Checkout
+            <span>Secure Checkout</span>
           </div>
         </div>
       </header>
 
-      <main className="max-w-frame mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Column */}
-          <div className="lg:w-2/3">
-            <Button
-              variant="link"
-              className="text-green-600 mb-6 p-0 h-auto font-semibold"
-              onClick={() => router.back()}
-            >
-              ← Go back to cart
-            </Button>
+      <main className="max-w-frame mx-auto px-4 py-6 md:py-10">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
-            {/* Customer Information */}
-            <div className="bg-white rounded-2xl shadow-lg border border-green-100 p-6 mb-6">
-              <h2 className="text-xl font-semibold text-green-900 mb-4">1. CUSTOMER INFORMATION</h2>
-              <div className="text-green-800">
-                <p className="font-semibold text-green-600">{user?.first_name || user?.name?.split(' ')[0]} {user?.last_name || (user?.name?.split(' ').slice(1).join(' ') || '')}</p>
-                <p>{user?.email} | {user?.phone}</p>
+          {/* Left Column — Form */}
+          <div className="lg:w-2/3 space-y-5">
+
+            {/* Step 1: Customer Info */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center">1</span>
+                <h2 className="font-semibold text-gray-900">Customer Information</h2>
+              </div>
+              <div className="p-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-bold text-sm">
+                    {(user?.first_name || user?.name || 'U').charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">{user?.first_name || user?.name?.split(' ')[0]} {user?.last_name || (user?.name?.split(' ').slice(1).join(' ') || '')}</p>
+                    <p className="text-sm text-gray-500">{user?.email}{user?.phone ? ` · ${user.phone}` : ''}</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Delivery Information */}
-            <div className="bg-white rounded-2xl shadow-lg border border-green-100 p-6 mb-6">
-              <h2 className="text-xl font-semibold text-green-900 mb-4">2. DELIVERY INFORMATION</h2>
+            {/* Step 2: Delivery */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center">2</span>
+                <h2 className="font-semibold text-gray-900">Delivery Information</h2>
+              </div>
+              <div className="p-5 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Region */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Region</label>
+                    <select
+                      value={selectedRegion || ""}
+                      onChange={(e) => setSelectedRegion(Number(e.target.value))}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors"
+                      disabled={loadingRegions}
+                    >
+                      <option value="">Select Region</option>
+                      {regions.map((region) => (
+                        <option key={region.id} value={region.id}>{region.name}</option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="space-y-4">
-                {/* Region Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-green-700 mb-2">Region</label>
-                  <select
-                    value={selectedRegion || ""}
-                    onChange={(e) => setSelectedRegion(Number(e.target.value))}
-                    className="w-full border border-green-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
-                    disabled={loadingRegions}
-                  >
-                    <option value="">Select Region</option>
-                    {regions.map((region) => (
-                      <option key={region.id} value={region.id}>{region.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Town Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-green-700 mb-2">Town</label>
-                  <select
-                    value={selectedTown || ""}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (!val) {
-                        setSelectedTown(null);
-                        setDeliveryFee(0);
-                        return;
-                      }
-                      const townId = Number(val);
-                      setSelectedTown(townId);
-                      const selectedTownObj = towns.find(t => t.id === townId);
-                      if (selectedTownObj?.delivery_fee) {
-                        setDeliveryFee(selectedTownObj.delivery_fee);
-                      }
-                    }}
-                    className="w-full border border-green-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
-                    disabled={!selectedRegion || towns.length === 0}
-                  >
-                    <option value="">Select Town</option>
-                    {towns.map((town) => (
-                      <option key={town.id} value={town.id}>
-                        {town.name}{town.delivery_fee ? ` (Fee: UGX ${Number(town.delivery_fee).toLocaleString()})` : ''}
-                      </option>
-                    ))}
-                  </select>
+                  {/* Town */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Town</label>
+                    <select
+                      value={selectedTown || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (!val) {
+                          setSelectedTown(null);
+                          setDeliveryFee(0);
+                          return;
+                        }
+                        const townId = Number(val);
+                        setSelectedTown(townId);
+                        const selectedTownObj = towns.find(t => t.id === townId);
+                        if (selectedTownObj?.delivery_fee) {
+                          setDeliveryFee(selectedTownObj.delivery_fee);
+                        }
+                      }}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors"
+                      disabled={!selectedRegion || towns.length === 0}
+                    >
+                      <option value="">Select Town</option>
+                      {towns.map((town) => (
+                        <option key={town.id} value={town.id}>
+                          {town.name}{town.delivery_fee ? ` (Fee: UGX ${Number(town.delivery_fee).toLocaleString()})` : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 {/* Address */}
                 <div>
-                  <label className="block text-sm font-medium text-green-700 mb-2">Delivery Address</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Delivery Address</label>
                   <textarea
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Enter your full delivery address..."
-                    className="w-full border border-green-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
+                    placeholder="e.g. Plot 12, Kampala Road, near Total Petrol Station..."
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors resize-none"
                     rows={3}
                   />
                 </div>
 
                 {/* Notes */}
                 <div>
-                  <label className="block text-sm font-medium text-green-700 mb-2">Order Notes (Optional)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Order Notes <span className="text-gray-400 font-normal">(Optional)</span>
+                  </label>
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Any special instructions for delivery..."
-                    className="w-full border border-green-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors resize-none"
                     rows={2}
                   />
                 </div>
               </div>
             </div>
 
-            {/* Payment Method */}
-            <div className="bg-white rounded-2xl shadow-lg border border-green-100 p-6">
-              <h2 className="text-xl font-semibold text-green-900 mb-4">3. PAYMENT METHOD</h2>
-              <div className="space-y-4">
-                <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center ${paymentMethod === 'cod' ? 'border-green-600 bg-green-50' : 'border-green-100'}`}>
+            {/* Step 3: Payment */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center">3</span>
+                <h2 className="font-semibold text-gray-900">Payment Method</h2>
+              </div>
+              <div className="p-5">
+                <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'cod' ? 'border-green-500 bg-green-50/40' : 'border-gray-200 hover:border-gray-300'}`}>
                   <input
                     type="radio"
-                    className="h-5 w-5 text-green-600"
+                    className="h-4 w-4 text-green-600 focus:ring-green-500"
                     checked={paymentMethod === 'cod'}
                     onChange={() => setPaymentMethod('cod')}
                   />
-                  <span className="ml-3 text-sm font-medium text-green-800">Cash on Delivery (COD)</span>
+                  <div className="flex items-center gap-2.5">
+                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                    </svg>
+                    <span className="text-sm font-medium text-gray-800">Cash on Delivery (COD)</span>
+                  </div>
                 </label>
               </div>
             </div>
           </div>
 
-          {/* Right Column - Order Summary */}
+          {/* Right Column — Order Summary */}
           <div className="lg:w-1/3">
-            <div className="bg-white rounded-2xl shadow-lg border border-green-100 p-6 sticky top-6">
-              <h2 className="text-xl font-semibold text-green-900 mb-6">Order Summary</h2>
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm sticky top-20">
+              <div className="bg-gradient-to-r from-gray-900 to-gray-800 px-5 py-4">
+                <h2 className="font-semibold text-white flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                  </svg>
+                  Order Summary
+                </h2>
+              </div>
 
-              {/* Items */}
-              <div className="space-y-3 mb-4">
-                {cart.items.map((item: any, index: number) => (
-                  <div key={index} className="flex justify-between text-sm">
-                    <span className="text-green-700">{item.name} × {item.quantity}</span>
-                    <span className="font-medium">UGX {(item.price * item.quantity).toLocaleString()}</span>
+              <div className="p-5">
+                {/* Items */}
+                <div className="space-y-3 mb-5">
+                  {cart.items.map((item: any, index: number) => (
+                    <div key={index} className="flex justify-between items-start text-sm">
+                      <div className="flex-1 min-w-0 mr-3">
+                        <span className="text-gray-700 line-clamp-1">{item.name}</span>
+                        <span className="text-gray-400 text-xs"> × {item.quantity}</span>
+                      </div>
+                      <span className="font-semibold text-gray-900 whitespace-nowrap">UGX {(item.price * item.quantity).toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="border-t border-gray-100 pt-4 space-y-2.5 mb-5">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Subtotal</span>
+                    <span className="font-medium text-gray-900">UGX {subtotal.toLocaleString()}</span>
                   </div>
-                ))}
-              </div>
-
-              <div className="border-t border-green-200 pt-4 space-y-3 mb-4">
-                <div className="flex justify-between">
-                  <span className="text-green-700">Subtotal</span>
-                  <span className="font-medium">UGX {subtotal.toLocaleString()}</span>
-                </div>
-
-                <div className="flex justify-between">
-                  <span className="text-green-700">Delivery Fee</span>
-                  <span className="font-medium">UGX {deliveryFee.toLocaleString()}</span>
-                </div>
-
-                {discountAmount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Discount</span>
-                    <span>-UGX {discountAmount.toLocaleString()}</span>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Delivery Fee</span>
+                    <span className="font-medium text-gray-900">{deliveryFee > 0 ? `UGX ${deliveryFee.toLocaleString()}` : 'Free'}</span>
                   </div>
-                )}
-              </div>
-
-              {/* Discount Code */}
-              <div className="mb-6">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Discount code"
-                    value={discountCode}
-                    onChange={(e) => setDiscountCode(e.target.value)}
-                    className="flex-1 border border-green-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none text-sm"
-                  />
-                  <button
-                    onClick={handleApplyDiscount}
-                    className="bg-green-600 text-white px-4 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
-                  >
-                    APPLY
-                  </button>
+                  {discountAmount > 0 && (
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Discount</span>
+                      <span>-UGX {discountAmount.toLocaleString()}</span>
+                    </div>
+                  )}
                 </div>
+
+                {/* Discount Code */}
+                <div className="mb-5">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Enter promo code"
+                      value={discountCode}
+                      onChange={(e) => setDiscountCode(e.target.value)}
+                      className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm"
+                    />
+                    <button
+                      onClick={handleApplyDiscount}
+                      className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center border-t border-gray-200 pt-4 mb-5">
+                  <span className="text-base font-bold text-gray-900">Total</span>
+                  <span className="text-xl font-bold text-gray-900">UGX {Math.round(finalTotal).toLocaleString()}</span>
+                </div>
+
+                <button
+                  onClick={handlePlaceOrder}
+                  disabled={loading || !selectedRegion || !selectedTown || !address}
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3.5 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-green-600/20 disabled:shadow-none"
+                >
+                  {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+                  {loading ? 'Processing...' : 'Confirm Order'}
+                </button>
+
+                <p className="text-xs text-gray-400 text-center mt-4 leading-relaxed">
+                  By placing your order, you agree to our{' '}
+                  <a href="/terms" className="underline hover:text-gray-600">Terms & Conditions</a>.
+                </p>
               </div>
-
-              <div className="flex justify-between border-t border-green-200 pt-4 mb-6">
-                <span className="text-lg font-bold text-green-900">Total</span>
-                <span className="text-lg font-bold text-green-600">UGX {Math.round(finalTotal).toLocaleString()}</span>
-              </div>
-
-              <button
-                onClick={handlePlaceOrder}
-                disabled={loading || !selectedRegion || !selectedTown || !address}
-                className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {loading && <Loader2 className="w-5 h-5 animate-spin" />}
-                {loading ? 'Processing...' : 'Confirm Order'}
-              </button>
-
-              <p className="text-xs text-green-500 text-center mt-4">
-                By proceeding, you are automatically accepting the Terms & Conditions.
-              </p>
             </div>
           </div>
         </div>
