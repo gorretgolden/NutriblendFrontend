@@ -5,7 +5,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
 import { fetchUserProfile } from "@/lib/features/auth/authSlice";
 import { apiClient } from "@/lib/api/client";
 import { toast } from "sonner";
-import { FiUser, FiMail, FiPhone, FiLock, FiSave, FiTrash2, FiAlertTriangle, FiEye, FiEyeOff } from "react-icons/fi";
+import { FiUser, FiMail, FiPhone, FiLock, FiSave, FiEye, FiEyeOff } from "react-icons/fi";
 
 export default function MyAccountManagement() {
   const dispatch = useAppDispatch();
@@ -29,7 +29,6 @@ export default function MyAccountManagement() {
     confirm: false,
   });
 
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
 
@@ -109,11 +108,6 @@ export default function MyAccountManagement() {
     } finally {
       setIsSavingPassword(false);
     }
-  };
-
-  const handleDeleteAccount = () => {
-    toast.info("Account deletion has been requested. Our team will process this shortly.");
-    setIsDeleting(false);
   };
 
   const initials = formData.name
@@ -295,57 +289,7 @@ export default function MyAccountManagement() {
           </div>
         </form>
       </div>
-
-      {/* Danger Zone */}
-      <div className="bg-red-50 rounded-xl border border-red-200 overflow-hidden">
-        <div className="px-5 py-4">
-          <h3 className="text-base font-semibold text-red-700 flex items-center gap-2">
-            <FiAlertTriangle className="w-4 h-4" /> Danger Zone
-          </h3>
-          <p className="text-sm text-red-600 mt-1">
-            Once you delete your account, there is no going back. Please be certain.
-          </p>
-          <button
-            type="button"
-            onClick={() => setIsDeleting(true)}
-            className="mt-4 inline-flex items-center gap-2 bg-red-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-red-700 transition-all shadow-md"
-          >
-            <FiTrash2 className="w-4 h-4" />
-            Delete Account
-          </button>
-        </div>
-      </div>
-
-      {/* Delete Confirmation Modal */}
-      {isDeleting && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
-              <FiAlertTriangle className="w-8 h-8" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              Delete Your Account?
-            </h3>
-            <p className="text-gray-600 mb-6 text-sm">
-              This action cannot be undone. All your data will be permanently deleted.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setIsDeleting(false)}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteAccount}
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
+

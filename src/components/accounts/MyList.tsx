@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import {
@@ -10,6 +9,7 @@ import {
   moveToCartAsync,
 } from "@/lib/features/wishlist/wishlistSlice";
 import { toast } from "sonner";
+import { getImageUrl } from "@/lib/api/client";
 import { FiHeart, FiShoppingCart, FiTrash2, FiExternalLink } from "react-icons/fi";
 
 const MyList = () => {
@@ -106,9 +106,16 @@ const MyList = () => {
           const product = item.product;
           if (!product) return null;
 
-          const imageUrl = product.images?.[0]?.image_url
+          const imageUrl =
+            // product_images is an array of objects with image_url
+            product.product_images?.[0]?.image_url
+            || product.product_images?.[0]?.image_path
+            // images may be a flat array of strings
+            || (Array.isArray(product.images) && typeof product.images[0] === 'string' ? product.images[0] : null)
+            || product.images?.[0]?.image_url
             || product.images?.[0]?.image_path
-            || "/placeholder-product.png";
+            || product.image
+            || null;
 
           const hasDiscount =
             (product.discount?.percentage ?? 0) > 0 || (product.discount?.amount ?? 0) > 0;
@@ -126,13 +133,18 @@ const MyList = () => {
               {/* Product Image */}
               <div className="relative bg-gradient-to-b from-gray-50 to-white h-44 flex items-center justify-center p-4">
                 <Link href={`/shop/product/${product.id}/${product.slug || ""}`}>
-                  <Image
-                    src={imageUrl}
-                    alt={product.name || product.title || "Product"}
-                    width={140}
-                    height={140}
-                    className="object-contain group-hover:scale-105 transition-transform duration-500"
-                  />
+                  {imageUrl ? (
+                    <img
+                      src={getImageUrl(imageUrl)}
+                      alt={product.name || product.title || "Product"}
+                      className="object-contain w-[140px] h-[140px] group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => { (e.target as HTMLImageElement).src = '/images/placeholder.jpg'; }}
+                    />
+                  ) : (
+                    <div className="w-[140px] h-[140px] flex items-center justify-center text-gray-200">
+                      <FiHeart className="w-12 h-12" />
+                    </div>
+                  )}
                 </Link>
                 {hasDiscount && (
                   <span className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">
