@@ -6,9 +6,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { cn } from "@/lib/utils";
-import { FaBox, FaHeart, FaStar, FaEnvelope, FaCog, FaBars, FaTimes } from "react-icons/fa";
+import { FaBox, FaHeart, FaStar, FaEnvelope, FaCog, FaBars, FaTimes, FaHome } from "react-icons/fa";
 
 const navItems = [
+  { name: "Account Overview", href: "/account", icon: FaHome, exact: true },
   { name: "Orders", href: "/account/order", icon: FaBox },
   { name: "My Wishlist", href: "/account/mylist", icon: FaHeart },
   { name: "Reviews", href: "/account/myreview", icon: FaStar },
@@ -24,8 +25,12 @@ export default function AccountLayout({
   const pathname = usePathname();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // Get current page label for mobile header
-  const currentPage = navItems.find((item) => pathname.startsWith(item.href));
+  const isActive = (item: typeof navItems[0]) => {
+    if (item.exact) return pathname === item.href;
+    return pathname.startsWith(item.href);
+  };
+
+  const currentPage = navItems.find((item) => isActive(item));
 
   return (
     <AuthGuard>
@@ -72,7 +77,7 @@ export default function AccountLayout({
                     onClick={() => setMobileSidebarOpen(false)}
                     className={cn(
                       "flex items-center px-4 py-3 rounded-lg transition-colors duration-200",
-                      pathname.startsWith(item.href)
+                      isActive(item)
                         ? "bg-green-50 text-green-600 font-medium"
                         : "text-gray-700 hover:bg-gray-100"
                     )}
@@ -98,7 +103,7 @@ export default function AccountLayout({
                       href={item.href}
                       className={cn(
                         "flex items-center px-4 py-3 rounded-lg transition-colors duration-200",
-                        pathname.startsWith(item.href)
+                        isActive(item)
                           ? "bg-green-50 text-green-600 font-medium"
                           : "text-gray-700 hover:bg-gray-100"
                       )}
