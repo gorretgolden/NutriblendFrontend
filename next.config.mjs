@@ -8,16 +8,28 @@ const nextConfig = {
   
   // Image Optimization
   images: {
-    unoptimized: true, 
+    unoptimized: false, 
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'admin.rasmuspharmaceuticals.com',
       },
       {
-        protocol: 'http', // Adding http for local/dev support
-        hostname: '**',
+        protocol: 'https',
+        hostname: 'www.rasmuspharmaceuticals.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
       },
     ],
   },
