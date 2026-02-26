@@ -11,7 +11,7 @@ import { toast } from "sonner";
 export default function Checkout() {
   const router = useRouter();
   const { cart, adjustedTotalPrice, isLoading: cartLoading } = useAppSelector((state) => state.carts);
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { user, isAuthenticated, isLoading: authLoading } = useAppSelector((state) => state.auth);
 
   const [regions, setRegions] = useState<Region[]>([]);
   const [towns, setTowns] = useState<Town[]>([]);
@@ -26,9 +26,13 @@ export default function Checkout() {
   const [loadingRegions, setLoadingRegions] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState('cod');
 
-  // Check authentication — only redirect if cart is definitely empty (not still loading)
+  // Check authentication — wait for auth to load, also check localStorage as fallback
   useEffect(() => {
-    if (!isAuthenticated) {
+    // Don't redirect while auth state is still loading
+    if (authLoading) return;
+
+    const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
+    if (!isAuthenticated && !hasToken) {
       toast.error("Please login to checkout");
       router.push('/cart');
       return;
@@ -39,7 +43,7 @@ export default function Checkout() {
       router.push('/cart');
       return;
     }
-  }, [isAuthenticated, cart, cartLoading, router]);
+  }, [isAuthenticated, authLoading, cart, cartLoading, router]);
 
   // Fetch regions
   useEffect(() => {
@@ -185,7 +189,7 @@ export default function Checkout() {
     }
   };
 
-  if (!cart || !isAuthenticated || cartLoading) {
+  if (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading) {
     return (
       <div className="min-h-screen bg-green-50 flex items-center justify-center">
         <Loader2 className="w-12 h-12 text-green-600 animate-spin" />
