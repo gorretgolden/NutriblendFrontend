@@ -61,16 +61,16 @@ export default function BrandsSection() {
 
   if (brands.length === 0) return null;
 
-  // Premium color palette for brand cards
-  const cardStyles = [
-    'from-emerald-50 to-teal-50 border-emerald-100 hover:border-emerald-300 hover:shadow-emerald-100/50',
-    'from-blue-50 to-indigo-50 border-blue-100 hover:border-blue-300 hover:shadow-blue-100/50',
-    'from-amber-50 to-orange-50 border-amber-100 hover:border-amber-300 hover:shadow-amber-100/50',
-    'from-rose-50 to-pink-50 border-rose-100 hover:border-rose-300 hover:shadow-rose-100/50',
-    'from-violet-50 to-purple-50 border-violet-100 hover:border-violet-300 hover:shadow-violet-100/50',
-    'from-cyan-50 to-sky-50 border-cyan-100 hover:border-cyan-300 hover:shadow-cyan-100/50',
-    'from-lime-50 to-green-50 border-lime-100 hover:border-lime-300 hover:shadow-lime-100/50',
-    'from-fuchsia-50 to-pink-50 border-fuchsia-100 hover:border-fuchsia-300 hover:shadow-fuchsia-100/50',
+  // Color accents for letter avatars
+  const accentColors = [
+    { bg: 'bg-emerald-600', ring: 'ring-emerald-200' },
+    { bg: 'bg-blue-600', ring: 'ring-blue-200' },
+    { bg: 'bg-amber-600', ring: 'ring-amber-200' },
+    { bg: 'bg-rose-600', ring: 'ring-rose-200' },
+    { bg: 'bg-violet-600', ring: 'ring-violet-200' },
+    { bg: 'bg-cyan-600', ring: 'ring-cyan-200' },
+    { bg: 'bg-green-600', ring: 'ring-green-200' },
+    { bg: 'bg-fuchsia-600', ring: 'ring-fuchsia-200' },
   ];
 
   return (
@@ -100,52 +100,58 @@ export default function BrandsSection() {
           </Link>
         </div>
 
-        {/* Grid */}
+        {/* Brand Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-5">
-          {brands.map((brand, i) => (
-            <Link
-              key={brand.id}
-              href={`/shop?brand_id=${brand.id}`}
-              className={`${i >= 4 ? "hidden sm:flex" : "flex"} 
-                relative flex-col items-center justify-center 
-                h-28 sm:h-32 md:h-36 
-                bg-gradient-to-br ${cardStyles[i % cardStyles.length]}
-                border rounded-2xl overflow-hidden 
-                shadow-sm hover:shadow-xl 
-                transition-all duration-500 hover:-translate-y-1.5
-                group`}
-            >
-              {/* Logo */}
-              {brand.logo ? (
-                <img
-                  src={getImageUrl(brand.logo)}
-                  alt={brand.name}
-                  className="w-full h-full object-contain p-5 md:p-6 group-hover:scale-110 transition-transform duration-500 ease-out"
-                />
-              ) : (
-                <div className="flex flex-col items-center justify-center gap-2 p-4">
-                  <div className="w-12 h-12 rounded-xl bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-sm">
-                    <span className="text-lg font-bold text-gray-700">
-                      {brand.name?.charAt(0)?.toUpperCase()}
-                    </span>
+          {brands.map((brand, i) => {
+            const accent = accentColors[i % accentColors.length];
+            return (
+              <Link
+                key={brand.id}
+                href={`/shop?brand_id=${brand.id}`}
+                className={`${i >= 4 ? "hidden sm:flex" : "flex"} 
+                  relative flex-col items-center justify-center 
+                  bg-white rounded-2xl overflow-hidden 
+                  border border-gray-100
+                  shadow-sm hover:shadow-lg
+                  transition-all duration-400 hover:-translate-y-1
+                  group p-5 md:p-6 min-h-[120px] sm:min-h-[140px]`}
+              >
+                {/* Logo or Avatar */}
+                {brand.logo ? (
+                  <div className="flex items-center justify-center flex-1 w-full">
+                    <img
+                      src={getImageUrl(brand.logo)}
+                      alt={brand.name}
+                      className="max-w-full max-h-[60px] md:max-h-[70px] object-contain group-hover:scale-105 transition-transform duration-400"
+                    />
                   </div>
-                  <span className="text-sm font-semibold text-gray-700 text-center leading-tight">
+                ) : (
+                  <div className="flex items-center justify-center flex-1">
+                    <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl ${accent.bg} ring-4 ${accent.ring} flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300`}>
+                      <span className="text-xl md:text-2xl font-bold text-white">
+                        {brand.name?.charAt(0)?.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Brand Name */}
+                <div className="mt-3 w-full text-center">
+                  <span className="text-sm font-semibold text-gray-800 group-hover:text-green-700 transition-colors duration-300 line-clamp-1">
                     {brand.name}
                   </span>
+                  {brand.products_count > 0 && (
+                    <span className="text-[11px] text-gray-400 block mt-0.5">
+                      {brand.products_count} product{brand.products_count !== 1 ? 's' : ''}
+                    </span>
+                  )}
                 </div>
-              )}
 
-              {/* Bottom name bar */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 py-3 px-3">
-                <span className="text-white text-xs font-bold tracking-wider uppercase text-center block drop-shadow-lg">
-                  {brand.name}
-                </span>
-              </div>
-
-              {/* Subtle shine effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-            </Link>
-          ))}
+                {/* Hover bottom accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left" />
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
