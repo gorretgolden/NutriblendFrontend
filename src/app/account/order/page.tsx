@@ -21,7 +21,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 6;
+  const ordersPerPage = 4;
   const router = useRouter();
 
   useEffect(() => {
