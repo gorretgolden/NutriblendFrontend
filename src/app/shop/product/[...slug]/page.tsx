@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import ProductListSec from "@/components/common/ProductListSec";
 import BreadcrumbProduct from "@/components/product-page/BreadcrumbProduct";
 import Header from "@/components/product-page/Header";
+import Tabs from "@/components/product-page/Tabs";
 import { apiClient } from "@/lib/api/client";
 import { transformProduct } from "@/lib/transformers";
 import { Product } from "@/types/product.types";
@@ -50,7 +51,9 @@ export default async function ProductPage({
         <section className="mb-11">
           <Header data={productData} />
         </section>
-        {/* <Tabs /> */}
+        <section className="mb-12">
+          <Tabs data={productData} />
+        </section>
       </div>
       <div className="mb-[50px] sm:mb-20">
         {relatedProducts.length > 0 && (

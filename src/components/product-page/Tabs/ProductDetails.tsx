@@ -1,41 +1,26 @@
+import { Product } from "@/types/product.types";
 import React from "react";
 
-export type SpecItem = {
-  label: string;
-  value: string;
-};
+const ProductDetails = ({ data }: { data: Product }) => {
+  const specsData = [
+    { label: "SKU", value: data.sku || "N/A" },
+    { label: "Brand", value: data.brand || "Generic" },
+    { label: "Weight", value: data.weight ? `${data.weight} kg` : "N/A" },
+    { label: "Stock", value: data.inStock ? "In Stock" : "Out of Stock" },
+    { label: "Model", value: data.title },
+  ];
 
-const specsData: SpecItem[] = [
-  {
-    label: " Material composition",
-    value: "100% Cotton",
-  },
-  {
-    label: "Care instructions",
-    value: "Machine wash warm, tumble dry",
-  },
-  {
-    label: "Fit type",
-    value: "Classic Fit",
-  },
-  {
-    label: "Pattern",
-    value: "Solid",
-  },
-];
-
-const ProductDetails = () => {
   return (
     <>
       {specsData.map((item, i) => (
-        <div className="grid grid-cols-3" key={i}>
-          <div>
-            <p className="text-sm py-3 w-full leading-7 lg:py-4 pr-2 text-neutral-500">
+        <div className="grid grid-cols-3 border-b border-gray-100 last:border-0" key={i}>
+          <div className="bg-gray-50">
+            <p className="text-[13px] py-2 px-4 leading-6 text-neutral-500 font-medium">
               {item.label}
             </p>
           </div>
-          <div className="col-span-2 py-3 lg:py-4 border-b">
-            <p className="text-sm w-full leading-7 text-neutral-800 font-medium">
+          <div className="col-span-2 py-2 px-4">
+            <p className="text-[13px] w-full leading-6 text-neutral-800">
               {item.value}
             </p>
           </div>

@@ -15,6 +15,7 @@ export type Product = {
   id: number;
   title: string;
   slug?: string;
+  sku?: string;
   srcUrl: string;
   gallery?: string[];
   price: number;
@@ -25,6 +26,11 @@ export type Product = {
   brand?: string;
   description?: string;
   shortDescription?: string;
+  keyFeatures?: string[];
+  whatsInBox?: string;
+  stock?: number;
+  weight?: number;
+  inStock?: boolean;
   variations?: {
     id: number;
     name: string;

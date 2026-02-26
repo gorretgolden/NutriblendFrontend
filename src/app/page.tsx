@@ -3,6 +3,8 @@ import BrandsSection from "@/components/homepage/Brands";
 import HeroCarousel, { CarouselSlide } from "@/components/homepage/imageCarousel";
 import CategoryGrid from "@/components/homepage/Categories";
 import WellnessHub from "@/components/Blog/index";
+import FlashSale from "@/components/homepage/FlashSale";
+import PromoBanners from "@/components/homepage/PromoBanners";
 import { Product } from "@/types/product.types";
 import { apiClient } from "@/lib/api/client";
 import { transformProduct } from "@/lib/transformers";
@@ -92,9 +94,15 @@ export default async function Home() {
       <main className="pt-2 md:pt-4">
 
         {/* Hero Carousel Section */}
-        <section className="mb-8 md:mb-14">
+        <section className="mb-4 md:mb-8">
           <HeroCarousel slides={heroSlides} autoPlay={true} interval={5000} />
         </section>
+
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
+          <FlashSale products={specialOffers} />
+        </div>
+
+        <PromoBanners />
 
         {/* Trust/Perks Banner */}
         <section className="max-w-[1600px] mx-auto px-4 sm:px-6 mb-8 md:mb-14">

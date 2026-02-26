@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Rating from "@/components/ui/Rating";
 import SizeSelection from "./SizeSelection";
 import AddToCardSection from "./AddToCardSection";
+import ChatHelp from "./ChatHelp";
 import { sanitizeRichHtml } from "@/lib/utils/security";
 
 const Header = ({ data }: { data: Product }) => {
@@ -16,67 +17,89 @@ const Header = ({ data }: { data: Product }) => {
           <PhotoSection data={data} />
         </div>
         <div>
+        <div className="flex flex-col">
+          <div className="flex flex-wrap items-center gap-x-2 text-xs mb-2">
+            <span className="text-gray-500">Brand:</span>
+            <span className="font-semibold text-green-700 hover:underline cursor-pointer">
+              {data.brand || "Generic"}
+            </span>
+            <span className="text-gray-300">|</span>
+            <span className="text-gray-500 hover:underline cursor-pointer">
+              Similar products from {data.brand || "Generic"}
+            </span>
+            {data.sku && (
+              <>
+                <span className="text-gray-300">|</span>
+                <span className="text-gray-500">SKU: {data.sku}</span>
+              </>
+            )}
+          </div>
           <h1
             className={cn([
-              "text-2xl md:text-[40px] md:leading-[40px] mb-3 md:mb-3.5 capitalize text-dark-800 font-extrabold",
+              "text-xl md:text-2xl lg:text-3xl mb-3 capitalize text-dark-800 font-bold",
             ])}
           >
             {data.title}
           </h1>
 
+          <div className="flex items-center space-x-3 mb-4">
+            {data.discount.percentage > 0 ? (
+              <>
+                <span className="font-bold text-dark-800 text-2xl lg:text-3xl">
+                  {`UGX ${Math.round(
+                    data.price - (data.price * data.discount.percentage) / 100
+                  ).toLocaleString()}`}
+                </span>
+                <span className="text-gray-400 line-through text-lg">
+                  UGX {data.price.toLocaleString()}
+                </span>
+                <span className="bg-orange-100 text-orange-600 font-bold text-xs px-2 py-1 rounded">
+                  {`-${data.discount.percentage}%`}
+                </span>
+              </>
+            ) : data.discount.amount > 0 ? (
+              <>
+                <span className="font-bold text-dark-800 text-2xl lg:text-3xl">
+                  {`UGX ${(data.price - data.discount.amount).toLocaleString()}`}
+                </span>
+                <span className="text-gray-400 line-through text-lg">
+                  UGX {data.price.toLocaleString()}
+                </span>
+                <span className="bg-orange-100 text-orange-600 font-bold text-xs px-2 py-1 rounded">
+                  {`-UGX ${data.discount.amount.toLocaleString()}`}
+                </span>
+              </>
+            ) : (
+              <span className="font-bold text-dark-800 text-2xl lg:text-3xl">
+                UGX {data.price.toLocaleString()}
+              </span>
+            )}
+          </div>
 
-          <div className="flex items-center mb-3 sm:mb-3.5">
+          {(data.stock !== undefined && data.stock > 0 && data.stock <= 10) && (
+            <div className="flex items-center space-x-2 mb-4 animate-pulse">
+              <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              <span className="text-red-600 font-bold text-sm">
+                {data.stock} units left
+              </span>
+            </div>
+          )}
+
+          <div className="flex items-center mb-6">
             <Rating
               initialValue={data.rating}
               allowFraction
               SVGclassName="inline-block"
               emptyClassName="fill-gray-200"
               fillClassName="fill-yellow-400"
-              size={25}
+              size={18}
               readonly
             />
-            <span className="text-green-700 text-xs sm:text-sm ml-[11px] sm:ml-[13px] pb-0.5 sm:pb-0">
-              {data.rating.toFixed(1)}
-              <span className="text-green-600">/5</span>
+            <span className="text-blue-600 text-sm ml-2 hover:underline cursor-pointer">
+              ({data.reviews || 0} verified ratings)
             </span>
-          </div>
-          <div className="flex items-center space-x-2.5 sm:space-x-3 mb-5">
-            {data.discount.percentage > 0 ? (
-              <span className="font-bold text-green-800 text-2xl sm:text-[32px]">
-                {` UGX ${Math.round(
-                  data.price - (data.price * data.discount.percentage) / 100
-                ).toLocaleString()}`}
-              </span>
-            ) : data.discount.amount > 0 ? (
-              <span className="font-bold text-green-800 text-2xl sm:text-[32px]">
-                {`UGX ${(data.price - data.discount.amount).toLocaleString()}`}
-              </span>
-            ) : (
-              <span className="font-bold text-green-800 text-2xl sm:text-[32px]">
-                UGX {data.price.toLocaleString()}
-              </span>
-            )}
-            {data.discount.percentage > 0 && (
-              <span className="font-bold text-dark-600/70 line-through text-2xl sm:text-[32px]">
-                UGX {data.price.toLocaleString()}
-              </span>
-            )}
-            {data.discount.amount > 0 && (
-              <span className="font-bold text-green-600/70 line-through text-2xl sm:text-[32px]">
-                UGX {data.price.toLocaleString()}
-              </span>
-            )}
-            {data.discount.percentage > 0 ? (
-              <span className="font-medium text-[10px] sm:text-xs py-1.5 px-3.5 rounded-full bg-green-100 text-green-700">
-                {`-${data.discount.percentage}%`}
-              </span>
-            ) : (
-              data.discount.amount > 0 && (
-                <span className="font-medium text-[10px] sm:text-xs py-1.5 px-3.5 rounded-full bg-green-100 text-green-700">
-                  {`-UGX ${data.discount.amount.toLocaleString()}`}
-                </span>
-              )
-            )}
           </div>
           {data.shortDescription ? (
             <p className="text-sm sm:text-base text-dark-700/80 mb-5">
@@ -94,6 +117,7 @@ const Header = ({ data }: { data: Product }) => {
           <SizeSelection data={data} />
           <hr className="hidden md:block h-[1px] border-t-green-200 my-5" />
           <AddToCardSection data={data} />
+          <ChatHelp />
         </div>
       </div>
     </>

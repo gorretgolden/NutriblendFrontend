@@ -27,12 +27,14 @@ const tabBtnData: TabBtn[] = [
   },
 ];
 
-const Tabs = () => {
+import { Product } from "@/types/product.types";
+
+const Tabs = ({ data }: { data: Product }) => {
   const [active, setActive] = useState<number>(1);
 
   return (
     <div>
-      <div className="flex items-center mb-6 sm:mb-8 overflow-x-auto">
+      <div className="flex items-center mb-6 sm:mb-8 overflow-x-auto border-b border-gray-100">
         {tabBtnData.map((tab) => (
           <Button
             key={tab.id}
@@ -40,9 +42,9 @@ const Tabs = () => {
             type="button"
             className={cn([
               active === tab.id
-                ? "border-black border-b-2 font-medium"
-                : "border-b border-black/10 text-black/60 font-normal",
-              "p-5 sm:p-6 rounded-none flex-1",
+                ? "border-green-600 border-b-2 font-bold text-green-700"
+                : "border-b border-transparent text-gray-500 font-normal hover:text-green-600",
+              "px-6 py-4 rounded-none transition-all duration-200",
             ])}
             onClick={() => setActive(tab.id)}
           >
@@ -51,7 +53,7 @@ const Tabs = () => {
         ))}
       </div>
       <div className="mb-12 sm:mb-16">
-        {active === 1 && <ProductDetailsContent />}
+        {active === 1 && <ProductDetailsContent data={data} />}
         {active === 2 && <ReviewsContent />}
         {active === 3 && <FaqContent />}
       </div>

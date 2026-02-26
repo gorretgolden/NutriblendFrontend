@@ -85,6 +85,14 @@ const ProductCard = ({ data }: ProductCardProps) => {
           />
         </div>
 
+        {/* Low Stock Badge */}
+        {data.stock !== undefined && data.stock > 0 && data.stock <= 10 && (
+          <span className="absolute top-2 left-10 sm:top-3 sm:left-12 bg-white text-red-600 text-[8px] sm:text-[9px] font-black px-2 py-0.5 sm:px-2 sm:py-0.5 rounded border border-red-100 z-10 shadow-sm animate-pulse flex items-center">
+            <span className="w-1 h-1 bg-red-600 rounded-full mr-1"></span>
+            ONLY {data.stock} LEFT
+          </span>
+        )}
+
         {/* Discount Badge */}
         {hasDiscount && (
           <span className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-gradient-to-r from-red-500 to-rose-500 text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg z-10 shadow-lg shadow-red-200/50">
