@@ -151,8 +151,8 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href="/account?tab=orders"
-                    onClick={(e) => handleAccountLink(e, '/account?tab=orders')}
+                    href="/account/order"
+                    onClick={(e) => handleAccountLink(e, '/account/order')}
                     className="text-gray-500 hover:text-green-600 transition-colors text-sm flex items-center gap-1.5 group"
                   >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-green-500 transition-all duration-300 rounded-full" />

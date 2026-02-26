@@ -183,7 +183,7 @@ export default function Checkout() {
         sessionStorage.removeItem('checkoutCart');
 
         // Redirect to orders tab
-        router.push(`/account?tab=orders`);
+        router.push(`/account/order`);
       } else {
         toast.error(response.message || "Failed to create order");
       }
