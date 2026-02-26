@@ -97,11 +97,15 @@ function OrdersSection() {
       try {
         const response = await apiClient.getOrders();
         if (response.status && response.data) {
-          const data = response.data;
-          setOrders(Array.isArray(data) ? data : (data as any).data || []);
+          // Backend returns paginated: { data: [...], current_page, ... }
+          const rawData = response.data;
+          const ordersArray = Array.isArray(rawData) 
+            ? rawData 
+            : (rawData as any).data || [];
+          setOrders(ordersArray);
         }
-      } catch {
-        // silently fail
+      } catch (e) {
+        console.error("Failed to fetch orders:", e);
       } finally {
         setLoading(false);
       }
@@ -240,13 +244,16 @@ function WishlistSection() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map((item: any) => {
           const product = item.product || item;
-          const imageUrl = getImageUrl(
+          // Try multiple image sources
+          const rawImagePath =
             product.product_images?.[0]?.image_url ||
             product.product_images?.[0]?.image_path ||
             product.images?.[0]?.image_url ||
             product.images?.[0]?.image_path ||
-            (Array.isArray(product.images) ? product.images[0] : null)
-          );
+            (Array.isArray(product.images) && typeof product.images[0] === 'string' ? product.images[0] : null) ||
+            product.image ||
+            product.thumbnail;
+          const imageUrl = rawImagePath ? getImageUrl(rawImagePath) : null;
 
           return (
             <div key={item.id} className="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:shadow-md transition-shadow">
@@ -254,8 +261,11 @@ function WishlistSection() {
                 {imageUrl ? (
                   <img
                     src={imageUrl}
-                    alt={product.name}
+                    alt={product.name || 'Product'}
                     className="w-full h-full object-contain p-2"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/images/placeholder.jpg';
+                    }}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-300">

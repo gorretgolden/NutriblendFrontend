@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAppSelector } from "@/lib/hooks/redux";
+import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
+import { clearCartAsync } from "@/lib/features/carts/cartsSlice";
 import { apiClient, type Region, type Town } from "@/lib/api/client";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Checkout() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { cart, adjustedTotalPrice, isLoading: cartLoading } = useAppSelector((state) => state.carts);
   const { user, isAuthenticated, isLoading: authLoading } = useAppSelector((state) => state.auth);
 
@@ -172,11 +174,16 @@ export default function Checkout() {
       if (response.status && response.data) {
         toast.success("Order placed successfully!");
 
-        // Clear cart (you'll need to add this action to cartsSlice)
+        // Clear cart from backend and Redux state
+        try {
+          await dispatch(clearCartAsync()).unwrap();
+        } catch {
+          // Cart clear failed silently — order was still placed
+        }
         sessionStorage.removeItem('checkoutCart');
 
-        // Redirect to order confirmation
-        router.push(`/account/order?orderNumber=${response.data.order_number}`);
+        // Redirect to orders tab
+        router.push(`/account?tab=orders`);
       } else {
         toast.error(response.message || "Failed to create order");
       }
