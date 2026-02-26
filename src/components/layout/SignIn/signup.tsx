@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { registerUser } from "@/lib/features/auth/authSlice";
+import { apiClient, Region, Town } from "@/lib/api/client";
 import { toast } from "sonner";
 
 type SignUpModalProps = {
@@ -10,14 +11,6 @@ type SignUpModalProps = {
   onClose: () => void;
   onSwitchToLogin: () => void;
   onProfileOpen: () => void;
-};
-
-// Uganda regions and sample districts
-const regions: Record<string, string[]> = {
-  Central: ["Kampala", "Mukono", "Wakiso", "Masaka"],
-  Eastern: ["Jinja", "Mbale", "Soroti", "Tororo"],
-  Northern: ["Gulu", "Arua", "Lira", "Kitgum"],
-  Western: ["Mbarara", "Fort Portal", "Kabale", "Kasese"],
 };
 
 const SignUpModal = ({
@@ -34,19 +27,66 @@ const SignUpModal = ({
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    email: "", // Added email field
+    email: "",
     phone: "",
     password: "",
     confirmPassword: "",
     newsletter: true,
     terms: false,
-    region: "",
-    district: "",
+    region_id: "",
+    town_id: "",
     location: "",
   });
 
+  // Backend-driven regions & towns
+  const [regions, setRegions] = useState<Region[]>([]);
+  const [towns, setTowns] = useState<Town[]>([]);
+  const [loadingRegions, setLoadingRegions] = useState(false);
+  const [loadingTowns, setLoadingTowns] = useState(false);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Fetch regions from backend on mount
+  useEffect(() => {
+    async function fetchRegions() {
+      try {
+        setLoadingRegions(true);
+        const response = await apiClient.getRegions();
+        if (response.status && response.data) {
+          setRegions(response.data);
+        }
+      } catch (err) {
+        console.error("Error fetching regions:", err);
+      } finally {
+        setLoadingRegions(false);
+      }
+    }
+    fetchRegions();
+  }, []);
+
+  // Fetch towns when region changes
+  useEffect(() => {
+    if (!formData.region_id) {
+      setTowns([]);
+      return;
+    }
+
+    async function fetchTowns() {
+      try {
+        setLoadingTowns(true);
+        const response = await apiClient.getTowns(Number(formData.region_id));
+        if (response.status && response.data) {
+          setTowns(response.data);
+        }
+      } catch (err) {
+        console.error("Error fetching towns:", err);
+      } finally {
+        setLoadingTowns(false);
+      }
+    }
+    fetchTowns();
+  }, [formData.region_id]);
 
   useEffect(() => {
     if (visible) {
@@ -67,10 +107,19 @@ const SignUpModal = ({
         [target.name]: target.checked,
       }));
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [target.name]: target.value,
-      }));
+      // Reset town when region changes
+      if (target.name === "region_id") {
+        setFormData((prev) => ({
+          ...prev,
+          region_id: target.value,
+          town_id: "",
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          [target.name]: target.value,
+        }));
+      }
     }
   };
 
@@ -214,17 +263,19 @@ const SignUpModal = ({
 
             <div>
               <select
-                name="region"
-                value={formData.region}
+                name="region_id"
+                value={formData.region_id}
                 onChange={handleInputChange}
                 className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
                 required
-                disabled={isLoading}
+                disabled={isLoading || loadingRegions}
               >
-                <option value="">Select Region</option>
-                {Object.keys(regions).map((region) => (
-                  <option key={region} value={region}>
-                    {region}
+                <option value="">
+                  {loadingRegions ? "Loading regions..." : "Select Region"}
+                </option>
+                {regions.map((region) => (
+                  <option key={region.id} value={region.id}>
+                    {region.name}
                   </option>
                 ))}
               </select>
@@ -232,24 +283,25 @@ const SignUpModal = ({
 
             <div>
               <select
-                name="district"
-                value={formData.district}
+                name="town_id"
+                value={formData.town_id}
                 onChange={handleInputChange}
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
                 required
-                disabled={!formData.region || isLoading}
+                disabled={!formData.region_id || isLoading || loadingTowns}
               >
                 <option value="">
-                  {formData.region
-                    ? "Select District"
-                    : "Select Region first"}
+                  {loadingTowns
+                    ? "Loading districts..."
+                    : formData.region_id
+                      ? "Select District"
+                      : "Select Region first"}
                 </option>
-                {formData.region &&
-                  regions[formData.region].map((d) => (
-                    <option key={d} value={d}>
-                      {d}
-                    </option>
-                  ))}
+                {towns.map((town) => (
+                  <option key={town.id} value={town.id}>
+                    {town.name}
+                  </option>
+                ))}
               </select>
             </div>
 
