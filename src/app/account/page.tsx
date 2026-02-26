@@ -181,7 +181,7 @@ function OrdersSection() {
             )}
             <div className="flex items-center justify-between pt-3 border-t border-gray-200">
               <span className="text-sm font-bold text-gray-800">
-                Total: {formatPrice(order.total_amount)}
+                Total: {formatPrice(Number(order.grand_total || 0))}
               </span>
               {(order.status === "pending" || order.status === "processing") && (
                 <button
