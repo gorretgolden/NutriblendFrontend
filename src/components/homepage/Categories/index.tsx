@@ -20,10 +20,89 @@ import {
   FaFish,
   FaRunning,
   FaCapsules,
+  FaMale,
+  FaBolt,
+  FaWeight,
+  FaSpa,
+  FaDna,
+  FaBrain,
+  FaMoon,
+  FaSeedling,
+  FaShoppingCart,
+  FaPaw,
+  FaChild,
+  FaHandHoldingHeart,
+  FaPaintBrush,
+  FaEye,
+  FaWind,
 } from "react-icons/fa";
 import { apiClient } from "@/lib/api/client";
 
-// Tailwind color map — maps color keys from backend to actual classes
+// ═══════════════════════════════════════════════════════
+// ICON REGISTRY — Maps backend icon identifiers to React Icons
+// Backend stores icon as "capsules", "leaf", etc.
+// ═══════════════════════════════════════════════════════
+const iconRegistry: Record<string, React.ReactElement> = {
+  // Health & Supplements
+  capsules: <FaCapsules />,
+  leaf: <FaLeaf />,
+  herbs: <FaLeaf />,
+  heart: <FaHeart />,
+  brain: <FaBrain />,
+  eye: <FaEye />,
+  lungs: <FaWind />,
+  dna: <FaDna />,
+
+  // Fitness & Body
+  dumbbell: <FaDumbbell />,
+  running: <FaRunning />,
+  muscle: <FaDumbbell />,
+  weight: <FaWeight />,
+  bolt: <FaBolt />,
+
+  // Bone & Joint
+  bone: <FaBone />,
+  joint: <FaBone />,
+
+  // Omega & Fish
+  fish: <FaFish />,
+
+  // Digestive
+  stomach: <FaCapsules />,
+
+  // Beauty & Personal Care
+  spa: <FaSpa />,
+  paintbrush: <FaPaintBrush />,
+  bath: <FaBath />,
+  seedling: <FaSeedling />,
+
+  // People
+  female: <FaFemale />,
+  male: <FaMale />,
+  baby: <FaBaby />,
+  child: <FaChild />,
+  "hand-holding-heart": <FaHandHoldingHeart />,
+
+  // Food & Shopping
+  apple: <FaAppleAlt />,
+  cart: <FaShoppingCart />,
+  "shopping-bag": <FaShoppingBag />,
+
+  // Home & Pets
+  home: <FaHome />,
+  dog: <FaDog />,
+  paw: <FaPaw />,
+
+  // Sleep & Mental
+  moon: <FaMoon />,
+
+  // Default
+  box: <FaBoxes />,
+};
+
+// ═══════════════════════════════════════════════════════
+// COLOR MAP — Maps backend color keys to Tailwind classes
+// ═══════════════════════════════════════════════════════
 const colorMap: Record<string, { text: string; bg: string }> = {
   purple: { text: "text-purple-600", bg: "bg-purple-50 border-purple-100" },
   green: { text: "text-green-600", bg: "bg-green-50 border-green-100" },
@@ -43,76 +122,68 @@ const colorMap: Record<string, { text: string; bg: string }> = {
   stone: { text: "text-stone-600", bg: "bg-stone-50 border-stone-100" },
 };
 
-// Fallback icon mapping (used when backend has no icon_emoji set)
-const fallbackIcons: Record<string, any> = {
-  supplements: <FaCapsules />,
-  herbal: <FaLeaf />,
-  protein: <FaDumbbell />,
-  fitness: <FaRunning />,
-  vitamin: <FaCapsules />,
-  immune: <FaHeart />,
-  bone: <FaBone />,
-  joint: <FaBone />,
-  omega: <FaFish />,
-  fish: <FaFish />,
-  weight: <FaDumbbell />,
-  women: <FaFemale />,
-  men: <FaRunning />,
-  mother: <FaBaby />,
-  baby: <FaBaby />,
-  food: <FaAppleAlt />,
-  beauty: <FaFemale />,
-  bath: <FaBath />,
-  grocery: <FaShoppingBag />,
-  home: <FaHome />,
-  pet: <FaDog />,
-  energy: <FaDumbbell />,
+// ═══════════════════════════════════════════════════════
+// FALLBACK — When backend icon/color fields are empty
+// ═══════════════════════════════════════════════════════
+const fallbackByKeyword: Record<string, { icon: string; color: string }> = {
+  supplement: { icon: "capsules", color: "purple" },
+  herbal: { icon: "herbs", color: "green" },
+  vitamin: { icon: "capsules", color: "amber" },
+  immune: { icon: "heart", color: "red" },
+  protein: { icon: "dumbbell", color: "orange" },
+  fitness: { icon: "running", color: "blue" },
+  energy: { icon: "bolt", color: "green" },
+  weight: { icon: "weight", color: "indigo" },
+  sports: { icon: "running", color: "blue" },
+  bone: { icon: "bone", color: "teal" },
+  joint: { icon: "joint", color: "teal" },
+  omega: { icon: "fish", color: "cyan" },
+  fish: { icon: "fish", color: "cyan" },
+  women: { icon: "female", color: "pink" },
+  men: { icon: "male", color: "blue" },
+  mother: { icon: "baby", color: "rose" },
+  baby: { icon: "baby", color: "rose" },
+  food: { icon: "apple", color: "green" },
+  probiotic: { icon: "dna", color: "emerald" },
+  digestive: { icon: "stomach", color: "emerald" },
+  beauty: { icon: "spa", color: "pink" },
+  skin: { icon: "spa", color: "pink" },
+  bath: { icon: "bath", color: "sky" },
+  grocery: { icon: "cart", color: "amber" },
+  home: { icon: "home", color: "stone" },
+  pet: { icon: "paw", color: "yellow" },
+  sleep: { icon: "moon", color: "indigo" },
+  brain: { icon: "brain", color: "violet" },
+  heart: { icon: "heart", color: "red" },
 };
 
-// Fallback color mapping by keyword
-const fallbackColors: Record<string, string> = {
-  supplements: "purple", herbal: "green", protein: "orange", fitness: "blue",
-  vitamin: "amber", immune: "red", bone: "teal", joint: "teal",
-  omega: "cyan", fish: "cyan", weight: "indigo", women: "pink",
-  men: "blue", mother: "rose", baby: "rose", food: "green",
-  beauty: "pink", bath: "sky", grocery: "amber", home: "stone",
-  pet: "yellow", energy: "green",
-};
-
-const getFallbackIcon = (name: string) => {
+const getFallback = (name: string) => {
   const lowerName = name.toLowerCase();
-  for (const [key, icon] of Object.entries(fallbackIcons)) {
-    if (lowerName.includes(key)) return icon;
+  for (const [key, config] of Object.entries(fallbackByKeyword)) {
+    if (lowerName.includes(key)) return config;
   }
-  return <FaBoxes />;
-};
-
-const getFallbackColor = (name: string): string => {
-  const lowerName = name.toLowerCase();
-  for (const [key, color] of Object.entries(fallbackColors)) {
-    if (lowerName.includes(key)) return color;
-  }
-  return "green";
+  return { icon: "box", color: "green" };
 };
 
 /**
  * Gets display config for a category.
- * Priority: backend-provided icon_emoji/color > fallback by name keyword
+ * Priority: backend-provided icon/color > fallback by name keyword
  */
 const getCategoryDisplay = (category: any) => {
+  const fallback = getFallback(category.name);
+
   // Color: use backend value, or fallback by name
-  const colorKey = category.color || getFallbackColor(category.name);
+  const colorKey = category.color || fallback.color;
   const colors = colorMap[colorKey] || colorMap.green;
 
-  // Icon: use backend emoji, or fallback react-icon
-  const hasEmoji = category.icon_emoji && category.icon_emoji.trim();
+  // Icon: use backend icon identifier, or fallback by name keyword
+  const iconKey = category.icon || fallback.icon;
+  const icon = iconRegistry[iconKey] || iconRegistry.box;
 
   return {
-    colorKey,
     textColor: colors.text,
     bgColor: colors.bg,
-    emoji: hasEmoji ? category.icon_emoji : null,
-    fallbackIcon: hasEmoji ? null : getFallbackIcon(category.name),
+    icon,
   };
 };
 
@@ -231,13 +302,9 @@ export default function CategoryGrid() {
                 className="flex flex-col items-center flex-shrink-0 group"
               >
                 <div className={`w-32 h-32 flex items-center justify-center rounded-full ${display.bgColor} border shadow-md group-hover:scale-105 transition duration-300`}>
-                  {display.emoji ? (
-                    <span className="text-5xl">{display.emoji}</span>
-                  ) : (
-                    <span className={display.textColor}>
-                      {React.cloneElement(display.fallbackIcon, { size: 48 })}
-                    </span>
-                  )}
+                  <span className={display.textColor}>
+                    {React.cloneElement(display.icon, { size: 48 })}
+                  </span>
                 </div>
                 <span className="mt-3 text-base font-medium text-gray-800 text-center">
                   {category.name}
@@ -267,13 +334,9 @@ export default function CategoryGrid() {
               className={`flex items-center gap-3 ${display.bgColor} border rounded-xl p-3 hover:shadow-md hover:scale-[1.02] transition-all duration-300 active:scale-95`}
             >
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-white/60 flex-shrink-0`}>
-                {display.emoji ? (
-                  <span className="text-xl">{display.emoji}</span>
-                ) : (
-                  <span className={display.textColor}>
-                    {React.cloneElement(display.fallbackIcon, { size: 20 })}
-                  </span>
-                )}
+                <span className={display.textColor}>
+                  {React.cloneElement(display.icon, { size: 20 })}
+                </span>
               </div>
               <span className="text-sm font-semibold text-gray-800 leading-tight line-clamp-2">
                 {category.name}
