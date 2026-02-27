@@ -77,6 +77,28 @@ export const registerUser = createAsyncThunk(
     }
 );
 
+export const registerWholesaleUser = createAsyncThunk(
+    "auth/registerWholesale",
+    async (userData: {
+        name: string;
+        email: string;
+        phone: string;
+        password: string;
+        wholesale_business_name: string;
+        wholesale_business_details: string;
+    }, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.registerWholesale(userData);
+            if (response.status) {
+                return response.data;
+            }
+            return rejectWithValue(response.message || "Wholesale registration failed");
+        } catch (error: any) {
+            return rejectWithValue(error.message || "Wholesale registration failed");
+        }
+    }
+);
+
 export const logoutUser = createAsyncThunk(
     "auth/logout",
     async (_, { rejectWithValue }) => {
@@ -163,6 +185,20 @@ const authSlice = createSlice({
             }
         });
         builder.addCase(registerUser.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload as string;
+        });
+
+        // Register Wholesale
+        builder.addCase(registerWholesaleUser.pending, (state) => {
+            state.isLoading = true;
+            state.error = null;
+        });
+        builder.addCase(registerWholesaleUser.fulfilled, (state) => {
+            state.isLoading = false;
+            // No login yet, pending approval
+        });
+        builder.addCase(registerWholesaleUser.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload as string;
         });

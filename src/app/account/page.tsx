@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { FiUser, FiMail, FiBox, FiHeart } from "react-icons/fi";
+import { FiUser, FiMail, FiBox, FiHeart, FiBriefcase } from "react-icons/fi";
 import { useAppSelector } from "@/lib/hooks/redux";
 import Link from "next/link";
 
@@ -89,6 +89,37 @@ export default function AccountPage() {
             </Link>
           </div>
         </div>
+
+        {/* Wholesale Status */}
+        {user?.wholesale_business_name && (
+          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm md:col-span-2 mt-6">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <FiBriefcase className="w-4 h-4" /> Wholesale Profile
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                <p className="text-xs text-blue-600 font-bold uppercase mb-1">Business Name</p>
+                <p className="text-lg font-bold text-blue-900">{user.wholesale_business_name}</p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                <p className="text-xs text-gray-500 font-bold uppercase mb-1">Account Status</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-lg font-bold text-gray-800">Wholesale Partner</p>
+                  {user.is_wholesale_approved ? (
+                    <span className="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded-full font-bold border border-green-200">APPROVED</span>
+                  ) : (
+                    <span className="bg-amber-100 text-amber-700 text-[10px] px-2 py-1 rounded-full font-bold border border-amber-200">PENDING APPROVAL</span>
+                  )}
+                </div>
+              </div>
+            </div>
+            {!user.is_wholesale_approved && (
+              <p className="mt-4 text-xs text-gray-500 italic">
+                Our team is currently reviewing your business details. You will gain access to wholesale pricing once approved.
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

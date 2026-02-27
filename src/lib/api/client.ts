@@ -43,6 +43,9 @@ export interface User {
     profile_photo?: string;
     address?: string;
     status?: string;
+    is_wholesale_approved?: boolean;
+    wholesale_business_name?: string;
+    wholesale_business_details?: string;
     created_at?: string;
     updated_at?: string;
 }
@@ -68,6 +71,8 @@ export interface Product {
     short_description?: string;
     description: string;
     price: number;
+    wholesale_price?: number;
+    wholesale_min_qty?: number;
     discount_percentage?: number;
     discount_amount?: number;
     stock_quantity: number;
@@ -352,6 +357,23 @@ class NutriBlendApiClient {
         }
 
         return response;
+    }
+
+    async registerWholesale(userData: {
+        name: string;
+        email: string;
+        phone: string;
+        password: string;
+        wholesale_business_name: string;
+        wholesale_business_details: string;
+    }): Promise<ApiResponse<User>> {
+        return this.request<User>(
+            '/auth/register-wholesale',
+            {
+                method: 'POST',
+                body: JSON.stringify(userData),
+            }
+        );
     }
 
     async login(credentials: {

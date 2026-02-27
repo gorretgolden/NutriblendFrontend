@@ -126,6 +126,23 @@ export default function LoginPage() {
                         Continue with Google
                     </button>
 
+                    {/* Links */}
+                    <div className="mt-8 space-y-4 text-center">
+                        <p className="text-sm text-gray-500">
+                            Don't have an account? <Link href="/auth/register" className="text-green-600 font-bold hover:underline">Sign Up</Link>
+                        </p>
+                        <hr className="border-gray-100" />
+                        <div className="bg-green-50 p-4 rounded-xl border border-green-100">
+                            <p className="text-xs text-green-700 font-semibold mb-2 uppercase tracking-wider">Are you a Business?</p>
+                            <Link
+                                href="/auth/register-wholesale"
+                                className="inline-block text-sm text-green-700 font-bold hover:text-green-800 transition-colors"
+                            >
+                                Apply for a Wholesale Account →
+                            </Link>
+                        </div>
+                    </div>
+
                     {/* Back to cart */}
                     <div className="mt-6 text-center">
                         <button
