@@ -19,6 +19,7 @@ export type Product = {
   srcUrl: string;
   gallery?: string[];
   price: number;
+  unit?: string;
   wholesale_price?: number;
   wholesale_min_qty?: number;
   discount: Discount;

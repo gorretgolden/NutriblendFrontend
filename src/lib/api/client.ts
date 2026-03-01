@@ -71,6 +71,7 @@ export interface Product {
     short_description?: string;
     description: string;
     price: number;
+    unit?: string;
     wholesale_price?: number;
     wholesale_min_qty?: number;
     discount_percentage?: number;
