@@ -13,6 +13,18 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
   const { sizeSelection, colorSelection, selectedVariationId } = useAppSelector(
     (state: RootState) => state.products
   );
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const isWholesaleUser = isAuthenticated && user?.is_wholesale_approved;
+
+  const hasDiscount = (data.discount?.percentage ?? 0) > 0 || (data.discount?.amount ?? 0) > 0;
+
+  const discountedPrice = (data.discount?.percentage ?? 0) > 0
+    ? Math.round(data.price - (data.price * (data.discount?.percentage ?? 0)) / 100)
+    : data.price - (data.discount?.amount ?? 0);
+
+  const displayPrice = (isWholesaleUser && data.wholesale_price)
+    ? data.wholesale_price
+    : (hasDiscount ? discountedPrice : data.price);
 
   return (
     <button
@@ -26,7 +38,7 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
               variation_id: selectedVariationId ?? undefined,
               name: data.title,
               srcUrl: data.srcUrl,
-              price: data.price,
+              price: displayPrice,
               quantity: data.quantity,
             })
           ).unwrap();

@@ -65,6 +65,7 @@ const Header = ({ data }: { data: Product }) => {
                   <>
                     <span className="font-bold text-blue-600 text-2xl lg:text-3xl">
                       {`UGX ${data.wholesale_price?.toLocaleString()}`}
+                      {data.unit && <span className="text-sm text-gray-500 font-normal ml-1">/ {data.unit}</span>}
                     </span>
                     <span className="text-gray-400 line-through text-lg">
                       UGX {data.price.toLocaleString()}
@@ -76,6 +77,7 @@ const Header = ({ data }: { data: Product }) => {
                       {`UGX ${Math.round(
                         data.price - (data.price * (data.discount?.percentage ?? 0)) / 100
                       ).toLocaleString()}`}
+                      {data.unit && <span className="text-sm text-gray-500 font-normal ml-1">/ {data.unit}</span>}
                     </span>
                     <span className="text-gray-400 line-through text-lg">
                       UGX {data.price.toLocaleString()}
@@ -88,6 +90,7 @@ const Header = ({ data }: { data: Product }) => {
                   <>
                     <span className="font-bold text-dark-800 text-2xl lg:text-3xl">
                       {`UGX ${(data.price - (data.discount?.amount ?? 0)).toLocaleString()}`}
+                      {data.unit && <span className="text-sm text-gray-500 font-normal ml-1">/ {data.unit}</span>}
                     </span>
                     <span className="text-gray-400 line-through text-lg">
                       UGX {data.price.toLocaleString()}
@@ -99,6 +102,7 @@ const Header = ({ data }: { data: Product }) => {
                 ) : (
                   <span className="font-bold text-dark-800 text-2xl lg:text-3xl">
                     UGX {data.price.toLocaleString()}
+                    {data.unit && <span className="text-sm text-gray-500 font-normal ml-1">/ {data.unit}</span>}
                   </span>
                 )}
               </div>
