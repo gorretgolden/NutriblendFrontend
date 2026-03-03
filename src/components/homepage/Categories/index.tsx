@@ -52,6 +52,9 @@ const iconRegistry: Record<string, React.ReactElement> = {
   eye: <FaEye />,
   lungs: <FaWind />,
   dna: <FaDna />,
+  liver: <FaLeaf />, // Fallback icon
+  gut: <FaCapsules />, // Fallback icon
+  immunity: <FaHandHoldingHeart />,
 
   // Fitness & Body
   dumbbell: <FaDumbbell />,
@@ -75,6 +78,7 @@ const iconRegistry: Record<string, React.ReactElement> = {
   paintbrush: <FaPaintBrush />,
   bath: <FaBath />,
   seedling: <FaSeedling />,
+  perfume: <FaBath />, // Use bath as scent/perfume icon
 
   // People
   female: <FaFemale />,
@@ -105,7 +109,7 @@ const iconRegistry: Record<string, React.ReactElement> = {
 // ═══════════════════════════════════════════════════════
 const colorMap: Record<string, { text: string; bg: string }> = {
   purple: { text: "text-purple-600", bg: "bg-purple-50 border-purple-100" },
-  green: { text: "text-green-600", bg: "bg-green-50 border-green-100" },
+  green: { text: "text-emerald-600", bg: "bg-emerald-50 border-emerald-100" },
   pink: { text: "text-pink-500", bg: "bg-pink-50 border-pink-100" },
   blue: { text: "text-blue-600", bg: "bg-blue-50 border-blue-100" },
   red: { text: "text-red-500", bg: "bg-red-50 border-red-100" },
@@ -130,31 +134,29 @@ const fallbackByKeyword: Record<string, { icon: string; color: string }> = {
   herbal: { icon: "herbs", color: "green" },
   vitamin: { icon: "capsules", color: "amber" },
   immune: { icon: "heart", color: "red" },
-  protein: { icon: "dumbbell", color: "orange" },
-  fitness: { icon: "running", color: "blue" },
-  energy: { icon: "bolt", color: "green" },
-  weight: { icon: "weight", color: "indigo" },
-  sports: { icon: "running", color: "blue" },
-  bone: { icon: "bone", color: "teal" },
-  joint: { icon: "joint", color: "teal" },
-  omega: { icon: "fish", color: "cyan" },
-  fish: { icon: "fish", color: "cyan" },
+  respiratory: { icon: "lungs", color: "sky" },
+  detox: { icon: "leaf", color: "emerald" },
+  liver: { icon: "leaf", color: "emerald" },
+  gut: { icon: "capsules", color: "teal" },
+  sexual: { icon: "male", color: "blue" },
+  performance: { icon: "bolt", color: "amber" },
+  fitness: { icon: "running", color: "indigo" },
+  blood: { icon: "heart", color: "red" },
+  cardio: { icon: "heart", color: "red" },
+  brain: { icon: "brain", color: "violet" },
+  pregnancy: { icon: "baby", color: "rose" },
+  lactation: { icon: "baby", color: "rose" },
+  bone: { icon: "bone", color: "stone" },
+  joint: { icon: "bone", color: "stone" },
+  skin: { icon: "spa", color: "pink" },
+  beauty: { icon: "spa", color: "pink" },
+  kids: { icon: "child", color: "orange" },
+  perfume: { icon: "perfume", color: "blue" },
+  loreal: { icon: "perfume", color: "rose" },
+  collection: { icon: "perfume", color: "violet" },
   women: { icon: "female", color: "pink" },
   men: { icon: "male", color: "blue" },
-  mother: { icon: "baby", color: "rose" },
   baby: { icon: "baby", color: "rose" },
-  food: { icon: "apple", color: "green" },
-  probiotic: { icon: "dna", color: "emerald" },
-  digestive: { icon: "stomach", color: "emerald" },
-  beauty: { icon: "spa", color: "pink" },
-  skin: { icon: "spa", color: "pink" },
-  bath: { icon: "bath", color: "sky" },
-  grocery: { icon: "cart", color: "amber" },
-  home: { icon: "home", color: "stone" },
-  pet: { icon: "paw", color: "yellow" },
-  sleep: { icon: "moon", color: "indigo" },
-  brain: { icon: "brain", color: "violet" },
-  heart: { icon: "heart", color: "red" },
 };
 
 const getFallback = (name: string) => {
@@ -162,7 +164,7 @@ const getFallback = (name: string) => {
   for (const [key, config] of Object.entries(fallbackByKeyword)) {
     if (lowerName.includes(key)) return config;
   }
-  return { icon: "box", color: "green" };
+  return { icon: "box", color: "blue" };
 };
 
 /**
