@@ -47,7 +47,7 @@ async function getHomePageData() {
     const [newArrivalsReq, trendingReq, specialOffersReq, recommendedReq, settingsReq] = await Promise.all([
       apiClient.getProducts({ is_new_arrival: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
       apiClient.getProducts({ is_trending: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
-      apiClient.getProducts({ is_special_offer: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
+      apiClient.getProducts({ on_sale: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
       apiClient.getProducts({ is_recommended: true, per_page: 8 }).catch(() => ({ status: false, data: null })),
       apiClient.getPublicSettings().catch(() => ({ status: false, data: null }))
     ]);
@@ -159,7 +159,7 @@ export default async function Home() {
                 title="Curated Wellness Deals"
                 subtitle="Exclusive clinical-grade offers selected for you"
                 badge="HOT"
-                viewAllLink="/shop?is_special_offer=true"
+                viewAllLink="/shop?on_sale=true"
               />
             </section>
 
