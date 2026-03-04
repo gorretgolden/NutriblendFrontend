@@ -4,8 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient, getImageUrl } from "@/lib/api/client";
+import { useAppSelector } from "@/lib/hooks/redux";
 
 export default function SearchWithDropdown() {
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const isWholesaleUser = isAuthenticated && user?.is_wholesale_approved;
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -172,9 +175,14 @@ export default function SearchWithDropdown() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 truncate">{product.name}</p>
-                        <p className="text-sm text-[#4caf50] font-semibold">
-                          UGX {product.price.toLocaleString()}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className={`text-sm font-semibold ${(isWholesaleUser && product.wholesale_price) ? 'text-blue-600' : 'text-[#4caf50]'}`}>
+                            UGX {((isWholesaleUser && product.wholesale_price) ? product.wholesale_price : product.price).toLocaleString()}
+                          </p>
+                          {(isWholesaleUser && product.wholesale_price) && (
+                            <span className="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-bold">WHOLESALE</span>
+                          )}
+                        </div>
                       </div>
                     </Link>
                   ))}

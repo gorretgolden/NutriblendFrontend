@@ -7,6 +7,7 @@ import { clearCartAsync } from "@/lib/features/carts/cartsSlice";
 import { apiClient, type Region, type Town } from "@/lib/api/client";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 
 export default function Checkout() {
   const router = useRouter();
@@ -116,6 +117,26 @@ export default function Checkout() {
     calculateFee();
   }, [selectedRegion, selectedTown]);
 
+  const config = {
+    public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
+    tx_ref: `NB-${Date.now()}`,
+    amount: Math.round(finalTotal),
+    currency: 'UGX',
+    payment_options: 'card,mobilemoney,ussd',
+    customer: {
+      email: user?.email || '',
+      phone_number: user?.phone || '',
+      name: `${user?.first_name || user?.name || ''} ${user?.last_name || ''}`,
+    },
+    customizations: {
+      title: 'NutriBlend Haven',
+      description: 'Payment for wellness products',
+      logo: 'https://nutriblendhaven.com/logo.png',
+    },
+  };
+
+  const handleFlutterPayment = useFlutterwave(config);
+
   const handleApplyDiscount = async () => {
     if (!discountCode.trim()) {
       toast.error("Please enter a discount code");
@@ -169,6 +190,32 @@ export default function Checkout() {
         payment_method: paymentMethod,
       };
 
+      if (paymentMethod === 'flutterwave') {
+        handleFlutterPayment({
+          callback: async (response) => {
+            if (response.status === "successful") {
+              const apiOrderData = { ...orderData, payment_id: response.transaction_id };
+              const apiResponse = await apiClient.createOrder(apiOrderData);
+
+              if (apiResponse.status && apiResponse.data) {
+                toast.success("Order placed and payment successful!");
+                await dispatch(clearCartAsync()).unwrap();
+                router.push(`/account/order`);
+              } else {
+                toast.error(apiResponse.message || "Failed to finalize order");
+              }
+            } else {
+              toast.error("Payment failed or cancelled");
+            }
+            closePaymentModal();
+          },
+          onClose: () => {
+            setLoading(false);
+          },
+        });
+        return;
+      }
+
       const response = await apiClient.createOrder(orderData);
 
       if (response.status && response.data) {
@@ -191,7 +238,9 @@ export default function Checkout() {
       console.error("Error placing order:", error);
       toast.error(error.message || "Failed to place order");
     } finally {
-      setLoading(false);
+      if (paymentMethod !== 'flutterwave') {
+        setLoading(false);
+      }
     }
   };
 
@@ -344,20 +393,37 @@ export default function Checkout() {
                 <h2 className="font-semibold text-gray-900">Payment Method</h2>
               </div>
               <div className="p-5">
-                <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'cod' ? 'border-green-500 bg-green-50/40' : 'border-gray-200 hover:border-gray-300'}`}>
-                  <input
-                    type="radio"
-                    className="h-4 w-4 text-green-600 focus:ring-green-500"
-                    checked={paymentMethod === 'cod'}
-                    onChange={() => setPaymentMethod('cod')}
-                  />
-                  <div className="flex items-center gap-2.5">
-                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                    </svg>
-                    <span className="text-sm font-medium text-gray-800">Cash on Delivery (COD)</span>
-                  </div>
-                </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'cod' ? 'border-green-500 bg-green-50/40' : 'border-gray-200 hover:border-gray-300'}`}>
+                    <input
+                      type="radio"
+                      className="h-4 w-4 text-green-600 focus:ring-green-500"
+                      checked={paymentMethod === 'cod'}
+                      onChange={() => setPaymentMethod('cod')}
+                    />
+                    <div className="flex items-center gap-2.5">
+                      <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                      </svg>
+                      <span className="text-sm font-medium text-gray-800">Cash on Delivery</span>
+                    </div>
+                  </label>
+
+                  <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'flutterwave' ? 'border-green-500 bg-green-50/40' : 'border-gray-200 hover:border-gray-300'}`}>
+                    <input
+                      type="radio"
+                      className="h-4 w-4 text-green-600 focus:ring-green-500"
+                      checked={paymentMethod === 'flutterwave'}
+                      onChange={() => setPaymentMethod('flutterwave')}
+                    />
+                    <div className="flex items-center gap-2.5">
+                      <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                      </svg>
+                      <span className="text-sm font-medium text-gray-800">Card / Mobile Money</span>
+                    </div>
+                  </label>
+                </div>
               </div>
             </div>
           </div>

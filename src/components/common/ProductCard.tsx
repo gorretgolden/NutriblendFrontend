@@ -72,72 +72,73 @@ const ProductCard = ({ data }: ProductCardProps) => {
   };
 
   return (
-    <div className="group bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-gray-100/80 shadow-sm hover:shadow-xl hover:shadow-green-900/8 transition-all duration-500 flex flex-col relative h-full hover:-translate-y-1">
+    <div className="group bg-white rounded-3xl overflow-hidden border border-gray-100/50 shadow-premium hover-lift transition-all duration-500 flex flex-col relative h-full">
       {/* Image Container */}
-      <div className="bg-gradient-to-b from-gray-50 to-white rounded-t-xl sm:rounded-t-2xl w-full h-[160px] sm:h-[200px] md:h-[230px] flex items-center justify-center p-3 sm:p-5 relative overflow-hidden">
-        {/* Wishlist Heart Button */}
-        <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">
+      <div className="bg-gradient-to-b from-green-50/30 to-white w-full h-[180px] sm:h-[220px] md:h-[250px] flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
+        {/* Wishlist Heart Button - Floating Glass */}
+        <div className="absolute top-3 left-3 z-10 scale-90 sm:scale-100">
           <WishlistButton productId={data.id} productName={data.title} variant="card" />
         </div>
 
         <div
-          className="w-full h-full flex items-center justify-center cursor-pointer"
+          className="w-full h-full flex items-center justify-center cursor-pointer relative z-0"
           onClick={handleImageClick}
         >
+          <div className="absolute inset-0 bg-gradient-to-tr from-green-100/20 to-transparent rounded-full blur-3xl scale-75 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
           <Image
             src={data.srcUrl}
-            width={200}
-            height={200}
-            className="object-contain max-h-full group-hover:scale-105 transition-transform duration-700 ease-out"
+            width={220}
+            height={220}
+            className="object-contain max-h-full group-hover:scale-110 transition-transform duration-1000 ease-[cubic-bezier(0.33,1,0.68,1)]"
             alt={data.title}
             priority
           />
         </div>
 
-        {/* Low Stock Badge */}
+        {/* Low Stock Badge - Pulse Glow */}
         {data.stock !== undefined && data.stock > 0 && data.stock <= 10 && (
-          <span className="absolute top-2 left-10 sm:top-3 sm:left-12 bg-white text-red-600 text-[8px] sm:text-[9px] font-black px-2 py-0.5 sm:px-2 sm:py-0.5 rounded border border-red-100 z-10 shadow-sm animate-pulse flex items-center">
-            <span className="w-1 h-1 bg-red-600 rounded-full mr-1"></span>
+          <span className="absolute top-3 left-12 bg-white/90 backdrop-blur-sm text-red-600 text-[9px] font-black px-2.5 py-1 rounded-full border border-red-100 z-10 shadow-sm animate-pulse-slow flex items-center">
+            <span className="w-1.5 h-1.5 bg-red-600 rounded-full mr-1.5 animate-pulse"></span>
             ONLY {data.stock} LEFT
           </span>
         )}
 
-        {/* Discount Badge */}
+        {/* Discount Badge - Glassmorphism */}
         {hasDiscount && !isUsingWholesalePrice && (
-          <span className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-gradient-to-r from-red-500 to-rose-500 text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg z-10 shadow-lg shadow-red-200/50">
+          <span className="absolute top-3 right-3 glass bg-red-500/90 text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 rounded-full z-10 shadow-lg border-none">
             {data.discount.percentage > 0
-              ? `-${data.discount.percentage}%`
+              ? `Save ${data.discount.percentage}%`
               : `-${data.discount.amount.toLocaleString()}`}
           </span>
         )}
 
-        {/* Wholesale Badge */}
+        {/* Wholesale Badge - Sleek Indigo Glass */}
         {isUsingWholesalePrice && (
-          <span className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg z-10 shadow-lg shadow-blue-200/50">
+          <span className="absolute top-3 right-3 glass bg-indigo-600/90 text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 rounded-full z-10 shadow-lg border-none">
             WHOLESALE
           </span>
         )}
 
-        {/* Quick Add Button - Overlay (hidden on mobile, tap to go to product) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none hidden sm:flex items-end justify-center pb-4">
+        {/* Quick Add Button - Floating Overlay */}
+        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none hidden sm:flex items-center justify-center">
           <button
             onClick={handleAddToCart}
-            className={`pointer-events-auto py-2 px-5 sm:py-2.5 sm:px-6 rounded-xl flex items-center justify-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl active:scale-95 font-semibold text-xs sm:text-sm ${isInCart
-              ? "bg-white text-green-700 border-2 border-green-500 shadow-green-200/30"
-              : "bg-green-600 hover:bg-green-700 text-white shadow-green-600/30"
+            className={`pointer-events-auto py-3 px-8 rounded-full flex items-center justify-center gap-2 transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 shadow-2xl active:scale-95 font-bold text-sm ${isInCart
+              ? "bg-white text-green-700 border border-green-200 shadow-white/50"
+              : "bg-green-700 hover:bg-green-800 text-white shadow-green-900/40"
               }`}
           >
             {isInCart ? (
               <>
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
                 In Cart
               </>
             ) : (
               <>
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
                 </svg>
                 Add to Cart
               </>
@@ -147,10 +148,10 @@ const ProductCard = ({ data }: ProductCardProps) => {
       </div>
 
       {/* Content */}
-      <div className="p-3 sm:p-4 md:p-5 flex flex-col flex-grow">
+      <div className="p-4 sm:p-6 flex flex-col flex-grow bg-white relative z-10">
         {/* Brand */}
         {data.brand && (
-          <p className="text-green-600 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-1 sm:mb-1.5 opacity-70">
+          <p className="text-green-600/60 text-[10px] font-extrabold uppercase tracking-[0.2em] mb-2">
             {data.brand}
           </p>
         )}
@@ -158,7 +159,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         {/* Product Name */}
         <Link
           href={`/shop/product/${data.id}/${productSlug}`}
-          className="text-gray-800 text-xs sm:text-sm md:text-base font-bold mb-1.5 sm:mb-2 line-clamp-2 hover:text-green-600 transition-colors duration-200 leading-snug"
+          className="text-gray-900 text-sm sm:text-base font-bold mb-2.5 line-clamp-2 hover:text-green-700 transition-colors duration-300 leading-tight"
         >
           {data.title.split(',')[0]}
         </Link>

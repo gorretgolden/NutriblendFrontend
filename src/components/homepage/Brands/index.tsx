@@ -11,11 +11,11 @@ export default function BrandsSection() {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const cached = localStorage.getItem('brands_cache_v2');
+        const cached = localStorage.getItem('brands_cache_v3');
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
           if (Date.now() - timestamp < 15 * 60 * 1000) {
-            setBrands(data);
+            setBrands(data.slice(0, 10));
             setLoading(false);
             return;
           }
@@ -23,9 +23,10 @@ export default function BrandsSection() {
 
         const response = await apiClient.getBrands();
         if (response.status && response.data) {
-          setBrands(response.data.slice(0, 8));
-          localStorage.setItem('brands_cache_v2', JSON.stringify({
-            data: response.data.slice(0, 8),
+          const fetched = response.data.slice(0, 10);
+          setBrands(fetched);
+          localStorage.setItem('brands_cache_v3', JSON.stringify({
+            data: fetched,
             timestamp: Date.now()
           }));
         }
@@ -40,18 +41,17 @@ export default function BrandsSection() {
 
   if (loading) {
     return (
-      <section className="w-full py-12 md:py-16 bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-[1600px] mx-auto px-6">
-          <div className="text-center mb-10">
-            <div className="h-8 w-48 bg-gray-200 rounded-lg mx-auto mb-3 animate-pulse" />
-            <div className="h-4 w-64 bg-gray-100 rounded mx-auto animate-pulse" />
+      <section className="relative w-full py-16 md:py-24 overflow-hidden">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
+          <div className="flex justify-between items-end mb-12">
+            <div className="space-y-4">
+              <div className="h-4 w-32 bg-gray-200 animate-pulse rounded-full" />
+              <div className="h-10 w-64 bg-gray-200 animate-pulse rounded-full" />
+            </div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div
-                key={i}
-                className="h-28 md:h-32 bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 bg-[length:200%_100%] animate-shimmer rounded-2xl"
-              />
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="h-40 bg-gray-100 animate-pulse rounded-3xl" />
             ))}
           </div>
         </div>
@@ -61,97 +61,75 @@ export default function BrandsSection() {
 
   if (brands.length === 0) return null;
 
-  // Color accents for letter avatars
-  const accentColors = [
-    { bg: 'bg-emerald-600', ring: 'ring-emerald-200' },
-    { bg: 'bg-blue-600', ring: 'ring-blue-200' },
-    { bg: 'bg-amber-600', ring: 'ring-amber-200' },
-    { bg: 'bg-rose-600', ring: 'ring-rose-200' },
-    { bg: 'bg-violet-600', ring: 'ring-violet-200' },
-    { bg: 'bg-cyan-600', ring: 'ring-cyan-200' },
-    { bg: 'bg-green-600', ring: 'ring-green-200' },
-    { bg: 'bg-fuchsia-600', ring: 'ring-fuchsia-200' },
-  ];
-
   return (
-    <section className="w-full py-12 md:py-16 bg-gradient-to-b from-gray-50/80 to-white">
-      <div className="max-w-[1600px] mx-auto px-6">
+    <section className="relative w-full py-16 md:py-24 overflow-hidden bg-white">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-96 h-96 bg-green-50 rounded-full blur-3xl opacity-60 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-60 pointer-events-none" />
+
+      <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 md:mb-10 gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-1.5 h-6 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full" />
-              <span className="text-xs font-bold tracking-[0.2em] uppercase text-green-600">
-                Trusted Brands
-              </span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 mb-4 border border-green-100">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-xs font-semibold tracking-wider text-green-700 uppercase">Trusted Partners</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              Shop by <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-500">Brand</span>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+              Premium <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-400">Clinical Brands</span>
             </h2>
+            <p className="mt-4 text-gray-500 text-lg">
+              Explore our curation of world-class pharmaceutical and wellness brands, renowned for their certified efficacy and rigorous quality standards.
+            </p>
           </div>
           <Link
             href="/brands"
-            className="group flex items-center gap-2 text-sm font-semibold text-green-700 hover:text-green-800 bg-green-50 hover:bg-green-100 px-5 py-2.5 rounded-full transition-all duration-300"
+            className="group inline-flex items-center gap-2 h-12 px-6 rounded-full bg-gray-900 text-white font-medium hover:bg-green-600 transition-colors duration-300"
           >
-            See All Brands
-            <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            Explore Directory
+            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>
         </div>
 
-        {/* Brand Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-5">
-          {brands.map((brand, i) => {
-            const accent = accentColors[i % accentColors.length];
-            return (
-              <Link
-                key={brand.id}
-                href={`/shop?brand_id=${brand.id}`}
-                className={`${i >= 4 ? "hidden sm:flex" : "flex"} 
-                  relative flex-col items-center justify-center 
-                  bg-white rounded-2xl overflow-hidden 
-                  border border-gray-100
-                  shadow-sm hover:shadow-lg
-                  transition-all duration-400 hover:-translate-y-1
-                  group p-5 md:p-6 min-h-[120px] sm:min-h-[140px]`}
-              >
-                {/* Logo or Avatar */}
+        {/* Brands Grid (Staggered modern layout) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+          {brands.map((brand, i) => (
+            <Link
+              key={brand.id}
+              href={`/shop?brand_id=${brand.id}`}
+              className="group relative flex flex-col items-center justify-center p-6 md:p-8 rounded-3xl bg-white border border-gray-100 hover:border-transparent transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2 overflow-hidden aspect-[4/3] sm:aspect-square"
+            >
+              {/* Hover gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              <div className="relative z-10 w-full flex-1 flex items-center justify-center max-w-[120px]">
                 {brand.logo ? (
-                  <div className="flex items-center justify-center flex-1 w-full">
-                    <img
-                      src={getImageUrl(brand.logo)}
-                      alt={brand.name}
-                      className="max-w-full max-h-[60px] md:max-h-[70px] object-contain group-hover:scale-105 transition-transform duration-400"
-                    />
-                  </div>
+                  <img
+                    src={getImageUrl(brand.logo)}
+                    alt={brand.name}
+                    className="w-full h-auto max-h-[70px] object-contain filter grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
+                  />
                 ) : (
-                  <div className="flex items-center justify-center flex-1">
-                    <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl ${accent.bg} ring-4 ${accent.ring} flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300`}>
-                      <span className="text-xl md:text-2xl font-bold text-white">
-                        {brand.name?.charAt(0)?.toUpperCase()}
-                      </span>
-                    </div>
+                  <div className="text-3xl font-black text-gray-300 group-hover:text-green-500 transition-colors duration-500 tracking-tighter uppercase">
+                    {brand.name.substring(0, 2)}
                   </div>
                 )}
+              </div>
 
-                {/* Brand Name */}
-                <div className="mt-3 w-full text-center">
-                  <span className="text-sm font-semibold text-gray-800 group-hover:text-green-700 transition-colors duration-300 line-clamp-1">
-                    {brand.name}
-                  </span>
-                  {brand.products_count > 0 && (
-                    <span className="text-[11px] text-gray-400 block mt-0.5">
-                      {brand.products_count} product{brand.products_count !== 1 ? 's' : ''}
-                    </span>
-                  )}
-                </div>
-
-                {/* Hover bottom accent line */}
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left" />
-              </Link>
-            );
-          })}
+              <div className="relative z-10 mt-6 text-center w-full">
+                <h3 className="font-semibold text-gray-900 text-sm md:text-base truncate truncate mb-1 border-b border-transparent group-hover:border-green-200 pb-1 w-max mx-auto transition-all duration-300">
+                  {brand.name}
+                </h3>
+                {brand.products_count > 0 && (
+                  <p className="text-xs text-gray-400 group-hover:text-green-600 transition-colors duration-300">
+                    {brand.products_count} Formula{brand.products_count !== 1 ? 's' : ''}
+                  </p>
+                )}
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

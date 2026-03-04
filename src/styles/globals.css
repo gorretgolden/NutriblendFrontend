@@ -7,18 +7,19 @@
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 250, 250, 250;
   
-  /* Premium Brand Colors */
-  --brand-primary: 142, 68, 173;
-  --brand-secondary: 52, 152, 219;
-  --brand-accent: 46, 204, 113;
+  /* Premium Brand Colors (Health & Wellness Green) */
+  --brand-primary: 76, 175, 80;    /* #4CAF50 - Fresh Green */
+  --brand-secondary: 69, 160, 73;  /* #45A049 - Forest Green */
+  --brand-accent: 255, 193, 7;     /* #FFC107 - Golden Sun */
+  --brand-bg-light: 240, 253, 244; /* Subtle Mint Background */
   --brand-warning: 230, 126, 34;
   --brand-error: 231, 76, 60;
   --brand-success: 39, 174, 96;
   
-  /* Gradient Colors */
-  --gradient-start: 99, 102, 241;
-  --gradient-middle: 168, 85, 247;
-  --gradient-end: 236, 72, 153;
+  /* Modern Gradient Colors */
+  --gradient-start: 76, 175, 80;
+  --gradient-middle: 67, 160, 71;
+  --gradient-end: 56, 142, 60;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -48,18 +49,23 @@
   }
   
   /* Glassmorphism */
+  /* Premium Glassmorphism */
   .glass {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
   }
   
   .glass-dark {
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    @apply bg-black/40 backdrop-blur-md border border-white/10 shadow-xl;
+  }
+
+  /* Sophisticated Soft Shadow */
+  .shadow-premium {
+    box-shadow: 0 10px 30px -10px rgba(76, 175, 80, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Noise Texture Overlay */
+  .bg-noise {
+    background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
   }
   
   /* Performance Optimizations */
@@ -82,25 +88,25 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 263 70% 60%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 204 65% 55%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --primary: 142 71% 45%;
+    --primary-foreground: 142 71% 98%;
+    --secondary: 142 20% 96%;
+    --secondary-foreground: 142 71% 25%;
+    --muted: 142 10% 96.1%;
+    --muted-foreground: 142 10% 46.9%;
     --accent: 142 71% 45%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 263 70% 60%;
+    --border: 142 20% 91.4%;
+    --input: 142 20% 91.4%;
+    --ring: 142 71% 45%;
     --chart-1: 142 71% 45%;
-    --chart-2: 204 65% 55%;
-    --chart-3: 263 70% 60%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --radius: 0.75rem;
+    --chart-2: 152 71% 45%;
+    --chart-3: 162 71% 45%;
+    --chart-4: 172 71% 45%;
+    --chart-5: 182 71% 45%;
+    --radius: 1rem;
   }
   
   .dark {
