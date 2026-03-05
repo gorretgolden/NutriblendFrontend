@@ -4,7 +4,7 @@
  * Base URL: http://localhost:8000/api/v1
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://admin.rasmuspharmaceuticals.com/api/v1';
 
 // ==================== Type Definitions ====================
 
@@ -727,7 +727,7 @@ export const getImageUrl = (path: string): string => {
     if (path.startsWith('images/')) return '/' + path;
 
     // Derive backend origin from NEXT_PUBLIC_API_URL (strip /api/v1 suffix)
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://admin.rasmuspharmaceuticals.com/api/v1';
     const baseUrl = process.env.NEXT_PUBLIC_ASSET_URL || apiUrl.replace(/\/api\/v1\/?$/, '');
 
     // If it's a backend storage path, ensure it starts with /storage/
