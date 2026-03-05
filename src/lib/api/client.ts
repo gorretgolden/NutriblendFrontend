@@ -4,7 +4,11 @@
  * Base URL: http://localhost:8000/api/v1
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://admin.rasmuspharmaceuticals.com/api/v1';
+const envApi = process.env.NEXT_PUBLIC_API_URL || '';
+const isDev = process.env.NODE_ENV === 'development';
+const API_BASE_URL = (!isDev && envApi.includes('localhost'))
+    ? 'https://admin.rasmuspharmaceuticals.com/api/v1'
+    : (envApi || 'https://admin.rasmuspharmaceuticals.com/api/v1');
 
 // ==================== Type Definitions ====================
 
@@ -727,8 +731,14 @@ export const getImageUrl = (path: string): string => {
     if (path.startsWith('images/')) return '/' + path;
 
     // Derive backend origin from NEXT_PUBLIC_API_URL (strip /api/v1 suffix)
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://admin.rasmuspharmaceuticals.com/api/v1';
-    const baseUrl = process.env.NEXT_PUBLIC_ASSET_URL || apiUrl.replace(/\/api\/v1\/?$/, '');
+    const isDevEnv = process.env.NODE_ENV === 'development';
+    const envApi = process.env.NEXT_PUBLIC_API_URL || '';
+    const apiUrl = (!isDevEnv && envApi.includes('localhost'))
+        ? 'https://admin.rasmuspharmaceuticals.com/api/v1'
+        : (envApi || 'https://admin.rasmuspharmaceuticals.com/api/v1');
+    const baseUrl = process.env.NEXT_PUBLIC_ASSET_URL && (!(!isDevEnv && process.env.NEXT_PUBLIC_ASSET_URL.includes('localhost')))
+        ? process.env.NEXT_PUBLIC_ASSET_URL
+        : apiUrl.replace(/\/api\/v1\/?$/, '');
 
     // If it's a backend storage path, ensure it starts with /storage/
     let finalPath = path.startsWith('/') ? path : '/' + path;
