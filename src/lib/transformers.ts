@@ -7,28 +7,39 @@ export const transformProduct = (p: ApiProduct): Product => {
     // 2. p.product_images - Related ProductImage records with image_url field
     let allImages: string[] = [];
 
-    // Process the images JSON field (array of storage path strings)
-    if (p.images && Array.isArray(p.images)) {
+    // 1. main_image & gallery_images (Preferred from ProductResource)
+    if ((p as any).main_image) {
+        allImages.push(getImageUrl((p as any).main_image));
+    }
+
+    if ((p as any).gallery_images && Array.isArray((p as any).gallery_images)) {
+        for (const img of (p as any).gallery_images) {
+            if (img && !allImages.includes(getImageUrl(img))) {
+                allImages.push(getImageUrl(img));
+            }
+        }
+    }
+
+    // 2. p.images - JSON array fallback
+    if (p.images && Array.isArray(p.images) && allImages.length === 0) {
         for (const img of p.images) {
             if (typeof img === 'string' && img.length > 0) {
                 allImages.push(getImageUrl(img));
             } else if (typeof img === 'object' && img !== null) {
-                // Legacy object format with image_path
                 if (img.image_path) allImages.push(getImageUrl(img.image_path));
                 else if (img.image_url) allImages.push(getImageUrl(img.image_url));
             }
         }
     }
 
-    // Process the product_images relation (ProductImage records)
+    // 3. p.product_images - Related ProductImage fallback
     const productImages = (p as any).product_images;
-    if (productImages && Array.isArray(productImages)) {
+    if (productImages && Array.isArray(productImages) && allImages.length === 0) {
         for (const img of productImages) {
             if (typeof img === 'object' && img !== null) {
                 const url = img.image_url || img.image_path;
                 if (url) {
                     const resolved = getImageUrl(url);
-                    // Avoid duplicates
                     if (!allImages.includes(resolved)) {
                         allImages.push(resolved);
                     }
@@ -37,7 +48,7 @@ export const transformProduct = (p: ApiProduct): Product => {
         }
     }
 
-    // Fallback placeholder if no images at all
+    // Fallback placeholder
     const imageUrl = allImages.length > 0 ? allImages[0] : '/images/placeholder.jpg';
 
     return {
