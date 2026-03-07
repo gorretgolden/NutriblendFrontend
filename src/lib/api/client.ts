@@ -54,28 +54,21 @@ export interface User {
     updated_at?: string;
 }
 
-export interface Region {
-    id: number;
-    name: string;
-    status?: string;
-}
 
-export interface Town {
-    id: number;
-    name: string;
-    region_id: number;
-    delivery_fee: number;
-    status?: string;
-}
 
 export interface Product {
     id: number;
     name: string;
+    title?: string; // Frontend alias
     slug: string;
+    sku?: string;
+    discount?: { amount: number; percentage: number }; // Transformed alias
     short_description?: string;
     description: string;
     price: number;
     unit?: string;
+    weight?: number | string;
+    in_stock?: boolean;
     wholesale_price?: number;
     wholesale_min_qty?: number;
     discount_percentage?: number;
@@ -85,13 +78,16 @@ export interface Product {
     brand_id?: number;
     is_featured: boolean;
     is_active: boolean;
-    images: any[]; // JSON array of storage path strings OR ProductImage objects
-    product_images?: ProductImage[]; // Related ProductImage records from API
+    key_features?: any[];
+    whats_in_box?: string;
+    images: any[];
+    product_images?: ProductImage[];
     category?: Category;
     brand?: Brand;
     variations?: ProductVariation[];
     average_rating?: number;
     review_count?: number;
+    image?: string; // Frontend alias
     created_at: string;
     updated_at: string;
 }
@@ -146,7 +142,6 @@ export interface CartItem {
     price: number;
     subtotal: number;
     product_image?: string;
-    // Legacy support
     product?: Product;
     variation?: ProductVariation;
 }
@@ -162,14 +157,16 @@ export interface CartSummary {
 export interface Region {
     id: number;
     name: string;
+    status?: string;
     towns?: Town[];
 }
 
 export interface Town {
     id: number;
-    region_id: number;
     name: string;
+    region_id: number;
     delivery_fee: number;
+    status?: string;
 }
 
 export interface Discount {
