@@ -10,6 +10,7 @@ interface ProductCarouselProps {
   subtitle?: string;
   badge?: string;
   viewAllLink?: string;
+  hideHeader?: boolean;
 }
 
 const ProductCarousel: React.FC<ProductCarouselProps> = ({
@@ -17,7 +18,8 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
   title,
   subtitle,
   badge,
-  viewAllLink = "#"
+  viewAllLink = "#",
+  hideHeader = false
 }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [showArrows, setShowArrows] = useState(true);
@@ -60,31 +62,33 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
     <section className="my-6 sm:my-8 md:my-14">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 sm:mb-8 gap-2 sm:gap-3">
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              {badge && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md shadow-green-200/50 animate-pulse">
-                  {badge}
-                </span>
+        {!hideHeader && (
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 sm:mb-8 gap-2 sm:gap-3">
+            <div>
+              <div className="flex items-center gap-3 mb-1">
+                {badge && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md shadow-green-200/50 animate-pulse">
+                    {badge}
+                  </span>
+                )}
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">{title}</h2>
+              </div>
+              {subtitle && (
+                <p className="text-gray-500 text-sm md:text-base mt-1">{subtitle}</p>
               )}
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">{title}</h2>
             </div>
-            {subtitle && (
-              <p className="text-gray-500 text-sm md:text-base mt-1">{subtitle}</p>
-            )}
-          </div>
 
-          <a
-            href={viewAllLink}
-            className="group inline-flex items-center gap-1.5 sm:gap-2 text-green-600 hover:text-green-700 font-semibold text-xs sm:text-sm md:text-base transition-all duration-300 bg-green-50 hover:bg-green-100 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full"
-          >
-            View All
-            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
+            <a
+              href={viewAllLink}
+              className="group inline-flex items-center gap-1.5 sm:gap-2 text-green-600 hover:text-green-700 font-semibold text-xs sm:text-sm md:text-base transition-all duration-300 bg-green-50 hover:bg-green-100 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full"
+            >
+              View All
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        )}
 
         {/* Carousel */}
         <div className="relative group/carousel">
