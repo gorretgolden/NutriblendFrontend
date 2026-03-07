@@ -1,5 +1,5 @@
 import { setCredentials } from '@/lib/features/auth/authSlice';
-import type { AppDispatch } from './store';
+import type { AppDispatch } from '../store';
 
 export const loadAuthFromStorage = (dispatch: AppDispatch) => {
     if (typeof window === 'undefined') return;
