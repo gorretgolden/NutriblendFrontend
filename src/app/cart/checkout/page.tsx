@@ -117,6 +117,9 @@ export default function Checkout() {
     calculateFee();
   }, [selectedRegion, selectedTown]);
 
+  const subtotal = Number(adjustedTotalPrice) || 0;
+  const finalTotal = subtotal + Number(deliveryFee) - Number(discountAmount);
+
   const config = {
     public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
     tx_ref: `NB-${Date.now()}`,
@@ -252,8 +255,6 @@ export default function Checkout() {
     );
   }
 
-  const subtotal = Number(adjustedTotalPrice) || 0;
-  const finalTotal = subtotal + Number(deliveryFee) - Number(discountAmount);
 
   return (
     <div className="min-h-screen bg-gray-50">
