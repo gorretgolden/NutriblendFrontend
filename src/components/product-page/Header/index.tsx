@@ -3,7 +3,6 @@
 import React from "react";
 import PhotoSection from "./PhotoSection";
 import { Product } from "@/types/product.types";
-import { integralCF } from "@/styles/fonts";
 import { cn } from "@/lib/utils";
 import Rating from "@/components/ui/Rating";
 import SizeSelection from "./SizeSelection";
@@ -18,149 +17,170 @@ const Header = ({ data }: { data: Product }) => {
   const isUsingWholesalePrice = isWholesaleUser && !!data.wholesale_price;
 
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div>
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+        {/* Left column — Photo gallery */}
+        <div className="bg-white p-4 md:p-8 border-r border-gray-100">
           <PhotoSection data={data} />
         </div>
-        <div>
-          <div className="flex flex-col">
-            <div className="flex flex-wrap items-center gap-x-2 text-xs mb-2">
-              <span className="text-gray-500">Brand:</span>
-              <span className="font-semibold text-green-700 hover:underline cursor-pointer">
-                {data.brand || "Generic"}
-              </span>
-              <span className="text-gray-300">|</span>
-              <span className="text-gray-500 hover:underline cursor-pointer">
-                Similar products from {data.brand || "Generic"}
-              </span>
-              {data.sku && (
-                <>
-                  <span className="text-gray-300">|</span>
-                  <span className="text-gray-500">SKU: {data.sku}</span>
-                </>
-              )}
-              <div className="flex items-center ml-auto gap-1 bg-green-50 px-2 py-1 rounded-full border border-green-100 shadow-sm animate-pulse-slow">
-                <span className="text-[10px] uppercase font-bold text-green-700 tracking-wider">A Product of</span>
-                <span className="text-[10px] font-black text-green-800">Rasmus Pharmaceuticals</span>
-              </div>
-            </div>
-            <h1
-              className={cn([
-                "text-xl md:text-2xl lg:text-3xl mb-3 capitalize text-dark-800 font-bold",
-              ])}
-            >
-              {data.title}
-            </h1>
 
-            <div className="flex flex-col mb-4">
-              {isUsingWholesalePrice && (
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded shadow-sm">WHOLESALE PRICE</span>
-                  <span className="text-xs text-blue-600 font-bold uppercase tracking-wide">Approved Business Member Rate</span>
-                </div>
-              )}
-              <div className="flex items-center space-x-3">
-                {isUsingWholesalePrice ? (
-                  <>
-                    <span className="font-bold text-blue-600 text-2xl lg:text-3xl">
-                      {`UGX ${data.wholesale_price?.toLocaleString()}`}
-                      {data.unit && <span className="text-sm text-gray-500 font-normal ml-1">/ {data.unit}</span>}
-                    </span>
-                    <span className="text-gray-400 line-through text-lg">
-                      UGX {data.price.toLocaleString()}
-                    </span>
-                  </>
-                ) : (data.discount?.percentage ?? 0) > 0 ? (
-                  <>
-                    <span className="font-bold text-dark-800 text-2xl lg:text-3xl">
-                      {`UGX ${Math.round(
-                        data.price - (data.price * (data.discount?.percentage ?? 0)) / 100
-                      ).toLocaleString()}`}
-                      {data.unit && <span className="text-sm text-gray-500 font-normal ml-1">/ {data.unit}</span>}
-                    </span>
-                    <span className="text-gray-400 line-through text-lg">
-                      UGX {data.price.toLocaleString()}
-                    </span>
-                    <span className="bg-orange-100 text-orange-600 font-bold text-xs px-2 py-1 rounded">
-                      {`-${data.discount?.percentage}%`}
-                    </span>
-                  </>
-                ) : (data.discount?.amount ?? 0) > 0 ? (
-                  <>
-                    <span className="font-bold text-dark-800 text-2xl lg:text-3xl">
-                      {`UGX ${(data.price - (data.discount?.amount ?? 0)).toLocaleString()}`}
-                      {data.unit && <span className="text-sm text-gray-500 font-normal ml-1">/ {data.unit}</span>}
-                    </span>
-                    <span className="text-gray-400 line-through text-lg">
-                      UGX {data.price.toLocaleString()}
-                    </span>
-                    <span className="bg-orange-100 text-orange-600 font-bold text-xs px-2 py-1 rounded">
-                      {`-UGX ${data.discount?.amount.toLocaleString()}`}
-                    </span>
-                  </>
-                ) : (
-                  <span className="font-bold text-dark-800 text-2xl lg:text-3xl">
-                    UGX {data.price.toLocaleString()}
-                    {data.unit && <span className="text-sm text-gray-500 font-normal ml-1">/ {data.unit}</span>}
-                  </span>
-                )}
-              </div>
-              {isUsingWholesalePrice && (
-                <p className="text-[10px] text-gray-500 mt-1 italic">* Business pricing applied based on your account status.</p>
-              )}
-            </div>
+        {/* Right column — Product info */}
+        <div className="p-5 md:p-8 flex flex-col">
+          {/* Brand + SKU bar */}
+          <div className="flex flex-wrap items-center gap-x-2 text-xs mb-3 pb-3 border-b border-gray-100">
+            <span className="text-gray-400">Brand:</span>
+            <span className="font-bold text-[#009E3C] hover:underline cursor-pointer">
+              {data.brand || "Generic"}
+            </span>
+            <span className="text-gray-200">|</span>
+            <span className="text-gray-400 hover:underline cursor-pointer text-[11px]">
+              More from {data.brand || "this brand"}
+            </span>
+            {data.sku && (
+              <>
+                <span className="text-gray-200">|</span>
+                <span className="text-gray-400 text-[11px]">SKU: {data.sku}</span>
+              </>
+            )}
+          </div>
 
-            {(data.stock !== undefined && data.stock > 0 && data.stock <= 10) && (
-              <div className="flex items-center space-x-2 mb-4 animate-pulse">
-                <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                <span className="text-red-600 font-bold text-sm">
-                  {data.stock} units left
-                </span>
+          {/* Product Title */}
+          <h1 className="text-xl md:text-2xl lg:text-[28px] font-bold text-gray-900 mb-3 leading-tight capitalize">
+            {data.title}
+          </h1>
+
+          {/* Rating row */}
+          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+            <Rating
+              initialValue={data.rating}
+              allowFraction
+              SVGclassName="inline-block"
+              emptyClassName="fill-gray-200"
+              fillClassName="fill-amber-400"
+              size={18}
+              readonly
+            />
+            <span className="text-[#009E3C] text-sm font-medium hover:underline cursor-pointer">
+              {data.reviews || 0} Ratings
+            </span>
+            <button className="flex items-center gap-1 ml-auto text-gray-400 hover:text-[#009E3C] transition-colors group">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.316a3 3 0 100-2.684 3 3 0 000 2.684z" />
+              </svg>
+              <span className="text-xs font-medium">Share</span>
+            </button>
+          </div>
+
+          {/* Price Block — iHerb-style prominent pricing */}
+          <div className="bg-[#f9faf9] rounded-lg p-4 mb-4 border border-gray-100">
+            {isUsingWholesalePrice && (
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">WHOLESALE</span>
+                <span className="text-xs text-blue-600 font-bold">Approved Business Rate</span>
               </div>
             )}
-
-            <div className="flex items-center mb-6">
-              <Rating
-                initialValue={data.rating}
-                allowFraction
-                SVGclassName="inline-block"
-                emptyClassName="fill-gray-200"
-                fillClassName="fill-yellow-400"
-                size={18}
-                readonly
-              />
-              <span className="text-blue-600 text-sm ml-2 hover:underline cursor-pointer">
-                ({data.reviews || 0} verified ratings)
-              </span>
-              <button className="flex items-center gap-1 ml-auto text-dark-500 hover:text-green-700 transition-colors group">
-                <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.316a3 3 0 100-2.684 3 3 0 000 2.684z" />
-                </svg>
-                <span className="text-xs font-semibold">Share</span>
-              </button>
+            <div className="flex items-baseline gap-3 flex-wrap">
+              {isUsingWholesalePrice ? (
+                <>
+                  <span className="font-extrabold text-blue-600 text-3xl lg:text-4xl">
+                    UGX {data.wholesale_price?.toLocaleString()}
+                  </span>
+                  <span className="text-gray-400 line-through text-lg">
+                    UGX {data.price.toLocaleString()}
+                  </span>
+                </>
+              ) : (data.discount?.percentage ?? 0) > 0 ? (
+                <>
+                  <span className="font-extrabold text-[#E53935] text-3xl lg:text-4xl">
+                    UGX {Math.round(data.price - (data.price * (data.discount?.percentage ?? 0)) / 100).toLocaleString()}
+                  </span>
+                  <span className="text-gray-400 line-through text-lg">
+                    UGX {data.price.toLocaleString()}
+                  </span>
+                  <span className="bg-[#E53935] text-white font-bold text-xs px-2.5 py-1 rounded">
+                    Save {data.discount?.percentage}%
+                  </span>
+                </>
+              ) : (data.discount?.amount ?? 0) > 0 ? (
+                <>
+                  <span className="font-extrabold text-[#E53935] text-3xl lg:text-4xl">
+                    UGX {(data.price - (data.discount?.amount ?? 0)).toLocaleString()}
+                  </span>
+                  <span className="text-gray-400 line-through text-lg">
+                    UGX {data.price.toLocaleString()}
+                  </span>
+                  <span className="bg-[#E53935] text-white font-bold text-xs px-2.5 py-1 rounded">
+                    -UGX {data.discount?.amount.toLocaleString()}
+                  </span>
+                </>
+              ) : (
+                <span className="font-extrabold text-gray-900 text-3xl lg:text-4xl">
+                  UGX {data.price.toLocaleString()}
+                </span>
+              )}
+              {data.unit && <span className="text-sm text-gray-400 font-normal">/ {data.unit}</span>}
             </div>
-            {data.shortDescription ? (
-              <p className="text-sm sm:text-base text-dark-700/80 mb-5">
-                {data.shortDescription}
-              </p>
-            ) : data.description ? (
-              <div
-                className="text-sm sm:text-base text-dark-700/80 mb-5 prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(data.description) }}
-              />
-            ) : null}
-            <hr className="h-[1px] border-t-green-200 my-5" />
-            <SizeSelection data={data} />
-            <hr className="hidden md:block h-[1px] border-t-green-200 my-5" />
-            <AddToCardSection data={data} />
-            <ChatHelp />
+            {isUsingWholesalePrice && (
+              <p className="text-[10px] text-gray-500 mt-1 italic">* Business pricing applied based on your account status.</p>
+            )}
           </div>
+
+          {/* Low Stock Warning */}
+          {(data.stock !== undefined && data.stock > 0 && data.stock <= 10) && (
+            <div className="flex items-center gap-2 mb-4 bg-red-50 border border-red-100 rounded-lg px-4 py-2.5">
+              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+              <span className="text-red-600 font-bold text-sm">
+                Low Stock — Only {data.stock} units remaining
+              </span>
+            </div>
+          )}
+
+          {/* Short Description */}
+          {data.shortDescription ? (
+            <p className="text-sm text-gray-600 mb-5 leading-relaxed">
+              {data.shortDescription}
+            </p>
+          ) : data.description ? (
+            <div
+              className="text-sm text-gray-600 mb-5 leading-relaxed prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(data.description) }}
+            />
+          ) : null}
+
+          {/* Size/Variant selection */}
+          <SizeSelection data={data} />
+
+          {/* Add to cart section */}
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <AddToCardSection data={data} />
+          </div>
+
+          {/* Trust indicators */}
+          <div className="mt-4 grid grid-cols-3 gap-3">
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <svg className="w-4 h-4 text-[#009E3C] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              Authentic
+            </div>
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <svg className="w-4 h-4 text-[#009E3C] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+              </svg>
+              Fast Shipping
+            </div>
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <svg className="w-4 h-4 text-[#009E3C] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Easy Returns
+            </div>
+          </div>
+
+          <ChatHelp />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

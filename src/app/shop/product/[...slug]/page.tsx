@@ -22,17 +22,12 @@ export default async function ProductPage({
       productData = transformProduct(response.data);
     }
 
-    // Fetch related products (e.g., from same category or just random for now)
-    // Ideally we'd use response.data.category_id to filter, but we need to await the first call.
-    // Parallelizing is harder if we need dependency. Let's just fetch generic suggestions or use category if available.
-
-    // Simplistic approach: just get some products
-    const relatedRes = await apiClient.getProducts({ per_page: 4 });
+    const relatedRes = await apiClient.getProducts({ per_page: 6 });
     if (relatedRes.status && relatedRes.data) {
       relatedProducts = relatedRes.data.data
         .map(transformProduct)
         .filter(p => p.id !== productId)
-        .slice(0, 4);
+        .slice(0, 6);
     }
 
   } catch (error) {
@@ -44,22 +39,35 @@ export default async function ProductPage({
   }
 
   return (
-    <main>
-      <div className="max-w-frame mx-auto px-4 xl:px-0">
-        <hr className="h-[1px] border-t-green-200 mb-5 sm:mb-6" />
-        <BreadcrumbProduct title={productData.title} />
-        <section className="mb-11">
+    <main className="bg-[#f5f5f5] min-h-screen">
+      {/* Breadcrumb bar */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-3">
+          <BreadcrumbProduct title={productData.title} />
+        </div>
+      </div>
+
+      {/* Product Detail */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
+        <section className="mb-8">
           <Header data={productData} />
         </section>
-        <section className="mb-12">
-          <Tabs data={productData} />
+
+        <section className="mb-8">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <Tabs data={productData} />
+          </div>
         </section>
       </div>
-      <div className="mb-[50px] sm:mb-20">
-        {relatedProducts.length > 0 && (
-          <ProductListSec title="You might also like" data={relatedProducts} />
-        )}
-      </div>
+
+      {/* Related Products */}
+      {relatedProducts.length > 0 && (
+        <div className="bg-white border-t border-gray-200 py-10">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+            <ProductListSec title="Customers Also Viewed" data={relatedProducts} />
+          </div>
+        </div>
+      )}
     </main>
   );
 }

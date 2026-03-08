@@ -201,19 +201,36 @@ export default function CategoryGrid() {
 
   useEffect(() => {
     const fetchCategories = async () => {
+      // 1. Try reading from cache first for instant load
+      try {
+        const cached = localStorage.getItem('homepage_categories_cache_v2');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed?.data?.categories?.length > 0) {
+            setCategories(parsed.data.categories);
+            setSubcategories(parsed.data.subcategories || []);
+            setLoading(false);
+          }
+        }
+      } catch (e) { }
+
+      // 2. Fetch fresh from API
       try {
         const response = await apiClient.getCategoriesTree();
-        if (response.status && response.data) {
-          const cats = response.data;
-          setCategories(cats);
+        if (response.status) {
+          const rawCats = response.data;
+          const cats = Array.isArray(rawCats) ? rawCats : (Array.isArray(rawCats?.data) ? rawCats.data : []);
 
-          const subs = cats.flatMap((cat: any) => cat.children || []);
-          setSubcategories(subs.slice(0, 15));
+          if (cats && cats.length > 0) {
+            setCategories(cats);
+            const subs = cats.flatMap((cat: any) => cat.children || []);
+            setSubcategories(subs.slice(0, 15));
 
-          localStorage.setItem('homepage_categories_cache_v2', JSON.stringify({
-            data: { categories: cats, subcategories: subs.slice(0, 15) },
-            timestamp: Date.now()
-          }));
+            localStorage.setItem('homepage_categories_cache_v2', JSON.stringify({
+              data: { categories: cats, subcategories: subs.slice(0, 15) },
+              timestamp: Date.now()
+            }));
+          }
         }
       } catch (error) {
         console.error("Failed to fetch categories", error);

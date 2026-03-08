@@ -7,6 +7,7 @@ import LayoutWrapper from "./layoutWrapper";
 import HolyLoader from "holy-loader";
 import Providers from "./providers";
 import { Toaster } from "sonner";
+import AIAssistant from "@/components/common/AIAssistant";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nutriblendhaven.com'),
@@ -122,7 +123,10 @@ export default function RootLayout({
       <body className={satoshi.className}>
         <HolyLoader color="#8e44ad" height="3px" speed={200} easing="ease-in-out" />
         <Providers>
-          <LayoutWrapper>{children}</LayoutWrapper>
+          <LayoutWrapper>
+            {children}
+            <AIAssistant />
+          </LayoutWrapper>
           <Footer />
         </Providers>
         <Toaster position="top-right" richColors closeButton duration={3000} />

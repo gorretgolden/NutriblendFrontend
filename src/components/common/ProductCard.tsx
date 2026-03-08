@@ -33,7 +33,6 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
   const isUsingWholesalePrice = isWholesaleUser && !!data.wholesale_price;
 
-  // Check if product is already in cart
   const cartItems = useAppSelector((state) => state.carts.cart?.items ?? []);
   const isInCart = cartItems.some(
     (item) => item.product_id === data.id
@@ -49,7 +48,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
     }
 
     try {
-      const result = await dispatch(
+      await dispatch(
         addToCart({
           product_id: data.id,
           name: data.title,
@@ -66,145 +65,135 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
   const productSlug = data.slug;
 
-  const handleImageClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    router.push(`/shop/product/${data.id}/${productSlug}`);
-  };
-
   return (
-    <div className="group bg-white rounded-3xl overflow-hidden border border-gray-100/50 shadow-premium hover-lift transition-all duration-500 flex flex-col relative h-full">
-      {/* Image Container */}
-      <div className="bg-gradient-to-b from-green-50/30 to-white w-full h-[180px] sm:h-[220px] md:h-[250px] flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
-        {/* Wishlist Heart Button - Floating Glass */}
-        <div className="absolute top-3 left-3 z-10 scale-90 sm:scale-100">
+    <div className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-premium hover:border-[#009E3C]/30 transition-all duration-500 flex flex-col relative h-full glow-on-hover">
+      {/* Quick Action Overlay (Unique Feature) */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            router.push(`/shop/product/${data.id}/${productSlug}`);
+          }}
+          className="w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center text-[#009E3C] hover:bg-[#009E3C] hover:text-white transition-all duration-300 transform translate-y-4 group-hover:translate-y-0"
+          title="Quick View"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+        </button>
+      </div>
+
+      {/* Image Container — clean 1:1 ratio like iHerb */}
+      <Link href={`/shop/product/${data.id}/${productSlug}`} className="block relative bg-white w-full aspect-square flex items-center justify-center p-3 sm:p-5 overflow-hidden">
+        {/* Wishlist */}
+        <div className="absolute top-2 right-2 z-10 scale-90 sm:scale-100" onClick={(e) => e.preventDefault()}>
           <WishlistButton productId={data.id} productName={data.title} variant="card" />
         </div>
 
-        <div
-          className="w-full h-full flex items-center justify-center cursor-pointer relative z-0"
-          onClick={handleImageClick}
-        >
-          <div className="absolute inset-0 bg-gradient-to-tr from-green-100/20 to-transparent rounded-full blur-3xl scale-75 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-          <Image
-            src={data.srcUrl}
-            width={220}
-            height={220}
-            className="object-contain max-h-full group-hover:scale-110 transition-transform duration-1000 ease-[cubic-bezier(0.33,1,0.68,1)]"
-            alt={data.title}
-            priority
-          />
-        </div>
-
-        {/* Low Stock Badge - Pulse Glow */}
-        {data.stock !== undefined && data.stock > 0 && data.stock <= 10 && (
-          <span className="absolute top-3 left-12 bg-white/90 backdrop-blur-sm text-red-600 text-[9px] font-black px-2.5 py-1 rounded-full border border-red-100 z-10 shadow-sm animate-pulse-slow flex items-center">
-            <span className="w-1.5 h-1.5 bg-red-600 rounded-full mr-1.5 animate-pulse"></span>
-            ONLY {data.stock} LEFT
-          </span>
-        )}
-
-        {/* Discount Badge - Glassmorphism */}
+        {/* Discount Badge — top left, bold red like iHerb */}
         {hasDiscount && !isUsingWholesalePrice && (
-          <span className="absolute top-3 right-3 glass bg-red-500/90 text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 rounded-full z-10 shadow-lg border-none">
+          <span className="absolute top-2 left-2 bg-[#E53935] text-white text-[10px] sm:text-xs font-black px-2 py-0.5 rounded z-10">
             {data.discount.percentage > 0
-              ? `Save ${data.discount.percentage}%`
-              : `-${data.discount.amount.toLocaleString()}`}
+              ? `-${data.discount.percentage}%`
+              : `-UGX ${data.discount.amount.toLocaleString()}`}
           </span>
         )}
 
-        {/* Wholesale Badge - Sleek Indigo Glass */}
+        {/* Wholesale Badge */}
         {isUsingWholesalePrice && (
-          <span className="absolute top-3 right-3 glass bg-indigo-600/90 text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 rounded-full z-10 shadow-lg border-none">
+          <span className="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded z-10">
             WHOLESALE
           </span>
         )}
 
-        {/* Quick Add Button - Floating Overlay */}
-        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none hidden sm:flex items-center justify-center">
-          <button
-            onClick={handleAddToCart}
-            className={`pointer-events-auto py-3 px-8 rounded-full flex items-center justify-center gap-2 transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 shadow-2xl active:scale-95 font-bold text-sm ${isInCart
-              ? "bg-white text-green-700 border border-green-200 shadow-white/50"
-              : "bg-green-700 hover:bg-green-800 text-white shadow-green-900/40"
-              }`}
-          >
-            {isInCart ? (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                </svg>
-                In Cart
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
-                </svg>
-                Add to Cart
-              </>
-            )}
-          </button>
-        </div>
-      </div>
+        {/* Low Stock */}
+        {data.stock !== undefined && data.stock > 0 && data.stock <= 10 && (
+          <span className="absolute bottom-2 left-2 bg-red-50 text-red-600 text-[9px] font-bold px-2 py-0.5 rounded z-10 border border-red-100">
+            Only {data.stock} left
+          </span>
+        )}
 
-      {/* Content */}
-      <div className="p-4 sm:p-6 flex flex-col flex-grow bg-white relative z-10">
+        <Image
+          src={data.srcUrl}
+          width={220}
+          height={220}
+          className="object-contain max-h-full w-auto group-hover:scale-105 transition-transform duration-500"
+          alt={data.title}
+          priority
+        />
+      </Link>
+
+      {/* Content — tight, dense info like iHerb */}
+      <div className="px-3 sm:px-4 pt-2 pb-3 sm:pb-4 flex flex-col flex-grow border-t border-gray-100">
         {/* Brand */}
         {data.brand && (
-          <p className="text-green-600/60 text-[10px] font-extrabold uppercase tracking-[0.2em] mb-2">
+          <p className="text-[#009E3C] text-[10px] sm:text-[11px] font-bold uppercase tracking-wide mb-1 truncate">
             {data.brand}
           </p>
         )}
 
-        {/* Product Name */}
+        {/* Title — 2 lines max */}
         <Link
           href={`/shop/product/${data.id}/${productSlug}`}
-          className="text-gray-900 text-sm sm:text-base font-bold mb-2.5 line-clamp-2 hover:text-green-700 transition-colors duration-300 leading-tight"
+          className="text-gray-900 text-xs sm:text-sm font-semibold mb-1.5 line-clamp-2 hover:text-[#009E3C] transition-colors leading-snug"
         >
-          {data.title.split(',')[0]}
+          {data.title}
         </Link>
 
         {/* Rating */}
-        <div className="flex items-center mb-2 sm:mb-3">
+        <div className="flex items-center mb-2">
           <Rating
             initialValue={data.rating}
             allowFraction
             SVGclassName="inline-block"
             emptyClassName="fill-gray-200"
             fillClassName="fill-amber-400"
-            size={11}
+            size={12}
             readonly
           />
-          <span className="text-gray-400 text-[9px] sm:text-[10px] ml-1 sm:ml-1.5 font-medium">
+          <span className="text-gray-400 text-[10px] ml-1 font-medium">
             ({data.reviews?.toLocaleString() || '0'})
           </span>
         </div>
 
-        {/* Price */}
+        {/* Health Verification Badge (Unique Feature) */}
+        <div className="flex items-center gap-1.5 mb-3">
+          <div className="flex -space-x-1">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="w-4 h-4 rounded-full border border-white bg-green-50 flex items-center justify-center">
+                <svg className="w-2.5 h-2.5 text-[#009E3C]" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" /></svg>
+              </div>
+            ))}
+          </div>
+          <span className="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">Verified Purity</span>
+        </div>
+
+        {/* Price Block — pushed to bottom */}
         <div className="flex flex-col mt-auto">
           {isUsingWholesalePrice && (
-            <p className="text-[9px] text-blue-600 font-bold uppercase tracking-tighter mb-0.5">Wholesale Member Price</p>
+            <p className="text-[9px] text-blue-600 font-bold uppercase mb-0.5">Wholesale Price</p>
           )}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 flex-wrap">
-            <span className={`font-extrabold text-sm sm:text-base md:text-lg ${isUsingWholesalePrice ? 'text-blue-600' : 'text-gray-900'}`}>
-              <span className="text-[9px] sm:text-[10px] font-bold text-gray-400 mr-0.5">UGX</span>
+          <div className="flex items-baseline gap-1.5 flex-wrap">
+            <span className={`font-extrabold text-base sm:text-lg ${isUsingWholesalePrice ? 'text-blue-600' : hasDiscount ? 'text-[#E53935]' : 'text-gray-900'}`}>
+              <span className="text-[9px] font-semibold text-gray-400 mr-0.5">UGX</span>
               {displayPrice.toLocaleString()}
-              {data.unit && <span className="text-[10px] text-gray-500 font-normal ml-1">/ {data.unit}</span>}
             </span>
             {(hasDiscount || isUsingWholesalePrice) && (
-              <span className="text-gray-400 text-[10px] sm:text-xs line-through decoration-red-400/60">
-                {data.price.toLocaleString()}
+              <span className="text-gray-400 text-[10px] sm:text-xs line-through">
+                UGX {data.price.toLocaleString()}
               </span>
             )}
           </div>
+          {data.unit && (
+            <span className="text-[10px] text-gray-400 mt-0.5">per {data.unit}</span>
+          )}
         </div>
 
-        {/* Mobile Add to Cart / In Cart button */}
+        {/* Add to Cart Button — always visible, green like iHerb */}
         <button
           onClick={handleAddToCart}
-          className={`sm:hidden mt-2 w-full py-2 rounded-lg text-xs font-semibold active:scale-95 transition-all flex items-center justify-center gap-1.5 ${isInCart
-            ? "bg-green-50 text-green-700 border border-green-200"
-            : "bg-green-600 hover:bg-green-700 text-white"
+          className={`mt-2.5 w-full py-2 sm:py-2.5 rounded-md text-xs sm:text-sm font-bold active:scale-[0.97] transition-all flex items-center justify-center gap-1.5 ${isInCart
+            ? "bg-[#f4fcf6] text-[#009E3C] border border-[#009E3C]/30"
+            : "bg-[#009E3C] hover:bg-[#007a2e] text-white shadow-sm"
             }`}
         >
           {isInCart ? (
@@ -215,7 +204,12 @@ const ProductCard = ({ data }: ProductCardProps) => {
               In Cart — View
             </>
           ) : (
-            "Add to Cart"
+            <>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+              </svg>
+              Add to Cart
+            </>
           )}
         </button>
       </div>

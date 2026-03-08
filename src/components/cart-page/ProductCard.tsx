@@ -35,17 +35,17 @@ const ProductCard = ({ data }: ProductCardProps) => {
   const hasDiscount = discount.percentage > 0 || discount.amount > 0;
 
   return (
-    <div className="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-      {/* Product Image */}
+    <div className="flex gap-4 sm:gap-6 items-start group">
+      {/* Product Image — white card border like iHerb */}
       <Link
         href={`/shop/product/${data.id}/${(data.name ?? "product").split(" ").join("-")}`}
-        className="bg-green-100 rounded-lg w-20 h-20 sm:w-[100px] sm:h-[100px] overflow-hidden flex items-center justify-center flex-shrink-0"
+        className="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-white border border-gray-100 rounded-lg overflow-hidden flex items-center justify-center p-2"
       >
         <Image
           src={data.srcUrl}
-          width={100}
-          height={100}
-          className="w-full h-full object-cover hover:scale-105 transition-all duration-300"
+          width={128}
+          height={128}
+          className="max-h-full w-auto object-contain transition-transform duration-500 group-hover:scale-105"
           alt={data.name ?? "Product"}
           priority
         />
@@ -53,55 +53,49 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
       {/* Product Details */}
       <div className="flex-1 min-w-0">
-        {/* Name + Delete */}
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <Link
-            href={`/shop/product/${data.id}/${(data.name ?? "product").split(" ").join("-")}`}
-            className="text-green-900 font-bold text-sm sm:text-base xl:text-xl hover:text-green-700 transition-colors line-clamp-2"
-          >
-            {data.name ?? "Unnamed Product"}
-          </Link>
+        <div className="flex justify-between items-start gap-4">
+          <div>
+            <Link
+              href={`/shop/product/${data.id}/${(data.name ?? "product").split(" ").join("-")}`}
+              className="text-gray-900 font-bold text-sm sm:text-base hover:text-[#009E3C] transition-colors line-clamp-2 leading-tight"
+            >
+              {data.name ?? "Unnamed Product"}
+            </Link>
+
+            {(data.attributes?.[0] || data.variation_name) && (
+              <p className="mt-1 text-[11px] text-gray-400 font-medium">
+                Variant: <span className="text-gray-600 uppercase tracking-wider">{data.variation_name || data.attributes?.[0] || "Standard"}</span>
+              </p>
+            )}
+
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="font-extrabold text-gray-900 text-lg">
+                UGX {displayPrice.toLocaleString()}
+              </span>
+              {hasDiscount && (
+                <span className="text-gray-400 line-through text-xs font-medium">
+                  UGX {data.price.toLocaleString()}
+                </span>
+              )}
+            </div>
+            {hasDiscount && (
+              <span className="text-[#E53935] text-[10px] font-bold">SAVING UGX {(data.price - displayPrice).toLocaleString()}</span>
+            )}
+          </div>
+
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 sm:h-8 sm:w-8 hover:bg-red-50 transition-colors flex-shrink-0"
-            onClick={() =>
-              dispatch(removeFromCart(data.id))
-            }
+            className="h-8 w-8 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all rounded-full"
+            onClick={() => dispatch(removeFromCart(data.id))}
           >
-            <PiTrashFill className="text-lg sm:text-xl text-red-500 hover:text-red-600" />
+            <PiTrashFill className="text-xl" />
           </Button>
         </div>
 
-        {/* Variation */}
-        {(data.attributes?.[0] || data.variation_name) && (
-          <div className="mb-2">
-            <span className="text-green-700 text-xs mr-1">Variation:</span>
-            <span className="text-green-600 text-xs">
-              {data.variation_name || data.attributes?.[0] || "Standard"}
-            </span>
-          </div>
-        )}
-
-        {/* Price */}
-        <div className="flex items-center gap-1.5 flex-wrap mb-2">
-          <span className="font-bold text-green-800 text-sm sm:text-lg">
-            UGX {displayPrice.toLocaleString()}
-          </span>
-          {hasDiscount && (
-            <span className="font-medium text-green-400 line-through text-xs sm:text-sm">
-              UGX {data.price.toLocaleString()}
-            </span>
-          )}
-          {discount.percentage > 0 && (
-            <span className="font-medium text-[10px] sm:text-xs py-0.5 px-2 rounded-full bg-green-200 text-green-800">
-              -{discount.percentage}%
-            </span>
-          )}
-        </div>
-
-        {/* Quantity Counter */}
-        <div className="flex justify-end">
+        {/* Quantity Controls */}
+        <div className="mt-4 flex items-center gap-4">
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Quantity</span>
           <CartCounter
             initialValue={data.quantity}
             onAdd={() => dispatch(updateCartItemAsync({ itemId: data.id, quantity: data.quantity + 1 }))}
@@ -111,7 +105,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
                 : dispatch(updateCartItemAsync({ itemId: data.id, quantity: data.quantity - 1 }))
             }
             isZeroDelete
-            className="px-3 py-1.5 sm:px-4 sm:py-2 max-h-9 sm:max-h-10 bg-white border border-green-200 rounded-full min-w-[100px] max-w-[120px]"
+            className="h-9 px-3 bg-gray-50 border border-gray-200 rounded-lg min-w-[110px] scale-90 sm:scale-100 origin-left"
           />
         </div>
       </div>

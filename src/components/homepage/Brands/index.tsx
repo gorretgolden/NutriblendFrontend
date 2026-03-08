@@ -11,7 +11,7 @@ export default function BrandsSection() {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const cached = localStorage.getItem('brands_cache_v3');
+        const cached = localStorage.getItem('brands_cache_v4');
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
           if (Date.now() - timestamp < 15 * 60 * 1000) {
@@ -25,7 +25,7 @@ export default function BrandsSection() {
         if (response.status && response.data) {
           const fetched = response.data.slice(0, 10);
           setBrands(fetched);
-          localStorage.setItem('brands_cache_v3', JSON.stringify({
+          localStorage.setItem('brands_cache_v4', JSON.stringify({
             data: fetched,
             timestamp: Date.now()
           }));
@@ -105,9 +105,9 @@ export default function BrandsSection() {
               <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               <div className="relative z-10 w-full flex-1 flex items-center justify-center max-w-[120px]">
-                {brand.logo ? (
+                {brand.image ? (
                   <img
-                    src={getImageUrl(brand.logo)}
+                    src={getImageUrl(brand.image)}
                     alt={brand.name}
                     className="w-full h-auto max-h-[70px] object-contain filter grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
                   />

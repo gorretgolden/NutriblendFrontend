@@ -4,7 +4,6 @@ import BreadcrumbCart from "@/components/cart-page/BreadcrumbCart";
 import ProductCard from "@/components/cart-page/ProductCard";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import { FaArrowRight } from "react-icons/fa6";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { TbBasketExclamation } from "react-icons/tb";
@@ -55,100 +54,86 @@ export default function CartPage() {
   };
 
   return (
-    <main className="pb-20 bg-white-50 min-h-screen">
-      <div className="max-w-frame mx-auto px-4 xl:px-0 py-8">
-        {cart && cart.items.length > 0 ? (
-          <>
-            <BreadcrumbCart />
-            <h2
-              className={cn([
-                integralCF.className,
-                "font-bold text-[24px] md:text-[28px] text-dark-800 uppercase mb-6 md:mb-8",
-              ])}
-            >
-              Your Shopping Cart
-            </h2>
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
-              {/* Cart Items Section */}
-              <div className="w-full lg:w-2/3 bg-white p-5 md:p-6 flex-col space-y-5 rounded-2xl shadow-lg border border-green-100">
-                <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-                  <h3 className="text-lg sm:text-xl font-semibold text-green-900">
-                    Cart Items ({cart.items.length})
-                  </h3>
-                  <span className="text-green-600 font-medium text-sm sm:text-base">
-                    Total: UGX {Math.round(adjustedTotalPrice).toLocaleString()}
-                  </span>
-                </div>
+    <main className="bg-[#f5f5f5] min-h-screen pb-20">
+      {/* Breadcrumb Header */}
+      <div className="bg-white border-b border-gray-200 mb-6">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
+          <BreadcrumbCart />
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-2">Shopping Cart</h1>
+        </div>
+      </div>
 
-                <div className="space-y-4">
-                  {cart.items.map((product, idx, arr) => (
-                    <React.Fragment key={idx}>
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+        {cart && cart.items.length > 0 ? (
+          <div className="flex flex-col lg:flex-row gap-8 items-start">
+            {/* Cart Items — white card box */}
+            <div className="flex-1 w-full flex flex-col gap-4">
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+                  <h2 className="font-bold text-gray-900">Cart ({cart.items.length} Items)</h2>
+                  <span className="text-sm font-medium text-gray-500">Subtotal: UGX {Math.round(adjustedTotalPrice).toLocaleString()}</span>
+                </div>
+                <div className="divide-y divide-gray-100">
+                  {cart.items.map((product, idx) => (
+                    <div key={idx} className="p-6">
                       <ProductCard data={product} />
-                      {arr.length - 1 !== idx && (
-                        <hr className="border-t-green-100" />
-                      )}
-                    </React.Fragment>
+                    </div>
                   ))}
                 </div>
               </div>
+            </div>
 
-              {/* Order Summary Section */}
-              <div className="w-full lg:w-1/3 bg-white p-5 md:p-6 flex-col space-y-5 rounded-2xl shadow-lg border border-green-100 sticky top-6">
-                <h3 className="text-xl font-semibold text-dark-900 border-b border-green-100 pb-3">
-                  Order Summary
-                </h3>
+            {/* Order Summary Sidebar */}
+            <div className="w-full lg:w-[380px] flex flex-col gap-4 sticky top-32">
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 overflow-hidden">
+                <h2 className="text-lg font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4 uppercase tracking-wider text-sm">Order Summary</h2>
 
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-green-700">Subtotal</span>
-                    <span className="font-semibold">UGX {totalPrice.toLocaleString()}</span>
+                <div className="space-y-4 mb-6">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-500">Subtotal</span>
+                    <span className="font-semibold text-gray-900 uppercase text-xs">UGX {totalPrice.toLocaleString()}</span>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-green-700">
-                      Discount (-
-                      {Math.round(
-                        ((totalPrice - adjustedTotalPrice) / totalPrice) * 100
-                      )}
-                      %)
-                    </span>
-                    <span className="font-semibold text-green-600">
-                      -UGX {Math.round(totalPrice - adjustedTotalPrice).toLocaleString()}
-                    </span>
+                  {(totalPrice - adjustedTotalPrice > 0) && (
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-500">Discount ({Math.round(((totalPrice - adjustedTotalPrice) / totalPrice) * 100)}%)</span>
+                      <span className="font-bold text-[#E53935]">-UGX {Math.round(totalPrice - adjustedTotalPrice).toLocaleString()}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-500">Shipping</span>
+                    <span className="font-bold text-[#009E3C] uppercase text-[10px] bg-[#f4fcf6] px-2 py-0.5 rounded">Calculated at checkout</span>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-green-700">Delivery Fee</span>
-                    <span className="font-semibold text-green-600">Free</span>
-                  </div>
-
-                  <hr className="border-t-green-100" />
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-semibold text-dark-900">Total</span>
-                    <span className="text-xl font-bold text-dark-800">
-                      UGX {Math.round(adjustedTotalPrice).toLocaleString()}
-                    </span>
+                  <div className="border-t border-gray-100 pt-4 flex justify-between items-center">
+                    <span className="text-lg font-bold text-gray-900">Estimated Total</span>
+                    <div className="text-right">
+                      <span className="text-2xl font-black text-gray-900">UGX {Math.round(adjustedTotalPrice).toLocaleString()}</span>
+                      <p className="text-[10px] text-gray-400 font-medium">VAT Included</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="pt-2">
-                  <h4 className="text-sm font-medium text-dark-700 mb-3">Have a promo code?</h4>
+                {/* Promo Code */}
+                <div className="mb-6 pt-2">
                   <div className="flex gap-2">
-                    <div className="flex-1 flex items-center bg-green-50 border border-green-200 rounded-full px-4 h-12">
-                      <MdOutlineLocalOffer className="text-green-500 text-xl mr-2 flex-shrink-0" />
+                    <div className="relative flex-1">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <MdOutlineLocalOffer className="text-gray-400" />
+                      </div>
                       <input
                         type="text"
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)}
-                        placeholder="Enter promo code"
-                        className="bg-transparent placeholder:text-dark-400 text-green-800 outline-none w-full"
+                        placeholder="Promo Code"
+                        className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-[#009E3C] focus:border-[#009E3C] outline-none transition-all"
                         disabled={promoApplied}
                       />
                     </div>
                     <Button
                       type="button"
-                      className="bg-green-600 hover:bg-green-700 text-white rounded-full px-4 h-12 transition-colors"
+                      className="bg-gray-900 hover:bg-black text-white px-4 py-2.5 h-auto text-xs font-bold uppercase tracking-widest rounded-lg"
                       onClick={handleApplyPromo}
                       disabled={promoLoading || promoApplied}
                     >
@@ -156,15 +141,17 @@ export default function CartPage() {
                     </Button>
                   </div>
                   {promoApplied && (
-                    <p className="text-green-600 text-xs mt-2">Discount: -UGX {discountAmount.toLocaleString()}</p>
+                    <p className="text-[#009E3C] text-[10px] font-bold mt-2 flex items-center gap-1">
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Promo code active! -UGX {discountAmount.toLocaleString()}
+                    </p>
                   )}
                 </div>
 
-                {/* Checkout Button */}
-
                 <Button
-                  type="button"
-                  className="w-full bg-green-600 hover:bg-green-700 text-white py-4 h-14 rounded-xl font-semibold text-lg group transition-all duration-300 hover:shadow-lg"
+                  className="w-full bg-[#009E3C] hover:bg-[#007a2e] text-white py-6 h-auto rounded-lg font-bold text-base shadow-sm group active:scale-[0.98] transition-all"
                   onClick={() => {
                     if (!isAuthenticated) {
                       sessionStorage.setItem('returnUrl', '/cart/checkout');
@@ -180,41 +167,34 @@ export default function CartPage() {
                     router.push('/cart/checkout');
                   }}
                 >
-                  Proceed to Checkout
-                  <FaArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
+                  Checkout Now
+                  <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
 
-                {/* Continue Shopping Link */}
-                <div className="text-center pt-2">
-                  <Link
-                    href="/shop"
-                    className="text-green-600 hover:text-green-800 text-sm font-medium transition-colors"
-                  >
-                    ← Continue Shopping
-                  </Link>
+                <div className="mt-6 flex flex-col items-center gap-3">
+                  <p className="text-[11px] text-gray-500 font-medium">Supported Payment Methods</p>
+                  <div className="flex gap-2">
+                    {['MTN', 'Airtel', 'Visa', 'Cash'].map(m => (
+                      <span key={m} className="px-2 py-1 bg-gray-50 border border-gray-100 rounded text-[9px] font-bold text-gray-400">{m}</span>
+                    ))}
+                  </div>
+                  <Link href="/shop" className="text-[#009E3C] font-bold text-xs hover:underline mt-2">← Continue Shopping</Link>
                 </div>
               </div>
             </div>
-          </>
+          </div>
         ) : (
-          // Empty Cart State
-          <div className="flex flex-col items-center justify-center text-center py-20 px-4">
-            <div className="bg-green-100 p-6 rounded-full mb-6">
-              <TbBasketExclamation strokeWidth={1} className="text-6xl text-green-600" />
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm py-20 px-4 text-center">
+            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <TbBasketExclamation className="text-5xl text-gray-300" />
             </div>
-            <h3 className="text-2xl font-semibold text-green-900 mb-3">
-              Your cart is empty
-            </h3>
-            <p className="text-green-600 mb-8 max-w-md">
-              Looks like you haven't added any items to your cart yet. Start shopping to find amazing products!
-            </p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
+            <p className="text-gray-500 mb-8 max-w-sm mx-auto">Looks like you haven&apos;t added any health essentials yet. Ready to start your wellness journey?</p>
             <Button
-              className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8 py-6 text-lg font-semibold transition-colors"
+              className="bg-[#009E3C] hover:bg-[#007a2e] text-white px-10 py-6 h-auto rounded-lg text-base font-bold transition-all shadow-md"
               asChild
             >
-              <Link href="/shop">
-                Start Shopping
-              </Link>
+              <Link href="/shop">Start Shopping</Link>
             </Button>
           </div>
         )}

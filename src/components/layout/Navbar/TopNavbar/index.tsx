@@ -197,14 +197,14 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-green-50/50">
+      <header className="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
         {/* Main header */}
         <div className="max-w-[1600px] mx-auto px-3 py-2 md:py-3">
           <div className="flex items-center justify-between gap-2">
             {/* Logo */}
             <div className="flex items-center flex-shrink-0">
               <Link href="/" className="flex items-center">
-                <div className="relative w-8 h-8 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[#4caf50] hover:scale-105 transition-transform duration-300 shadow-md">
+                <div className="relative w-8 h-8 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[#009E3C] hover:scale-105 transition-transform duration-300 shadow-md">
                   <Image
                     src="/images/logo.png"
                     alt="Company Logo"
@@ -248,7 +248,7 @@ const Header = () => {
                 >
                   <div className="p-1 rounded-full bg-gray-100 group-hover:bg-green-100 transition-colors">
                     <svg
-                      className="w-5 h-5 text-gray-600 group-hover:text-[#4caf50] transition-colors"
+                      className="w-5 h-5 text-gray-600 group-hover:text-[#009E3C] transition-colors"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -300,7 +300,7 @@ const Header = () => {
                               key={idx}
                               href={item.href}
                               onClick={() => setIsAccountOpen(false)}
-                              className="flex items-center px-3 py-2 md:px-4 md:py-2.5 text-gray-700 hover:bg-green-50 hover:text-[#4caf50] rounded-lg transition-colors duration-200"
+                              className="flex items-center px-3 py-2 md:px-4 md:py-2.5 text-gray-700 hover:bg-green-50 hover:text-[#009E3C] rounded-lg transition-colors duration-200"
                             >
                               <span className="mr-2.5 text-gray-400 flex-shrink-0">{item.icon}</span>
                               {item.label}
@@ -324,7 +324,7 @@ const Header = () => {
                       ) : (
                         <button
                           onClick={openLoginModal}
-                          className="block w-full bg-[#4caf50] hover:bg-green-600 text-white text-center font-medium py-2 md:py-2.5 px-3 md:px-4 rounded-lg transition-colors duration-200 shadow-sm text-sm md:text-base"
+                          className="block w-full bg-[#009E3C] hover:bg-green-600 text-white text-center font-medium py-2 md:py-2.5 px-3 md:px-4 rounded-lg transition-colors duration-200 shadow-sm text-sm md:text-base"
                         >
                           Sign in / Create account
                         </button>
@@ -357,46 +357,65 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Desktop Navigation Bar */}
-        <div className="border-t border-gray-100 hidden md:block">
+        {/* Desktop Navigation Bar — iHerb Green Category Bar */}
+        <div className="hidden md:block bg-[#009E3C]">
           <div className="max-w-[1600px] mx-auto px-3">
-            <div className="flex justify-center py-2">
-              <div className="flex items-center space-x-1 overflow-x-auto scrollbar-hide">
-                {navItems.map((item, index) => (
-                  <div key={index} className="relative group">
-                    {item.subItems && item.subItems.length > 0 ? (
-                      <>
-                        <button className="px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50/50 flex items-center transition-all duration-300 active:scale-95 group-hover:bg-green-50 whitespace-nowrap">
-                          {item.name}
-                          <svg className="ml-1.5 h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </button>
+            <div className="flex items-center overflow-x-auto scrollbar-hide">
+              {/* All Categories Button — iHerb style hamburger */}
+              <Link
+                href="/shop"
+                className="flex items-center gap-2 px-4 py-3 bg-[#007a2e] text-white text-sm font-bold whitespace-nowrap hover:bg-[#006624] transition-colors flex-shrink-0 border-r border-white/20"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                All Categories
+              </Link>
 
-                        <div className="absolute left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50">
-                          <div className="rounded-2xl shadow-xl ring-1 ring-black ring-opacity-5 p-2 bg-white/95 backdrop-blur-sm border border-green-50">
-                            {item.subItems.map((subItem: any, subIndex: number) => (
-                              <Link
-                                key={subIndex}
-                                href={subItem.href}
-                                className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-green-600 hover:text-white rounded-xl transition-all duration-200"
-                              >
-                                {subItem.name}
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <Link
-                        href={item.href || "#"}
-                        className="px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50/50 transition-all duration-300 active:scale-95 whitespace-nowrap"
-                      >
+              {navItems.map((item, index) => (
+                <div key={index} className="relative group flex-shrink-0">
+                  {item.subItems && item.subItems.length > 0 ? (
+                    <>
+                      <button className="px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-[#007a2e] flex items-center gap-1 transition-colors duration-200 whitespace-nowrap border-b-2 border-transparent hover:border-white">
                         {item.name}
-                      </Link>
-                    )}
-                  </div>
-                ))}
+                        <svg className="h-3 w-3 transition-transform duration-200 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      {/* Mega dropdown */}
+                      <div className="absolute left-0 top-full w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-1">
+                        <div className="bg-white rounded-b-xl shadow-2xl border border-gray-100 py-1 overflow-hidden">
+                          {item.subItems.map((subItem: any, subIndex: number) => (
+                            <Link
+                              key={subIndex}
+                              href={subItem.href}
+                              className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-[#009E3C] hover:text-white transition-colors duration-150"
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href || "#"}
+                      className="px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-[#007a2e] transition-colors duration-200 whitespace-nowrap inline-block border-b-2 border-transparent hover:border-white"
+                    >
+                      {item.name}
+                    </Link>
+                  )}
+                </div>
+              ))}
+
+              {/* Special links at end of nav bar */}
+              <div className="ml-auto flex items-center flex-shrink-0">
+                <Link href="/shop?on_sale=true" className="flex items-center gap-1 px-4 py-3 text-sm font-bold text-[#FFC107] hover:bg-[#007a2e] transition-colors whitespace-nowrap">
+                  Sale
+                </Link>
+                <Link href="/brands" className="px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-[#007a2e] transition-colors whitespace-nowrap">
+                  Brands
+                </Link>
               </div>
             </div>
           </div>
@@ -655,7 +674,7 @@ function DesktopSearchBar({
     <div ref={ref} className="relative flex-1 max-w-4xl">
       <form
         onSubmit={handleSearch}
-        className="flex shadow-lg rounded-full overflow-hidden border border-green-100 bg-white/50 backdrop-blur-sm transition-all duration-300 focus-within:ring-4 focus-within:ring-green-500/20 focus-within:border-green-300 group shadow-green-900/5 hover:shadow-green-900/10"
+        className="flex shadow-md rounded-lg overflow-hidden border border-gray-200 bg-white shadow-sm transition-all duration-300 focus-within:ring-2 focus-within:ring-[#009E3C]/20 focus-within:border-[#009E3C] group hover:border-gray-300"
       >
         <div className="flex items-center pl-5 md:pl-6">
           <svg className="w-5 h-5 text-gray-400 group-focus-within:text-green-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -675,7 +694,7 @@ function DesktopSearchBar({
         />
         <button
           type="submit"
-          className="flex items-center justify-center bg-green-500 text-white px-6 sm:px-7 py-3 hover:bg-green-600 transition-all duration-300 font-semibold active:scale-95"
+          className="flex items-center justify-center bg-[#009E3C] text-white px-6 sm:px-10 py-3 hover:bg-[#007a2e] transition-all duration-300 font-bold active:scale-95 uppercase text-xs tracking-widest"
         >
           Search
         </button>
@@ -689,7 +708,7 @@ function DesktopSearchBar({
               <h3 className="font-semibold mb-3 text-gray-700">Search Results</h3>
               {isSearching ? (
                 <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4caf50]"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#009E3C]"></div>
                 </div>
               ) : searchResults.length > 0 ? (
                 <div className="space-y-2">
@@ -726,26 +745,26 @@ function DesktopSearchBar({
                       setOpen(false);
                       setSearchQuery("");
                     }}
-                    className="block text-center text-[#4caf50] font-medium py-2 hover:underline"
+                    className="block text-center text-[#009E3C] font-bold py-3 bg-gray-50 hover:bg-green-50 rounded-lg text-sm transition-colors"
                   >
                     View all results for &quot;{searchQuery}&quot;
                   </Link>
                 </div>
               ) : (
-                <p className="text-gray-500 text-center py-4">No products found for &quot;{searchQuery}&quot;</p>
+                <p className="text-gray-500 text-center py-4 text-sm font-medium">No products found for &quot;{searchQuery}&quot;</p>
               )}
-              <hr className="my-5" />
+              <hr className="my-5 border-gray-100" />
             </div>
           )}
 
           <div>
-            <h3 className="font-semibold mb-3 text-gray-700">Browse Categories</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <h3 className="font-bold mb-4 text-gray-900 text-xs uppercase tracking-widest">Recommended Categories</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {categories.slice(0, 9).map((category) => (
                 <Link
                   key={category.id}
                   href={`/shop?category=${category.slug}`}
-                  className="block bg-gray-50 hover:bg-[#4caf50] hover:text-white p-3 sm:p-4 rounded-xl text-sm font-medium text-center transition-colors duration-200"
+                  className="block bg-gray-50 hover:bg-[#009E3C] hover:text-white px-3 py-3 rounded-lg text-xs font-bold text-center transition-all duration-200 border border-gray-100"
                   onClick={() => setOpen(false)}
                 >
                   {category.name}

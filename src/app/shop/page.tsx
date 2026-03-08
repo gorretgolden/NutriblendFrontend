@@ -21,8 +21,8 @@ interface ShopPageProps {
   searchParams: {
     page?: string;
     sort?: string;
-    category?: string; // slug-based
-    category_id?: string; // legacy support
+    category?: string;
+    category_id?: string;
     min_price?: string;
     max_price?: string;
     search?: string;
@@ -40,10 +40,9 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const page = Number(searchParams.page) || 1;
   const sort = searchParams.sort || "created_at";
 
-  // Prepare API params — prefer slug, fallback to category_id for legacy links
   const apiParams: any = {
     page,
-    per_page: 12,
+    per_page: 24,
     category_slug: searchParams.category || undefined,
     category_id: !searchParams.category && searchParams.category_id
       ? Number(searchParams.category_id) : undefined,
@@ -61,7 +60,6 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
           : 'created_at'
   };
 
-  // Dynamic page title
   const categoryName = searchParams.category
     ? searchParams.category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
     : null;
@@ -72,70 +70,84 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         : searchParams.is_new_arrival === 'true' ? 'New Arrivals'
           : searchParams.on_sale === 'true' ? 'On Sale'
             : searchParams.is_featured === 'true' ? 'Featured Products'
-              : searchParams.search ? `Search: "${searchParams.search}"`
+              : searchParams.search ? `Results for "${searchParams.search}"`
                 : categoryName ? categoryName
                   : 'All Products';
 
-  // Fetch data
   let products: Product[] = [];
-  let meta = {
-    current_page: 1,
-    last_page: 1,
-    total: 0,
-    from: 0,
-    to: 0
-  };
+  let meta = { current_page: 1, last_page: 1, total: 0, from: 0, to: 0 };
 
   try {
     const response = await apiClient.getProducts(apiParams);
     if (response.status && response.data) {
-      products = response.data.data.map(transformProduct);
+      // Backend returns array inside response.data and pagination inside response.meta
+      // Or in some legacy endpoints response.data.data
+      const items = Array.isArray(response.data) ? response.data : (response.data.data || []);
+      const metaObj = (response as any).meta || response.data;
+
+      products = items.map(transformProduct);
       meta = {
-        current_page: response.data.current_page,
-        last_page: response.data.last_page,
-        total: response.data.total,
-        from: response.data.from,
-        to: response.data.to
+        current_page: metaObj.current_page || 1,
+        last_page: metaObj.last_page || 1,
+        total: metaObj.total || 0,
+        from: metaObj.from || 0,
+        to: metaObj.to || 0
       };
     }
   } catch (error) {
     console.error("Failed to load shop products:", error);
   }
 
-  // Helper to build pagination links
   const getPageLink = (p: number) => {
     const params = new URLSearchParams(searchParams as any);
     params.set('page', p.toString());
     return `/shop?${params.toString()}`;
   };
 
-  // Sort label
-  const sortLabel = sort === 'most-popular' ? 'Popular'
-    : sort === 'low-price' ? 'Price: Low → High'
-      : sort === 'high-price' ? 'Price: High → Low'
-        : 'Newest';
+  const sortOptions = [
+    { value: 'created_at', label: 'Newest' },
+    { value: 'most-popular', label: 'Best Selling' },
+    { value: 'low-price', label: 'Price: Low to High' },
+    { value: 'high-price', label: 'Price: High to Low' },
+  ];
+
+  const getSortLink = (sortValue: string) => {
+    const params = new URLSearchParams(searchParams as any);
+    params.set('sort', sortValue);
+    params.delete('page');
+    return `/shop?${params.toString()}`;
+  };
 
   return (
-    <main className="pb-20">
-      <div className="max-w-frame mx-auto px-4 xl:px-0">
-        <hr className="h-[1px] border-t-black/10 mb-3 sm:mb-5" />
-        <BreadcrumbShop />
-        <div className="flex md:space-x-5 items-start">
-          {/* Desktop Sidebar Filters */}
-          <div className="hidden md:block min-w-[295px] max-w-[295px] border border-black/10 rounded-[20px] px-5 md:px-6 py-5 space-y-5 md:space-y-6">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-black text-xl">Filters</span>
-              <FiSliders className="text-2xl text-black/40" />
+    <main className="bg-[#f5f5f5] min-h-screen pb-16">
+      {/* Breadcrumb bar */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-3">
+          <BreadcrumbShop />
+        </div>
+      </div>
+
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 mt-6">
+        <div className="flex gap-6 items-start">
+          {/* Sidebar Filters — iHerb-style white card */}
+          <div className="hidden lg:block w-[260px] flex-shrink-0 sticky top-32">
+            <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50">
+                <span className="font-bold text-gray-900 text-base">Filters</span>
+                <FiSliders className="text-lg text-gray-400" />
+              </div>
+              <div className="px-5 py-4">
+                <Filters />
+              </div>
             </div>
-            <Filters />
           </div>
 
           {/* Main Content */}
-          <div className="flex flex-col w-full space-y-4 sm:space-y-5">
-            {/* Header Row */}
-            <div className="flex items-center justify-between gap-2">
-              <div className="min-w-0">
-                <h1 className="font-bold text-xl sm:text-2xl md:text-[32px] truncate">{pageTitle}</h1>
+          <div className="flex-1 min-w-0">
+            {/* Title + Sort Bar — white top bar like iHerb */}
+            <div className="bg-white rounded-lg border border-gray-200 shadow-sm px-4 sm:px-6 py-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h1 className="font-bold text-xl sm:text-2xl text-gray-900">{pageTitle}</h1>
                 <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
                   {meta.total > 0
                     ? `Showing ${meta.from}–${meta.to} of ${meta.total} products`
@@ -143,82 +155,96 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
-                {/* Sort badge */}
-                <span className="hidden sm:inline-flex items-center gap-1 text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                  </svg>
-                  {sortLabel}
-                </span>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {/* Sort Dropdown */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs text-gray-500 hidden sm:inline">Sort by:</span>
+                  <div className="flex gap-1">
+                    {sortOptions.map((opt) => (
+                      <Link
+                        key={opt.value}
+                        href={getSortLink(opt.value)}
+                        className={`text-xs px-2.5 py-1.5 rounded-md transition-colors ${sort === opt.value
+                          ? 'bg-[#009E3C] text-white font-bold'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          }`}
+                      >
+                        {opt.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
                 <MobileFilters />
               </div>
             </div>
 
-            {/* Product Grid — 2 columns on mobile, 3 on tablet, 3 on desktop */}
+            {/* Product Grid — 2 cols mobile, 3 tablet, 4 desktop like iHerb */}
             {products.length > 0 ? (
-              <div className="w-full grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {products.map((product) => (
                   <ProductCard key={product.id} data={product} />
                 ))}
               </div>
             ) : (
-              <div className="py-16 sm:py-20 text-center">
+              <div className="bg-white rounded-lg border border-gray-200 py-20 text-center">
                 <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
                   <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
-                <p className="text-gray-500 font-medium">No products found</p>
-                <p className="text-gray-400 text-sm mt-1">Try adjusting your filters or search</p>
+                <p className="text-gray-600 font-semibold text-lg">No products found</p>
+                <p className="text-gray-400 text-sm mt-1.5">Try adjusting your filters or browse our categories</p>
+                <Link href="/shop" className="inline-block mt-4 px-6 py-2.5 bg-[#009E3C] text-white rounded-lg font-semibold text-sm hover:bg-[#007a2e] transition-colors">
+                  Browse All Products
+                </Link>
               </div>
             )}
 
-            <hr className="border-t-black/10" />
-
             {/* Pagination */}
             {meta.last_page > 1 && (
-              <Pagination className="justify-between">
-                <PaginationPrevious
-                  href={meta.current_page > 1 ? getPageLink(meta.current_page - 1) : '#'}
-                  className={meta.current_page <= 1 ? "pointer-events-none opacity-50 border border-black/10" : "border border-black/10"}
-                />
+              <div className="mt-8 bg-white rounded-lg border border-gray-200 shadow-sm px-4 py-4">
+                <Pagination className="justify-between">
+                  <PaginationPrevious
+                    href={meta.current_page > 1 ? getPageLink(meta.current_page - 1) : '#'}
+                    className={meta.current_page <= 1 ? "pointer-events-none opacity-50 border border-gray-200" : "border border-gray-200 hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C]"}
+                  />
 
-                <PaginationContent>
-                  {meta.current_page > 1 && (
+                  <PaginationContent>
+                    {meta.current_page > 1 && (
+                      <PaginationItem>
+                        <PaginationLink href={getPageLink(meta.current_page - 1)} className="text-gray-500 font-medium text-sm">
+                          {meta.current_page - 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )}
+
                     <PaginationItem>
-                      <PaginationLink href={getPageLink(meta.current_page - 1)} className="text-black/50 font-medium text-sm">
-                        {meta.current_page - 1}
+                      <PaginationLink href="#" isActive className="font-bold text-sm bg-[#009E3C] text-white border-[#009E3C]">
+                        {meta.current_page}
                       </PaginationLink>
                     </PaginationItem>
-                  )}
 
-                  <PaginationItem>
-                    <PaginationLink href="#" isActive className="font-medium text-sm">
-                      {meta.current_page}
-                    </PaginationLink>
-                  </PaginationItem>
+                    {meta.current_page < meta.last_page && (
+                      <PaginationItem>
+                        <PaginationLink href={getPageLink(meta.current_page + 1)} className="text-gray-500 font-medium text-sm">
+                          {meta.current_page + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )}
 
-                  {meta.current_page < meta.last_page && (
-                    <PaginationItem>
-                      <PaginationLink href={getPageLink(meta.current_page + 1)} className="text-black/50 font-medium text-sm">
-                        {meta.current_page + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )}
+                    {meta.last_page > meta.current_page + 1 && (
+                      <PaginationItem>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    )}
+                  </PaginationContent>
 
-                  {meta.last_page > meta.current_page + 1 && (
-                    <PaginationItem>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  )}
-                </PaginationContent>
-
-                <PaginationNext
-                  href={meta.current_page < meta.last_page ? getPageLink(meta.current_page + 1) : '#'}
-                  className={meta.current_page >= meta.last_page ? "pointer-events-none opacity-50 border border-black/10" : "border border-black/10"}
-                />
-              </Pagination>
+                  <PaginationNext
+                    href={meta.current_page < meta.last_page ? getPageLink(meta.current_page + 1) : '#'}
+                    className={meta.current_page >= meta.last_page ? "pointer-events-none opacity-50 border border-gray-200" : "border border-gray-200 hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C]"}
+                  />
+                </Pagination>
+              </div>
             )}
           </div>
         </div>

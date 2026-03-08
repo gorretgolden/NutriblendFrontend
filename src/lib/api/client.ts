@@ -6,10 +6,15 @@
 
 const envApi = process.env.NEXT_PUBLIC_API_URL || '';
 const isDev = process.env.NODE_ENV === 'development';
-const API_BASE_URL = (!isDev && envApi.includes('localhost'))
-    ? 'https://admin.rasmuspharmaceuticals.com/api/v1'
-    : (envApi || 'https://admin.rasmuspharmaceuticals.com/api/v1');
 
+const isServer = typeof window === 'undefined';
+let API_BASE_URL = envApi || 'https://admin.rasmuspharmaceuticals.com/api/v1';
+
+// Node.js 18+ resolves localhost to IPv6 (::1). We must replace it with 127.0.0.1 ONLY on the server
+// so that server-side fetches hit the Laravel IPv4 server, while the client browsers continue hitting localhost
+if (isServer && API_BASE_URL.includes('localhost')) {
+    API_BASE_URL = API_BASE_URL.replace('localhost', '127.0.0.1');
+}
 // ==================== Type Definitions ====================
 
 export interface ApiResponse<T = any> {
@@ -128,7 +133,7 @@ export interface Brand {
     id: number;
     name: string;
     slug: string;
-    logo_path?: string;
+    image?: string;
     is_active: boolean;
 }
 
@@ -285,6 +290,8 @@ class NutriBlendApiClient {
     ): Promise<ApiResponse<T>> {
         try {
             const url = `${this.baseURL}${endpoint}`;
+            console.log(`[API Client] Fetching: ${url}`);
+
             const config: RequestInit = {
                 ...options,
                 cache: 'no-store' as RequestCache, // Prevent Next.js from caching API responses
