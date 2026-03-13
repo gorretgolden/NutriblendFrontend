@@ -88,6 +88,7 @@ export default function WholesaleRegisterPage() {
                                         type="text"
                                         name="name"
                                         required
+                                        minLength={3}
                                         disabled={isLoading}
                                         className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                         placeholder="Enter your name"
@@ -101,6 +102,7 @@ export default function WholesaleRegisterPage() {
                                         type="tel"
                                         name="phone"
                                         required
+                                        minLength={9}
                                         disabled={isLoading}
                                         className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                         placeholder="+256..."
@@ -147,6 +149,7 @@ export default function WholesaleRegisterPage() {
                                     type="text"
                                     name="wholesale_business_name"
                                     required
+                                    minLength={3}
                                     disabled={isLoading}
                                     className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="Legal Business Name"
@@ -160,10 +163,11 @@ export default function WholesaleRegisterPage() {
                                 <textarea
                                     name="wholesale_business_details"
                                     required
+                                    minLength={20}
                                     disabled={isLoading}
                                     rows={4}
                                     className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
-                                    placeholder="Describe your business, location, and registration details..."
+                                    placeholder="Describe your business, location, and registration details (min. 20 characters)..."
                                     value={formData.wholesale_business_details}
                                     onChange={handleChange}
                                 />
