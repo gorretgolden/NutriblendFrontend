@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { registerUser } from "@/lib/features/auth/authSlice";
@@ -181,7 +182,14 @@ const SignUpModal = ({
               Create your account
             </h1>
             <p className="mt-1 text-sm text-gray-600">
-              Fill in the details below to get started.
+              Fill in the details below to get started or{" "}
+              <Link
+                href="/wholesale-registration"
+                onClick={onClose}
+                className="text-[#4caf50] font-semibold hover:underline"
+              >
+                register as a wholesale customer
+              </Link>
             </p>
           </div>
 

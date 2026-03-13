@@ -413,6 +413,9 @@ const Header = () => {
                 <Link href="/shop?on_sale=true" className="flex items-center gap-1 px-4 py-3 text-sm font-bold text-[#FFC107] hover:bg-[#007a2e] transition-colors whitespace-nowrap">
                   Sale
                 </Link>
+                <Link href="/wholesale-registration" className="px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-[#007a2e] transition-colors whitespace-nowrap">
+                  Wholesale
+                </Link>
                 <Link href="/brands" className="px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-[#007a2e] transition-colors whitespace-nowrap">
                   Brands
                 </Link>
