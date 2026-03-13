@@ -424,10 +424,11 @@ const SignUpModal = ({
                   type="checkbox"
                   id="terms"
                   name="terms"
-                  className="h-5 w-5 mr-2 appearance-none border border-gray-400 rounded-sm checked:bg-[#4caf50] checked:border-[#4caf50] checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center"
+                  className="h-5 w-5 mr-2 appearance-none border border-gray-400 rounded-sm checked:bg-[#4caf50] checked:border-[#4caf50] checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                   checked={formData.terms}
                   onChange={handleInputChange}
                   required
+                  disabled={isLoading}
                 />
                 <span className="text-sm text-gray-600">
                   I agree to the{" "}
@@ -463,7 +464,8 @@ const SignUpModal = ({
                   const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
                   window.location.href = `${baseUrl}/auth/google/redirect`;
                 }}
-                className="flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                disabled={isLoading}
+                className="flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

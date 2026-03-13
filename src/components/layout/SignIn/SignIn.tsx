@@ -96,26 +96,28 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
             <input
               type="text"
               placeholder="Email"
-              className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+              className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 disabled:cursor-not-allowed"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
           <div className="mb-4">
             <input
               type="password"
               placeholder="Password"
-              className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50]"
+              className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 disabled:cursor-not-allowed"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047] disabled:opacity-50"
+            className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Signing in..." : "Continue"}
           </button>
@@ -127,15 +129,16 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
           <hr className="w-full border-gray-300" />
         </div>
 
-        <button
-          onClick={() => {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            // Strip /api/v1 suffix since Google OAuth uses web routes
-            const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
-            window.location.href = `${baseUrl}/auth/google/redirect`;
-          }}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50"
-        >
+          <button
+            onClick={() => {
+              const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+              // Strip /api/v1 suffix since Google OAuth uses web routes
+              const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
+              window.location.href = `${baseUrl}/auth/google/redirect`;
+            }}
+            disabled={isLoading}
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
               fill="#4285F4"

@@ -88,7 +88,8 @@ export default function WholesaleRegisterPage() {
                                         type="text"
                                         name="name"
                                         required
-                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all"
+                                        disabled={isLoading}
+                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                         placeholder="Enter your name"
                                         value={formData.name}
                                         onChange={handleChange}
@@ -100,7 +101,8 @@ export default function WholesaleRegisterPage() {
                                         type="tel"
                                         name="phone"
                                         required
-                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all"
+                                        disabled={isLoading}
+                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                         placeholder="+256..."
                                         value={formData.phone}
                                         onChange={handleChange}
@@ -114,7 +116,8 @@ export default function WholesaleRegisterPage() {
                                     type="email"
                                     name="email"
                                     required
-                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all"
+                                    disabled={isLoading}
+                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="your@business.com"
                                     value={formData.email}
                                     onChange={handleChange}
@@ -127,8 +130,9 @@ export default function WholesaleRegisterPage() {
                                     type="password"
                                     name="password"
                                     required
+                                    disabled={isLoading}
                                     minLength={8}
-                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all"
+                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="••••••••"
                                     value={formData.password}
                                     onChange={handleChange}
@@ -143,7 +147,8 @@ export default function WholesaleRegisterPage() {
                                     type="text"
                                     name="wholesale_business_name"
                                     required
-                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all"
+                                    disabled={isLoading}
+                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="Legal Business Name"
                                     value={formData.wholesale_business_name}
                                     onChange={handleChange}
@@ -155,8 +160,9 @@ export default function WholesaleRegisterPage() {
                                 <textarea
                                     name="wholesale_business_details"
                                     required
+                                    disabled={isLoading}
                                     rows={4}
-                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all resize-none"
+                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="Describe your business, location, and registration details..."
                                     value={formData.wholesale_business_details}
                                     onChange={handleChange}
@@ -167,7 +173,7 @@ export default function WholesaleRegisterPage() {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full rounded-xl bg-green-600 py-4 text-lg font-bold text-white transition-all duration-300 hover:bg-green-700 hover:shadow-xl hover:shadow-green-200/50 disabled:opacity-50"
+                                    className="w-full rounded-xl bg-green-600 py-4 text-lg font-bold text-white transition-all duration-300 hover:bg-green-700 hover:shadow-xl hover:shadow-green-200/50 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isLoading ? "Submitting..." : "Submit Wholesale Application"}
                                 </button>
