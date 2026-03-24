@@ -35,9 +35,9 @@ const NewsLetterSection = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-[#0b3d2e] via-[#145740] to-[#0d4434]" />
 
       {/* Decorative mesh gradient blobs */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#009E3C]/10 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-teal-400/10 rounded-full blur-[100px] translate-x-1/3 translate-y-1/3" />
-      <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-green-400/5 rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-[#009E3C]/5 rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2" />
 
       {/* Subtle dot pattern */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -52,12 +52,12 @@ const NewsLetterSection = () => {
           <div className="flex-1 text-center lg:text-left">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-white/[0.08] backdrop-blur-sm px-4 py-1.5 rounded-full mb-6 border border-white/[0.08]">
-              <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-green-300/90 text-[11px] font-semibold tracking-[0.15em] uppercase">Newsletter</span>
+              <span className="w-1.5 h-1.5 bg-[#00bc49] rounded-full animate-pulse" />
+              <span className="text-[#009E3C]/90 text-[11px] font-semibold tracking-[0.15em] uppercase">Newsletter</span>
             </div>
 
             <h2 className="text-3xl md:text-4xl lg:text-[42px] font-extrabold text-white mb-4 tracking-tight leading-[1.15]">
-              Stay in the <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-300">Loop</span>
+              Stay in the <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#009E3C] to-[#00bc49]">Loop</span>
             </h2>
             <p className="text-white/50 text-base md:text-lg leading-relaxed max-w-md mx-auto lg:mx-0">
               Get exclusive deals, new product announcements, and health tips delivered right to your inbox.
@@ -70,8 +70,8 @@ const NewsLetterSection = () => {
               {isSubscribed ? (
                 /* ✅ Success state */
                 <div className="text-center py-4 animate-in fade-in duration-500">
-                  <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-16 h-16 bg-[#009E3C]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-[#00bc49]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
@@ -80,7 +80,7 @@ const NewsLetterSection = () => {
                     Welcome to the NutriBlend Haven community! Check your inbox for a welcome surprise.
                   </p>
                   <div className="bg-white/[0.07] rounded-xl px-4 py-3 border border-white/[0.1]">
-                    <p className="text-green-300/80 text-sm font-medium">{email}</p>
+                    <p className="text-[#009E3C]/80 text-sm font-medium">{email}</p>
                   </div>
                 </div>
               ) : (
@@ -99,13 +99,13 @@ const NewsLetterSection = () => {
                       placeholder="Enter your email address"
                       required
                       disabled={isLoading}
-                      className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/[0.07] border border-white/[0.1] text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-green-400/40 focus:border-green-400/30 focus:bg-white/[0.1] transition-all duration-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/[0.07] border border-white/[0.1] text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#009E3C]/25 focus:border-[#009E3C]/40 focus:bg-white/[0.1] transition-all duration-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-green-900/40 hover:shadow-xl hover:shadow-green-800/50 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] text-sm flex items-center justify-center gap-2"
+                    className="w-full bg-gradient-to-r from-[#009E3C] to-[#007a2e] hover:from-[#00bc49] hover:to-[#009E3C] text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-[#009E3C]/30 hover:shadow-xl hover:shadow-[#009E3C]/40 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] text-sm flex items-center justify-center gap-2"
                   >
                     {isLoading ? (
                       <>

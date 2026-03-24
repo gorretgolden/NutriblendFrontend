@@ -48,7 +48,7 @@ const SizeSelection = ({ data }: { data: Product }) => {
               "bg-white-50 border border-green-400 flex flex-col items-center justify-center p-3 text-sm rounded-lg transition-all duration-200 min-w-[100px]",
               "hover:bg-green-100 hover:border-green-400 hover:shadow-sm",
               sizeSelection === variation.name
-                ? "bg-green-600 border-green-600 text-white font-medium shadow-md"
+                ? "bg-[#009E3C] border-[#009E3C] text-white font-medium shadow-md"
                 : "text-dark-800"
             ])}
             onClick={() => dispatch(setSizeSelection(variation.name))}

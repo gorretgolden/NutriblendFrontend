@@ -12,9 +12,11 @@ export default function AccountPage() {
   return (
     <div>
       {/* Profile Header */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-700 rounded-2xl p-6 md:p-8 mb-8 text-white">
-        <div className="flex items-center gap-5">
-          <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold backdrop-blur-sm border-2 border-white/30">
+      <div className="bg-gradient-to-br from-[#009E3C] to-[#007a2e] rounded-2xl p-6 md:p-8 mb-8 text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+        <div className="absolute bottom-0 left-12 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 pointer-events-none" />
+        <div className="flex items-center gap-5 relative z-10">
+          <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-2xl font-black backdrop-blur-sm border-2 border-white/25 shadow-lg">
             {(user?.first_name?.[0] || user?.name?.[0] || "").toUpperCase()}
             {(user?.last_name?.[0] || user?.name?.split(' ')[1]?.[0] || "").toUpperCase()}
           </div>
@@ -23,9 +25,9 @@ export default function AccountPage() {
               {user?.first_name || user?.name?.split(' ')[0] || ''}{' '}
               {user?.last_name || (user?.name?.split(' ').slice(1).join(' ') || '')}
             </h1>
-            <p className="text-green-100 text-sm mt-1">{user?.email}</p>
+            <p className="text-white/70 text-sm mt-1">{user?.email}</p>
             {(user?.phone || user?.contact) && (
-              <p className="text-green-100 text-sm">{user?.phone || user?.contact}</p>
+              <p className="text-white/70 text-sm">{user?.phone || user?.contact}</p>
             )}
           </div>
         </div>
@@ -41,7 +43,7 @@ export default function AccountPage() {
           </h3>
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <FiUser className="text-green-600 w-5 h-5 flex-shrink-0" />
+              <FiUser className="text-[#009E3C] w-5 h-5 flex-shrink-0" />
               <div>
                 <p className="text-xs text-gray-500">Full Name</p>
                 <p className="text-sm font-semibold text-gray-800">
@@ -51,7 +53,7 @@ export default function AccountPage() {
               </div>
             </div>
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <FiMail className="text-green-600 w-5 h-5 flex-shrink-0" />
+              <FiMail className="text-[#009E3C] w-5 h-5 flex-shrink-0" />
               <div>
                 <p className="text-xs text-gray-500">Email</p>
                 <p className="text-sm font-semibold text-gray-800">{user?.email}</p>
@@ -68,23 +70,23 @@ export default function AccountPage() {
           <div className="space-y-2">
             <Link
               href="/account/order"
-              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-green-50 hover:text-green-700 transition-colors group"
+              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-[#009E3C]/8 hover:text-[#009E3C] transition-colors group"
             >
-              <FiBox className="w-5 h-5 text-gray-400 group-hover:text-green-600" />
+              <FiBox className="w-5 h-5 text-gray-400 group-hover:text-[#009E3C]" />
               <span className="text-sm font-medium">View My Orders</span>
             </Link>
             <Link
               href="/account/mylist"
-              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-green-50 hover:text-green-700 transition-colors group"
+              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-[#009E3C]/8 hover:text-[#009E3C] transition-colors group"
             >
-              <FiHeart className="w-5 h-5 text-gray-400 group-hover:text-green-600" />
+              <FiHeart className="w-5 h-5 text-gray-400 group-hover:text-[#009E3C]" />
               <span className="text-sm font-medium">My Wishlist</span>
             </Link>
             <Link
               href="/account/manage"
-              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-green-50 hover:text-green-700 transition-colors group"
+              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-[#009E3C]/8 hover:text-[#009E3C] transition-colors group"
             >
-              <FiUser className="w-5 h-5 text-gray-400 group-hover:text-green-600" />
+              <FiUser className="w-5 h-5 text-gray-400 group-hover:text-[#009E3C]" />
               <span className="text-sm font-medium">Edit Profile</span>
             </Link>
           </div>

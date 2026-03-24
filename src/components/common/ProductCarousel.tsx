@@ -67,7 +67,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
             <div>
               <div className="flex items-center gap-3 mb-1">
                 {badge && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md shadow-green-200/50 animate-pulse">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#009E3C] text-white shadow-md shadow-[#009E3C]/25 animate-pulse">
                     {badge}
                   </span>
                 )}
@@ -97,7 +97,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
             <button
               onClick={() => scroll('left')}
               className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10 w-11 h-11 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 border border-gray-100 ${canScrollLeft
-                ? 'hover:bg-green-600 hover:text-white hover:border-green-600 hover:shadow-green-200/50 hover:scale-110 opacity-0 group-hover/carousel:opacity-100'
+                ? 'hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C] hover:shadow-[#009E3C]/20 hover:scale-110 opacity-0 group-hover/carousel:opacity-100'
                 : 'opacity-0 pointer-events-none'
                 }`}
               aria-label="Previous products"
@@ -113,7 +113,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
             <button
               onClick={() => scroll('right')}
               className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-10 w-11 h-11 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 border border-gray-100 ${canScrollRight
-                ? 'hover:bg-green-600 hover:text-white hover:border-green-600 hover:shadow-green-200/50 hover:scale-110 opacity-0 group-hover/carousel:opacity-100'
+                ? 'hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C] hover:shadow-[#009E3C]/20 hover:scale-110 opacity-0 group-hover/carousel:opacity-100'
                 : 'opacity-0 pointer-events-none'
                 }`}
               aria-label="Next products"

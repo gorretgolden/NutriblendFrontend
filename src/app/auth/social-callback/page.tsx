@@ -127,7 +127,7 @@ function SocialCallbackContent() {
                             <p className="text-gray-500 mb-4">{message}</p>
                             <button
                                 onClick={() => router.push("/")}
-                                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                                className="px-6 py-2 bg-[#009E3C] text-white rounded-lg hover:bg-[#00752C] transition-colors"
                             >
                                 Try Again
                             </button>

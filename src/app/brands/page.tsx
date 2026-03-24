@@ -61,7 +61,7 @@ export default function BrandsPage() {
             placeholder="Search for a brand..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 shadow-sm focus:ring-2 focus:ring-[#009E3C]/15 focus:outline-none"
             disabled={loading}
           />
         </div>
@@ -78,7 +78,7 @@ export default function BrandsPage() {
             <p className="text-red-600 mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="px-6 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition"
+              className="px-6 py-3 bg-[#009E3C] text-white font-semibold rounded-xl hover:bg-[#00752C] transition"
             >
               Try Again
             </button>
@@ -110,7 +110,7 @@ export default function BrandsPage() {
                     </span>
                   </div>
                 )}
-                <span className="absolute bottom-0 left-0 right-0 bg-green-600 text-white text-sm font-medium text-center py-1 opacity-0 group-hover:opacity-100 transition">
+                <span className="absolute bottom-0 left-0 right-0 bg-[#009E3C] text-white text-sm font-medium text-center py-1 opacity-0 group-hover:opacity-100 transition">
                   {brand.name}
                 </span>
               </Link>
@@ -126,7 +126,7 @@ export default function BrandsPage() {
             </p>
             <Link
               href="/shop"
-              className="px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-md hover:bg-green-700 hover:shadow-lg transition"
+              className="px-6 py-3 bg-[#009E3C] text-white font-semibold rounded-xl shadow-md hover:bg-[#00752C] hover:shadow-lg transition"
             >
               Explore All Products
             </Link>

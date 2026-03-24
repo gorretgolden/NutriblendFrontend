@@ -60,7 +60,7 @@ export default function WholesaleRegisterPage() {
                         </p>
                         <Link
                             href="/"
-                            className="inline-block w-full rounded-lg bg-green-600 px-4 py-3 text-base font-bold text-white transition-all duration-300 hover:bg-green-700 hover:shadow-lg"
+                            className="inline-block w-full rounded-lg bg-[#009E3C] px-4 py-3 text-base font-bold text-white transition-all duration-300 hover:bg-[#00752C] hover:shadow-lg"
                         >
                             Return to Homepage
                         </Link>
@@ -74,7 +74,7 @@ export default function WholesaleRegisterPage() {
         <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 flex items-center justify-center py-12 px-4">
             <div className="w-full max-w-xl">
                 <div className="bg-white rounded-3xl shadow-2xl border border-green-100 overflow-hidden">
-                    <div className="bg-green-600 p-8 text-center text-white">
+                    <div className="bg-[#009E3C] p-8 text-center text-white">
                         <h1 className="text-3xl font-bold">Wholesale Program</h1>
                         <p className="mt-2 opacity-90">Partner with NutriBlend Haven for premium health products</p>
                     </div>
@@ -90,7 +90,7 @@ export default function WholesaleRegisterPage() {
                                         required
                                         minLength={3}
                                         disabled={isLoading}
-                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                         placeholder="Enter your name"
                                         value={formData.name}
                                         onChange={handleChange}
@@ -104,7 +104,7 @@ export default function WholesaleRegisterPage() {
                                         required
                                         minLength={9}
                                         disabled={isLoading}
-                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                         placeholder="+256..."
                                         value={formData.phone}
                                         onChange={handleChange}
@@ -119,7 +119,7 @@ export default function WholesaleRegisterPage() {
                                     name="email"
                                     required
                                     disabled={isLoading}
-                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="your@business.com"
                                     value={formData.email}
                                     onChange={handleChange}
@@ -134,7 +134,7 @@ export default function WholesaleRegisterPage() {
                                     required
                                     disabled={isLoading}
                                     minLength={8}
-                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="••••••••"
                                     value={formData.password}
                                     onChange={handleChange}
@@ -151,7 +151,7 @@ export default function WholesaleRegisterPage() {
                                     required
                                     minLength={3}
                                     disabled={isLoading}
-                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="Legal Business Name"
                                     value={formData.wholesale_business_name}
                                     onChange={handleChange}
@@ -166,7 +166,7 @@ export default function WholesaleRegisterPage() {
                                     minLength={20}
                                     disabled={isLoading}
                                     rows={4}
-                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-50 transition-all resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="Describe your business, location, and registration details (min. 20 characters)..."
                                     value={formData.wholesale_business_details}
                                     onChange={handleChange}
@@ -177,7 +177,7 @@ export default function WholesaleRegisterPage() {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full rounded-xl bg-green-600 py-4 text-lg font-bold text-white transition-all duration-300 hover:bg-green-700 hover:shadow-xl hover:shadow-green-200/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full rounded-xl bg-[#009E3C] py-4 text-lg font-bold text-white transition-all duration-300 hover:bg-[#00752C] hover:shadow-xl hover:shadow-[#009E3C]/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isLoading ? "Submitting..." : "Submit Wholesale Application"}
                                 </button>

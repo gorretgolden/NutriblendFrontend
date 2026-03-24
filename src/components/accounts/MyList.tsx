@@ -81,7 +81,7 @@ const MyList = () => {
         <p className="text-gray-400 text-sm mb-6">Start adding products you love by clicking the heart icon.</p>
         <Link
           href="/shop"
-          className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors"
+          className="inline-flex items-center gap-2 bg-[#009E3C] text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#00752C] transition-colors"
         >
           Browse Products
           <FiExternalLink className="w-4 h-4" />
@@ -128,7 +128,7 @@ const MyList = () => {
           return (
             <div
               key={item.id}
-              className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:shadow-green-900/5 transition-all duration-300 hover:-translate-y-0.5"
+              className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:shadow-[#009E3C]/5 transition-all duration-300 hover:-translate-y-0.5"
             >
               {/* Product Image */}
               <div className="relative bg-gradient-to-b from-gray-50 to-white h-44 flex items-center justify-center p-4">
@@ -166,13 +166,13 @@ const MyList = () => {
               {/* Product Info */}
               <div className="p-4">
                 {product.brand && (
-                  <p className="text-green-600 text-[10px] font-bold uppercase tracking-widest mb-1 opacity-70">
+                  <p className="text-[#009E3C] text-[10px] font-bold uppercase tracking-widest mb-1 opacity-70">
                     {typeof product.brand === "string" ? product.brand : product.brand.name}
                   </p>
                 )}
                 <Link
                   href={`/shop/product/${product.id}/${product.slug || ""}`}
-                  className="text-gray-800 text-sm font-bold line-clamp-2 hover:text-green-600 transition-colors duration-200 leading-snug mb-2 block"
+                  className="text-gray-800 text-sm font-bold line-clamp-2 hover:text-[#009E3C] transition-colors duration-200 leading-snug mb-2 block"
                 >
                   {(product.name || product.title || "").split(",")[0]}
                 </Link>
@@ -193,7 +193,7 @@ const MyList = () => {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleMoveToCart(item.product_id)}
-                    className="flex-1 flex items-center justify-center gap-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-all duration-200 active:scale-95 shadow-sm"
+                    className="flex-1 flex items-center justify-center gap-1.5 bg-[#009E3C] hover:bg-[#00752C] text-white text-sm font-semibold py-2.5 rounded-xl transition-all duration-200 active:scale-95 shadow-sm"
                   >
                     <FiShoppingCart className="w-4 h-4" />
                     Move to Cart

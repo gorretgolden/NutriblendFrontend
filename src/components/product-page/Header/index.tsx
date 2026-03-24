@@ -17,7 +17,7 @@ const Header = ({ data }: { data: Product }) => {
   const isUsingWholesalePrice = isWholesaleUser && !!data.wholesale_price;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
         {/* Left column — Photo gallery */}
         <div className="bg-white p-4 md:p-8 border-r border-gray-100">
@@ -72,7 +72,7 @@ const Header = ({ data }: { data: Product }) => {
           </div>
 
           {/* Price Block — iHerb-style prominent pricing */}
-          <div className="bg-[#f9faf9] rounded-lg p-4 mb-4 border border-gray-100">
+          <div className="bg-gradient-to-br from-[#f0fbf4] to-[#f8fffe] rounded-xl p-4 mb-4 border border-[#009E3C]/12">
             {isUsingWholesalePrice && (
               <div className="flex items-center gap-2 mb-2">
                 <span className="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">WHOLESALE</span>
@@ -156,25 +156,28 @@ const Header = ({ data }: { data: Product }) => {
           </div>
 
           {/* Trust indicators */}
-          <div className="mt-4 grid grid-cols-3 gap-3">
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <svg className="w-4 h-4 text-[#009E3C] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              Authentic
-            </div>
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <svg className="w-4 h-4 text-[#009E3C] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-              </svg>
-              Fast Shipping
-            </div>
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <svg className="w-4 h-4 text-[#009E3C] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Easy Returns
-            </div>
+          <div className="mt-5 grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
+            {[
+              {
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />,
+                label: "100% Authentic",
+              },
+              {
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />,
+                label: "Fast Delivery",
+              },
+              {
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />,
+                label: "Easy Returns",
+              },
+            ].map((item, i) => (
+              <div key={i} className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-[#f0fbf4] border border-[#009E3C]/10 text-center">
+                <svg className="w-5 h-5 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {item.icon}
+                </svg>
+                <span className="text-[11px] font-bold text-[#007a2e] leading-tight">{item.label}</span>
+              </div>
+            ))}
           </div>
 
           <ChatHelp />

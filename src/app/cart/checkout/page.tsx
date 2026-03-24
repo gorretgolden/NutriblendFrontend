@@ -249,8 +249,8 @@ export default function Checkout() {
 
   if (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading) {
     return (
-      <div className="min-h-screen bg-green-50 flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-green-600 animate-spin" />
+      <div className="min-h-screen bg-[#f2f4f3] flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-[#009E3C] animate-spin" />
       </div>
     );
   }
@@ -270,7 +270,7 @@ export default function Checkout() {
             <h1 className="text-xl md:text-2xl font-bold text-gray-900">Checkout</h1>
           </div>
           <div className="flex items-center gap-1.5 text-gray-500 text-sm">
-            <svg className="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="h-4 w-4 text-[#009E3C]" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
             </svg>
             <span>Secure Checkout</span>
@@ -287,12 +287,12 @@ export default function Checkout() {
             {/* Step 1: Customer Info */}
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
               <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
-                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center">1</span>
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#009E3C] text-white text-xs font-bold flex items-center justify-center">1</span>
                 <h2 className="font-semibold text-gray-900">Customer Information</h2>
               </div>
               <div className="p-5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-10 h-10 rounded-xl bg-[#009E3C] flex items-center justify-center text-white font-bold text-sm shadow-[0_4px_10px_rgba(0,158,60,0.30)]">
                     {(user?.first_name || user?.name || 'U').charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -306,7 +306,7 @@ export default function Checkout() {
             {/* Step 2: Delivery */}
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
               <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
-                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center">2</span>
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#009E3C] text-white text-xs font-bold flex items-center justify-center">2</span>
                 <h2 className="font-semibold text-gray-900">Delivery Information</h2>
               </div>
               <div className="p-5 space-y-4">
@@ -317,7 +317,7 @@ export default function Checkout() {
                     <select
                       value={selectedRegion || ""}
                       onChange={(e) => setSelectedRegion(Number(e.target.value))}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors"
                       disabled={loadingRegions}
                     >
                       <option value="">Select Region</option>
@@ -346,7 +346,7 @@ export default function Checkout() {
                           setDeliveryFee(selectedTownObj.delivery_fee);
                         }
                       }}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors"
                       disabled={!selectedRegion || towns.length === 0}
                     >
                       <option value="">Select Town</option>
@@ -366,7 +366,7 @@ export default function Checkout() {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="e.g. Plot 12, Kampala Road, near Total Petrol Station..."
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors resize-none"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors resize-none"
                     rows={3}
                   />
                 </div>
@@ -380,7 +380,7 @@ export default function Checkout() {
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Any special instructions for delivery..."
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors resize-none"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors resize-none"
                     rows={2}
                   />
                 </div>
@@ -390,15 +390,15 @@ export default function Checkout() {
             {/* Step 3: Payment */}
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
               <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
-                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center">3</span>
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#009E3C] text-white text-xs font-bold flex items-center justify-center">3</span>
                 <h2 className="font-semibold text-gray-900">Payment Method</h2>
               </div>
               <div className="p-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'cod' ? 'border-green-500 bg-green-50/40' : 'border-gray-200 hover:border-gray-300'}`}>
+                  <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'cod' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
                     <input
                       type="radio"
-                      className="h-4 w-4 text-green-600 focus:ring-green-500"
+                      className="h-4 w-4 accent-[#009E3C]"
                       checked={paymentMethod === 'cod'}
                       onChange={() => setPaymentMethod('cod')}
                     />
@@ -410,10 +410,10 @@ export default function Checkout() {
                     </div>
                   </label>
 
-                  <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'flutterwave' ? 'border-green-500 bg-green-50/40' : 'border-gray-200 hover:border-gray-300'}`}>
+                  <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'flutterwave' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
                     <input
                       type="radio"
-                      className="h-4 w-4 text-green-600 focus:ring-green-500"
+                      className="h-4 w-4 accent-[#009E3C]"
                       checked={paymentMethod === 'flutterwave'}
                       onChange={() => setPaymentMethod('flutterwave')}
                     />
@@ -432,7 +432,7 @@ export default function Checkout() {
           {/* Right Column — Order Summary */}
           <div className="lg:w-1/3">
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm sticky top-20">
-              <div className="bg-gradient-to-r from-gray-900 to-gray-800 px-5 py-4">
+              <div className="bg-gradient-to-br from-[#009E3C] to-[#007a2e] px-5 py-4">
                 <h2 className="font-semibold text-white flex items-center gap-2">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -465,7 +465,7 @@ export default function Checkout() {
                     <span className="font-medium text-gray-900">{deliveryFee > 0 ? `UGX ${deliveryFee.toLocaleString()}` : 'Free'}</span>
                   </div>
                   {discountAmount > 0 && (
-                    <div className="flex justify-between text-sm text-green-600">
+                    <div className="flex justify-between text-sm text-[#009E3C]">
                       <span>Discount</span>
                       <span>-UGX {discountAmount.toLocaleString()}</span>
                     </div>
@@ -480,7 +480,7 @@ export default function Checkout() {
                       placeholder="Enter promo code"
                       value={discountCode}
                       onChange={(e) => setDiscountCode(e.target.value)}
-                      className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm"
+                      className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none text-sm"
                     />
                     <button
                       onClick={handleApplyDiscount}
@@ -499,7 +499,7 @@ export default function Checkout() {
                 <button
                   onClick={handlePlaceOrder}
                   disabled={loading || !selectedRegion || !selectedTown || !address}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3.5 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-green-600/20 disabled:shadow-none"
+                  className="w-full bg-[#009E3C] text-white py-3.5 rounded-xl font-bold hover:bg-[#00752C] transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(0,158,60,0.30)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.40)] disabled:shadow-none active:scale-[0.98]"
                 >
                   {loading && <Loader2 className="w-5 h-5 animate-spin" />}
                   {loading ? 'Processing...' : 'Confirm Order'}

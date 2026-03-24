@@ -78,7 +78,7 @@ export default function AccountLayout({
                     className={cn(
                       "flex items-center px-4 py-3 rounded-lg transition-colors duration-200",
                       isActive(item)
-                        ? "bg-green-50 text-green-600 font-medium"
+                        ? "bg-[#009E3C]/8 text-[#009E3C] font-medium"
                         : "text-gray-700 hover:bg-gray-100"
                     )}
                   >
@@ -104,7 +104,7 @@ export default function AccountLayout({
                       className={cn(
                         "flex items-center px-4 py-3 rounded-lg transition-colors duration-200",
                         isActive(item)
-                          ? "bg-green-50 text-green-600 font-medium"
+                          ? "bg-[#009E3C]/8 text-[#009E3C] font-medium"
                           : "text-gray-700 hover:bg-gray-100"
                       )}
                     >

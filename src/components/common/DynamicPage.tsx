@@ -109,7 +109,7 @@ const DynamicPage: React.FC<DynamicPageProps> = ({ slug, type }) => {
         switch (section.type) {
             case 'hero':
                 return (
-                    <section key={index} className="relative bg-gradient-to-br from-green-600 via-emerald-600 to-green-700 text-white py-16 md:py-20 text-center overflow-hidden">
+                    <section key={index} className="relative bg-gradient-to-br from-[#009E3C] via-[#007a2e] to-[#00752C] text-white py-16 md:py-20 text-center overflow-hidden">
                         {/* Decorative elements */}
                         <div className="absolute inset-0 opacity-10">
                             <div className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />

@@ -79,13 +79,13 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 flex items-center justify-center py-12 px-4">
+        <div className="min-h-screen bg-[#f2f4f3] flex items-center justify-center py-12 px-4">
             <div className="w-full max-w-lg">
-                <div className="bg-white rounded-2xl shadow-xl border border-green-100 p-8">
+                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
                     {/* Header */}
                     <div className="text-center mb-8">
-                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-16 h-16 bg-[#009E3C]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <svg className="w-8 h-8 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                             </svg>
                         </div>
@@ -107,7 +107,7 @@ export default function RegisterPage() {
                                     type="text"
                                     name="firstName"
                                     placeholder="John"
-                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
                                     value={formData.firstName}
                                     onChange={handleInputChange}
                                     required
@@ -120,7 +120,7 @@ export default function RegisterPage() {
                                     type="text"
                                     name="lastName"
                                     placeholder="Doe"
-                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
                                     value={formData.lastName}
                                     onChange={handleInputChange}
                                     required
@@ -135,7 +135,7 @@ export default function RegisterPage() {
                                 type="email"
                                 name="email"
                                 placeholder="your@email.com"
-                                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
                                 value={formData.email}
                                 onChange={handleInputChange}
                                 required
@@ -149,7 +149,7 @@ export default function RegisterPage() {
                                 type="tel"
                                 name="phone"
                                 placeholder="+256 7XX XXX XXX"
-                                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
                                 value={formData.phone}
                                 onChange={handleInputChange}
                                 required
@@ -164,7 +164,7 @@ export default function RegisterPage() {
                                     type={showPassword ? "text" : "password"}
                                     name="password"
                                     placeholder="Min 8 characters"
-                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all pr-10"
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all pr-10"
                                     value={formData.password}
                                     onChange={handleInputChange}
                                     required
@@ -174,7 +174,7 @@ export default function RegisterPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-9 text-gray-400 hover:text-green-600"
+                                    className="absolute right-3 top-9 text-gray-400 hover:text-[#009E3C]"
                                 >
                                     {showPassword ? "Hide" : "Show"}
                                 </button>
@@ -185,7 +185,7 @@ export default function RegisterPage() {
                                     type={showConfirmPassword ? "text" : "password"}
                                     name="confirmPassword"
                                     placeholder="Repeat password"
-                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all pr-10"
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all pr-10"
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
                                     required
@@ -194,7 +194,7 @@ export default function RegisterPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute right-3 top-9 text-gray-400 hover:text-green-600"
+                                    className="absolute right-3 top-9 text-gray-400 hover:text-[#009E3C]"
                                 >
                                     {showConfirmPassword ? "Hide" : "Show"}
                                 </button>
@@ -211,7 +211,7 @@ export default function RegisterPage() {
                                     name="newsletter"
                                     checked={formData.newsletter}
                                     onChange={handleInputChange}
-                                    className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                    className="h-4 w-4 rounded border-gray-300 accent-[#009E3C]"
                                 />
                                 <span className="text-sm text-gray-600">Send me special offers & health tips</span>
                             </label>
@@ -222,12 +222,12 @@ export default function RegisterPage() {
                                     checked={formData.terms}
                                     onChange={handleInputChange}
                                     required
-                                    className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                    className="h-4 w-4 rounded border-gray-300 accent-[#009E3C]"
                                 />
                                 <span className="text-sm text-gray-600">
                                     I agree to the{" "}
-                                    <Link href="/terms" className="text-green-600 hover:underline">Terms</Link> &{" "}
-                                    <Link href="/privacy" className="text-green-600 hover:underline">Privacy Policy</Link>
+                                    <Link href="/terms" className="text-[#009E3C] hover:underline">Terms</Link> &{" "}
+                                    <Link href="/privacy" className="text-[#009E3C] hover:underline">Privacy Policy</Link>
                                 </span>
                             </label>
                         </div>
@@ -235,7 +235,7 @@ export default function RegisterPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full rounded-lg bg-green-600 px-4 py-3 text-base font-bold text-white transition-all duration-300 hover:bg-green-700 hover:shadow-lg disabled:opacity-50"
+                            className="w-full rounded-lg bg-[#009E3C] px-4 py-3 text-base font-bold text-white transition-all duration-200 hover:bg-[#00752C] shadow-[0_4px_14px_rgba(0,158,60,0.30)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.40)] disabled:opacity-50"
                         >
                             {isLoading ? "Creating Account..." : "Create Account"}
                         </button>
@@ -268,11 +268,11 @@ export default function RegisterPage() {
                             Already have an account?{" "}
                             <Link href="/login" className="text-green-600 font-bold hover:underline">Sign In</Link>
                         </p>
-                        <div className="bg-green-50 p-4 rounded-xl border border-green-100">
-                            <p className="text-xs text-green-700 font-semibold mb-1 uppercase tracking-wider">Business Account</p>
+                        <div className="bg-[#009E3C]/6 p-4 rounded-2xl border border-[#009E3C]/15">
+                            <p className="text-xs text-[#007a2e] font-semibold mb-1 uppercase tracking-wider">Business Account</p>
                             <Link
                                 href="/auth/register-wholesale"
-                                className="text-sm text-green-700 font-bold hover:text-green-800 transition-colors"
+                                className="text-sm text-[#009E3C] font-bold hover:text-[#007a2e] transition-colors"
                             >
                                 Apply for Wholesale Access →
                             </Link>

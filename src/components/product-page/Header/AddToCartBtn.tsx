@@ -29,7 +29,7 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
   return (
     <button
       type="button"
-      className="bg-green-600 hover:bg-green-700 w-full ml-3 sm:ml-5 rounded-full h-11 md:h-[52px] text-sm sm:text-base text-white transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+      className="bg-[#009E3C] hover:bg-[#00752C] w-full ml-3 sm:ml-5 rounded-full h-11 md:h-[52px] text-sm sm:text-base text-white transition-all duration-300 shadow-[0_4px_14px_rgba(0,158,60,0.28)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.38)] transform hover:scale-[1.02]"
       onClick={async () => {
         try {
           await dispatch(

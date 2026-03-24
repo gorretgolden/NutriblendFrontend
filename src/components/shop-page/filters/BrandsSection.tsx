@@ -49,7 +49,7 @@ const BrandsSection = () => {
                             <Link
                                 key={brand.id}
                                 href={`/shop?brand_id=${brand.id}`}
-                                className="bg-gray-100 px-4 py-2 rounded-full text-xs font-medium text-gray-700 hover:bg-green-600 hover:text-white transition-colors"
+                                className="bg-gray-100 px-4 py-2 rounded-full text-xs font-medium text-gray-700 hover:bg-[#009E3C] hover:text-white transition-colors"
                             >
                                 {brand.name}
                             </Link>

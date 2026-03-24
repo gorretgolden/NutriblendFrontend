@@ -15,7 +15,7 @@ const Filters = () => {
       <BrandsSection />
       <Button
         type="button"
-        className="bg-black w-full rounded-full text-sm font-medium py-4 h-12"
+        className="bg-[#009E3C] hover:bg-[#00752C] w-full rounded-xl text-sm font-bold py-3 h-11 transition-colors shadow-[0_4px_12px_rgba(0,158,60,0.25)]"
       >
         Apply Filter
       </Button>

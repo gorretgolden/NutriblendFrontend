@@ -66,8 +66,8 @@ const WishlistButton = ({
                 onClick={handleToggle}
                 disabled={isProcessing}
                 className={`group/wish relative flex items-center justify-center w-11 h-11 md:w-[52px] md:h-[52px] rounded-full border-2 transition-all duration-300 ${isInWishlist
-                    ? "border-green-200 bg-green-50 hover:bg-green-100"
-                    : "border-gray-200 bg-white hover:border-green-300 hover:bg-green-50"
+                    ? "border-[#009E3C]/30 bg-[#009E3C]/8 hover:bg-[#009E3C]/12"
+                    : "border-gray-200 bg-white hover:border-[#009E3C]/40 hover:bg-[#009E3C]/5"
                     } ${isProcessing ? "opacity-60 cursor-wait" : ""} ${className}`}
                 aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
                 title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
@@ -75,8 +75,8 @@ const WishlistButton = ({
                 <svg
                     className={`w-5 h-5 md:w-6 md:h-6 transition-all duration-300 ${isAnimating ? "scale-125" : "scale-100"
                         } ${isInWishlist
-                            ? "fill-green-500 text-green-500"
-                            : "fill-none text-gray-400 group-hover/wish:text-green-400"
+                            ? "fill-[#009E3C] text-[#009E3C]"
+                            : "fill-none text-gray-400 group-hover/wish:text-[#009E3C]"
                         }`}
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -90,7 +90,7 @@ const WishlistButton = ({
                 </svg>
                 {/* Pulse animation on click */}
                 {isAnimating && (
-                    <span className="absolute inset-0 rounded-full animate-ping bg-green-200/50 pointer-events-none" />
+                    <span className="absolute inset-0 rounded-full animate-ping bg-[#009E3C]/20 pointer-events-none" />
                 )}
             </button>
         );
@@ -102,8 +102,8 @@ const WishlistButton = ({
             onClick={handleToggle}
             disabled={isProcessing}
             className={`group/wish relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 backdrop-blur-sm ${isInWishlist
-                ? "bg-green-500 shadow-lg shadow-green-300/50"
-                : "bg-white/90 shadow-md hover:bg-green-50 hover:shadow-lg"
+                ? "bg-[#009E3C] shadow-lg shadow-[#009E3C]/30"
+                : "bg-white/90 shadow-md hover:bg-[#009E3C]/6 hover:shadow-lg"
                 } ${isProcessing ? "opacity-60 cursor-wait" : ""} ${className}`}
             aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
             title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
@@ -112,7 +112,7 @@ const WishlistButton = ({
                 className={`w-4 h-4 transition-all duration-300 ${isAnimating ? "scale-125" : "scale-100"
                     } ${isInWishlist
                         ? "fill-white text-white"
-                        : "fill-none text-gray-500 group-hover/wish:text-green-500"
+                        : "fill-none text-gray-500 group-hover/wish:text-[#009E3C]"
                     }`}
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -127,7 +127,7 @@ const WishlistButton = ({
             {/* Pulse animation on click */}
             {isAnimating && (
                 <span
-                    className={`absolute inset-0 rounded-full animate-ping pointer-events-none ${isInWishlist ? "bg-white/30" : "bg-green-200/50"
+                    className={`absolute inset-0 rounded-full animate-ping pointer-events-none ${isInWishlist ? "bg-white/30" : "bg-[#009E3C]/20"
                         }`}
                 />
             )}

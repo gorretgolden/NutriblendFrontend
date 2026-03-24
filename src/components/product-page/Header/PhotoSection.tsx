@@ -138,7 +138,7 @@ const PhotoSection = ({ data }: { data: Product }) => {
                   e.stopPropagation();
                   setIsZoomed(true);
                 }}
-                className="bg-green-600 text-white p-2 rounded-full shadow-md"
+                className="bg-[#009E3C] text-white p-2 rounded-full shadow-md"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -150,7 +150,7 @@ const PhotoSection = ({ data }: { data: Product }) => {
                     e.stopPropagation();
                     setIsZoomed(false);
                   }}
-                  className="bg-green-600 text-white p-2 rounded-full shadow-md"
+                  className="bg-[#009E3C] text-white p-2 rounded-full shadow-md"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 12H6" />

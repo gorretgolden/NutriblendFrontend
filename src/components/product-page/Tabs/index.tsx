@@ -42,8 +42,8 @@ const Tabs = ({ data }: { data: Product }) => {
             type="button"
             className={cn([
               active === tab.id
-                ? "border-green-600 border-b-2 font-bold text-green-700"
-                : "border-b border-transparent text-gray-500 font-normal hover:text-green-600",
+                ? "border-[#009E3C] border-b-2 font-bold text-[#009E3C]"
+                : "border-b border-transparent text-gray-500 font-normal hover:text-[#009E3C]",
               "px-6 py-4 rounded-none transition-all duration-200",
             ])}
             onClick={() => setActive(tab.id)}

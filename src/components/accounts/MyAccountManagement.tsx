@@ -118,7 +118,7 @@ export default function MyAccountManagement() {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-md">
+        <div className="w-16 h-16 bg-[#009E3C] rounded-2xl flex items-center justify-center text-white text-xl font-bold shadow-[0_4px_14px_rgba(0,158,60,0.30)]">
           {initials}
         </div>
         <div>
@@ -129,7 +129,7 @@ export default function MyAccountManagement() {
 
       {/* Profile Information */}
       <div className="bg-gray-50 rounded-xl border border-gray-100 overflow-hidden">
-        <div className="bg-gradient-to-r from-green-600 to-emerald-700 px-5 py-4">
+        <div className="bg-gradient-to-br from-[#009E3C] to-[#007a2e] px-5 py-4">
           <h3 className="text-base font-semibold text-white flex items-center gap-2">
             <FiUser className="w-4 h-4" /> Profile Information
           </h3>
@@ -147,7 +147,7 @@ export default function MyAccountManagement() {
                 value={formData.name}
                 onChange={handleProfileChange}
                 placeholder="Enter your full name"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
               />
             </div>
 
@@ -161,7 +161,7 @@ export default function MyAccountManagement() {
                 value={formData.email}
                 onChange={handleProfileChange}
                 placeholder="Enter your email"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
               />
             </div>
 
@@ -175,7 +175,7 @@ export default function MyAccountManagement() {
                 value={formData.phone}
                 onChange={handleProfileChange}
                 placeholder="Enter your phone number"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
               />
             </div>
           </div>
@@ -184,7 +184,7 @@ export default function MyAccountManagement() {
             <button
               type="submit"
               disabled={isSavingProfile}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:from-green-600 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50"
+              className="inline-flex items-center gap-2 bg-[#009E3C] text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-[#00752C] transition-all shadow-[0_4px_12px_rgba(0,158,60,0.28)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.38)] disabled:opacity-50 disabled:shadow-none"
             >
               <FiSave className="w-4 h-4" />
               {isSavingProfile ? "Saving..." : "Save Profile"}
@@ -215,7 +215,7 @@ export default function MyAccountManagement() {
                   onChange={handlePasswordChange}
                   required
                   placeholder="Enter your current password"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
                 />
                 <button
                   type="button"
@@ -239,7 +239,7 @@ export default function MyAccountManagement() {
                   onChange={handlePasswordChange}
                   required
                   placeholder="Enter new password"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
                 />
                 <button
                   type="button"
@@ -264,7 +264,7 @@ export default function MyAccountManagement() {
                   onChange={handlePasswordChange}
                   required
                   placeholder="Confirm new password"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
                 />
                 <button
                   type="button"
@@ -281,7 +281,7 @@ export default function MyAccountManagement() {
             <button
               type="submit"
               disabled={isSavingPassword}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-gray-700 to-gray-800 text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:from-gray-800 hover:to-gray-900 transition-all shadow-md hover:shadow-lg disabled:opacity-50"
+              className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-[#2d2d2d] transition-all shadow-sm hover:shadow-md disabled:opacity-50"
             >
               <FiLock className="w-4 h-4" />
               {isSavingPassword ? "Updating..." : "Update Password"}

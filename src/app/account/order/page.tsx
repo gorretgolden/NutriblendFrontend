@@ -81,7 +81,7 @@ export default function OrdersPage() {
     switch (status?.toLowerCase()) {
       case "pending": return "bg-yellow-50 text-yellow-700 border-yellow-200";
       case "processing": return "bg-blue-50 text-blue-700 border-blue-200";
-      case "completed": case "delivered": return "bg-green-50 text-green-700 border-green-200";
+      case "completed": case "delivered": return "bg-[#f0fbf4] text-[#007a2e] border-[#009E3C]/25";
       case "cancelled": return "bg-red-50 text-red-700 border-red-200";
       default: return "bg-gray-50 text-gray-700 border-gray-200";
     }
@@ -89,7 +89,7 @@ export default function OrdersPage() {
 
   const getPaymentBadge = (status: string) => {
     switch (status?.toLowerCase()) {
-      case "paid": return <span className="text-xs text-green-600 font-medium">Paid</span>;
+      case "paid": return <span className="text-xs text-[#009E3C] font-medium">Paid</span>;
       case "pending": return <span className="text-xs text-amber-600 font-medium">Payment pending</span>;
       default: return <span className="text-xs text-gray-500 font-medium">{status}</span>;
     }
@@ -98,7 +98,7 @@ export default function OrdersPage() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <FiLoader className="w-8 h-8 text-green-500 animate-spin mb-3" />
+        <FiLoader className="w-8 h-8 text-[#009E3C] animate-spin mb-3" />
         <p className="text-gray-500 text-sm">Loading your orders...</p>
       </div>
     );
@@ -123,7 +123,7 @@ export default function OrdersPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none cursor-pointer"
+              className="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] appearance-none cursor-pointer"
             >
               {STATUS_OPTIONS.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -149,14 +149,14 @@ export default function OrdersPage() {
           {statusFilter !== 'all' ? (
             <button
               onClick={() => setStatusFilter('all')}
-              className="px-5 py-2 text-sm font-medium text-green-600 border border-green-200 rounded-lg hover:bg-green-50 transition"
+              className="px-5 py-2 text-sm font-medium text-[#009E3C] border border-[#009E3C]/25 rounded-lg hover:bg-[#009E3C]/6 transition"
             >
               Clear Filter
             </button>
           ) : (
             <button
               onClick={() => router.push('/')}
-              className="px-6 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition"
+              className="px-6 py-2.5 bg-[#009E3C] text-white rounded-lg text-sm font-medium hover:bg-[#00752C] transition"
             >
               Browse Products
             </button>
@@ -223,7 +223,7 @@ export default function OrdersPage() {
                         <p className="text-sm font-bold text-gray-900">
                           {formatPrice(Number(order.grand_total || 0))}
                         </p>
-                        <FiChevronRight className="w-4 h-4 text-gray-400 ml-auto mt-1 group-hover:text-green-500 transition-colors" />
+                        <FiChevronRight className="w-4 h-4 text-gray-400 ml-auto mt-1 group-hover:text-[#009E3C] transition-colors" />
                       </div>
                     </div>
                   </div>

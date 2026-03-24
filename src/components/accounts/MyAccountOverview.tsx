@@ -52,7 +52,7 @@ const AccountOverview = () => {
           {/* Account Details Card */}
           <div className="bg-white rounded-2xl p-5 sm:p-8 shadow-xl border border-gray-100 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1">
             <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
-              <div className="p-3 sm:p-4 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-md">
+              <div className="p-3 sm:p-4 bg-gradient-to-r from-green-500 to-[#009E3C] rounded-2xl shadow-md">
                 <FiUser className="text-white" size={22} />
               </div>
               <div>
@@ -80,7 +80,7 @@ const AccountOverview = () => {
                     name="email"
                     value={userData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 sm:px-5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm sm:text-base"
+                    className="w-full px-4 py-2 sm:px-5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#009E3C]/15 focus:border-transparent text-sm sm:text-base"
                   />
                 </div>
                 <button className="mt-3 sm:mt-4 px-5 py-2.5 sm:px-6 sm:py-3 bg-gradient-to-r from-green-500 to-lightgreen-600 text-white rounded-xl hover:from-lightgreen-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg text-sm sm:text-base">
@@ -121,7 +121,7 @@ const AccountOverview = () => {
           {/* Address Book Card */}
           <div className="bg-white rounded-2xl p-5 sm:p-8 shadow-xl border border-gray-100 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1">
             <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
-              <div className="p-3 sm:p-4 bg-gradient-to-r from-green-600 to-green-600 rounded-2xl shadow-md">
+              <div className="p-3 sm:p-4 bg-gradient-to-r from-[#009E3C] to-[#009E3C] rounded-2xl shadow-md">
                 <FiHome className="text-white" size={22} />
               </div>
               <div>
@@ -138,7 +138,7 @@ const AccountOverview = () => {
               </div>
             </div>
 
-            <button className="flex items-center justify-center gap-2 sm:gap-3 w-full px-5 py-3 sm:px-6 sm:py-4 bg-gradient-to-r from-green-600 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-400 transition-all shadow-md hover:shadow-lg text-sm sm:text-base">
+            <button className="flex items-center justify-center gap-2 sm:gap-3 w-full px-5 py-3 sm:px-6 sm:py-4 bg-gradient-to-r from-[#009E3C] to-[#009E3C] text-white rounded-xl hover:from-[#009E3C] hover:to-[#00bc49] transition-all shadow-md hover:shadow-lg text-sm sm:text-base">
               <FiPlus size={18} />
               Add Default Address
             </button>
