@@ -197,14 +197,14 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+      <header className="bg-white/95 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         {/* Main header */}
-        <div className="max-w-[1600px] mx-auto px-3 py-2 md:py-3">
-          <div className="flex items-center justify-between gap-2">
+        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 py-2 md:py-3">
+          <div className="flex items-center justify-between gap-3">
             {/* Logo */}
             <div className="flex items-center flex-shrink-0">
-              <Link href="/" className="flex items-center">
-                <div className="relative w-8 h-8 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[#009E3C] hover:scale-105 transition-transform duration-300 shadow-md">
+              <Link href="/" className="flex items-center gap-2.5 group">
+                <div className="relative w-9 h-9 md:w-11 md:h-11 rounded-xl overflow-hidden border-2 border-[#009E3C]/30 group-hover:border-[#009E3C] transition-all duration-250 shadow-sm group-hover:shadow-[0_4px_12px_rgba(0,158,60,0.20)]">
                   <Image
                     src="/images/logo.png"
                     alt="Company Logo"
@@ -212,11 +212,14 @@ const Header = () => {
                     className="object-contain p-1"
                   />
                 </div>
+                <span className="hidden sm:block font-black text-sm text-gray-900 leading-tight tracking-tight">
+                  NutriBlend<br /><span className="text-[#009E3C]">Haven</span>
+                </span>
               </Link>
             </div>
 
-            {/* Desktop Search bar - hidden on mobile */}
-            <div className="hidden md:flex flex-1 px-2 max-w-4xl">
+            {/* Desktop Search bar */}
+            <div className="hidden md:flex flex-1 px-3 max-w-3xl xl:max-w-4xl">
               <DesktopSearchBar
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
@@ -227,13 +230,13 @@ const Header = () => {
             </div>
 
             {/* Right icons */}
-            <div className="flex items-center space-x-1 md:space-x-3 flex-shrink-0">
+            <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
               {/* Mobile Search Icon */}
               <button
                 onClick={() => setMobileSearchOpen(true)}
-                className="md:hidden p-2 rounded-full hover:bg-green-50 transition-colors"
+                className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 hover:text-[#009E3C] hover:bg-[#009E3C]/8 transition-all duration-200"
               >
-                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
@@ -241,58 +244,48 @@ const Header = () => {
               {/* Account */}
               <div className="relative">
                 <button
-                  className="flex items-center space-x-1 p-1.5 md:p-2 rounded-lg hover:bg-gray-50 group relative transition-colors duration-200"
+                  className="flex items-center gap-1.5 px-2 py-1.5 md:px-3 rounded-xl hover:bg-gray-50/80 group transition-colors duration-200"
                   onMouseEnter={() => setIsAccountOpen(true)}
                   onMouseLeave={() => setIsAccountOpen(false)}
                   onClick={() => setIsAccountOpen(!isAccountOpen)}
                 >
-                  <div className="p-1 rounded-full bg-gray-100 group-hover:bg-green-100 transition-colors">
-                    <svg
-                      className="w-5 h-5 text-gray-600 group-hover:text-[#009E3C] transition-colors"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
+                  <div className="w-7 h-7 rounded-lg bg-gray-100 group-hover:bg-[#009E3C]/10 flex items-center justify-center transition-colors duration-200">
+                    <svg className="w-4 h-4 text-gray-500 group-hover:text-[#009E3C] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <span className="hidden md:inline text-sm font-medium">
+                  <span className="hidden md:inline text-sm font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">
                     {user ? `Hi, ${user.first_name || user.name?.split(' ')[0] || 'User'}` : "Account"}
                   </span>
                   <svg
-                    className="hidden md:block ml-1 w-3 h-3 text-gray-400 transition-transform duration-200"
+                    className="hidden md:block w-3 h-3 text-gray-400 transition-transform duration-200"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     style={{ transform: isAccountOpen ? "rotate(180deg)" : "rotate(0deg)" }}
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </button>
 
                 {isAccountOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-64 md:w-72 max-w-[90vw] bg-white rounded-xl shadow-lg z-50 border border-gray-100 overflow-hidden text-sm md:text-base"
+                    className="absolute right-0 mt-2 w-64 md:w-72 max-w-[92vw] bg-white rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.14),0_4px_12px_rgba(0,0,0,0.06)] z-50 border border-gray-100/80 overflow-hidden text-sm"
                     onMouseEnter={() => setIsAccountOpen(true)}
                     onMouseLeave={() => setIsAccountOpen(false)}
                   >
-                    <div className="bg-gradient-to-r from-[#4caf50] to-[#45a049] text-white p-3 md:p-4">
-                      <h3 className="font-semibold text-base md:text-lg">
-                        {user ? `Welcome, ${user.first_name || user.name?.split(' ')[0] || 'User'}!` : "Welcome!"}
+                    {/* Dropdown header */}
+                    <div className="relative bg-gradient-to-br from-[#009E3C] to-[#00752C] text-white p-4 overflow-hidden">
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-white/8 rounded-full -translate-y-1/2 translate-x-1/2" />
+                      <h3 className="font-extrabold text-base relative z-10">
+                        {user ? `Welcome back, ${user.first_name || user.name?.split(' ')[0] || 'User'}!` : "Welcome!"}
                       </h3>
-                      <p className="text-xs md:text-sm opacity-90">
-                        {user ? "Happy to see you again" : "Sign in to access your account"}
+                      <p className="text-xs text-white/80 mt-0.5 relative z-10">
+                        {user ? "Great to see you again" : "Sign in to access your account"}
                       </p>
                     </div>
-                    <div className="p-2">
+
+                    {/* Links */}
+                    <div className="p-1.5">
                       {user ? (
                         <div className="space-y-0.5">
                           {accountLinks.map((item, idx) => (
@@ -300,31 +293,33 @@ const Header = () => {
                               key={idx}
                               href={item.href}
                               onClick={() => setIsAccountOpen(false)}
-                              className="flex items-center px-3 py-2 md:px-4 md:py-2.5 text-gray-700 hover:bg-green-50 hover:text-[#009E3C] rounded-lg transition-colors duration-200"
+                              className="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-[#009E3C]/6 hover:text-[#009E3C] rounded-xl transition-colors duration-150 font-medium"
                             >
-                              <span className="mr-2.5 text-gray-400 flex-shrink-0">{item.icon}</span>
+                              <span className="text-gray-400 group-hover:text-[#009E3C] flex-shrink-0 w-4">{item.icon}</span>
                               {item.label}
                             </Link>
                           ))}
                         </div>
                       ) : (
-                        <div className="text-center py-4 text-gray-500 text-sm">
-                          Please sign in to access your account features
+                        <div className="text-center py-5">
+                          <p className="text-gray-500 text-sm mb-1">Access your orders, wishlist & more</p>
                         </div>
                       )}
                     </div>
-                    <div className="p-2 md:p-3 border-t border-gray-100 bg-gray-50">
+
+                    {/* CTA */}
+                    <div className="px-2.5 pb-2.5 pt-1 border-t border-gray-100/80">
                       {user ? (
                         <button
                           onClick={handleLogout}
-                          className="block w-full bg-red-500 hover:bg-red-600 text-white text-center font-medium py-2 md:py-2.5 px-3 md:px-4 rounded-lg transition-colors duration-200 shadow-sm text-sm md:text-base"
+                          className="w-full bg-red-50 hover:bg-red-500 text-red-600 hover:text-white text-center font-bold py-2.5 px-4 rounded-xl transition-all duration-200 text-sm border border-red-100 hover:border-red-500"
                         >
                           Sign Out
                         </button>
                       ) : (
                         <button
                           onClick={openLoginModal}
-                          className="block w-full bg-[#009E3C] hover:bg-green-600 text-white text-center font-medium py-2 md:py-2.5 px-3 md:px-4 rounded-lg transition-colors duration-200 shadow-sm text-sm md:text-base"
+                          className="w-full bg-[#009E3C] hover:bg-[#00752C] text-white text-center font-bold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)] text-sm"
                         >
                           Sign in / Create account
                         </button>
@@ -337,17 +332,17 @@ const Header = () => {
               <CartBtn />
 
               {/* Mobile menu button */}
-              <div className="md:hidden flex items-center">
+              <div className="md:hidden">
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="p-2 rounded-md text-gray-500 hover:text-green-600 hover:bg-green-50 focus:outline-none"
+                  className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200"
                 >
                   {mobileMenuOpen ? (
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   ) : (
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                   )}
@@ -357,14 +352,14 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Desktop Navigation Bar — iHerb Green Category Bar */}
-        <div className="hidden md:block bg-[#009E3C]">
+        {/* Desktop Navigation Bar */}
+        <div className="hidden md:block bg-[#009E3C] shadow-[0_2px_8px_rgba(0,158,60,0.25)]">
           <div className="max-w-[1600px] mx-auto px-3">
             <div className="flex items-center overflow-x-auto scrollbar-hide">
-              {/* All Categories Button — iHerb style hamburger */}
+              {/* All Categories CTA */}
               <Link
                 href="/shop"
-                className="flex items-center gap-2 px-4 py-3 bg-[#007a2e] text-white text-sm font-bold whitespace-nowrap hover:bg-[#006624] transition-colors flex-shrink-0 border-r border-white/20"
+                className="flex items-center gap-2 px-4 py-3 bg-[#007a2e] text-white text-sm font-extrabold whitespace-nowrap hover:bg-[#006624] transition-colors flex-shrink-0 border-r border-white/20"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
@@ -376,21 +371,24 @@ const Header = () => {
                 <div key={index} className="relative group flex-shrink-0">
                   {item.subItems && item.subItems.length > 0 ? (
                     <>
-                      <button className="px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-[#007a2e] flex items-center gap-1 transition-colors duration-200 whitespace-nowrap border-b-2 border-transparent hover:border-white">
+                      <button className="px-4 py-3 text-sm font-semibold text-white/90 hover:text-white hover:bg-[#007a2e] flex items-center gap-1.5 transition-colors duration-150 whitespace-nowrap border-b-2 border-transparent group-hover:border-white/60">
                         {item.name}
-                        <svg className="h-3 w-3 transition-transform duration-200 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <svg className="h-3 w-3 transition-transform duration-200 group-hover:rotate-180 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                       </button>
-                      {/* Mega dropdown */}
-                      <div className="absolute left-0 top-full w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-1">
-                        <div className="bg-white rounded-b-xl shadow-2xl border border-gray-100 py-1 overflow-hidden">
+                      {/* Dropdown */}
+                      <div className="absolute left-0 top-full w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-out z-50 pt-1.5">
+                        <div className="bg-white rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.14)] border border-gray-100/80 py-1.5 overflow-hidden">
+                          {/* Top accent */}
+                          <div className="h-0.5 bg-gradient-to-r from-[#009E3C] to-[#00bc49] rounded-full mx-2 mb-1.5" />
                           {item.subItems.map((subItem: any, subIndex: number) => (
                             <Link
                               key={subIndex}
                               href={subItem.href}
-                              className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-[#009E3C] hover:text-white transition-colors duration-150"
+                              className="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-[#009E3C]/8 hover:text-[#009E3C] transition-colors duration-120 font-medium"
                             >
+                              <span className="w-1 h-1 rounded-full bg-gray-300 flex-shrink-0" />
                               {subItem.name}
                             </Link>
                           ))}
@@ -400,7 +398,7 @@ const Header = () => {
                   ) : (
                     <Link
                       href={item.href || "#"}
-                      className="px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-[#007a2e] transition-colors duration-200 whitespace-nowrap inline-block border-b-2 border-transparent hover:border-white"
+                      className="px-4 py-3 text-sm font-semibold text-white/90 hover:text-white hover:bg-[#007a2e] transition-colors duration-150 whitespace-nowrap inline-block border-b-2 border-transparent hover:border-white/60"
                     >
                       {item.name}
                     </Link>
@@ -408,15 +406,16 @@ const Header = () => {
                 </div>
               ))}
 
-              {/* Special links at end of nav bar */}
-              <div className="ml-auto flex items-center flex-shrink-0">
-                <Link href="/shop?on_sale=true" className="flex items-center gap-1 px-4 py-3 text-sm font-bold text-[#FFC107] hover:bg-[#007a2e] transition-colors whitespace-nowrap">
+              {/* Spacer + special end links */}
+              <div className="ml-auto flex items-center flex-shrink-0 border-l border-white/15 ml-2">
+                <Link href="/shop?on_sale=true" className="flex items-center gap-1.5 px-4 py-3 text-sm font-extrabold text-[#FFC107] hover:bg-[#007a2e] transition-colors whitespace-nowrap">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" /></svg>
                   Sale
                 </Link>
-                <Link href="/wholesale-registration" className="px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-[#007a2e] transition-colors whitespace-nowrap">
+                <Link href="/wholesale-registration" className="px-4 py-3 text-sm font-semibold text-white/85 hover:text-white hover:bg-[#007a2e] transition-colors whitespace-nowrap">
                   Wholesale
                 </Link>
-                <Link href="/brands" className="px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-[#007a2e] transition-colors whitespace-nowrap">
+                <Link href="/brands" className="px-4 py-3 text-sm font-semibold text-white/85 hover:text-white hover:bg-[#007a2e] transition-colors whitespace-nowrap">
                   Brands
                 </Link>
               </div>
@@ -426,10 +425,22 @@ const Header = () => {
 
         {/* Mobile menu overlay */}
         {mobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 top-[56px] z-40 bg-black/30" onClick={() => setMobileMenuOpen(false)}>
-            <div className="bg-white max-h-[80vh] overflow-y-auto shadow-xl" onClick={(e) => e.stopPropagation()}>
-              <div className="px-4 pt-3 pb-4 space-y-1">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Categories</p>
+          <div
+            className="md:hidden fixed inset-0 top-[56px] z-40 bg-black/40 backdrop-blur-[2px]"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <div
+              className="bg-white max-h-[82vh] overflow-y-auto shadow-2xl border-t border-gray-100"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Top accent */}
+              <div className="h-0.5 bg-gradient-to-r from-[#009E3C] via-[#00bc49] to-[#009E3C]" />
+
+              <div className="px-3 pt-3 pb-5 space-y-0.5">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-3 py-1 mb-1">
+                  Browse Categories
+                </p>
+
                 {navItems.map((item, index) => (
                   <div key={index}>
                     {item.subItems && item.subItems.length > 0 ? (
@@ -437,21 +448,22 @@ const Header = () => {
                         <Link
                           href={item.href || "#"}
                           onClick={() => setMobileMenuOpen(false)}
-                          className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50"
+                          className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-800 hover:text-[#009E3C] hover:bg-[#009E3C]/6 transition-colors duration-150"
                         >
                           <span>{item.name}</span>
-                          <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                           </svg>
                         </Link>
-                        <div className="pl-6 space-y-0.5">
+                        <div className="pl-5 space-y-0.5 mb-1">
                           {item.subItems.map((subItem: any, subIndex: number) => (
                             <Link
                               key={subIndex}
                               href={subItem.href}
-                              className="block px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-green-600 hover:bg-green-50"
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-gray-500 hover:text-[#009E3C] hover:bg-[#009E3C]/5 transition-colors duration-120"
                               onClick={() => setMobileMenuOpen(false)}
                             >
+                              <span className="w-1 h-1 rounded-full bg-gray-300 flex-shrink-0" />
                               {subItem.name}
                             </Link>
                           ))}
@@ -460,7 +472,7 @@ const Header = () => {
                     ) : (
                       <Link
                         href={item.href || "#"}
-                        className="block px-3 py-2.5 rounded-lg text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50"
+                        className="flex items-center px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-800 hover:text-[#009E3C] hover:bg-[#009E3C]/6 transition-colors duration-150"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {item.name}
@@ -469,19 +481,26 @@ const Header = () => {
                   </div>
                 ))}
 
-                <div className="border-t border-gray-100 my-3" />
-                <Link
-                  href="/shop"
-                  className="block px-3 py-2.5 rounded-lg text-base font-medium text-green-600 hover:bg-green-50"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <div className="flex items-center">
-                    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    View All Products
-                  </div>
-                </Link>
+                <div className="h-px bg-gray-100 my-3 mx-2" />
+
+                {/* Quick links */}
+                <div className="grid grid-cols-3 gap-2 px-1">
+                  {[
+                    { href: "/shop", label: "All Products", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /> },
+                    { href: "/shop?on_sale=true", label: "Sale", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /> },
+                    { href: "/brands", label: "Brands", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /> },
+                  ].map(({ href, label, icon }) => (
+                    <Link
+                      key={label}
+                      href={href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl bg-gray-50 hover:bg-[#009E3C]/8 hover:text-[#009E3C] text-gray-600 transition-colors duration-150"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">{icon}</svg>
+                      <span className="text-[10px] font-bold">{label}</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -490,34 +509,40 @@ const Header = () => {
 
       {/* Mobile Search Modal */}
       {mobileSearchOpen && (
-        <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm" onClick={() => { setMobileSearchOpen(false); setSearchQuery(""); setSearchResults([]); }}>
+        <div
+          className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm"
+          onClick={() => { setMobileSearchOpen(false); setSearchQuery(""); setSearchResults([]); }}
+        >
           <div
-            className="bg-white w-full max-h-[85vh] overflow-y-auto animate-in slide-in-from-top duration-300"
+            className="bg-white w-full max-h-[88vh] overflow-y-auto shadow-2xl animate-fade-in-down"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Top accent bar */}
+            <div className="h-0.5 bg-gradient-to-r from-[#009E3C] via-[#00bc49] to-[#009E3C]" />
+
             {/* Search Header */}
-            <div className="sticky top-0 bg-white border-b border-gray-100 p-4">
-              <form onSubmit={handleMobileSearch} className="flex items-center gap-2">
-                <div className="flex-1 flex items-center bg-gray-100 rounded-xl px-3 py-2.5">
-                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3.5">
+              <form onSubmit={handleMobileSearch} className="flex items-center gap-2.5">
+                <div className="flex-1 flex items-center bg-gray-100/80 border border-gray-200/60 rounded-xl px-3 py-2.5 focus-within:border-[#009E3C] focus-within:bg-white transition-all duration-200">
+                  <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                   <input
                     type="text"
-                    placeholder="Search products..."
+                    placeholder="Search products, brands..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     autoFocus
-                    className="w-full bg-transparent outline-none text-sm text-gray-700"
+                    className="w-full bg-transparent outline-none text-sm text-gray-800 placeholder:text-gray-400"
                   />
                   {searchQuery && (
                     <button
                       type="button"
                       onClick={() => { setSearchQuery(""); setSearchResults([]); }}
-                      className="p-1 hover:bg-gray-200 rounded-full"
+                      className="w-5 h-5 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center transition-colors flex-shrink-0"
                     >
-                      <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
                   )}
@@ -525,72 +550,88 @@ const Header = () => {
                 <button
                   type="button"
                   onClick={() => { setMobileSearchOpen(false); setSearchQuery(""); setSearchResults([]); }}
-                  className="text-sm text-gray-500 font-medium px-2"
+                  className="text-sm text-[#009E3C] font-bold px-1 flex-shrink-0"
                 >
                   Cancel
                 </button>
               </form>
             </div>
 
-            {/* Search Results */}
-            <div className="p-4">
+            {/* Content */}
+            <div className="px-4 py-4">
               {searchQuery.trim() && (
-                <div className="mb-6">
+                <div className="mb-5">
                   {isSearching ? (
-                    <div className="flex items-center justify-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+                    <div className="space-y-2">
+                      {[1,2,3].map(i => (
+                        <div key={i} className="flex items-center gap-3 p-2">
+                          <div className="w-11 h-11 bg-gray-100 rounded-xl animate-shimmer flex-shrink-0" />
+                          <div className="flex-1 space-y-2">
+                            <div className="h-3 bg-gray-100 rounded animate-shimmer w-4/5" />
+                            <div className="h-3 bg-gray-100 rounded animate-shimmer w-1/3" />
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   ) : searchResults.length > 0 ? (
-                    <div className="space-y-2">
-                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Results</p>
-                      {searchResults.map((product) => (
+                    <div>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2.5">Results</p>
+                      <div className="space-y-1">
+                        {searchResults.map((product) => (
+                          <Link
+                            key={product.id}
+                            href={`/shop/product/${product.id}/${product.slug}`}
+                            onClick={() => { setMobileSearchOpen(false); setSearchQuery(""); }}
+                            className="flex items-center gap-3 p-2.5 hover:bg-gray-50 rounded-xl transition-colors group/res"
+                          >
+                            <div className="w-11 h-11 bg-gray-50 border border-gray-100 rounded-xl flex-shrink-0 overflow-hidden">
+                              {product.images?.[0] && (
+                                <img
+                                  src={getImageUrl(product.images[0].image_path || product.images[0])}
+                                  alt={product.name}
+                                  className="w-full h-full object-contain p-1"
+                                />
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-gray-900 text-sm truncate group-hover/res:text-[#009E3C] transition-colors">{product.name}</p>
+                              <p className="text-xs text-[#009E3C] font-bold mt-0.5">
+                                UGX {Number(product.price).toLocaleString()}
+                              </p>
+                            </div>
+                          </Link>
+                        ))}
                         <Link
-                          key={product.id}
-                          href={`/shop/product/${product.id}/${product.slug}`}
+                          href={`/shop?search=${encodeURIComponent(searchQuery)}`}
                           onClick={() => { setMobileSearchOpen(false); setSearchQuery(""); }}
-                          className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition-colors"
+                          className="flex items-center justify-center gap-1.5 text-[#009E3C] font-bold py-3 bg-[#009E3C]/6 hover:bg-[#009E3C]/10 rounded-xl text-sm mt-2 transition-colors"
                         >
-                          <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden">
-                            {product.images?.[0] && (
-                              <img
-                                src={getImageUrl(product.images[0].image_path || product.images[0])}
-                                alt={product.name}
-                                className="w-full h-full object-cover"
-                              />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900 truncate text-sm">{product.name}</p>
-                            <p className="text-sm text-green-600 font-semibold">
-                              UGX {Number(product.price).toLocaleString()}
-                            </p>
-                          </div>
+                          View all results
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
                         </Link>
-                      ))}
-                      <Link
-                        href={`/shop?search=${encodeURIComponent(searchQuery)}`}
-                        onClick={() => { setMobileSearchOpen(false); setSearchQuery(""); }}
-                        className="block text-center text-green-600 font-medium py-3 hover:bg-green-50 rounded-xl"
-                      >
-                        View all results →
-                      </Link>
+                      </div>
                     </div>
                   ) : (
-                    <p className="text-gray-500 text-center py-8 text-sm">No products found for &quot;{searchQuery}&quot;</p>
+                    <div className="text-center py-8">
+                      <p className="text-gray-400 text-sm font-medium">No results for &quot;{searchQuery}&quot;</p>
+                      <p className="text-gray-300 text-xs mt-1">Try different keywords</p>
+                    </div>
                   )}
-                  <hr className="my-4" />
+                  <div className="h-px bg-gray-100 my-4" />
                 </div>
               )}
 
               {/* Browse Categories */}
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Browse Categories</p>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Browse Categories</p>
                 <div className="grid grid-cols-2 gap-2">
                   {categories.slice(0, 8).map((category) => (
                     <Link
                       key={category.id}
                       href={`/shop?category=${category.slug}`}
-                      className="bg-gray-50 hover:bg-green-500 hover:text-white p-3 rounded-xl text-sm font-medium text-center transition-colors duration-200"
+                      className="bg-gray-50/80 border border-gray-100/80 text-gray-700 hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C] py-3 px-3 rounded-xl text-sm font-semibold text-center transition-all duration-200 active:scale-[0.97]"
                       onClick={() => { setMobileSearchOpen(false); setSearchQuery(""); }}
                     >
                       {category.name}
@@ -674,47 +715,72 @@ function DesktopSearchBar({
   };
 
   return (
-    <div ref={ref} className="relative flex-1 max-w-4xl">
+    <div ref={ref} className="relative flex-1 max-w-3xl xl:max-w-4xl">
       <form
         onSubmit={handleSearch}
-        className="flex shadow-md rounded-lg overflow-hidden border border-gray-200 bg-white shadow-sm transition-all duration-300 focus-within:ring-2 focus-within:ring-[#009E3C]/20 focus-within:border-[#009E3C] group hover:border-gray-300"
+        className="flex rounded-xl overflow-hidden border-2 border-gray-200/80 bg-white transition-all duration-250 focus-within:border-[#009E3C] focus-within:shadow-[0_0_0_4px_rgba(0,158,60,0.10)] hover:border-gray-300 group"
       >
-        <div className="flex items-center pl-5 md:pl-6">
-          <svg className="w-5 h-5 text-gray-400 group-focus-within:text-green-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex items-center pl-4">
+          <svg className="w-4.5 h-4.5 w-5 h-5 text-gray-400 group-focus-within:text-[#009E3C] transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
         <input
           type="text"
-          placeholder="Search for supplements, proteins..."
+          placeholder="Search supplements, brands, categories..."
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          className="w-full outline-none text-gray-700 bg-transparent text-sm md:text-base px-4 py-3 pl-3"
+          className="w-full outline-none text-gray-800 placeholder:text-gray-400 bg-transparent text-sm px-3 py-2.5 md:py-3"
         />
+        {searchQuery && (
+          <button
+            type="button"
+            onClick={() => { setSearchQuery(""); setOpen(false); }}
+            className="flex items-center justify-center px-2 text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
         <button
           type="submit"
-          className="flex items-center justify-center bg-[#009E3C] text-white px-6 sm:px-10 py-3 hover:bg-[#007a2e] transition-all duration-300 font-bold active:scale-95 uppercase text-xs tracking-widest"
+          className="flex items-center justify-center bg-[#009E3C] hover:bg-[#00752C] text-white px-5 sm:px-8 py-2.5 md:py-3 transition-colors duration-200 font-extrabold text-xs tracking-widest uppercase active:scale-95 flex-shrink-0 gap-1.5"
         >
-          Search
+          <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <span className="hidden sm:inline">Search</span>
         </button>
       </form>
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 w-full mt-3 bg-white shadow-2xl rounded-2xl p-4 sm:p-6 z-50 border border-gray-100 max-h-[70vh] overflow-y-auto">
+        <div className="absolute top-full left-0 w-full mt-2.5 bg-white shadow-[0_16px_48px_rgba(0,0,0,0.14)] rounded-2xl p-4 sm:p-5 z-50 border border-gray-100/80 max-h-[72vh] overflow-y-auto">
           {searchQuery.trim() && (
-            <div className="mb-6">
-              <h3 className="font-semibold mb-3 text-gray-700">Search Results</h3>
+            <div className="mb-5">
+              <div className="flex items-center gap-2 mb-3">
+                <h3 className="font-extrabold text-xs text-gray-400 uppercase tracking-widest">Search Results</h3>
+                {isSearching && <div className="w-3 h-3 border-2 border-[#009E3C] border-t-transparent rounded-full animate-spin" />}
+              </div>
               {isSearching ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#009E3C]"></div>
+                <div className="space-y-2">
+                  {[1,2,3].map(i => (
+                    <div key={i} className="flex items-center gap-3 p-2">
+                      <div className="w-10 h-10 bg-gray-100 rounded-lg animate-shimmer flex-shrink-0" />
+                      <div className="flex-1 space-y-1.5">
+                        <div className="h-3 bg-gray-100 rounded animate-shimmer w-3/4" />
+                        <div className="h-3 bg-gray-100 rounded animate-shimmer w-1/4" />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : searchResults.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {searchResults.map((product) => (
                     <Link
                       key={product.id}
@@ -723,51 +789,57 @@ function DesktopSearchBar({
                         setOpen(false);
                         setSearchQuery("");
                       }}
-                      className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                      className="flex items-center gap-3 p-2.5 hover:bg-gray-50 rounded-xl transition-colors duration-150 group/result"
                     >
-                      <div className="w-12 h-12 bg-gray-100 rounded flex-shrink-0">
+                      <div className="w-11 h-11 bg-gray-50 rounded-xl flex-shrink-0 overflow-hidden border border-gray-100">
                         {product.images?.[0] && (
                           <img
                             src={getImageUrl(product.images[0].image_path || product.images[0])}
                             alt={product.name}
-                            className="w-full h-full object-cover rounded"
+                            className="w-full h-full object-contain p-1"
                           />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 truncate">{product.name}</p>
-                        <p className="text-sm text-[#4caf50] font-semibold">
+                        <p className="font-semibold text-gray-900 text-sm truncate group-hover/result:text-[#009E3C] transition-colors">{product.name}</p>
+                        <p className="text-xs text-[#009E3C] font-bold mt-0.5">
                           UGX {Number(product.price).toLocaleString()}
                         </p>
                       </div>
+                      <svg className="w-3.5 h-3.5 text-gray-300 group-hover/result:text-[#009E3C] flex-shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </Link>
                   ))}
                   <Link
                     href={`/shop?search=${encodeURIComponent(searchQuery)}`}
-                    onClick={() => {
-                      setOpen(false);
-                      setSearchQuery("");
-                    }}
-                    className="block text-center text-[#009E3C] font-bold py-3 bg-gray-50 hover:bg-green-50 rounded-lg text-sm transition-colors"
+                    onClick={() => { setOpen(false); setSearchQuery(""); }}
+                    className="flex items-center justify-center gap-2 text-[#009E3C] font-bold py-2.5 bg-[#009E3C]/6 hover:bg-[#009E3C]/10 rounded-xl text-sm transition-colors"
                   >
                     View all results for &quot;{searchQuery}&quot;
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </Link>
                 </div>
               ) : (
-                <p className="text-gray-500 text-center py-4 text-sm font-medium">No products found for &quot;{searchQuery}&quot;</p>
+                <div className="text-center py-5">
+                  <p className="text-gray-400 text-sm font-medium">No results for &quot;{searchQuery}&quot;</p>
+                  <p className="text-gray-300 text-xs mt-1">Try different keywords</p>
+                </div>
               )}
-              <hr className="my-5 border-gray-100" />
+              <div className="h-px bg-gray-100 my-4" />
             </div>
           )}
 
           <div>
-            <h3 className="font-bold mb-4 text-gray-900 text-xs uppercase tracking-widest">Recommended Categories</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <h3 className="font-extrabold mb-3 text-gray-400 text-[10px] uppercase tracking-widest">Browse Categories</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {categories.slice(0, 9).map((category) => (
                 <Link
                   key={category.id}
                   href={`/shop?category=${category.slug}`}
-                  className="block bg-gray-50 hover:bg-[#009E3C] hover:text-white px-3 py-3 rounded-lg text-xs font-bold text-center transition-all duration-200 border border-gray-100"
+                  className="block bg-gray-50/80 hover:bg-[#009E3C] hover:text-white text-gray-700 px-3 py-2.5 rounded-xl text-xs font-semibold text-center transition-all duration-200 border border-gray-100/80 hover:border-[#009E3C] hover:shadow-[0_4px_12px_rgba(0,158,60,0.20)] active:scale-[0.97]"
                   onClick={() => setOpen(false)}
                 >
                   {category.name}

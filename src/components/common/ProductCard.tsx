@@ -64,83 +64,107 @@ const ProductCard = ({ data }: ProductCardProps) => {
   };
 
   const productSlug = data.slug;
+  const discountLabel = data.discount?.percentage > 0
+    ? `-${data.discount.percentage}%`
+    : data.discount?.amount > 0
+      ? `-UGX ${data.discount.amount.toLocaleString()}`
+      : null;
 
   return (
-    <div className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-premium hover:border-[#009E3C]/30 transition-all duration-500 flex flex-col relative h-full glow-on-hover">
-      {/* Quick Action Overlay (Unique Feature) */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
+    <div className="group relative bg-white border border-gray-100 rounded-2xl overflow-hidden flex flex-col h-full transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.10),0_4px_10px_rgba(0,0,0,0.06)] hover:border-[#009E3C]/25 glow-on-hover">
+
+      {/* ── Shimmer sheen on hover ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl z-0">
+        <div className="absolute -inset-full top-0 left-[-60%] w-[40%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg] opacity-0 group-hover:opacity-100 group-hover:translate-x-[400%] transition-all duration-700 ease-out" />
+      </div>
+
+      {/* ── Quick View Overlay ── */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
         <button
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             router.push(`/shop/product/${data.id}/${productSlug}`);
           }}
-          className="w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center text-[#009E3C] hover:bg-[#009E3C] hover:text-white transition-all duration-300 transform translate-y-4 group-hover:translate-y-0"
+          className="flex items-center gap-1.5 bg-white/95 backdrop-blur-sm text-[#009E3C] text-[11px] font-bold px-4 py-2 rounded-full shadow-lg border border-[#009E3C]/20 hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C] transition-all duration-200 translate-y-3 group-hover:translate-y-0"
           title="Quick View"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          Quick View
         </button>
       </div>
 
-      {/* Image Container — clean 1:1 ratio like iHerb */}
-      <Link href={`/shop/product/${data.id}/${productSlug}`} className="block relative bg-white w-full aspect-square flex items-center justify-center p-3 sm:p-5 overflow-hidden">
+      {/* ── Image Container ── */}
+      <Link
+        href={`/shop/product/${data.id}/${productSlug}`}
+        className="relative block bg-gradient-to-b from-gray-50 to-white w-full aspect-square overflow-hidden"
+      >
         {/* Wishlist */}
-        <div className="absolute top-2 right-2 z-10 scale-90 sm:scale-100" onClick={(e) => e.preventDefault()}>
+        <div
+          className="absolute top-2.5 right-2.5 z-10"
+          onClick={(e) => e.preventDefault()}
+        >
           <WishlistButton productId={data.id} productName={data.title} variant="card" />
         </div>
 
-        {/* Discount Badge — top left, bold red like iHerb */}
-        {hasDiscount && !isUsingWholesalePrice && (
-          <span className="absolute top-2 left-2 bg-[#E53935] text-white text-[10px] sm:text-xs font-black px-2 py-0.5 rounded z-10">
-            {data.discount.percentage > 0
-              ? `-${data.discount.percentage}%`
-              : `-UGX ${data.discount.amount.toLocaleString()}`}
+        {/* Sale Badge */}
+        {hasDiscount && !isUsingWholesalePrice && discountLabel && (
+          <span className="absolute top-2.5 left-2.5 z-10 bg-[#E53935] text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm tracking-wide">
+            {discountLabel}
           </span>
         )}
 
         {/* Wholesale Badge */}
         {isUsingWholesalePrice && (
-          <span className="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded z-10">
+          <span className="absolute top-2.5 left-2.5 z-10 bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm tracking-wide">
             WHOLESALE
           </span>
         )}
 
         {/* Low Stock */}
         {data.stock !== undefined && data.stock > 0 && data.stock <= 10 && (
-          <span className="absolute bottom-2 left-2 bg-red-50 text-red-600 text-[9px] font-bold px-2 py-0.5 rounded z-10 border border-red-100">
+          <span className="absolute bottom-2.5 left-2.5 z-10 flex items-center gap-1 bg-red-50 text-red-600 text-[9px] font-bold px-2 py-0.5 rounded-md border border-red-100">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
             Only {data.stock} left
           </span>
         )}
 
-        <Image
-          src={data.srcUrl}
-          width={220}
-          height={220}
-          className="object-contain max-h-full w-auto group-hover:scale-105 transition-transform duration-500"
-          alt={data.title}
-          priority
-        />
+        {/* Product Image */}
+        <div className="flex items-center justify-center w-full h-full p-4 sm:p-5">
+          <Image
+            src={data.srcUrl}
+            width={220}
+            height={220}
+            className="object-contain max-h-full w-auto transition-transform duration-500 ease-out group-hover:scale-[1.07]"
+            alt={data.title}
+            priority
+          />
+        </div>
       </Link>
 
-      {/* Content — tight, dense info like iHerb */}
-      <div className="px-3 sm:px-4 pt-2 pb-3 sm:pb-4 flex flex-col flex-grow border-t border-gray-100">
+      {/* ── Content ── */}
+      <div className="relative z-10 px-3 sm:px-4 pt-3 pb-3.5 sm:pb-4 flex flex-col flex-grow border-t border-gray-100/80">
+
         {/* Brand */}
         {data.brand && (
-          <p className="text-[#009E3C] text-[10px] sm:text-[11px] font-bold uppercase tracking-wide mb-1 truncate">
+          <p className="text-[#009E3C] text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest mb-1 truncate">
             {data.brand}
           </p>
         )}
 
-        {/* Title — 2 lines max */}
+        {/* Title */}
         <Link
           href={`/shop/product/${data.id}/${productSlug}`}
-          className="text-gray-900 text-xs sm:text-sm font-semibold mb-1.5 line-clamp-2 hover:text-[#009E3C] transition-colors leading-snug"
+          className="text-gray-900 text-xs sm:text-[13px] font-semibold mb-1.5 line-clamp-2 hover:text-[#009E3C] transition-colors duration-200 leading-snug"
         >
           {data.title}
         </Link>
 
         {/* Rating */}
-        <div className="flex items-center mb-2">
+        <div className="flex items-center gap-1.5 mb-2.5">
           <Rating
             initialValue={data.rating}
             allowFraction
@@ -150,35 +174,37 @@ const ProductCard = ({ data }: ProductCardProps) => {
             size={12}
             readonly
           />
-          <span className="text-gray-400 text-[10px] ml-1 font-medium">
-            ({data.reviews?.toLocaleString() || '0'})
+          <span className="text-gray-400 text-[10px] font-medium">
+            ({data.reviews?.toLocaleString() || "0"})
           </span>
         </div>
 
-        {/* Health Verification Badge (Unique Feature) */}
+        {/* Verified Purity indicator */}
         <div className="flex items-center gap-1.5 mb-3">
-          <div className="flex -space-x-1">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="w-4 h-4 rounded-full border border-white bg-green-50 flex items-center justify-center">
-                <svg className="w-2.5 h-2.5 text-[#009E3C]" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" /></svg>
-              </div>
-            ))}
-          </div>
-          <span className="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">Verified Purity</span>
+          <svg className="w-3 h-3 text-[#009E3C] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Verified Authentic</span>
         </div>
 
-        {/* Price Block — pushed to bottom */}
+        {/* Price Block */}
         <div className="flex flex-col mt-auto">
           {isUsingWholesalePrice && (
-            <p className="text-[9px] text-blue-600 font-bold uppercase mb-0.5">Wholesale Price</p>
+            <p className="text-[9px] text-blue-600 font-bold uppercase tracking-wider mb-0.5">Wholesale Price</p>
           )}
           <div className="flex items-baseline gap-1.5 flex-wrap">
-            <span className={`font-extrabold text-base sm:text-lg ${isUsingWholesalePrice ? 'text-blue-600' : hasDiscount ? 'text-[#E53935]' : 'text-gray-900'}`}>
-              <span className="text-[9px] font-semibold text-gray-400 mr-0.5">UGX</span>
+            <span className={`font-extrabold text-base sm:text-lg leading-none ${
+              isUsingWholesalePrice
+                ? "text-blue-600"
+                : hasDiscount
+                  ? "text-[#E53935]"
+                  : "text-gray-900"
+            }`}>
+              <span className="text-[9px] font-semibold text-gray-400 mr-0.5 align-baseline">UGX</span>
               {displayPrice.toLocaleString()}
             </span>
             {(hasDiscount || isUsingWholesalePrice) && (
-              <span className="text-gray-400 text-[10px] sm:text-xs line-through">
+              <span className="text-gray-300 text-[10px] sm:text-xs line-through leading-none">
                 UGX {data.price.toLocaleString()}
               </span>
             )}
@@ -188,13 +214,14 @@ const ProductCard = ({ data }: ProductCardProps) => {
           )}
         </div>
 
-        {/* Add to Cart Button — always visible, green like iHerb */}
+        {/* Add to Cart Button */}
         <button
           onClick={handleAddToCart}
-          className={`mt-2.5 w-full py-2 sm:py-2.5 rounded-md text-xs sm:text-sm font-bold active:scale-[0.97] transition-all flex items-center justify-center gap-1.5 ${isInCart
-            ? "bg-[#f4fcf6] text-[#009E3C] border border-[#009E3C]/30"
-            : "bg-[#009E3C] hover:bg-[#007a2e] text-white shadow-sm"
-            }`}
+          className={`mt-3 w-full py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] font-bold active:scale-[0.97] transition-all duration-200 flex items-center justify-center gap-1.5 ${
+            isInCart
+              ? "bg-[#f0fbf4] text-[#009E3C] border-2 border-[#009E3C]/30 hover:bg-[#e4f8ec] hover:border-[#009E3C]/50"
+              : "bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)]"
+          }`}
         >
           {isInCart ? (
             <>

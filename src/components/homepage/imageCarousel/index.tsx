@@ -31,8 +31,15 @@ export default function HeroCarousel({
     if (isTransitioning) return;
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-    setTimeout(() => setIsTransitioning(false), 600);
+    setTimeout(() => setIsTransitioning(false), 650);
   }, [isTransitioning, slides.length]);
+
+  const goToPrev = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+    setTimeout(() => setIsTransitioning(false), 650);
+  };
 
   useEffect(() => {
     if (!autoPlay || slides.length <= 1) return;
@@ -44,77 +51,113 @@ export default function HeroCarousel({
     if (index === currentSlide || isTransitioning) return;
     setIsTransitioning(true);
     setCurrentSlide(index);
-    setTimeout(() => setIsTransitioning(false), 600);
+    setTimeout(() => setIsTransitioning(false), 650);
   };
 
-  const goToPrev = () => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-    setTimeout(() => setIsTransitioning(false), 600);
-  };
+  if (!slides || slides.length === 0) return null;
 
   return (
-    <div className="relative w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-white shadow-xl shadow-green-900/8 border border-gray-100/50">
-        {/* Slides container */}
-        <div className="relative h-60 sm:h-72 md:h-80 lg:h-[340px] xl:h-[380px]">
+    <div className="relative w-full max-w-[1560px] mx-auto px-3 sm:px-5 lg:px-8 py-3 md:py-5">
+      {/* ── Main carousel wrapper ── */}
+      <div className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-white shadow-[0_8px_40px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.06)] border border-gray-100/70">
+
+        {/* Progress bar */}
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gray-100/60 z-30">
+          <div
+            key={currentSlide}
+            className="h-full bg-gradient-to-r from-[#009E3C] to-[#00bc49] rounded-full"
+            style={{
+              animation: autoPlay ? `progressBar ${interval}ms linear forwards` : 'none',
+            }}
+          />
+        </div>
+
+        {/* Slide stack */}
+        <div className="relative h-52 xs:h-60 sm:h-72 md:h-80 lg:h-[350px] xl:h-[390px]">
           {slides.map((slide, index) => (
             <div
               key={slide.id}
-              className={`absolute top-0 left-0 w-full h-full transition-all duration-600 ease-in-out ${index === currentSlide
-                  ? 'opacity-100 scale-100'
-                  : 'opacity-0 scale-[1.02] pointer-events-none'
-                }`}
+              className="absolute inset-0 w-full h-full"
+              style={{
+                opacity: index === currentSlide ? 1 : 0,
+                transform: index === currentSlide ? 'scale(1)' : 'scale(1.015)',
+                transition: 'opacity 650ms cubic-bezier(0.4,0,0.2,1), transform 650ms cubic-bezier(0.4,0,0.2,1)',
+                pointerEvents: index === currentSlide ? 'auto' : 'none',
+                zIndex: index === currentSlide ? 10 : 0,
+              }}
             >
               <div className={`flex h-full ${slide.layout === 'imageLeft' ? 'flex-row' : 'flex-row-reverse'}`}>
-                {/* Image side */}
-                <div className="w-1/2 relative overflow-hidden">
+
+                {/* Image panel */}
+                <div className="w-[48%] sm:w-1/2 relative overflow-hidden flex items-center justify-center bg-gradient-to-b from-[#f8fdf9] to-[#eef9f0]">
                   <img
                     src={slide.image}
                     alt={slide.title}
-                    className="w-full h-full object-contain p-4 md:p-6 transition-transform duration-700"
+                    className="w-full h-full object-contain p-5 md:p-8 transition-transform duration-700 ease-out group-hover:scale-105"
+                    style={{ transform: index === currentSlide ? 'scale(1)' : 'scale(1.05)' }}
                   />
-                  {/* Decorative wave separator */}
-                  <div className={`absolute top-0 h-full w-6 sm:w-8 md:w-10 ${slide.layout === 'imageLeft' ? 'right-0' : 'left-0'}`}>
-                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+
+                  {/* Wave edge separator */}
+                  <div
+                    className={`absolute top-0 h-full w-8 sm:w-10 md:w-14 pointer-events-none ${
+                      slide.layout === 'imageLeft' ? 'right-0' : 'left-0'
+                    }`}
+                  >
+                    <svg viewBox="0 0 100 200" preserveAspectRatio="none" className="h-full w-full">
                       <defs>
-                        <linearGradient id={`grad-${slide.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#22c55e" />
-                          <stop offset="100%" stopColor="#059669" />
+                        <linearGradient id={`wgrad-${slide.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%"   stopColor="#ffffff" />
+                          <stop offset="50%"  stopColor="#fafffe" />
+                          <stop offset="100%" stopColor="#f8fdf9" />
                         </linearGradient>
                       </defs>
                       <path
-                        d={slide.layout === 'imageLeft'
-                          ? "M0,0 C40,20 20,80 0,100 L0,100 L0,0 Z"
-                          : "M100,0 C60,20 80,80 100,100 L100,100 L100,0 Z"
+                        d={
+                          slide.layout === 'imageLeft'
+                            ? 'M100,0 C60,25 80,75 100,100 C80,125 60,175 100,200 L100,0 Z'
+                            : 'M0,0 C40,25 20,75 0,100 C20,125 40,175 0,200 L0,0 Z'
                         }
-                        fill={`url(#grad-${slide.id})`}
+                        fill={`url(#wgrad-${slide.id})`}
                       />
                     </svg>
                   </div>
                 </div>
 
-                {/* Text content side */}
-                <div className="w-1/2 flex items-center justify-center p-5 sm:p-8 md:p-12 bg-gradient-to-br from-gray-50 to-green-50/30">
-                  <div className="max-w-sm text-center">
-                    <div className="inline-flex items-center gap-1.5 bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold tracking-wider uppercase mb-3 sm:mb-4">
-                      <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                {/* Text panel */}
+                <div className="w-[52%] sm:w-1/2 flex items-center justify-center px-4 sm:px-8 md:px-12 lg:px-16 bg-white relative">
+
+                  {/* Decorative blob */}
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-green-50/60 rounded-full blur-3xl pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 w-32 h-32 bg-orange-50/40 rounded-full blur-3xl pointer-events-none" />
+
+                  <div className="relative z-10 max-w-xs">
+                    {/* Eyebrow */}
+                    <div className="inline-flex items-center gap-1.5 bg-[#009E3C]/10 border border-[#009E3C]/20 text-[#009E3C] px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase mb-3 sm:mb-4">
+                      <span className="w-1.5 h-1.5 bg-[#009E3C] rounded-full animate-pulse" />
                       Featured
                     </div>
-                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold text-gray-900 mb-2 sm:mb-3 tracking-tight leading-tight">
+
+                    {/* Title */}
+                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-[1.75rem] font-black text-gray-900 mb-2 sm:mb-3 leading-tight tracking-tight">
                       {slide.title}
                     </h2>
-                    <p className="text-xs sm:text-sm md:text-base text-gray-500 mb-4 sm:mb-6 leading-relaxed">
+
+                    {/* Subtitle */}
+                    <p className="text-[11px] sm:text-sm md:text-base text-gray-500 mb-4 sm:mb-6 leading-relaxed">
                       {slide.subtitle}
                     </p>
+
+                    {/* CTA */}
                     {slide.ctaText && (
                       <a
                         href={slide.ctaLink || '#'}
-                        className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-xs sm:text-sm font-bold py-2.5 px-6 sm:py-3 sm:px-8 rounded-full transition-all duration-300 shadow-lg shadow-green-200/50 hover:shadow-xl hover:shadow-green-300/50 active:scale-95"
+                        className="inline-flex items-center gap-2 bg-[#009E3C] hover:bg-[#00752C] text-white text-[11px] sm:text-sm font-black py-2.5 px-5 sm:py-3 sm:px-7 rounded-xl transition-all duration-250 shadow-[0_6px_20px_rgba(0,158,60,0.30)] hover:shadow-[0_8px_28px_rgba(0,158,60,0.40)] active:scale-[0.97] group/cta"
                       >
                         {slide.ctaText}
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="w-3.5 h-3.5 transition-transform duration-200 group-hover/cta:translate-x-0.5"
+                          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
                       </a>
@@ -126,12 +169,12 @@ export default function HeroCarousel({
           ))}
         </div>
 
-        {/* Navigation arrows */}
+        {/* ── Navigation arrows ── */}
         {slides.length > 1 && (
           <>
             <button
               onClick={goToPrev}
-              className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm text-gray-700 p-2 sm:p-2.5 rounded-full hover:bg-white hover:text-green-600 transition-all duration-300 shadow-lg border border-gray-100 hover:scale-110"
+              className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/90 backdrop-blur-sm text-gray-600 flex items-center justify-center shadow-[0_2px_12px_rgba(0,0,0,0.12)] border border-gray-100 hover:bg-white hover:text-[#009E3C] hover:scale-110 hover:shadow-[0_4px_20px_rgba(0,0,0,0.16)] transition-all duration-200"
               aria-label="Previous slide"
             >
               <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,7 +183,7 @@ export default function HeroCarousel({
             </button>
             <button
               onClick={goToNext}
-              className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm text-gray-700 p-2 sm:p-2.5 rounded-full hover:bg-white hover:text-green-600 transition-all duration-300 shadow-lg border border-gray-100 hover:scale-110"
+              className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/90 backdrop-blur-sm text-gray-600 flex items-center justify-center shadow-[0_2px_12px_rgba(0,0,0,0.12)] border border-gray-100 hover:bg-white hover:text-[#009E3C] hover:scale-110 hover:shadow-[0_4px_20px_rgba(0,0,0,0.16)] transition-all duration-200"
               aria-label="Next slide"
             >
               <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,23 +193,40 @@ export default function HeroCarousel({
           </>
         )}
 
-        {/* Indicators - pill style */}
+        {/* ── Dot indicators ── */}
         {slides.length > 1 && (
-          <div className="absolute bottom-3 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5 sm:gap-2 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-md">
+          <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.10)] border border-gray-100/80">
             {slides.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`transition-all duration-300 rounded-full ${index === currentSlide
-                    ? 'bg-green-600 w-6 h-2.5'
-                    : 'bg-gray-300 hover:bg-gray-400 w-2.5 h-2.5'
-                  }`}
+                className={`rounded-full transition-all duration-350 ease-out ${
+                  index === currentSlide
+                    ? 'bg-[#009E3C] w-6 sm:w-7 h-2'
+                    : 'bg-gray-300 hover:bg-[#009E3C]/50 w-2 h-2'
+                }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
         )}
+
+        {/* Slide counter badge */}
+        {slides.length > 1 && (
+          <div className="absolute top-4 right-4 z-20 bg-black/30 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full hidden sm:flex items-center gap-1">
+            <span>{currentSlide + 1}</span>
+            <span className="opacity-50">/</span>
+            <span className="opacity-70">{slides.length}</span>
+          </div>
+        )}
       </div>
+
+      <style jsx>{`
+        @keyframes progressBar {
+          from { width: 0%; }
+          to   { width: 100%; }
+        }
+      `}</style>
     </div>
   );
 }

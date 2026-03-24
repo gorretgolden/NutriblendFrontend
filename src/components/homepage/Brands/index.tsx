@@ -41,17 +41,19 @@ export default function BrandsSection() {
 
   if (loading) {
     return (
-      <section className="relative w-full py-16 md:py-24 overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
-          <div className="flex justify-between items-end mb-12">
-            <div className="space-y-4">
-              <div className="h-4 w-32 bg-gray-200 animate-pulse rounded-full" />
-              <div className="h-10 w-64 bg-gray-200 animate-pulse rounded-full" />
+      <section className="relative w-full py-12 md:py-20 overflow-hidden bg-white rounded-2xl border border-gray-100">
+        <div className="max-w-[1560px] mx-auto px-4 sm:px-6">
+          <div className="flex justify-between items-end mb-10">
+            <div className="space-y-3">
+              <div className="h-3.5 w-28 bg-gray-100 animate-shimmer rounded-full" />
+              <div className="h-9 w-56 bg-gray-100 animate-shimmer rounded-xl" />
+              <div className="h-4 w-80 bg-gray-100 animate-shimmer rounded-full" />
             </div>
+            <div className="h-11 w-36 bg-gray-100 animate-shimmer rounded-full hidden sm:block" />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-40 bg-gray-100 animate-pulse rounded-3xl" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {[1,2,3,4,5].map((i) => (
+              <div key={i} className="aspect-square bg-gray-50 animate-shimmer rounded-2xl" />
             ))}
           </div>
         </div>
@@ -62,69 +64,88 @@ export default function BrandsSection() {
   if (brands.length === 0) return null;
 
   return (
-    <section className="relative w-full py-16 md:py-24 overflow-hidden bg-white">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-96 h-96 bg-green-50 rounded-full blur-3xl opacity-60 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-60 pointer-events-none" />
+    <section className="relative w-full py-12 md:py-20 overflow-hidden bg-white rounded-2xl border border-gray-100">
 
-      <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 mb-4 border border-green-100">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-xs font-semibold tracking-wider text-green-700 uppercase">Trusted Partners</span>
+      {/* ── Decorative blobs ── */}
+      <div className="absolute top-0 right-0 -translate-y-1/3 translate-x-1/4 w-80 h-80 bg-[#009E3C]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/4 w-72 h-72 bg-[#F3911E]/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-[1560px] mx-auto px-4 sm:px-6">
+
+        {/* ── Header ── */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 md:mb-14">
+          <div className="max-w-xl">
+            {/* Eyebrow */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#009E3C]/8 border border-[#009E3C]/20 mb-4">
+              <span className="w-2 h-2 rounded-full bg-[#009E3C] animate-pulse" />
+              <span className="text-[10px] font-black tracking-widest text-[#009E3C] uppercase">Trusted Partners</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
-              Premium <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-400">Clinical Brands</span>
+
+            <h2 className="text-2xl md:text-4xl font-black text-gray-900 tracking-tight leading-tight mb-3">
+              Premium{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#009E3C] to-[#00bc49]">
+                Clinical Brands
+              </span>
             </h2>
-            <p className="mt-4 text-gray-500 text-lg">
-              Explore our curation of world-class pharmaceutical and wellness brands, renowned for their certified efficacy and rigorous quality standards.
+
+            <p className="text-gray-500 text-sm md:text-base leading-relaxed">
+              World-class pharmaceutical and wellness brands — renowned for certified
+              efficacy and rigorous quality standards.
             </p>
           </div>
+
           <Link
             href="/brands"
-            className="group inline-flex items-center gap-2 h-12 px-6 rounded-full bg-gray-900 text-white font-medium hover:bg-green-600 transition-colors duration-300"
+            className="group inline-flex items-center gap-2 h-11 px-6 rounded-full border-2 border-gray-900 text-gray-900 font-bold text-sm hover:bg-gray-900 hover:text-white transition-all duration-250 flex-shrink-0"
           >
-            Explore Directory
-            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            Explore All Brands
+            <svg
+              className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>
         </div>
 
-        {/* Brands Grid (Staggered modern layout) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+        {/* ── Brands grid ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
           {brands.map((brand, i) => (
             <Link
               key={brand.id}
               href={`/shop?brand_id=${brand.id}`}
-              className="group relative flex flex-col items-center justify-center p-6 md:p-8 rounded-3xl bg-white border border-gray-100 hover:border-transparent transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2 overflow-hidden aspect-[4/3] sm:aspect-square"
+              className="group relative flex flex-col items-center justify-center p-5 md:p-7 rounded-2xl bg-white border border-gray-100 hover:border-[#009E3C]/25 transition-all duration-350 hover:shadow-[0_12px_36px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 overflow-hidden aspect-square"
+              style={{ animationDelay: `${i * 50}ms` }}
             >
               {/* Hover gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#009E3C]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-350 rounded-2xl" />
 
-              <div className="relative z-10 w-full flex-1 flex items-center justify-center max-w-[120px]">
+              {/* Top-right accent dot */}
+              <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-[#009E3C]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+              {/* Logo */}
+              <div className="relative z-10 w-full flex-1 flex items-center justify-center max-w-[110px]">
                 {brand.image ? (
                   <img
                     src={getImageUrl(brand.image)}
                     alt={brand.name}
-                    className="w-full h-auto max-h-[70px] object-contain filter grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
+                    className="w-full h-auto max-h-[64px] object-contain filter grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 scale-100 group-hover:scale-105 transition-all duration-400"
                   />
                 ) : (
-                  <div className="text-3xl font-black text-gray-300 group-hover:text-green-500 transition-colors duration-500 tracking-tighter uppercase">
+                  <div className="text-2xl font-black text-gray-200 group-hover:text-[#009E3C]/60 transition-colors duration-400 tracking-tight uppercase select-none">
                     {brand.name.substring(0, 2)}
                   </div>
                 )}
               </div>
 
-              <div className="relative z-10 mt-6 text-center w-full">
-                <h3 className="font-semibold text-gray-900 text-sm md:text-base truncate truncate mb-1 border-b border-transparent group-hover:border-green-200 pb-1 w-max mx-auto transition-all duration-300">
+              {/* Name & count */}
+              <div className="relative z-10 mt-4 text-center w-full">
+                <h3 className="font-bold text-gray-800 group-hover:text-gray-900 text-xs md:text-sm truncate transition-colors duration-200 mb-0.5">
                   {brand.name}
                 </h3>
                 {brand.products_count > 0 && (
-                  <p className="text-xs text-gray-400 group-hover:text-green-600 transition-colors duration-300">
-                    {brand.products_count} Formula{brand.products_count !== 1 ? 's' : ''}
+                  <p className="text-[10px] text-gray-400 group-hover:text-[#009E3C] transition-colors duration-300 font-medium">
+                    {brand.products_count} Formula{brand.products_count !== 1 ? "s" : ""}
                   </p>
                 )}
               </div>
