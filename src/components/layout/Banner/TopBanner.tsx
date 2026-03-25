@@ -68,60 +68,40 @@ const TopBanner = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="w-full bg-black text-white" >
-      <div className="container mx-auto px-2 py-2">
-        <div className="flex flex-row justify-between items-center flex-nowrap gap-2">
-          {/* Left side - Contact info */}
-          <div className="flex items-center gap-2 animate-slide-in-left shrink-0">
-            <div className="flex items-center gap-1 bg-[#4caf50] text-white px-2 py-0.5 rounded-full whitespace-nowrap">
-              <PhoneIcon />
-              <span className="text-[10px]">Call For Deals</span>
-              <span className="font-mono text-[11px]">{settings?.top_banner_phone || "0200 804 020"}</span>
-            </div>
+    <div className="w-full bg-[#009E3C] text-white">
+      <div className="max-w-[1600px] mx-auto px-4 py-1.5">
+        <div className="flex flex-row justify-between items-center gap-2">
+          {/* Left — phone */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <PhoneIcon />
+            <span className="text-[11px] font-medium whitespace-nowrap">{settings?.top_banner_phone || "0200 804 020"}</span>
           </div>
 
-          {/* Center - Brand, Bonanza and date */}
-          <div className="hidden sm:flex items-center gap-2 shrink-0">
-            <div className="flex items-center gap-1 animate-fall-from-top" style={{ animationDelay: '0.3s' }}>
-              <span className="text-[10px] font-bold bg-white text-[#4caf50] px-1 py-0.5 rounded">
-                BANNER
-              </span>
-              <span className="text-sm font-extrabold text-white uppercase">
-                {settings?.top_banner_event_name || "LAUNCH BONAZA"}
-              </span>
-            </div>
-
-            <span className="text-[10px] font-semibold animate-slide-in-right whitespace-nowrap" style={{ animationDelay: '0.5s' }}>
-              {settings?.top_banner_event_date || "1st March"}
-            </span>
-          </div>
-
-          {/* Right side - Rotating texts, discount and shop now */}
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="hidden sm:block rotating-text-container animate-zoom-in-out" style={{ animationDelay: '0.7s' }}>
+          {/* Center — rotating promo text */}
+          <div className="flex items-center gap-2 text-[11px] font-medium">
+            <span className="hidden sm:inline text-white/80">✦</span>
+            <div className="rotating-text-container">
               {rotatingTexts.map((text: string, index: number) => (
-                <div
-                  key={index}
-                  className={`rotating-text ${index === currentText ? 'active' : ''}`}
-                >
+                <div key={index} className={`rotating-text ${index === currentText ? 'active' : ''}`}>
                   {text}
                 </div>
               ))}
             </div>
-
-            <div className="bg-[#4caf50] text-white font-bold px-2 py-0.5 rounded-full animate-fade-in text-[10px] whitespace-nowrap" style={{ animationDelay: '0.9s' }}>
+            <span className="hidden sm:inline text-white/80">✦</span>
+            <span className="hidden sm:inline bg-white/20 text-white font-bold px-2 py-0.5 rounded text-[10px] uppercase tracking-wide whitespace-nowrap">
               {settings?.top_banner_discount_text || "GET 60% OFF"}
-            </div>
+            </span>
+          </div>
 
-            <div className="hidden md:flex items-center gap-1 animate-zoom-in-out" style={{ animationDelay: '1.1s' }}>
-              <span className="text-sm font-bold">SHOP NOW</span>
-            </div>
-
+          {/* Right — event + close */}
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="hidden md:inline text-[11px] font-medium text-white/90 whitespace-nowrap">
+              {settings?.top_banner_event_name || "Free delivery over UGX 100k"}
+            </span>
             <Button
               variant="ghost"
               onClick={() => setIsVisible(false)}
-              className="hover:bg-transparent text-white hover:text-[#4caf50] transition-colors animate-fade-in p-1 h-auto w-auto"
-              style={{ animationDelay: '1.3s' }}
+              className="hover:bg-transparent text-white/70 hover:text-white transition-colors p-0.5 h-auto w-auto"
               type="button"
               aria-label="close banner"
             >

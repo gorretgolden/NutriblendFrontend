@@ -19,7 +19,7 @@ const MobileFilters = () => {
         <DrawerTrigger asChild>
           <button
             type="button"
-            className="h-8 w-8 rounded-full bg-[#F0F0F0] text-black p-1 md:hidden"
+            className="h-8 w-8 rounded-full bg-[#F0F0F0] text-black p-1 lg:hidden"
           >
             <FiSliders className="text-base mx-auto" />
           </button>

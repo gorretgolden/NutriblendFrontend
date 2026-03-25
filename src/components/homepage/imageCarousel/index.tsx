@@ -73,7 +73,7 @@ export default function HeroCarousel({
         </div>
 
         {/* Slide stack */}
-        <div className="relative h-52 xs:h-60 sm:h-72 md:h-80 lg:h-[350px] xl:h-[390px]">
+        <div className="relative h-52 xs:h-64 sm:h-80 md:h-96 lg:h-[440px] xl:h-[500px] 2xl:h-[540px]">
           {slides.map((slide, index) => (
             <div
               key={slide.id}
@@ -130,7 +130,7 @@ export default function HeroCarousel({
                   <div className="absolute top-0 right-0 w-40 h-40 bg-green-50/60 rounded-full blur-3xl pointer-events-none" />
                   <div className="absolute bottom-0 left-0 w-32 h-32 bg-orange-50/40 rounded-full blur-3xl pointer-events-none" />
 
-                  <div className="relative z-10 max-w-xs">
+                  <div className="relative z-10 max-w-xs lg:max-w-sm xl:max-w-md">
                     {/* Eyebrow */}
                     <div className="inline-flex items-center gap-1.5 bg-[#009E3C]/10 border border-[#009E3C]/20 text-[#009E3C] px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase mb-3 sm:mb-4">
                       <span className="w-1.5 h-1.5 bg-[#009E3C] rounded-full animate-pulse" />
@@ -138,12 +138,12 @@ export default function HeroCarousel({
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-[1.75rem] font-black text-gray-900 mb-2 sm:mb-3 leading-tight tracking-tight">
+                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2rem] xl:text-[2.25rem] font-black text-gray-900 mb-2 sm:mb-3 leading-tight tracking-tight">
                       {slide.title}
                     </h2>
 
                     {/* Subtitle */}
-                    <p className="text-[11px] sm:text-sm md:text-base text-gray-500 mb-4 sm:mb-6 leading-relaxed">
+                    <p className="text-[11px] sm:text-sm md:text-base lg:text-[15px] xl:text-base text-gray-500 mb-4 sm:mb-6 leading-relaxed">
                       {slide.subtitle}
                     </p>
 

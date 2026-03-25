@@ -197,7 +197,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-white/95 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <header className="bg-white sticky top-0 z-50 border-b border-gray-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         {/* Main header */}
         <div className="max-w-[1600px] mx-auto px-3 sm:px-4 py-2 md:py-3">
           <div className="flex items-center justify-between gap-3">
@@ -352,14 +352,14 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Desktop Navigation Bar */}
-        <div className="hidden md:block bg-[#009E3C] shadow-[0_2px_8px_rgba(0,158,60,0.25)]">
+        {/* Desktop Navigation Bar — white iHerb-style */}
+        <div className="hidden md:block bg-white border-t border-gray-100 shadow-[0_1px_0_rgba(0,0,0,0.05)]">
           <div className="max-w-[1600px] mx-auto px-3">
-            <div className="flex items-center overflow-x-auto scrollbar-hide">
+            <div className="flex items-center overflow-x-auto no-scrollbar">
               {/* All Categories CTA */}
               <Link
                 href="/shop"
-                className="flex items-center gap-2 px-4 py-3 bg-[#007a2e] text-white text-sm font-extrabold whitespace-nowrap hover:bg-[#006624] transition-colors flex-shrink-0 border-r border-white/20"
+                className="flex items-center gap-2 px-4 py-2.5 bg-[#009E3C] text-white text-[13px] font-bold whitespace-nowrap hover:bg-[#007a2e] transition-colors flex-shrink-0 rounded-none"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
@@ -371,16 +371,15 @@ const Header = () => {
                 <div key={index} className="relative group flex-shrink-0">
                   {item.subItems && item.subItems.length > 0 ? (
                     <>
-                      <button className="px-4 py-3 text-sm font-semibold text-white/90 hover:text-white hover:bg-[#007a2e] flex items-center gap-1.5 transition-colors duration-150 whitespace-nowrap border-b-2 border-transparent group-hover:border-white/60">
+                      <button className="px-4 py-2.5 text-[13px] font-semibold text-gray-700 hover:text-[#009E3C] flex items-center gap-1 transition-colors duration-150 whitespace-nowrap border-b-2 border-transparent group-hover:border-[#009E3C]">
                         {item.name}
-                        <svg className="h-3 w-3 transition-transform duration-200 group-hover:rotate-180 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <svg className="h-3 w-3 transition-transform duration-200 group-hover:rotate-180 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                       </button>
                       {/* Dropdown */}
                       <div className="absolute left-0 top-full w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-out z-50 pt-1.5">
                         <div className="bg-white rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.14)] border border-gray-100/80 py-1.5 overflow-hidden">
-                          {/* Top accent */}
                           <div className="h-0.5 bg-gradient-to-r from-[#009E3C] to-[#00bc49] rounded-full mx-2 mb-1.5" />
                           {item.subItems.map((subItem: any, subIndex: number) => (
                             <Link
@@ -388,7 +387,7 @@ const Header = () => {
                               href={subItem.href}
                               className="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-[#009E3C]/8 hover:text-[#009E3C] transition-colors duration-120 font-medium"
                             >
-                              <span className="w-1 h-1 rounded-full bg-gray-300 flex-shrink-0" />
+                              <span className="w-1 h-1 rounded-full bg-[#009E3C]/40 flex-shrink-0" />
                               {subItem.name}
                             </Link>
                           ))}
@@ -398,7 +397,7 @@ const Header = () => {
                   ) : (
                     <Link
                       href={item.href || "#"}
-                      className="px-4 py-3 text-sm font-semibold text-white/90 hover:text-white hover:bg-[#007a2e] transition-colors duration-150 whitespace-nowrap inline-block border-b-2 border-transparent hover:border-white/60"
+                      className="px-4 py-2.5 text-[13px] font-semibold text-gray-700 hover:text-[#009E3C] transition-colors duration-150 whitespace-nowrap inline-block border-b-2 border-transparent hover:border-[#009E3C]"
                     >
                       {item.name}
                     </Link>
@@ -406,16 +405,16 @@ const Header = () => {
                 </div>
               ))}
 
-              {/* Spacer + special end links */}
-              <div className="ml-auto flex items-center flex-shrink-0 border-l border-white/15 ml-2">
-                <Link href="/shop?on_sale=true" className="flex items-center gap-1.5 px-4 py-3 text-sm font-extrabold text-[#FFC107] hover:bg-[#007a2e] transition-colors whitespace-nowrap">
+              {/* End links */}
+              <div className="ml-auto flex items-center flex-shrink-0 border-l border-gray-100 ml-2">
+                <Link href="/shop?on_sale=true" className="flex items-center gap-1.5 px-4 py-2.5 text-[13px] font-bold text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors whitespace-nowrap">
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" /></svg>
                   Sale
                 </Link>
-                <Link href="/wholesale-registration" className="px-4 py-3 text-sm font-semibold text-white/85 hover:text-white hover:bg-[#007a2e] transition-colors whitespace-nowrap">
+                <Link href="/wholesale-registration" className="px-4 py-2.5 text-[13px] font-semibold text-gray-600 hover:text-[#009E3C] hover:bg-gray-50 transition-colors whitespace-nowrap">
                   Wholesale
                 </Link>
-                <Link href="/brands" className="px-4 py-3 text-sm font-semibold text-white/85 hover:text-white hover:bg-[#007a2e] transition-colors whitespace-nowrap">
+                <Link href="/brands" className="px-4 py-2.5 text-[13px] font-semibold text-gray-600 hover:text-[#009E3C] hover:bg-gray-50 transition-colors whitespace-nowrap">
                   Brands
                 </Link>
               </div>
@@ -718,29 +717,29 @@ function DesktopSearchBar({
     <div ref={ref} className="relative flex-1 max-w-3xl xl:max-w-4xl">
       <form
         onSubmit={handleSearch}
-        className="flex rounded-xl overflow-hidden border-2 border-gray-200/80 bg-white transition-all duration-250 focus-within:border-[#009E3C] focus-within:shadow-[0_0_0_4px_rgba(0,158,60,0.10)] hover:border-gray-300 group"
+        className="flex rounded-full overflow-hidden border-2 border-gray-200 bg-white transition-all duration-250 focus-within:border-[#009E3C] focus-within:shadow-[0_0_0_3px_rgba(0,158,60,0.12)] hover:border-gray-300 group shadow-sm"
       >
-        <div className="flex items-center pl-4">
-          <svg className="w-4.5 h-4.5 w-5 h-5 text-gray-400 group-focus-within:text-[#009E3C] transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex items-center pl-5">
+          <svg className="w-5 h-5 text-gray-400 group-focus-within:text-[#009E3C] transition-colors duration-200 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
         <input
           type="text"
-          placeholder="Search supplements, brands, categories..."
+          placeholder="Search for supplements, brands, health products..."
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          className="w-full outline-none text-gray-800 placeholder:text-gray-400 bg-transparent text-sm px-3 py-2.5 md:py-3"
+          className="w-full outline-none text-gray-800 placeholder:text-gray-400 bg-transparent text-sm px-3 py-3 md:py-3.5"
         />
         {searchQuery && (
           <button
             type="button"
             onClick={() => { setSearchQuery(""); setOpen(false); }}
-            className="flex items-center justify-center px-2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex items-center justify-center px-2 text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -749,7 +748,7 @@ function DesktopSearchBar({
         )}
         <button
           type="submit"
-          className="flex items-center justify-center bg-[#009E3C] hover:bg-[#00752C] text-white px-5 sm:px-8 py-2.5 md:py-3 transition-colors duration-200 font-extrabold text-xs tracking-widest uppercase active:scale-95 flex-shrink-0 gap-1.5"
+          className="flex items-center justify-center bg-[#009E3C] hover:bg-[#00752C] text-white px-6 sm:px-8 py-3 md:py-3.5 transition-colors duration-200 font-bold text-sm active:scale-95 flex-shrink-0 gap-2 rounded-r-full"
         >
           <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
