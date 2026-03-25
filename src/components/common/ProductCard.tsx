@@ -105,7 +105,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       {/* ── Image Container ── */}
       <Link
         href={`/shop/product/${data.id}/${productSlug}`}
-        className="relative block bg-gradient-to-b from-gray-50 to-white w-full aspect-square overflow-hidden"
+        className="relative block bg-gradient-to-b from-gray-50 to-white w-full aspect-[4/3] overflow-hidden"
       >
         {/* Wishlist */}
         <div

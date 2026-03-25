@@ -25,7 +25,7 @@ const banners: BannerItem[] = [
     subtitle: "Build your best body",
   },
   {
-    image: "/images/two.avif",
+    image: "/images/bottle1.avif",
     alt: "Nutritional Supplements",
     href: "/shop?category=nutritional-supplements",
     badge: "Best Sellers",
@@ -34,7 +34,7 @@ const banners: BannerItem[] = [
     subtitle: "Fuel from inside out",
   },
   {
-    image: "/images/three.avif",
+    image: "/images/bottle2.avif",
     alt: "Weight Management",
     href: "/shop?category=weight-management",
     badge: "New Arrivals",
