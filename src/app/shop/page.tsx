@@ -144,36 +144,36 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
           {/* Main Content */}
           <div className="flex-1 min-w-0">
-            {/* Title + Sort Bar — white top bar like iHerb */}
-            <div className="bg-white rounded-lg border border-gray-200 shadow-sm px-4 sm:px-6 py-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* Title + Sort Bar */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm px-4 sm:px-6 py-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h1 className="font-bold text-xl sm:text-2xl text-gray-900">{pageTitle}</h1>
-                <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+                <h1 className="font-extrabold text-xl sm:text-2xl text-gray-900 leading-tight">{pageTitle}</h1>
+                <p className="text-xs sm:text-sm text-gray-400 mt-0.5 font-medium">
                   {meta.total > 0
-                    ? `Showing ${meta.from}–${meta.to} of ${meta.total} products`
+                    ? `${meta.from}–${meta.to} of ${meta.total.toLocaleString()} products`
                     : 'No products found'}
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {/* Sort Dropdown */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs text-gray-500 hidden sm:inline">Sort by:</span>
-                  <div className="flex gap-1">
-                    {sortOptions.map((opt) => (
-                      <Link
-                        key={opt.value}
-                        href={getSortLink(opt.value)}
-                        className={`text-xs px-2.5 py-1.5 rounded-md transition-colors ${sort === opt.value
-                          ? 'bg-[#009E3C] text-white font-bold'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                          }`}
-                      >
-                        {opt.label}
-                      </Link>
-                    ))}
-                  </div>
+              <div className="flex items-center gap-2.5 flex-shrink-0">
+                {/* Sort pills */}
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+                  <span className="text-[11px] font-semibold text-gray-400 hidden sm:inline whitespace-nowrap">Sort:</span>
+                  {sortOptions.map((opt) => (
+                    <Link
+                      key={opt.value}
+                      href={getSortLink(opt.value)}
+                      className={`whitespace-nowrap text-[11px] px-3 py-1.5 rounded-full border transition-all duration-200 font-semibold ${
+                        sort === opt.value
+                          ? 'bg-[#009E3C] text-white border-[#009E3C] shadow-sm'
+                          : 'bg-white text-gray-500 border-gray-200 hover:border-[#009E3C]/40 hover:text-[#009E3C]'
+                      }`}
+                    >
+                      {opt.label}
+                    </Link>
+                  ))}
                 </div>
+                <div className="w-px h-5 bg-gray-200 hidden sm:block" />
                 <MobileFilters />
               </div>
             </div>
