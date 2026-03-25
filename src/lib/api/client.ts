@@ -718,6 +718,15 @@ class NutriBlendApiClient {
     async subscribeToNewsletter(email: string): Promise<ApiResponse> {
         return this.post('/newsletter/subscribe', { email });
     }
+
+    // Wellness questions
+    async submitWellnessQuestion(data: { name: string; email: string; subject: string; question: string }): Promise<ApiResponse> {
+        return this.post('/wellness/submit-question', data);
+    }
+
+    async getWellnessAnswers(): Promise<ApiResponse> {
+        return this.request('/wellness/answers');
+    }
 }
 
 // ==================== Export Singleton ====================
