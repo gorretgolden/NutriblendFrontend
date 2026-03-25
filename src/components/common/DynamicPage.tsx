@@ -6,6 +6,9 @@ import { apiClient, Page, PageContent } from '@/lib/api/client';
 interface DynamicPageProps {
     slug?: string;
     type?: 'about' | 'contact' | 'faq' | 'terms' | 'privacy';
+    /** Pre-fetched page data from a server component. When provided, skips
+     *  the client-side fetch entirely so the page renders with no loading flash. */
+    initialData?: Page | null;
 }
 
 /**
@@ -68,12 +71,16 @@ const FeatureIcon: React.FC<{ name: string }> = ({ name }) => {
     return <svg className={cls} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>;
 };
 
-const DynamicPage: React.FC<DynamicPageProps> = ({ slug, type }) => {
-    const [pageData, setPageData] = useState<Page | null>(null);
-    const [loading, setLoading] = useState(true);
+const DynamicPage: React.FC<DynamicPageProps> = ({ slug, type, initialData }) => {
+    // If initialData is provided (server-side pre-fetch), skip client-side fetching.
+    const [pageData, setPageData] = useState<Page | null>(initialData ?? null);
+    const [loading, setLoading] = useState(initialData === undefined);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        // Skip the client fetch when the server already provided data.
+        if (initialData !== undefined) return;
+
         const fetchPage = async () => {
             try {
                 setLoading(true);
@@ -103,7 +110,7 @@ const DynamicPage: React.FC<DynamicPageProps> = ({ slug, type }) => {
         };
 
         fetchPage();
-    }, [slug, type]);
+    }, [slug, type, initialData]);
 
     const renderSection = (section: PageContent, index: number) => {
         switch (section.type) {

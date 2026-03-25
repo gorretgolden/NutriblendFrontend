@@ -97,9 +97,9 @@ export default function BrandsPage() {
                 href={`/shop?brand_id=${brand.id}`}
                 className="relative w-full h-32 sm:h-36 lg:h-44 bg-white/80 backdrop-blur rounded-2xl shadow-md border border-gray-100 overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all"
               >
-                {brand.logo_path ? (
+                {brand.image ? (
                   <img
-                    src={getImageUrl(brand.logo_path)}
+                    src={getImageUrl(brand.image)}
                     alt={brand.name}
                     className="absolute inset-0 w-full h-full object-contain p-4 group-hover:scale-105 transition-transform"
                   />
