@@ -19,6 +19,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const hasDiscount = (data.discount?.percentage ?? 0) > 0 || (data.discount?.amount ?? 0) > 0;
+  const isOutOfStock = data.stock !== undefined && data.stock === 0;
 
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const isWholesaleUser = isAuthenticated && user?.is_wholesale_approved;
@@ -71,7 +72,11 @@ const ProductCard = ({ data }: ProductCardProps) => {
       : null;
 
   return (
-    <div className="group relative bg-white border border-gray-100 rounded-2xl overflow-hidden flex flex-col h-full transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.10),0_4px_10px_rgba(0,0,0,0.06)] hover:border-[#009E3C]/25 glow-on-hover">
+    <div className={`group relative bg-white border rounded-2xl overflow-hidden flex flex-col h-full transition-all duration-300 ease-out ${
+      isOutOfStock
+        ? 'border-gray-100 opacity-75'
+        : 'border-gray-100 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.10),0_4px_10px_rgba(0,0,0,0.06)] hover:border-[#009E3C]/25 glow-on-hover'
+    }`}>
 
       {/* ── Shimmer sheen on hover ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl z-0">
@@ -124,8 +129,17 @@ const ProductCard = ({ data }: ProductCardProps) => {
           </span>
         )}
 
+        {/* Out of Stock overlay */}
+        {isOutOfStock && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 backdrop-blur-[2px]">
+            <span className="bg-gray-800 text-white text-[10px] font-black px-3 py-1.5 rounded-full tracking-widest uppercase shadow-lg">
+              Out of Stock
+            </span>
+          </div>
+        )}
+
         {/* Low Stock */}
-        {data.stock !== undefined && data.stock > 0 && data.stock <= 10 && (
+        {!isOutOfStock && data.stock !== undefined && data.stock > 0 && data.stock <= 10 && (
           <span className="absolute bottom-2.5 left-2.5 z-10 flex items-center gap-1 bg-red-50 text-red-600 text-[9px] font-bold px-2 py-0.5 rounded-md border border-red-100">
             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
             Only {data.stock} left
@@ -217,13 +231,18 @@ const ProductCard = ({ data }: ProductCardProps) => {
         {/* Add to Cart Button */}
         <button
           onClick={handleAddToCart}
-          className={`mt-3 w-full py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] font-bold active:scale-[0.97] transition-all duration-200 flex items-center justify-center gap-1.5 ${
-            isInCart
-              ? "bg-[#f0fbf4] text-[#009E3C] border-2 border-[#009E3C]/30 hover:bg-[#e4f8ec] hover:border-[#009E3C]/50"
-              : "bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)]"
+          disabled={isOutOfStock}
+          className={`mt-3 w-full py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
+            isOutOfStock
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+              : isInCart
+                ? "active:scale-[0.97] bg-[#f0fbf4] text-[#009E3C] border-2 border-[#009E3C]/30 hover:bg-[#e4f8ec] hover:border-[#009E3C]/50"
+                : "active:scale-[0.97] bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)]"
           }`}
         >
-          {isInCart ? (
+          {isOutOfStock ? (
+            'Out of Stock'
+          ) : isInCart ? (
             <>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
