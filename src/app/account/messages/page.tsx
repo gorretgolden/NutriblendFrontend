@@ -1,10 +1,48 @@
-// src/app/account/messages/page.tsx
-"use client";
+'use client';
 
-import React from "react";
-import { FaEnvelope, FaInbox } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { apiClient } from "@/lib/api/client";
+import MyMessages, { Message } from "@/components/accounts/messages";
+import { FaEnvelope } from "react-icons/fa";
+import { FiLoader } from "react-icons/fi";
 
 export default function MessagesPage() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await apiClient.getNotifications();
+        if (response.status && response.data) {
+          const rawData = (response.data as any).data || response.data;
+          const items = Array.isArray(rawData) ? rawData : [];
+          const mapped: Message[] = items.map((n: any) => ({
+            id: String(n.id),
+            sender: "NutriBlend Haven",
+            subject: n.title || n.type || "Notification",
+            date: n.created_at
+              ? new Date(n.created_at).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })
+              : "",
+            preview: n.message || "",
+            isRead: !!n.read_at,
+          }));
+          setMessages(mapped);
+        }
+      } catch (error) {
+        console.error("Failed to fetch notifications:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
@@ -17,17 +55,14 @@ export default function MessagesPage() {
         </div>
       </div>
 
-      {/* Empty State */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
-        <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <FaInbox className="w-8 h-8 text-gray-400" />
+      {loading ? (
+        <div className="flex items-center justify-center py-16 text-gray-400">
+          <FiLoader className="w-6 h-6 animate-spin mr-2" />
+          <span>Loading messages...</span>
         </div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">No messages yet</h3>
-        <p className="text-gray-500 text-sm max-w-sm mx-auto">
-          You&apos;ll receive notifications here when you place orders,
-          receive shipment updates, or get promotional offers.
-        </p>
-      </div>
+      ) : (
+        <MyMessages messages={messages} />
+      )}
     </div>
   );
 }

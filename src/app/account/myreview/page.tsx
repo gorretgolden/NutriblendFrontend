@@ -1,10 +1,50 @@
-// src/app/account/myreview/page.tsx
-"use client";
+'use client';
 
-import React from "react";
-import { FaStar, FaPen } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { apiClient } from "@/lib/api/client";
+import MyReview, { Review } from "@/components/accounts/MyReview";
+import { FaStar } from "react-icons/fa";
+import { FiLoader } from "react-icons/fi";
 
 export default function MyReviewsPage() {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await apiClient.getMyReviews();
+        if (response.status && response.data) {
+          const rawData = Array.isArray(response.data)
+            ? response.data
+            : (response.data as any).data || [];
+          const mapped: Review[] = rawData.map((r: any) => ({
+            id: String(r.id),
+            reviewerName: r.user?.name || "You",
+            productName: r.product?.name || r.product_name || "Unknown Product",
+            rating: r.rating ?? 0,
+            date: r.created_at
+              ? new Date(r.created_at).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })
+              : "",
+            comment: r.comment || r.review || "",
+            productImage: r.product?.image_url || r.product?.thumbnail || undefined,
+          }));
+          setReviews(mapped);
+        }
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
@@ -17,17 +57,14 @@ export default function MyReviewsPage() {
         </div>
       </div>
 
-      {/* Empty State */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
-        <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6">
-          <FaPen className="w-8 h-8 text-amber-300" />
+      {loading ? (
+        <div className="flex items-center justify-center py-16 text-gray-400">
+          <FiLoader className="w-6 h-6 animate-spin mr-2" />
+          <span>Loading reviews...</span>
         </div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">No reviews yet</h3>
-        <p className="text-gray-500 text-sm max-w-sm mx-auto">
-          After purchasing products, you can share your experience by leaving reviews
-          on their product pages. Your feedback helps other customers!
-        </p>
-      </div>
+      ) : (
+        <MyReview reviews={reviews} />
+      )}
     </div>
   );
 }
