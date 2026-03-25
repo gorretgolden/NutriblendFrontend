@@ -541,6 +541,17 @@ class NutriBlendApiClient {
         return this.request<any[]>('/reviews/my');
     }
 
+    async getProductReviews(productId: number): Promise<ApiResponse<any>> {
+        return this.request<any>(`/products/${productId}/reviews`);
+    }
+
+    async submitReview(productId: number, data: { rating: number; comment: string }): Promise<ApiResponse<any>> {
+        return this.request<any>('/reviews', {
+            method: 'POST',
+            body: JSON.stringify({ product_id: productId, ...data }),
+        });
+    }
+
     // ==================== Wishlist ====================
 
     async getWishlist(): Promise<ApiResponse<WishlistItem[]>> {

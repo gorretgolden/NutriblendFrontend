@@ -54,7 +54,7 @@ const Tabs = ({ data }: { data: Product }) => {
       </div>
       <div className="mb-12 sm:mb-16">
         {active === 1 && <ProductDetailsContent data={data} />}
-        {active === 2 && <ReviewsContent />}
+        {active === 2 && <ReviewsContent productId={data.id} />}
         {active === 3 && <FaqContent />}
       </div>
     </div>
