@@ -13,34 +13,34 @@ type FaqItem = {
 
 const faqsData: FaqItem[] = [
   {
-    question: "What is the material of the t-shirt?",
+    question: "Are the products on NutriBlend Haven authentic and safe?",
     answer:
-      "Provide details about the fabric type (e.g., cotton, polyester, blend), weight, and any specific features.",
+      "Yes. Every product we carry is sourced directly from verified manufacturers and authorised distributors. We carry out quality checks before listing any item. If you have concerns about a specific product, contact our support team.",
   },
   {
-    question: "What are the care instructions for the t-shirt?",
+    question: "How should I store my supplements?",
     answer:
-      "Outline recommended washing, drying, and ironing methods to maintain quality and longevity.",
+      "Most supplements should be stored in a cool, dry place away from direct sunlight and moisture. Check the product label for specific storage instructions — some items such as probiotics may require refrigeration.",
   },
   {
-    question: "What is the design or print on the t-shirt made of?",
+    question: "Can I take multiple supplements at the same time?",
     answer:
-      "Explain the material used for the design (e.g., vinyl, screen print, embroidery) and its durability.",
+      "While many supplements can be combined safely, we recommend consulting a qualified healthcare professional before starting any new supplement regimen, especially if you are on medication or have an existing health condition.",
   },
   {
-    question: "Is the t-shirt unisex or designed for specific genders?",
+    question: "What is your delivery policy?",
     answer:
-      "Indicate whether the shirt is suitable for both men and women or targeted towards a particular gender.",
+      "We deliver across Uganda. Delivery fees vary by town and are calculated at checkout. Orders placed before 12 PM are typically dispatched the same business day. You will receive updates via SMS/email once your order is on the way.",
   },
   {
-    question: "What are the shipping options and costs?",
+    question: "What is your returns and refund policy?",
     answer:
-      "Provide information about shipping methods, estimated delivery times, and associated fees.",
+      "We accept returns within 7 days of delivery for sealed, unopened products in their original condition. Perishable items and opened supplements are not eligible for return. Contact our support team to initiate a return.",
   },
   {
-    question: "What is the return policy for the t-shirt?",
+    question: "How do I apply for a wholesale account?",
     answer:
-      "Outline the return window, conditions, and refund or exchange procedures.",
+      "Visit the Wholesale Registration page and fill in your business details. Our team reviews applications within 1–2 business days. Once approved, you'll have access to wholesale pricing on qualifying products.",
   },
 ];
 
