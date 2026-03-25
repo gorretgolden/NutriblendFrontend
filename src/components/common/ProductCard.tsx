@@ -105,7 +105,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       {/* ── Image Container ── */}
       <Link
         href={`/shop/product/${data.id}/${productSlug}`}
-        className="relative block bg-gradient-to-b from-gray-50 to-white w-full aspect-[4/3] overflow-hidden"
+        className="relative block bg-gradient-to-b from-gray-50 to-white w-full overflow-hidden" style={{height: '160px'}}
       >
         {/* Wishlist */}
         <div
@@ -147,11 +147,11 @@ const ProductCard = ({ data }: ProductCardProps) => {
         )}
 
         {/* Product Image */}
-        <div className="flex items-center justify-center w-full h-full p-4 sm:p-5">
+        <div className="flex items-center justify-center w-full h-full p-2 sm:p-3">
           <Image
             src={data.srcUrl}
-            width={220}
-            height={220}
+            width={140}
+            height={140}
             className="object-contain max-h-full w-auto transition-transform duration-500 ease-out group-hover:scale-[1.07]"
             alt={data.title}
             priority
@@ -160,7 +160,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       </Link>
 
       {/* ── Content ── */}
-      <div className="relative z-10 px-3 sm:px-4 pt-3 pb-3.5 sm:pb-4 flex flex-col flex-grow border-t border-gray-100/80">
+      <div className="relative z-10 px-2 sm:px-3 pt-2 pb-2.5 flex flex-col flex-grow border-t border-gray-100/80">
 
         {/* Brand */}
         {data.brand && (
@@ -172,13 +172,13 @@ const ProductCard = ({ data }: ProductCardProps) => {
         {/* Title */}
         <Link
           href={`/shop/product/${data.id}/${productSlug}`}
-          className="text-gray-900 text-xs sm:text-[13px] font-semibold mb-1.5 line-clamp-2 hover:text-[#009E3C] transition-colors duration-200 leading-snug"
+          className="text-gray-900 text-[11px] sm:text-xs font-semibold mb-1 line-clamp-2 hover:text-[#009E3C] transition-colors duration-200 leading-snug"
         >
           {data.title}
         </Link>
 
         {/* Rating */}
-        <div className="flex items-center gap-1.5 mb-2.5">
+        <div className="flex items-center gap-1 mb-1.5">
           <Rating
             initialValue={data.rating}
             allowFraction
@@ -193,13 +193,6 @@ const ProductCard = ({ data }: ProductCardProps) => {
           </span>
         </div>
 
-        {/* Verified Purity indicator */}
-        <div className="flex items-center gap-1.5 mb-3">
-          <svg className="w-3 h-3 text-[#009E3C] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-          </svg>
-          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Verified Authentic</span>
-        </div>
 
         {/* Price Block */}
         <div className="flex flex-col mt-auto">
@@ -232,7 +225,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock}
-          className={`mt-3 w-full py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
+          className={`mt-2 w-full py-1.5 rounded-lg text-[11px] font-bold transition-all duration-200 flex items-center justify-center gap-1 ${
             isOutOfStock
               ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
               : isInCart

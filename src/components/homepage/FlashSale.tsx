@@ -28,8 +28,8 @@ const FlashSale = ({ products }: { products: Product[] | null }) => {
 
   return (
     <section className="w-full mb-8 md:mb-14">
-      {/* Red Header Bar */}
-      <div className="bg-red-600 text-white py-3 px-4 sm:px-6 flex flex-wrap items-center justify-between">
+      {/* Flash Sale Header Bar */}
+      <div className="bg-[#009E3C] text-white py-3 px-4 sm:px-6 flex flex-wrap items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
             <svg className="w-6 h-6 mr-2 animate-bounce" fill="currentColor" viewBox="0 0 24 24">
@@ -58,7 +58,7 @@ const FlashSale = ({ products }: { products: Product[] | null }) => {
       </div>
 
       {/* Carousel Container */}
-      <div className="bg-white border-x border-b border-red-100 shadow-xl shadow-red-50/50 rounded-b-2xl overflow-hidden pt-4">
+      <div className="bg-white border-x border-b border-[#009E3C]/15 shadow-xl shadow-[#009E3C]/5 rounded-b-2xl overflow-hidden pt-4">
         <ProductCarousel 
           products={products} 
           title="" 
