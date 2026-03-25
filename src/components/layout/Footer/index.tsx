@@ -38,7 +38,7 @@ const Footer = () => {
     { href: "/shop",                        label: "Shop All Products" },
     { href: "/shop?is_new_arrival=true",    label: "New Arrivals"      },
     { href: "/brands",                      label: "All Brands"        },
-    { href: "/auth/register-wholesale",     label: "Wholesale Registration" },
+    { href: "/wholesale-registration",       label: "Wholesale Registration" },
     { href: "/aboutUs",                     label: "About Us"          },
     { href: "/faq",                         label: "FAQ"               },
     { href: "/contact",                     label: "Contact Us"        },

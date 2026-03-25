@@ -178,15 +178,6 @@ export default async function Home() {
         <ThreeColBanners />
       </div>
 
-      {/* ── 6. Best Sellers (latest products as best sellers) ── */}
-      {latestProducts.length > 0 && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-6">
-          <div className="bg-white rounded-2xl px-5 py-6 md:px-8 border border-gray-100 shadow-sm">
-            <SectionHeading label="Top Picks" title="Best Sellers" viewAllLink="/shop" />
-            <ProductCarousel products={latestProducts} title="Best Sellers" hideHeader viewAllLink="/shop" />
-          </div>
-        </div>
-      )}
 
       {/* ── 7. Brands Section ── */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-6">
