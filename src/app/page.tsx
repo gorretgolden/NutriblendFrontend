@@ -139,7 +139,10 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── 2. Trust Signals Bar ── */}
+      {/* ── 2. Shop by Category (iHerb style) ── */}
+      <ShopByGoal />
+
+      {/* ── 3. Trust Signals Bar ── */}
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 md:divide-x md:divide-gray-100">
@@ -165,13 +168,10 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── 3. Flash Sales / Deals of the Day ── */}
+      {/* ── 4. Flash Sales / Deals of the Day ── */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-6">
         <FlashSale products={onSaleProducts} />
       </div>
-
-      {/* ── 4. Shop by Health Goal ── */}
-      <ShopByGoal />
 
       {/* ── 5. Three-Column Promo Banners ── */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">

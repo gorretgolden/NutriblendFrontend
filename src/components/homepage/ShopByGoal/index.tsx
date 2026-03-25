@@ -150,46 +150,28 @@ const goals: GoalItem[] = [
 
 export default function ShopByGoal() {
   return (
-    <section className="w-full bg-white border-y border-gray-100 py-6">
+    <section className="w-full bg-white border-b border-gray-100 py-4">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <p className="text-[11px] font-black uppercase tracking-widest text-[#009E3C] mb-0.5">Browse by Goal</p>
-            <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Shop by Health Goal</h2>
-          </div>
-          <Link
-            href="/shop"
-            className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-[#009E3C] hover:text-[#007a2e] transition-colors group border border-[#009E3C]/30 rounded-full px-4 py-1.5 hover:bg-[#009E3C]/5"
-          >
-            All Categories
-            <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
 
-        {/* Scrollable goals strip */}
+        {/* iHerb-style: scrollable on mobile, grid on desktop */}
         <div
-          className="flex gap-4 overflow-x-auto pb-2"
+          className="flex md:grid md:grid-cols-12 gap-1 overflow-x-auto"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {goals.map((goal) => (
             <Link
               key={goal.label}
               href={goal.href}
-              className="flex flex-col items-center gap-2.5 flex-none group"
-              style={{ minWidth: "80px" }}
+              className="flex flex-col items-center gap-1.5 flex-none md:flex-auto group py-2 px-2 rounded-xl hover:bg-gray-50 transition-colors duration-150"
+              style={{ minWidth: "68px" }}
             >
-              {/* Circle icon */}
               <div
-                className="w-[72px] h-[72px] rounded-full flex items-center justify-center shadow-sm transition-transform duration-200 group-hover:scale-110 group-hover:shadow-md"
+                className="w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
                 style={{ backgroundColor: goal.bgColor, color: goal.color }}
               >
-                {goal.icon}
+                <div className="w-5 h-5">{goal.icon}</div>
               </div>
-              {/* Label */}
-              <span className="text-[11px] font-semibold text-gray-700 text-center leading-tight group-hover:text-gray-900 transition-colors" style={{ maxWidth: "76px" }}>
+              <span className="text-[10px] font-semibold text-gray-600 text-center leading-tight group-hover:text-gray-900 transition-colors whitespace-nowrap">
                 {goal.label}
               </span>
             </Link>
@@ -198,9 +180,7 @@ export default function ShopByGoal() {
       </div>
 
       <style jsx>{`
-        div::-webkit-scrollbar {
-          display: none;
-        }
+        div::-webkit-scrollbar { display: none; }
       `}</style>
     </section>
   );
