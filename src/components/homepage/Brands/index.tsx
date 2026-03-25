@@ -41,7 +41,7 @@ export default function BrandsSection() {
 
   if (loading) {
     return (
-      <section className="relative w-full py-12 md:py-20 overflow-hidden bg-white rounded-2xl border border-gray-100">
+      <section className="relative w-full py-6 md:py-10 overflow-hidden bg-white rounded-2xl border border-gray-100">
         <div className="max-w-[1560px] mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-end mb-10">
             <div className="space-y-3">
@@ -64,7 +64,7 @@ export default function BrandsSection() {
   if (brands.length === 0) return null;
 
   return (
-    <section className="relative w-full py-12 md:py-20 overflow-hidden bg-white rounded-2xl border border-gray-100">
+    <section className="relative w-full py-6 md:py-10 overflow-hidden bg-white rounded-2xl border border-gray-100">
 
       {/* ── Decorative blobs ── */}
       <div className="absolute top-0 right-0 -translate-y-1/3 translate-x-1/4 w-80 h-80 bg-[#009E3C]/5 rounded-full blur-3xl pointer-events-none" />
@@ -73,7 +73,7 @@ export default function BrandsSection() {
       <div className="relative max-w-[1560px] mx-auto px-4 sm:px-6">
 
         {/* ── Header ── */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 md:mb-14">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-5 md:mb-8">
           <div className="max-w-xl">
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#009E3C]/8 border border-[#009E3C]/20 mb-4">
@@ -114,7 +114,7 @@ export default function BrandsSection() {
             <Link
               key={brand.id}
               href={`/shop?brand_id=${brand.id}`}
-              className="group relative flex flex-col items-center justify-center p-5 md:p-7 rounded-2xl bg-white border border-gray-100 hover:border-[#009E3C]/25 transition-all duration-350 hover:shadow-[0_12px_36px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 overflow-hidden aspect-square"
+              className="group relative flex flex-col items-center justify-center p-3 md:p-5 rounded-2xl bg-white border border-gray-100 hover:border-[#009E3C]/25 transition-all duration-350 hover:shadow-[0_12px_36px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 overflow-hidden aspect-square"
               style={{ animationDelay: `${i * 50}ms` }}
             >
               {/* Hover gradient overlay */}
