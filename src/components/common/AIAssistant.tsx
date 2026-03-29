@@ -30,7 +30,7 @@ const AIAssistant = () => {
         <>
             {/* Floating Button */}
             <button
-                onClick={() => setIsOpen(true)}
+                onClick={() => setIsOpen(prev => !prev)}
                 className="fixed bottom-8 left-8 w-16 h-16 bg-premium-gradient text-white rounded-2xl shadow-2xl flex items-center justify-center z-[100] transform transition-all duration-300 hover:scale-105 active:scale-95 shadow-[#009E3C]/20 hover:shadow-[#009E3C]/40"
             >
                 <div className="relative">
