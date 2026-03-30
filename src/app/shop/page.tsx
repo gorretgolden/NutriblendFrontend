@@ -1,4 +1,4 @@
-import BreadcrumbShop from "@/components/shop-page/BreadcrumbShop";
+﻿import BreadcrumbShop from "@/components/shop-page/BreadcrumbShop";
 import MobileFilters from "@/components/shop-page/filters/MobileFilters";
 import Filters from "@/components/shop-page/filters";
 import { FiSliders } from "react-icons/fi";
@@ -76,8 +76,16 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
   let products: Product[] = [];
   let meta = { current_page: 1, last_page: 1, total: 0, from: 0, to: 0 };
+  let selectedCategory: any = null;
 
   try {
+    if (searchParams.category) {
+      const catRes = await apiClient.getCategoryBySlug(searchParams.category);
+      if (catRes.status) {
+        selectedCategory = catRes.data;
+      }
+    }
+
     const response = await apiClient.getProducts(apiParams);
     if (response.status && response.data) {
       // Backend returns array inside response.data and pagination inside response.meta
@@ -129,7 +137,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 mt-6">
         <div className="flex gap-6 items-start">
-          {/* Sidebar Filters — iHerb-style white card */}
+          {/* Sidebar Filters â€” iHerb-style white card */}
           <div className="hidden lg:block w-[260px] flex-shrink-0 sticky top-32">
             <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
               <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50">
@@ -144,41 +152,71 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
           {/* Main Content */}
           <div className="flex-1 min-w-0">
-            {/* Title + Sort Bar */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm px-4 sm:px-6 py-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <h1 className="font-extrabold text-xl sm:text-2xl text-gray-900 leading-tight">{pageTitle}</h1>
-                <p className="text-xs sm:text-sm text-gray-400 mt-0.5 font-medium">
-                  {meta.total > 0
-                    ? `${meta.from}–${meta.to} of ${meta.total.toLocaleString()} products`
-                    : 'No products found'}
-                </p>
-              </div>
 
-              <div className="flex items-center gap-2.5 flex-shrink-0">
-                {/* Sort pills */}
-                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
-                  <span className="text-[11px] font-semibold text-gray-400 hidden sm:inline whitespace-nowrap">Sort:</span>
-                  {sortOptions.map((opt) => (
-                    <Link
-                      key={opt.value}
-                      href={getSortLink(opt.value)}
-                      className={`whitespace-nowrap text-[11px] px-3 py-1.5 rounded-full border transition-all duration-200 font-semibold ${
-                        sort === opt.value
-                          ? 'bg-[#009E3C] text-white border-[#009E3C] shadow-sm'
-                          : 'bg-white text-gray-500 border-gray-200 hover:border-[#009E3C]/40 hover:text-[#009E3C]'
-                      }`}
-                    >
-                      {opt.label}
-                    </Link>
-                  ))}
+            {/* Category Banner / Header */}
+            {selectedCategory ? (
+              <div className={w-full mb-6 relative overflow-hidden rounded-2xl border border-gray-200 shadow-sm }>
+                {selectedCategory.image ? (
+                  <div className="relative h-[200px] sm:h-[260px] w-full overflow-hidden">
+                    <img src={getImageUrl(selectedCategory.image)} alt={selectedCategory.name} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 text-white">
+                      <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 drop-shadow-md">{selectedCategory.name}</h1>
+                      <p className="text-sm sm:text-base font-medium text-gray-100 max-w-xl opacity-90">{selectedCategory.description || Premium selection of  products.}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col sm:flex-row items-center gap-6 px-8 max-w-4xl">
+                    {selectedCategory.icon && (
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0">
+                        <img src={getImageUrl(selectedCategory.icon)} alt={selectedCategory.name} className="w-full h-full object-contain filter drop-shadow-xl" />
+                      </div>
+                    )}
+                    <div className="text-center sm:text-left">
+                      <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tighter mb-2">{selectedCategory.name}</h1>
+                      <p className="text-sm sm:text-base text-gray-500 font-medium max-w-xl leading-relaxed">{selectedCategory.description || Explore our curated range of  essentials.}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm px-4 sm:px-6 py-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h1 className="font-extrabold text-xl sm:text-2xl text-gray-900 leading-tight">{pageTitle}</h1>
+                  <p className="text-xs sm:text-sm text-gray-400 mt-0.5 font-medium">
+                    {meta.total > 0 ? ${meta.from}– of  products : 'No products found'}
+                  </p>
                 </div>
-                <div className="w-px h-5 bg-gray-200 hidden sm:block" />
+                <div className="flex items-center gap-2.5 flex-shrink-0">
+                  <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+                    {sortOptions.map((opt) => (
+                      <Link key={opt.value} href={getSortLink(opt.value)} className={whitespace-nowrap text-[11px] px-3 py-1.5 rounded-full border transition-all duration-200 font-semibold }>{opt.label}</Link>
+                    ))}
+                  </div>
+                  <MobileFilters />
+                </div>
+              </div>
+            )}
+
+            {selectedCategory && (
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm px-4 sm:px-6 py-3 mb-5 flex items-center justify-between gap-3">
+                <p className="text-[12px] font-bold text-gray-400">{meta.total > 0 ? Showing – of  items : 'No items available'}</p>
+                <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                    {sortOptions.map((opt) => (
+                      <Link key={opt.value} href={getSortLink(opt.value)} className={whitespace-nowrap text-[11px] px-3 py-1.5 rounded-full border transition-all duration-200 font-semibold }>{opt.label}</Link>
+                    ))}
+                  </div>
+                  <MobileFilters />
+                </div>
+              </div>
+            )}
+
                 <MobileFilters />
               </div>
             </div>
 
-            {/* Product Grid — 2 cols mobile, 3 tablet, 4 desktop like iHerb */}
+            {/* Product Grid â€” 2 cols mobile, 3 tablet, 4 desktop like iHerb */}
             {products.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {products.map((product) => (

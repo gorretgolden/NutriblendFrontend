@@ -190,8 +190,16 @@ export default function CategoryGrid() {
                 <div className={`absolute -top-4 -right-4 w-20 h-20 rounded-full opacity-10 ${colors.accent}`} />
 
                 {/* Category image or icon */}
-                {category.image ? (
-                  <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
+                {category.icon ? (
+                  <div className="relative w-16 h-16 flex-shrink-0">
+                    <img
+                      src={getImageUrl(category.icon)}
+                      alt={category.name}
+                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                ) : category.image ? (
+                  <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
                     <img
                       src={getImageUrl(category.image)}
                       alt={category.name}
@@ -199,7 +207,7 @@ export default function CategoryGrid() {
                     />
                   </div>
                 ) : (
-                  <div className={`w-14 h-14 rounded-xl ${colors.bg} border ${colors.border} flex items-center justify-center flex-shrink-0 shadow-sm`}>
+                  <div className={`w-14 h-14 rounded-xl ${colors.bg} border ${colors.border} flex items-center justify-center flex-shrink-0 shadow-sm opacity-50`}>
                     <CategoryIcon name={category.name} color={colors.text} />
                   </div>
                 )}
