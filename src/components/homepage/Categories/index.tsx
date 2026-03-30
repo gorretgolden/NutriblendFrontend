@@ -144,10 +144,11 @@ export default function CategoryGrid() {
       {/* Section header */}
       <div className="flex items-center justify-between mb-5 sm:mb-6 px-1">
         <div>
-          <p className="text-[11px] font-black uppercase tracking-widest text-[#009E3C] mb-1">Browse</p>
-          <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">
+          <p className="text-[11px] font-black uppercase tracking-widest text-[#009E3C] mb-1">Discover Wellness</p>
+          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
             Shop by Category
           </h2>
+          <p className="mt-1 text-sm text-gray-500 max-w-md">Explore our curated selection of premium health and wellness products.</p>
         </div>
         <Link
           href="/shop"

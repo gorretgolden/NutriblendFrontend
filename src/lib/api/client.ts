@@ -766,11 +766,12 @@ export const getImageUrl = (path: string): string => {
 
     // If it's a backend storage path, ensure it starts with /storage/
     let finalPath = path.startsWith('/') ? path : '/' + path;
-    if (!finalPath.startsWith('/storage/')) {
-        finalPath = '/storage' + finalPath;
+    if (finalPath.startsWith('/storage/')) {
+        return `${baseUrl}${finalPath}`;
     }
 
-    return `${baseUrl}${finalPath}`;
+    // Default: try storage if not a direct URL
+    return `${baseUrl}/storage${finalPath}`;
 };
 
 export const formatPrice = (
