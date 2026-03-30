@@ -51,9 +51,9 @@ export default function BrandsSection() {
             </div>
             <div className="h-11 w-36 bg-gray-100 animate-shimmer rounded-full hidden sm:block" />
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[1,2,3,4,5].map((i) => (
-              <div key={i} className="aspect-square bg-gray-50 animate-shimmer rounded-2xl" />
+          <div className="flex flex-row overflow-hidden gap-3 md:gap-4 pb-4">
+            {[1,2,3,4,5,6].map((i) => (
+              <div key={i} className="aspect-square bg-gray-50 animate-shimmer rounded-2xl min-w-[130px] sm:min-w-[150px] md:min-w-[180px] shrink-0" />
             ))}
           </div>
         </div>
@@ -108,13 +108,13 @@ export default function BrandsSection() {
           </Link>
         </div>
 
-        {/* ── Brands grid ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+        {/* ── Brands Row ── */}
+        <div className="flex flex-row overflow-x-auto gap-3 md:gap-4 pb-4 snap-x pr-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {brands.map((brand, i) => (
             <Link
               key={brand.id}
               href={`/shop?brand_id=${brand.id}`}
-              className="group relative flex flex-col items-center justify-center p-3 md:p-5 rounded-2xl bg-white border border-gray-100 hover:border-[#009E3C]/25 transition-all duration-350 hover:shadow-[0_12px_36px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 overflow-hidden aspect-square"
+              className="group relative flex flex-col items-center justify-center p-3 md:p-5 rounded-2xl bg-white border border-gray-100 hover:border-[#009E3C]/25 transition-all duration-350 hover:shadow-[0_12px_36px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 overflow-hidden aspect-square min-w-[130px] sm:min-w-[150px] md:min-w-[180px] snap-start shrink-0"
               style={{ animationDelay: `${i * 50}ms` }}
             >
               {/* Hover gradient overlay */}
