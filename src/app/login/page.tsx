@@ -32,7 +32,7 @@ export default function LoginPage() {
     e.preventDefault();
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
-      toast.success("Signed in successfully!");
+      toast.success("You have successfully logged into your account");
       const returnUrl = sessionStorage.getItem("returnUrl");
       if (returnUrl) {
         sessionStorage.removeItem("returnUrl");

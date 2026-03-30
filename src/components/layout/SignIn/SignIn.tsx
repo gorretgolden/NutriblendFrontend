@@ -39,7 +39,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
       // Fetch this user's cart and wishlist from backend
       dispatch(fetchCart());
       dispatch(fetchWishlist());
-      toast.success("Signed in successfully!");
+      toast.success("You have successfully logged into your account");
       onClose();
       // Check for returnUrl (e.g., from checkout redirect)
       const returnUrl = sessionStorage.getItem("returnUrl");
