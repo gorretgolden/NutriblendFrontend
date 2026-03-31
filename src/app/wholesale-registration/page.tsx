@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { registerWholesaleUser } from "@/lib/features/auth/authSlice";
+import { apiClient, Region, Town } from "@/lib/api/client";
 import { toast } from "sonner";
 
 export default function WholesaleRegisterPage() {
@@ -16,16 +17,67 @@ export default function WholesaleRegisterPage() {
         name: "",
         email: "",
         phone: "",
+        region_id: "",
+        town_id: "",
+        location: "",
         password: "",
         wholesale_business_name: "",
         wholesale_business_details: "",
     });
 
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [regions, setRegions] = useState<Region[]>([]);
+    const [towns, setTowns] = useState<Town[]>([]);
+    const [loadingRegions, setLoadingRegions] = useState(false);
+    const [loadingTowns, setLoadingTowns] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // Fetch regions on mount
+    useEffect(() => {
+        async function fetchRegions() {
+            try {
+                setLoadingRegions(true);
+                const response = await apiClient.getRegions();
+                if (response.status && response.data) {
+                    setRegions(response.data);
+                }
+            } catch (err) {
+                console.error("Error fetching regions:", err);
+            } finally {
+                setLoadingRegions(false);
+            }
+        }
+        fetchRegions();
+    }, []);
+
+    // Fetch towns when region changes
+    useEffect(() => {
+        if (!formData.region_id) {
+            setTowns([]);
+            return;
+        }
+        async function fetchTowns() {
+            try {
+                setLoadingTowns(true);
+                const response = await apiClient.getTowns(Number(formData.region_id));
+                if (response.status && response.data) {
+                    setTowns(response.data);
+                }
+            } catch (err) {
+                console.error("Error fetching towns:", err);
+            } finally {
+                setLoadingTowns(false);
+            }
+        }
+        fetchTowns();
+    }, [formData.region_id]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        if (name === "region_id") {
+            setFormData(prev => ({ ...prev, region_id: value, town_id: "" }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -138,6 +190,67 @@ export default function WholesaleRegisterPage() {
                                     placeholder="••••••••"
                                     value={formData.password}
                                     onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Region</label>
+                                    <select
+                                        name="region_id"
+                                        value={formData.region_id}
+                                        onChange={handleChange}
+                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                        required
+                                        disabled={isLoading || loadingRegions}
+                                    >
+                                        <option value="">
+                                            {loadingRegions ? "Loading regions..." : "Select Region"}
+                                        </option>
+                                        {regions.map((region) => (
+                                            <option key={region.id} value={region.id}>
+                                                {region.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1">District</label>
+                                    <select
+                                        name="town_id"
+                                        value={formData.town_id}
+                                        onChange={handleChange}
+                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                        required
+                                        disabled={!formData.region_id || isLoading || loadingTowns}
+                                    >
+                                        <option value="">
+                                            {loadingTowns
+                                                ? "Loading districts..."
+                                                : formData.region_id
+                                                    ? "Select District"
+                                                    : "Select Region first"}
+                                        </option>
+                                        {towns.map((town) => (
+                                            <option key={town.id} value={town.id}>
+                                                {town.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Specific Location</label>
+                                <input
+                                    type="text"
+                                    name="location"
+                                    placeholder="e.g. Kampala Road, Plot 12"
+                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                    value={formData.location}
+                                    onChange={handleChange}
+                                    required
+                                    disabled={isLoading}
                                 />
                             </div>
 

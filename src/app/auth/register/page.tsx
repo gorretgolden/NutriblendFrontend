@@ -8,6 +8,8 @@ import { registerUser } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
 import { toast } from "sonner";
 
+type SelectChangeEvent = React.ChangeEvent<HTMLSelectElement>;
+
 export default function RegisterPage() {
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -18,11 +20,19 @@ export default function RegisterPage() {
         lastName: "",
         email: "",
         phone: "",
+        region_id: "",
+        town_id: "",
+        location: "",
         password: "",
         confirmPassword: "",
         newsletter: true,
         terms: false,
     });
+
+    const [regions, setRegions] = useState<Region[]>([]);
+    const [towns, setTowns] = useState<Town[]>([]);
+    const [loadingRegions, setLoadingRegions] = useState(false);
+    const [loadingTowns, setLoadingTowns] = useState(false);
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -33,12 +43,65 @@ export default function RegisterPage() {
         }
     }, [isAuthenticated, router]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
+    // Fetch regions on mount
+    useEffect(() => {
+        async function fetchRegions() {
+            try {
+                setLoadingRegions(true);
+                const response = await apiClient.getRegions();
+                if (response.status && response.data) {
+                    setRegions(response.data);
+                }
+            } catch (err) {
+                console.error("Error fetching regions:", err);
+            } finally {
+                setLoadingRegions(false);
+            }
+        }
+        fetchRegions();
+    }, []);
+
+    // Fetch towns when region changes
+    useEffect(() => {
+        if (!formData.region_id) {
+            setTowns([]);
+            return;
+        }
+        async function fetchTowns() {
+            try {
+                setLoadingTowns(true);
+                const response = await apiClient.getTowns(Number(formData.region_id));
+                if (response.status && response.data) {
+                    setTowns(response.data);
+                }
+            } catch (err) {
+                console.error("Error fetching towns:", err);
+            } finally {
+                setLoadingTowns(false);
+            }
+        }
+        fetchTowns();
+    }, [formData.region_id]);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent) => {
+        const target = e.target;
+        if (target instanceof HTMLInputElement && target.type === "checkbox") {
+            setFormData((prev) => ({
+                ...prev,
+                [target.name]: target.checked,
+            }));
+        } else if (target.name === "region_id") {
+            setFormData((prev) => ({
+                ...prev,
+                region_id: target.value,
+                town_id: "",
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [target.name]: target.value,
+            }));
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -151,6 +214,67 @@ export default function RegisterPage() {
                                 placeholder="+256 7XX XXX XXX"
                                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
                                 value={formData.phone}
+                                onChange={handleInputChange}
+                                required
+                                disabled={isLoading}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Region</label>
+                                <select
+                                    name="region_id"
+                                    value={formData.region_id}
+                                    onChange={handleInputChange}
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
+                                    required
+                                    disabled={isLoading || loadingRegions}
+                                >
+                                    <option value="">
+                                        {loadingRegions ? "Loading regions..." : "Select Region"}
+                                    </option>
+                                    {regions.map((region) => (
+                                        <option key={region.id} value={region.id}>
+                                            {region.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
+                                <select
+                                    name="town_id"
+                                    value={formData.town_id}
+                                    onChange={handleInputChange}
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
+                                    required
+                                    disabled={!formData.region_id || isLoading || loadingTowns}
+                                >
+                                    <option value="">
+                                        {loadingTowns
+                                            ? "Loading districts..."
+                                            : formData.region_id
+                                                ? "Select District"
+                                                : "Select Region first"}
+                                    </option>
+                                    {towns.map((town) => (
+                                        <option key={town.id} value={town.id}>
+                                            {town.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Specific Location</label>
+                            <input
+                                type="text"
+                                name="location"
+                                placeholder="e.g. Kampala Road, Plot 12"
+                                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
+                                value={formData.location}
                                 onChange={handleInputChange}
                                 required
                                 disabled={isLoading}

@@ -42,6 +42,14 @@ const AIAssistant = () => {
                 </div>
             </button>
 
+            {/* Backdrop Overlay */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 z-[99] bg-black/20"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
             {/* Chat Window */}
             {isOpen && (
                 <div className="fixed bottom-24 left-6 w-80 md:w-96 glass-effect rounded-2xl shadow-2xl z-[100] overflow-hidden flex flex-col border border-white/40 animate-in slide-in-from-bottom-5 duration-300">

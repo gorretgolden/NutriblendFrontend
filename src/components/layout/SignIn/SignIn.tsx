@@ -53,8 +53,8 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
-      <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-md md:p-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90" onClick={onClose}>
+      <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-md md:p-8" onClick={(e) => e.stopPropagation()}>
         {/* Close (X) button */}
         <button
           onClick={onClose}

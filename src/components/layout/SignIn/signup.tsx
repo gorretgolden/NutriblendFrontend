@@ -97,6 +97,16 @@ const SignUpModal = ({
     }
   }, [visible]);
 
+  // Auto-dismiss success toast after 5 seconds
+  useEffect(() => {
+    if (!showSuccessToast) return;
+    const timer = setTimeout(() => {
+      setShowSuccessToast(false);
+      onClose();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [showSuccessToast, onClose]);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -128,12 +138,12 @@ const SignUpModal = ({
     e.preventDefault();
 
     if (!formData.terms) {
-      alert("Please agree to the Terms and Conditions");
+      toast.error("Please agree to the Terms and Conditions");
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -495,8 +505,17 @@ const SignUpModal = ({
       </div>
 
       {showSuccessToast && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-4 animate-fade-in-up">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+          onClick={() => {
+            setShowSuccessToast(false);
+            onClose();
+          }}
+        >
+          <div
+            className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-4 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center mb-4">
               <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                 <svg
