@@ -153,6 +153,23 @@ export default function ShopByGoal() {
     <section className="w-full bg-white border-b border-gray-100 py-4">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
 
+        {/* Section header */}
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-widest text-[#009E3C] mb-0.5">Browse</p>
+            <h2 className="text-lg sm:text-xl font-black text-gray-900 tracking-tight">Shop by Categories</h2>
+          </div>
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-[#009E3C] hover:text-[#007a2e] transition-colors group"
+          >
+            View all
+            <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+
         {/* iHerb-style: scrollable on mobile, grid on desktop */}
         <div
           className="flex md:grid md:grid-cols-12 gap-1 overflow-x-auto"
