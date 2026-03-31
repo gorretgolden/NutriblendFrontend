@@ -3,12 +3,12 @@ const nextConfig = {
   // Performance Optimizations
   reactStrictMode: true,
   
-  // Vercel handles this automatically, removing 'export' for full functionality
-  // output: 'export',
-  
+  // Static export for cPanel FTP deployment
+  output: 'export',
+
   // Image Optimization
   images: {
-    unoptimized: false, 
+    unoptimized: true,
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
