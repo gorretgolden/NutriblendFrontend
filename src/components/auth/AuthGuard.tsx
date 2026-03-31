@@ -1,23 +1,29 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/lib/hooks/redux';
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
+    const [isHydrated, setIsHydrated] = useState(false);
+
+    // Wait for client-side hydration before checking auth
+    useEffect(() => {
+        setIsHydrated(true);
+    }, []);
 
     useEffect(() => {
-        // Only redirect if we're sure the user is not authenticated
-        // and we're not still loading the auth state
-        if (!isLoading && !isAuthenticated) {
-            router.push('/');
+        // Only redirect after hydration is complete and auth state is settled
+        if (isHydrated && !isLoading && !isAuthenticated) {
+            sessionStorage.setItem('returnUrl', window.location.pathname);
+            router.push('/login');
         }
-    }, [isAuthenticated, isLoading, router]);
+    }, [isAuthenticated, isLoading, isHydrated, router]);
 
-    // Show loading state while checking authentication
-    if (isLoading) {
+    // Show loading state while hydrating or checking authentication
+    if (!isHydrated || isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
