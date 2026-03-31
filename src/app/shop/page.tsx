@@ -54,6 +54,8 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     category_id: !searchParams.category && searchParams.category_id
       ? Number(searchParams.category_id) : undefined,
     brand_id: searchParams.brand_id ? Number(searchParams.brand_id) : undefined,
+    min_price: searchParams.min_price ? Number(searchParams.min_price) : undefined,
+    max_price: searchParams.max_price ? Number(searchParams.max_price) : undefined,
     search: searchParams.search || undefined,
     is_special_offer: searchParams.is_special_offer === 'true' ? true : undefined,
     is_trending: searchParams.is_trending === 'true' ? true : undefined,

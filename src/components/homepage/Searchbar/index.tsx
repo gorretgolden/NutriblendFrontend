@@ -165,9 +165,11 @@ export default function SearchWithDropdown() {
                       className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
                     >
                       <div className="w-12 h-12 bg-gray-100 rounded flex-shrink-0">
-                        {product.images?.[0] && (
+                        {(product.main_image || product.images?.[0]) && (
                           <img
-                            src={getImageUrl(product.images[0].image_path)}
+                            src={product.main_image
+                              ? getImageUrl(product.main_image)
+                              : getImageUrl(product.images[0]?.image_path || product.images[0])}
                             alt={product.name}
                             className="w-full h-full object-cover rounded"
                           />
