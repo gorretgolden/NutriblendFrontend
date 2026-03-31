@@ -321,8 +321,25 @@ class NutriBlendApiClient {
                 };
             }
 
-            const data: ApiResponse<T> = await response.json();
-            return data;
+            const data = await response.json();
+
+            // Handle both response formats:
+            // 1. ServiceResponseHelper: { status: true, message: '...', data: ... }
+            // 2. Laravel Resource Collection: { data: [...], links: {...}, meta: {...} }
+            if (data.status !== undefined) {
+                // Format 1: already has status field
+                return data as ApiResponse<T>;
+            }
+
+            // Format 2: Laravel paginated/resource response - wrap it
+            return {
+                status: true,
+                message: 'Success',
+                data: data as T,
+                // Preserve meta and links at response level for pagination
+                ...(data.meta && { meta: data.meta }),
+                ...(data.links && { links: data.links }),
+            } as ApiResponse<T>;
         } catch (error) {
             console.error('API Error:', error);
             return {
