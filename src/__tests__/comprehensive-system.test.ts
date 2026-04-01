@@ -625,11 +625,13 @@ describe('Section 06 — Orders API', () => {
     expect(url).toContain('status=pending');
   });
 
-  it('gets invoice URL', async () => {
-    mockFetch.mockResolvedValueOnce(mockSuccess({ url: '/invoices/NB-0001.pdf' }));
+  it('gets invoice URL (synchronous)', () => {
+    localStorage.setItem('auth_token', 'test-token');
 
-    const result = await apiClient.getInvoiceUrl('NB-0001');
-    expect(result.status).toBe(true);
+    const url = apiClient.getInvoiceUrl('NB-0001');
+    expect(typeof url).toBe('string');
+    expect(url).toContain('NB-0001');
+    expect(url).toContain('invoice');
   });
 });
 
@@ -1041,10 +1043,8 @@ describe('Section 16 — Redux Auth Slice', () => {
     const action = {
       type: loginUser.fulfilled.type,
       payload: {
-        data: {
-          user: sampleUser(),
-          token: 'auth-token',
-        },
+        user: sampleUser(),
+        token: 'auth-token',
       },
     };
 
@@ -1102,8 +1102,9 @@ describe('Section 17 — Redux Cart Slice', () => {
 
     const state = cartReducer(undefined, { type: 'unknown' });
 
-    expect(state.items).toBeDefined();
+    expect(state.cart).toBeNull();
     expect(state.isLoading).toBe(false);
+    expect(state.totalPrice).toBe(0);
   });
 
   it('addToCart.fulfilled updates cart items', async () => {
@@ -1163,7 +1164,9 @@ describe('Section 19 — Redux Products Slice', () => {
     const state = productsReducer(undefined, { type: 'unknown' });
 
     expect(state).toBeDefined();
-    expect(state.isLoading).toBeDefined();
+    expect(state.colorSelection).toBeDefined();
+    expect(state.sizeSelection).toBe('Large');
+    expect(state.selectedVariationId).toBeNull();
   });
 });
 
