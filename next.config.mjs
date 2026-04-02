@@ -3,8 +3,8 @@ const nextConfig = {
   // Performance Optimizations
   reactStrictMode: true,
   
-  // Static export for cPanel FTP deployment
-  output: 'export',
+  // Static export removed to allow dynamic Shop and Products pages
+  // output: 'export',
 
   // Image Optimization
   images: {
