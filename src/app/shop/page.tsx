@@ -12,7 +12,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { apiClient } from "@/lib/api/client";
+import { apiClient, getImageUrl } from "@/lib/api/client";
 import { transformProduct } from "@/lib/transformers";
 import Link from "next/link";
 import { Product } from "@/types/product.types";
@@ -35,13 +35,6 @@ interface ShopPageProps {
     brand_id?: string;
   };
 }
-
-const getImageUrl = (path: string) => {
-  if (!path) return '';
-  if (path.startsWith('http')) return path;
-  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
-  return `${baseUrl}/storage/${path}`;
-};
 
 export default async function ShopPage({ searchParams }: ShopPageProps) {
   const page = Number(searchParams.page) || 1;

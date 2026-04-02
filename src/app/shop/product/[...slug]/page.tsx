@@ -7,6 +7,21 @@ import { apiClient } from "@/lib/api/client";
 import { transformProduct } from "@/lib/transformers";
 import { Product } from "@/types/product.types";
 
+export async function generateStaticParams() {
+  try {
+    // Fetch top products to statically generate
+    const response = await apiClient.getProducts({ per_page: 50 });
+    if (response.status && response.data?.data) {
+      return response.data.data.map((p: any) => ({
+        slug: [p.id.toString(), p.slug || "product"],
+      }));
+    }
+  } catch (error) {
+    console.error("Failed to fetch products for static paths:", error);
+  }
+  return []; // Fallback empty if API fails during build
+}
+
 export default async function ProductPage({
   params,
 }: {

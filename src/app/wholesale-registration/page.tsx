@@ -30,6 +30,7 @@ export default function WholesaleRegisterPage() {
     const [towns, setTowns] = useState<Town[]>([]);
     const [loadingRegions, setLoadingRegions] = useState(false);
     const [loadingTowns, setLoadingTowns] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     // Fetch regions on mount
     useEffect(() => {
@@ -150,17 +151,22 @@ export default function WholesaleRegisterPage() {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-1">Contact Phone</label>
-                                    <input
-                                        type="tel"
-                                        name="phone"
-                                        required
-                                        minLength={9}
-                                        disabled={isLoading}
-                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
-                                        placeholder="+256..."
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                    />
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                            <span className="text-gray-500 font-medium">+256</span>
+                                        </div>
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            required
+                                            minLength={9}
+                                            disabled={isLoading}
+                                            className="w-full rounded-xl border border-gray-200 pl-14 pr-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                            placeholder="7XX XXX XXX"
+                                            value={formData.phone}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -180,17 +186,26 @@ export default function WholesaleRegisterPage() {
 
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    required
-                                    disabled={isLoading}
-                                    minLength={8}
-                                    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
-                                    placeholder="••••••••"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        required
+                                        disabled={isLoading}
+                                        minLength={8}
+                                        className="w-full rounded-xl border border-gray-200 px-4 py-3 pr-12 outline-none focus:border-[#009E3C] focus:ring-4 focus:ring-green-50 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                        placeholder="••••••••"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#009E3C]"
+                                    >
+                                        {showPassword ? "Hide" : "Show"}
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

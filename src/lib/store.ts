@@ -10,7 +10,7 @@ const persistConfig = {
   key: "root",
   storage,
   version: 2,
-  whitelist: ["carts", "wishlist"],
+  whitelist: ["carts", "wishlist", "auth"],
   migrate: (state: any) => {
     // v2: Reset cart to fix stale totalQuantities (521 bug)
     if (state && state._persist && state._persist.version < 2) {

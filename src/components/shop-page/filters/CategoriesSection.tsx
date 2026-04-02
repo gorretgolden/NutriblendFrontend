@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { apiClient, Category } from "@/lib/api/client";
@@ -10,6 +11,8 @@ import Skeleton from "@/components/common/Skeleton";
 const CategoriesSection = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const activeCategory = searchParams.get("category");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -27,6 +30,15 @@ const CategoriesSection = () => {
 
     fetchCategories();
   }, []);
+
+  const getCategoryLink = (slug: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("category", slug);
+    // Remove category_id when using slug
+    params.delete("category_id");
+    params.delete("page");
+    return `/shop?${params.toString()}`;
+  };
 
   if (loading) {
     return (
@@ -46,11 +58,22 @@ const CategoriesSection = () => {
         </AccordionTrigger>
         <AccordionContent className="pt-4">
           <div className="flex flex-col space-y-0.5 text-black/60">
+            {/* Show "All Products" option */}
+            <Link
+              href="/shop"
+              className={`flex items-center justify-between py-2 transition-colors font-medium ${
+                !activeCategory ? "text-[#009E3C] font-bold" : "text-black hover:text-green-700"
+              }`}
+            >
+              All Products <MdKeyboardArrowRight />
+            </Link>
             {categories.map((category) => (
               <div key={category.id}>
                 <Link
-                  href={`/shop?category=${category.slug}`}
-                  className="flex items-center justify-between py-2 hover:text-green-700 transition-colors font-medium text-black"
+                  href={getCategoryLink(category.slug)}
+                  className={`flex items-center justify-between py-2 transition-colors font-medium ${
+                    activeCategory === category.slug ? "text-[#009E3C] font-bold" : "text-black hover:text-green-700"
+                  }`}
                 >
                   {category.name} <MdKeyboardArrowRight />
                 </Link>
@@ -60,8 +83,10 @@ const CategoriesSection = () => {
                     {category.children.map((child: any) => (
                       <Link
                         key={child.id}
-                        href={`/shop?category=${child.slug}`}
-                        className="flex items-center text-sm py-1.5 hover:text-green-600 transition-colors"
+                        href={getCategoryLink(child.slug)}
+                        className={`flex items-center text-sm py-1.5 transition-colors ${
+                          activeCategory === child.slug ? "text-[#009E3C] font-bold" : "hover:text-green-600"
+                        }`}
                       >
                         {child.name}
                       </Link>

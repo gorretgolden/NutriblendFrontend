@@ -208,16 +208,21 @@ export default function RegisterPage() {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                            <input
-                                type="tel"
-                                name="phone"
-                                placeholder="+256 7XX XXX XXX"
-                                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
-                                value={formData.phone}
-                                onChange={handleInputChange}
-                                required
-                                disabled={isLoading}
-                            />
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                    <span className="text-gray-500 font-medium">+256</span>
+                                </div>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    placeholder="7XX XXX XXX"
+                                    className="w-full rounded-lg border border-gray-300 pl-14 pr-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
+                                    value={formData.phone}
+                                    onChange={handleInputChange}
+                                    required
+                                    disabled={isLoading}
+                                />
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
@@ -395,7 +400,7 @@ export default function RegisterPage() {
                         <div className="bg-[#009E3C]/6 p-4 rounded-2xl border border-[#009E3C]/15">
                             <p className="text-xs text-[#007a2e] font-semibold mb-1 uppercase tracking-wider">Business Account</p>
                             <Link
-                                href="/auth/register-wholesale"
+                                href="/wholesale-registration"
                                 className="text-sm text-[#009E3C] font-bold hover:text-[#007a2e] transition-colors"
                             >
                                 Apply for Wholesale Access →

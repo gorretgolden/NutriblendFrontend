@@ -216,12 +216,32 @@ const authSlice = createSlice({
         });
 
         // Fetch Profile
+        builder.addCase(fetchUserProfile.pending, (state) => {
+            state.isLoading = true;
+        });
         builder.addCase(fetchUserProfile.fulfilled, (state, action) => {
+            state.isLoading = false;
             state.user = action.payload;
             state.isAuthenticated = true;
             // Persist updated profile to localStorage
             if (typeof window !== 'undefined') {
                 localStorage.setItem('user', JSON.stringify(action.payload));
+            }
+        });
+        builder.addCase(fetchUserProfile.rejected, (state, action) => {
+            state.isLoading = false;
+            // Do NOT clear auth state on profile fetch failure.
+            // The user may simply be offline or the server may be down.
+            // Only clear if the error indicates an invalid/expired token (401).
+            const errorMsg = (action.payload as string) || '';
+            if (errorMsg.includes('401') || errorMsg.includes('Unauthenticated') || errorMsg.includes('Token')) {
+                state.user = null;
+                state.token = null;
+                state.isAuthenticated = false;
+                if (typeof window !== 'undefined') {
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('user');
+                }
             }
         });
     },

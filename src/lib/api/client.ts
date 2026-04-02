@@ -725,6 +725,43 @@ class NutriBlendApiClient {
         });
     }
 
+    // ==================== Messages / Chat ====================
+
+    async getMessages(page: number = 1): Promise<ApiResponse<any>> {
+        return this.request<any>(`/messages?page=${page}`);
+    }
+
+    async getMessage(id: number | string): Promise<ApiResponse<any>> {
+        return this.request<any>(`/messages/${id}`);
+    }
+
+    async sendMessage(data: { subject: string; body: string }): Promise<ApiResponse<any>> {
+        return this.request<any>('/messages', {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    }
+
+    async replyToMessage(id: number | string, body: string): Promise<ApiResponse<any>> {
+        return this.request<any>(`/messages/${id}/reply`, {
+            method: 'POST',
+            body: JSON.stringify({ body }),
+        });
+    }
+
+    async updateMessage(id: number | string, body: string): Promise<ApiResponse<any>> {
+        return this.request<any>(`/messages/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify({ body }),
+        });
+    }
+
+    async deleteMessage(id: number | string): Promise<ApiResponse<any>> {
+        return this.request<any>(`/messages/${id}`, {
+            method: 'DELETE',
+        });
+    }
+
     // ==================== Pages ====================
 
     async getPages(type?: string): Promise<ApiResponse<Page[]>> {

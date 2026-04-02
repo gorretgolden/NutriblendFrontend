@@ -791,9 +791,9 @@ function DesktopSearchBar({
                       className="flex items-center gap-3 p-2.5 hover:bg-gray-50 rounded-xl transition-colors duration-150 group/result"
                     >
                       <div className="w-11 h-11 bg-gray-50 rounded-xl flex-shrink-0 overflow-hidden border border-gray-100">
-                        {product.images?.[0] && (
+                        {(product.main_image || product.images?.[0]) && (
                           <img
-                            src={getImageUrl(product.images[0].image_path || product.images[0])}
+                            src={product.main_image || getImageUrl(product.images?.[0]?.image_path || product.images?.[0] || '')}
                             alt={product.name}
                             className="w-full h-full object-contain p-1"
                           />

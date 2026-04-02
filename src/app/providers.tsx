@@ -1,17 +1,46 @@
 "use client";
 
-import React from "react";
-import { Provider } from "react-redux";
-import { makeStore } from "../lib/store";
+import React, { useRef, useEffect } from "react";
+import { Provider, useSelector, useDispatch } from "react-redux";
+import { makeStore, type AppStore, type RootState, type AppDispatch } from "../lib/store";
 import { PersistGate } from "redux-persist/integration/react";
+import { Persistor } from "redux-persist";
 import SpinnerbLoader from "@/components/ui/SpinnerbLoader";
+import { fetchWishlist } from "@/lib/features/wishlist/wishlistSlice";
 
 type Props = {
   children: React.ReactNode;
 };
 
+/**
+ * Fetches the user's wishlist from the server once authenticated.
+ */
+function WishlistLoader() {
+  const dispatch = useDispatch<AppDispatch>();
+  const isAuthenticated = useSelector((state: RootState) => state.auth?.isAuthenticated);
+  const hasFetched = useRef(false);
+
+  useEffect(() => {
+    if (isAuthenticated && !hasFetched.current) {
+      hasFetched.current = true;
+      dispatch(fetchWishlist());
+    }
+    if (!isAuthenticated) {
+      hasFetched.current = false;
+    }
+  }, [isAuthenticated, dispatch]);
+
+  return null;
+}
+
 const Providers = ({ children }: Props) => {
-  const { store, persistor } = makeStore();
+  const storeRef = useRef<{ store: AppStore; persistor: Persistor } | null>(null);
+
+  if (!storeRef.current) {
+    storeRef.current = makeStore();
+  }
+
+  const { store, persistor } = storeRef.current;
 
   return (
     <Provider store={store}>
@@ -23,6 +52,7 @@ const Providers = ({ children }: Props) => {
         }
         persistor={persistor}
       >
+        <WishlistLoader />
         {children}
       </PersistGate>
     </Provider>

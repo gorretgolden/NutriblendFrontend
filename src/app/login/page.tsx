@@ -176,7 +176,7 @@ export default function LoginPage() {
             <div className="mt-5 rounded-2xl bg-[#009E3C]/6 border border-[#009E3C]/15 px-4 py-3.5 text-center">
               <p className="text-xs font-bold text-[#007a2e] uppercase tracking-wider mb-1">Are you a business?</p>
               <Link
-                href="/auth/register-wholesale"
+                href="/wholesale-registration"
                 className="text-sm font-bold text-[#009E3C] hover:text-[#007a2e] transition-colors"
               >
                 Apply for Wholesale Account →
