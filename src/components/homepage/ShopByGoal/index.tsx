@@ -170,23 +170,25 @@ export default function ShopByGoal() {
           </Link>
         </div>
 
-        {/* iHerb-style: scrollable on mobile, grid on desktop */}
+        {/* iHerb-style: scrollable on mobile, centered wrap on desktop */}
         <div
-          className="flex md:grid md:grid-cols-12 gap-1 overflow-x-auto"
+          className="flex md:flex-wrap md:justify-center gap-1 overflow-x-auto"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {goals.map((goal) => (
             <Link
               key={goal.label}
               href={goal.href}
-              className="flex flex-col items-center gap-1.5 flex-none md:flex-auto group py-2 px-2 rounded-xl hover:bg-gray-50 transition-colors duration-150"
+              className="flex flex-col items-center gap-1.5 flex-none group py-2 px-2 rounded-xl hover:bg-gray-50 transition-colors duration-150"
               style={{ minWidth: "68px" }}
             >
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
                 style={{ backgroundColor: goal.bgColor, color: goal.color }}
               >
-                <div className="w-5 h-5">{goal.icon}</div>
+                <div className="w-7 h-7 flex items-center justify-center">
+                  {goal.icon}
+                </div>
               </div>
               <span className="text-[10px] font-semibold text-gray-600 text-center leading-tight group-hover:text-gray-900 transition-colors whitespace-nowrap">
                 {goal.label}
