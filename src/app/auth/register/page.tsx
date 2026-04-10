@@ -124,6 +124,9 @@ export default function RegisterPage() {
             phone: formData.phone,
             password: formData.password,
             password_confirmation: formData.confirmPassword,
+            region_id: formData.region_id ? Number(formData.region_id) : undefined,
+            town_id: formData.town_id ? Number(formData.town_id) : undefined,
+            location: formData.location || undefined,
         };
 
         const resultAction = await dispatch(registerUser(apiData));

@@ -95,15 +95,20 @@ const SignUpModal = ({
     } else {
       document.body.style.overflow = "";
     }
+    // Always restore scroll on unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [visible]);
 
-  // Auto-dismiss success toast after 5 seconds
+  // Auto-dismiss success toast after 3 seconds
   useEffect(() => {
     if (!showSuccessToast) return;
     const timer = setTimeout(() => {
       setShowSuccessToast(false);
+      document.body.style.overflow = "";
       onClose();
-    }, 5000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, [showSuccessToast, onClose]);
 
@@ -154,7 +159,10 @@ const SignUpModal = ({
       email: formData.email,
       phone: formData.phone,
       password: formData.password,
-      password_confirmation: formData.confirmPassword
+      password_confirmation: formData.confirmPassword,
+      region_id: formData.region_id ? Number(formData.region_id) : undefined,
+      town_id: formData.town_id ? Number(formData.town_id) : undefined,
+      location: formData.location || undefined,
     };
 
     const resultAction = await dispatch(registerUser(apiData));

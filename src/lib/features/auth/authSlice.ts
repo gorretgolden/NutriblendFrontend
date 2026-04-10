@@ -64,6 +64,9 @@ export const registerUser = createAsyncThunk(
         phone: string;
         password: string;
         password_confirmation: string;
+        region_id?: number;
+        town_id?: number;
+        location?: string;
     }, { rejectWithValue }) => {
         try {
             const response = await apiClient.register(userData);
@@ -86,6 +89,9 @@ export const registerWholesaleUser = createAsyncThunk(
         password: string;
         wholesale_business_name: string;
         wholesale_business_details: string;
+        region_id?: string | number;
+        town_id?: string | number;
+        location?: string;
     }, { rejectWithValue }) => {
         try {
             const response = await apiClient.registerWholesale(userData);

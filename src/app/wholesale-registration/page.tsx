@@ -86,7 +86,7 @@ export default function WholesaleRegisterPage() {
 
         // Manual dispatch since I haven't added it to authSlice yet, but I will soon
         // For now, let's assume it's there
-        const resultAction = await dispatch(registerWholesaleUser(formData) as any);
+        const resultAction = await dispatch(registerWholesaleUser(formData));
 
         if (registerWholesaleUser.fulfilled.match(resultAction)) {
             toast.success("Application submitted successfully!");

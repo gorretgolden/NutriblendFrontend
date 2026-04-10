@@ -27,6 +27,9 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
     } else {
       document.body.style.overflow = "";
     }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [visible]);
 
   const handleSubmit = async (e: React.FormEvent) => {
