@@ -49,16 +49,22 @@ const PriceSection = () => {
             min={0}
             max={2000000}
             step={5000}
-            label="UGX "
           />
-          <div className="mb-5" />
-          <div className="flex items-center justify-between text-xs text-gray-500 mt-1 mb-3">
-            <span>UGX {values[0].toLocaleString()}</span>
-            <span>UGX {values[1].toLocaleString()}</span>
+
+          <div className="mt-4 mb-4 grid grid-cols-2 gap-2">
+            <div className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-2 text-left min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Min</p>
+              <p className="text-sm sm:text-base font-bold text-gray-800 truncate">UGX {values[0].toLocaleString()}</p>
+            </div>
+            <div className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-2 text-right min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Max</p>
+              <p className="text-sm sm:text-base font-bold text-gray-800 truncate">UGX {values[1].toLocaleString()}</p>
+            </div>
           </div>
+
           <button
             onClick={applyPriceFilter}
-            className="w-full bg-[#009E3C] hover:bg-[#00752C] text-white text-xs font-bold py-2 rounded-lg transition-colors"
+            className="w-full bg-[#009E3C] hover:bg-[#00752C] text-white text-sm font-bold py-2.5 rounded-xl transition-colors"
           >
             Apply Price
           </button>
