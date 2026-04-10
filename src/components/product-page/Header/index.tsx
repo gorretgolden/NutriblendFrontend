@@ -10,11 +10,41 @@ import AddToCardSection from "./AddToCardSection";
 import ChatHelp from "./ChatHelp";
 import { sanitizeRichHtml } from "@/lib/utils/security";
 import { useAppSelector } from "@/lib/hooks/redux";
+import { toast } from "sonner";
 
 const Header = ({ data }: { data: Product }) => {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const isWholesaleUser = isAuthenticated && user?.is_wholesale_approved;
   const isUsingWholesalePrice = isWholesaleUser && !!data.wholesale_price;
+
+  const handleShareProduct = async () => {
+    const shareUrl = typeof window !== 'undefined'
+      ? window.location.href
+      : `https://nutriblendhaven.com/shop/product/${data.id}/${data.slug || 'product'}`;
+
+    const sharePayload = {
+      title: data.title,
+      text: `Check out ${data.title} on NutriBlend Haven`,
+      url: shareUrl,
+    };
+
+    try {
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        await navigator.share(sharePayload);
+        return;
+      }
+
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success('Product link copied to clipboard');
+        return;
+      }
+
+      window.open(shareUrl, '_blank', 'noopener,noreferrer');
+    } catch {
+      toast.error('Unable to share right now. Please try again.');
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
@@ -63,7 +93,10 @@ const Header = ({ data }: { data: Product }) => {
             <span className="text-[#009E3C] text-sm font-medium hover:underline cursor-pointer">
               {data.reviews || 0} Ratings
             </span>
-            <button className="flex items-center gap-1 ml-auto text-gray-400 hover:text-[#009E3C] transition-colors group">
+            <button
+              onClick={handleShareProduct}
+              className="flex items-center gap-1 ml-auto text-gray-400 hover:text-[#009E3C] transition-colors group"
+            >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.316a3 3 0 100-2.684 3 3 0 000 2.684z" />
               </svg>

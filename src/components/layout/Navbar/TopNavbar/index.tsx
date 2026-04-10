@@ -710,6 +710,11 @@ function DesktopSearchBar({
     }
   };
 
+  const resolveSearchImage = (product: any) => {
+    const rawPath = product.main_image || product.images?.[0]?.image_path || product.images?.[0] || '';
+    return getImageUrl(rawPath);
+  };
+
   return (
     <div ref={ref} className="relative flex-1 max-w-3xl xl:max-w-4xl">
       <form
@@ -790,9 +795,16 @@ function DesktopSearchBar({
                       <div className="w-11 h-11 bg-gray-50 rounded-xl flex-shrink-0 overflow-hidden border border-gray-100">
                         {(product.main_image || product.images?.[0]) && (
                           <img
-                            src={product.main_image || getImageUrl(product.images?.[0]?.image_path || product.images?.[0] || '')}
+                            src={resolveSearchImage(product)}
                             alt={product.name}
                             className="w-full h-full object-contain p-1"
+                            loading="eager"
+                            decoding="async"
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              target.onerror = null;
+                              target.src = '/images/placeholder.jpg';
+                            }}
                           />
                         )}
                       </div>
