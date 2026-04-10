@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { apiClient } from '@/lib/api/client';
 
 export interface CarouselSlide {
   id: number;
@@ -20,12 +21,35 @@ interface HeroCarouselProps {
 }
 
 export default function HeroCarousel({
-  slides = [],
+  slides: initialSlides = [],
   autoPlay = true,
   interval = 5000
 }: HeroCarouselProps) {
+  // Client-side fetch so admin edits reflect immediately (the page is
+  // statically exported via `output: 'export'`, so build-time data is stale).
+  const [slides, setSlides] = useState<CarouselSlide[]>(initialSlides);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await apiClient.getPublicSettings();
+        if (cancelled) return;
+        const fresh = res?.status && Array.isArray(res.data?.hero_carousel)
+          ? res.data!.hero_carousel as CarouselSlide[]
+          : [];
+        if (fresh.length > 0) {
+          setSlides(fresh);
+          setCurrentSlide(0);
+        }
+      } catch {
+        // keep initial/fallback slides
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const goToNext = useCallback(() => {
     if (isTransitioning) return;
