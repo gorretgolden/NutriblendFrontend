@@ -83,30 +83,30 @@ const ProductCard = ({ data }: ProductCardProps) => {
         <div className="absolute -inset-full top-0 left-[-60%] w-[40%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg] opacity-0 group-hover:opacity-100 group-hover:translate-x-[400%] transition-all duration-700 ease-out" />
       </div>
 
-      {/* ── Quick View Overlay ── */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            router.push(`/shop/product/${data.id}/${productSlug}`);
-          }}
-          className="flex items-center gap-1.5 bg-white/95 backdrop-blur-sm text-[#009E3C] text-[11px] font-bold px-4 py-2 rounded-full shadow-lg border border-[#009E3C]/20 hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C] transition-all duration-200 translate-y-3 group-hover:translate-y-0"
-          title="Quick View"
-        >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-          Quick View
-        </button>
-      </div>
-
       {/* ── Image Container ── */}
       <Link
         href={`/shop/product/${data.id}/${productSlug}`}
-        className="relative block bg-gradient-to-b from-gray-50 to-white w-full overflow-hidden aspect-square"
+        className="relative block bg-gradient-to-b from-gray-50 to-white w-full overflow-hidden h-[220px] sm:h-[240px]"
       >
+        {/* Quick View Overlay */}
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push(`/shop/product/${data.id}/${productSlug}`);
+            }}
+            className="flex items-center gap-1.5 bg-white/95 backdrop-blur-sm text-[#009E3C] text-[11px] font-bold px-4 py-2 rounded-full shadow-lg border border-[#009E3C]/20 hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C] transition-all duration-200 translate-y-3 group-hover:translate-y-0"
+            title="Quick View"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            Quick View
+          </button>
+        </div>
+
         {/* Wishlist */}
         <div
           className="absolute top-2.5 right-2.5 z-10"
@@ -158,7 +158,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       </Link>
 
       {/* ── Content ── */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 px-2 sm:px-3 pt-2 pb-2.5 bg-white/95 backdrop-blur-sm border-t border-gray-100/80">
+      <div className="relative z-10 px-2 sm:px-3 pt-2 pb-2.5 flex flex-col flex-grow border-t border-gray-100/80 bg-white">
 
         {/* Brand */}
         {data.brand && (
