@@ -204,7 +204,7 @@ const Header = () => {
             {/* Logo */}
             <div className="flex items-center flex-shrink-0">
               <Link href="/" className="flex items-center gap-2.5 group">
-                <div className="relative w-9 h-9 md:w-11 md:h-11 rounded-xl overflow-hidden border-2 border-[#009E3C]/30 bg-white group-hover:border-[#009E3C] transition-all duration-250 shadow-sm group-hover:shadow-[0_4px_12px_rgba(0,158,60,0.20)]">
+                <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden border-2 border-[#009E3C]/30 bg-white group-hover:border-[#009E3C] transition-all duration-250 shadow-sm group-hover:shadow-[0_4px_12px_rgba(0,158,60,0.20)]">
                   <Image
                     src="/images/logo.png"
                     alt="Company Logo"

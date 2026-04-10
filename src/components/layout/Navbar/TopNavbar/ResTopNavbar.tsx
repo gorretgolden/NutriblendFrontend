@@ -34,7 +34,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
         <SheetHeader className="mb-10">
           <SheetTitle asChild>
             <SheetClose asChild>
-              <Link href="/" className="relative block w-12 h-12 rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm">
+              <Link href="/" className="relative block w-14 h-14 rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm">
                 <Image
                   priority
                   src="/images/logo.png"
