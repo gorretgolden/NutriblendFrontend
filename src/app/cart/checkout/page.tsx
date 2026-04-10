@@ -321,8 +321,10 @@ export default function Checkout() {
               <div className="p-5 space-y-4">
                 {/* Delivery Method Toggle */}
                 <div className="grid grid-cols-2 gap-3">
-                  <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${deliveryMethod === 'delivery' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                  <label htmlFor="deliveryMethodDelivery" className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${deliveryMethod === 'delivery' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
                     <input
+                      id="deliveryMethodDelivery"
+                      name="deliveryMethod"
                       type="radio"
                       className="h-4 w-4 accent-[#009E3C]"
                       checked={deliveryMethod === 'delivery'}
@@ -338,8 +340,10 @@ export default function Checkout() {
                     </div>
                   </label>
 
-                  <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${deliveryMethod === 'pickup' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                  <label htmlFor="deliveryMethodPickup" className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${deliveryMethod === 'pickup' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
                     <input
+                      id="deliveryMethodPickup"
+                      name="deliveryMethod"
                       type="radio"
                       className="h-4 w-4 accent-[#009E3C]"
                       checked={deliveryMethod === 'pickup'}

@@ -39,13 +39,13 @@ const ProductCard = ({ data }: ProductCardProps) => {
       {/* Product Image — white card border like iHerb */}
       <Link
         href={`/shop/product/${data.id}/${(data.name ?? "product").split(" ").join("-")}`}
-        className="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-white border border-gray-100 rounded-lg overflow-hidden flex items-center justify-center p-2"
+        className="relative w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-white border border-gray-100 rounded-lg overflow-hidden"
       >
         <Image
           src={data.srcUrl}
-          width={128}
-          height={128}
-          className="max-h-full w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+          fill
+          sizes="(max-width: 640px) 128px, 192px"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
           alt={data.name ?? "Product"}
           priority
         />

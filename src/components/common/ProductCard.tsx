@@ -105,7 +105,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       {/* ── Image Container ── */}
       <Link
         href={`/shop/product/${data.id}/${productSlug}`}
-        className="relative block bg-gradient-to-b from-gray-50 to-white w-full overflow-hidden aspect-square"
+        className="relative block bg-gradient-to-b from-gray-50 to-white w-full overflow-hidden h-full"
       >
         {/* Wishlist */}
         <div
@@ -158,7 +158,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       </Link>
 
       {/* ── Content ── */}
-      <div className="relative z-10 px-2 sm:px-3 pt-2 pb-2.5 flex flex-col flex-grow border-t border-gray-100/80">
+      <div className="absolute bottom-0 left-0 right-0 z-20 px-2 sm:px-3 pt-2 pb-2.5 bg-white/95 backdrop-blur-sm border-t border-gray-100/80">
 
         {/* Brand */}
         {data.brand && (
