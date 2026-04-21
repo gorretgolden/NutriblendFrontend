@@ -170,9 +170,9 @@ export default function ShopByGoal() {
           </Link>
         </div>
 
-        {/* iHerb-style: scrollable on mobile, centered wrap on desktop */}
+        {/* iHerb-style: scrollable on mobile, left-aligned wrap on desktop */}
         <div
-          className="flex md:flex-wrap md:justify-center gap-1 overflow-x-auto"
+          className="flex md:flex-wrap md:justify-start gap-1 overflow-x-auto"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {goals.map((goal) => (
