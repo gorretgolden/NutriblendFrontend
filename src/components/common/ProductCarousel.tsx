@@ -59,8 +59,8 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
   }, [products]);
 
   return (
-    <section className="my-6 sm:my-8 md:my-14">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
+    <section className={hideHeader ? "my-0" : "my-6 sm:my-8 md:my-14"}>
+      <div className={hideHeader ? "" : "max-w-[1600px] mx-auto px-4 sm:px-6"}>
         {/* Header */}
         {!hideHeader && (
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 sm:mb-8 gap-2 sm:gap-3">
@@ -134,7 +134,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
 
           <div
             ref={carouselRef}
-            className="flex overflow-x-auto scrollbar-hide gap-3 sm:gap-5 py-2 px-1 snap-x snap-mandatory"
+            className={`flex overflow-x-auto scrollbar-hide gap-3 sm:gap-5 py-2 ${hideHeader ? 'px-0' : 'px-1'} snap-x snap-mandatory`}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {products.map((product, index) => (

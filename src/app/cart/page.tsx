@@ -151,7 +151,7 @@ export default function CartPage() {
                 </div>
 
                 <Button
-                  className="w-full bg-[#009E3C] hover:bg-[#007a2e] text-white py-6 h-auto rounded-lg font-bold text-base shadow-sm group active:scale-[0.98] transition-all"
+                  className="w-full bg-[#009E3C] hover:bg-[#007a2e] text-white py-3.5 h-auto rounded-lg font-bold text-sm shadow-sm group active:scale-[0.98] transition-all"
                   onClick={() => {
                     if (!isAuthenticated) {
                       sessionStorage.setItem('returnUrl', '/cart/checkout');
