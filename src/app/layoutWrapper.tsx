@@ -56,7 +56,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   }, [isAuthenticated, dispatch]);
 
   // Hide these on checkout page
-  const hideLayoutRoutes = ["/cart/checkout"];
+  const hideLayoutRoutes = ["/cart/checkout", "/wholesale-registration"];
   const shouldHideLayout = hideLayoutRoutes.includes(pathname);
 
   return (
