@@ -15,6 +15,7 @@ export default function Checkout() {
   const dispatch = useAppDispatch();
   const { cart, adjustedTotalPrice, isLoading: cartLoading } = useAppSelector((state) => state.carts);
   const { user, isAuthenticated, isLoading: authLoading } = useAppSelector((state) => state.auth);
+  const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
 
   const [regions, setRegions] = useState<Region[]>([]);
   const [towns, setTowns] = useState<Town[]>([]);
@@ -36,7 +37,6 @@ export default function Checkout() {
     // Don't redirect while auth state is still loading
     if (authLoading) return;
 
-    const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
     if (!isAuthenticated && !hasToken) {
       toast.error("Please login to checkout");
       router.push('/cart');
@@ -67,10 +67,10 @@ export default function Checkout() {
       }
     }
 
-    if (isAuthenticated && cart?.items && cart.items.length > 0) {
+    if ((isAuthenticated || hasToken) && cart?.items && cart.items.length > 0) {
       fetchRegions();
     }
-  }, [isAuthenticated, cart]);
+  }, [isAuthenticated, hasToken, cart]);
 
   // Fetch towns when region changes
   useEffect(() => {
@@ -251,6 +251,11 @@ export default function Checkout() {
         // Redirect to orders tab
         router.push(`/account/order`);
       } else {
+        if ((response.message || '').toLowerCase().includes('unauthenticated')) {
+          toast.error('Session expired. Please log in again.');
+          router.push('/login');
+          return;
+        }
         toast.error(response.message || "Failed to create order");
       }
     } catch (error: any) {

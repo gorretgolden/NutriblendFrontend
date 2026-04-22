@@ -301,6 +301,7 @@ class NutriBlendApiClient {
             const config: RequestInit = {
                 ...options,
                 cache: 'no-store' as RequestCache, // Prevent Next.js from caching API responses
+                credentials: 'include', // Required for cross-subdomain auth cookies (frontend -> admin API)
                 headers: {
                     ...this.getAuthHeaders(),
                     ...options.headers,
@@ -311,6 +312,12 @@ class NutriBlendApiClient {
 
             // Handle logical errors before parsing JSON
             if (!response.ok) {
+                if (response.status === 401 && typeof window !== 'undefined') {
+                    // Keep auth state in sync when backend rejects current auth context
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('user');
+                }
+
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                     const errorData = await response.json();
