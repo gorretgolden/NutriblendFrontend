@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { registerUser } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
+import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
 
 type SignUpModalProps = {
@@ -112,9 +113,7 @@ const SignUpModal = ({
     return () => clearTimeout(timer);
   }, [showSuccessToast, onClose]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.currentTarget;
 
     if (target instanceof HTMLInputElement && target.type === "checkbox") {
@@ -123,20 +122,27 @@ const SignUpModal = ({
         [target.name]: target.checked,
       }));
     } else {
-      // Reset town when region changes
-      if (target.name === "region_id") {
-        setFormData((prev) => ({
-          ...prev,
-          region_id: target.value,
-          town_id: "",
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          [target.name]: target.value,
-        }));
-      }
+      setFormData((prev) => ({
+        ...prev,
+        [target.name]: target.value,
+      }));
     }
+  };
+
+  const handleSelectChange = (name: "region_id" | "town_id", value: string) => {
+    if (name === "region_id") {
+      setFormData((prev) => ({
+        ...prev,
+        region_id: value,
+        town_id: "",
+      }));
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -149,6 +155,11 @@ const SignUpModal = ({
 
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match");
+      return;
+    }
+
+    if (!formData.region_id || !formData.town_id) {
+      toast.error("Please select both region and district");
       return;
     }
 
@@ -288,47 +299,33 @@ const SignUpModal = ({
             </div>
 
             <div>
-              <select
-                name="region_id"
+              <SearchableSelect
                 value={formData.region_id}
-                onChange={handleInputChange}
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
-                required
+                onChange={(value) => handleSelectChange("region_id", value)}
+                options={regions.map((region) => ({ value: String(region.id), label: region.name }))}
+                placeholder={loadingRegions ? "Loading regions..." : "Select Region"}
                 disabled={isLoading || loadingRegions}
-              >
-                <option value="">
-                  {loadingRegions ? "Loading regions..." : "Select Region"}
-                </option>
-                {regions.map((region) => (
-                  <option key={region.id} value={region.id}>
-                    {region.name}
-                  </option>
-                ))}
-              </select>
+                isLoading={loadingRegions}
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 text-left"
+              />
             </div>
 
             <div>
-              <select
-                name="town_id"
+              <SearchableSelect
                 value={formData.town_id}
-                onChange={handleInputChange}
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
-                required
-                disabled={!formData.region_id || isLoading || loadingTowns}
-              >
-                <option value="">
-                  {loadingTowns
+                onChange={(value) => handleSelectChange("town_id", value)}
+                options={towns.map((town) => ({ value: String(town.id), label: town.name }))}
+                placeholder={
+                  loadingTowns
                     ? "Loading districts..."
                     : formData.region_id
                       ? "Select District"
-                      : "Select Region first"}
-                </option>
-                {towns.map((town) => (
-                  <option key={town.id} value={town.id}>
-                    {town.name}
-                  </option>
-                ))}
-              </select>
+                      : "Select Region first"
+                }
+                disabled={!formData.region_id || isLoading || loadingTowns}
+                isLoading={loadingTowns}
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 text-left"
+              />
             </div>
 
             <div className="col-span-2">

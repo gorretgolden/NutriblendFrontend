@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
 import { clearCartAsync } from "@/lib/features/carts/cartsSlice";
 import { apiClient, type Region, type Town } from "@/lib/api/client";
+import SearchableSelect from "@/components/ui/SearchableSelect";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
@@ -26,6 +27,7 @@ export default function Checkout() {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadingRegions, setLoadingRegions] = useState(true);
+  const [loadingTowns, setLoadingTowns] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
 
@@ -81,6 +83,9 @@ export default function Checkout() {
 
     async function fetchTowns() {
       try {
+        setLoadingTowns(true);
+        setTowns([]);
+        setSelectedTown(null);
         const response = await apiClient.getTowns(selectedRegion!);
         if (response.status && response.data) {
           setTowns(response.data);
@@ -88,6 +93,8 @@ export default function Checkout() {
       } catch (error) {
         console.error("Error fetching towns:", error);
         toast.error("Failed to load towns");
+      } finally {
+        setLoadingTowns(false);
       }
     }
 
@@ -377,48 +384,50 @@ export default function Checkout() {
                   {/* Region */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Region</label>
-                    <select
-                      value={selectedRegion || ""}
-                      onChange={(e) => setSelectedRegion(Number(e.target.value))}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors"
+                    <SearchableSelect
+                      value={selectedRegion ? String(selectedRegion) : ""}
+                      onChange={(value) => {
+                        if (!value) {
+                          setSelectedRegion(null);
+                          return;
+                        }
+                        setSelectedRegion(Number(value));
+                      }}
+                      options={regions.map((region) => ({ value: String(region.id), label: region.name }))}
+                      placeholder="Select Region"
                       disabled={loadingRegions}
-                    >
-                      <option value="">Select Region</option>
-                      {regions.map((region) => (
-                        <option key={region.id} value={region.id}>{region.name}</option>
-                      ))}
-                    </select>
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors text-left"
+                    />
                   </div>
 
                   {/* Town */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Town</label>
-                    <select
-                      value={selectedTown || ""}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (!val) {
+                    <SearchableSelect
+                      value={selectedTown ? String(selectedTown) : ""}
+                      onChange={(value) => {
+                        if (!value) {
                           setSelectedTown(null);
                           setDeliveryFee(0);
                           return;
                         }
-                        const townId = Number(val);
+
+                        const townId = Number(value);
                         setSelectedTown(townId);
-                        const selectedTownObj = towns.find(t => t.id === townId);
+                        const selectedTownObj = towns.find((t) => t.id === townId);
                         if (selectedTownObj?.delivery_fee) {
                           setDeliveryFee(selectedTownObj.delivery_fee);
                         }
                       }}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors"
-                      disabled={!selectedRegion || towns.length === 0}
-                    >
-                      <option value="">Select Town</option>
-                      {towns.map((town) => (
-                        <option key={town.id} value={town.id}>
-                          {town.name}{town.delivery_fee ? ` (Fee: UGX ${Number(town.delivery_fee).toLocaleString()})` : ''}
-                        </option>
-                      ))}
-                    </select>
+                      options={towns.map((town) => ({
+                        value: String(town.id),
+                        label: `${town.name}${town.delivery_fee ? ` (Fee: UGX ${Number(town.delivery_fee).toLocaleString()})` : ""}`,
+                      }))}
+                      placeholder={loadingTowns ? "Loading towns..." : "Select Town"}
+                      disabled={!selectedRegion || loadingTowns}
+                      isLoading={loadingTowns}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors text-left"
+                    />
                   </div>
                 </div>
 
