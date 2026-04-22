@@ -199,7 +199,7 @@ const Header = () => {
     <>
       <header className="bg-white sticky top-0 z-50 border-b border-gray-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         {/* Main header */}
-        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 py-2 md:py-3">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3">
           <div className="flex items-center justify-between gap-3">
             {/* Logo */}
             <div className="flex items-center flex-shrink-0">
@@ -351,7 +351,7 @@ const Header = () => {
 
         {/* Desktop Navigation Bar — white iHerb-style */}
         <div className="hidden md:block bg-white border-t border-gray-100 shadow-[0_1px_0_rgba(0,0,0,0.05)]">
-          <div className="max-w-[1600px] mx-auto px-3">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center overflow-x-auto no-scrollbar">
               {/* All Categories CTA */}
               <Link
