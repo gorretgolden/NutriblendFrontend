@@ -8,7 +8,7 @@ import { registerWholesaleUser } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
-import { Eye, EyeOff, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { Eye, EyeOff, CheckCircle, AlertCircle, Loader2, ArrowLeft } from "lucide-react";
 
 const BLOCKED_DOMAINS = [
     "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "live.com", "aol.com",
@@ -197,9 +197,6 @@ export default function WholesaleRegisterPage() {
                 <Image src="/images/hero_wellness_vitamins.png" alt="Wholesale" fill className="object-cover" priority />
                 <div className="absolute inset-0 bg-gradient-to-br from-[#009E3C]/85 to-[#003a17]/75" />
                 <div className="relative z-10 text-white px-10 py-12 max-w-md">
-                    <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
-                        <Image src="/images/logo.png" alt="Logo" width={40} height={40} className="rounded-xl" />
-                    </div>
                     <h1 className="text-4xl font-extrabold mb-4 leading-tight">Wholesale Partner Program</h1>
                     <p className="text-white/85 mb-8 text-lg">
                         Join NutriBlend Haven as a wholesale partner and unlock exclusive bulk pricing,
@@ -221,10 +218,19 @@ export default function WholesaleRegisterPage() {
                 </div>
             </div>
 
-            <div className="flex-1 flex items-start justify-center bg-white overflow-y-auto py-8 px-4 sm:px-8 lg:py-10">
+            <div className="flex-1 flex items-start justify-center bg-white overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
                 <div className="w-full max-w-xl">
+                    <div className="sticky top-0 z-20 -mx-1 mb-4 border-b border-gray-100 bg-white/95 px-1 py-2 backdrop-blur">
+                        <Link
+                            href="/"
+                            className="inline-flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-semibold text-[#00752C] hover:bg-green-50 hover:text-[#009E3C] transition-colors"
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            Back to Home
+                        </Link>
+                    </div>
+
                     <div className="lg:hidden text-center mb-6">
-                        <Image src="/images/logo.png" alt="NutriBlend Haven" width={48} height={48} className="mx-auto mb-3 rounded-xl" />
                         <h1 className="text-2xl font-bold text-gray-900">Wholesale Program</h1>
                         <p className="text-sm text-gray-500">Partner with NutriBlend Haven</p>
                     </div>
