@@ -13,11 +13,13 @@ type SearchableSelectProps = {
   value: string;
   onChange: (value: string) => void;
   options: SearchableOption[];
-  placeholder: string;
+  placeholder: React.ReactNode;
   disabled?: boolean;
   isLoading?: boolean;
   className?: string;
   noResultsText?: string;
+  /** Force dropdown direction. Defaults to 'auto' (detects available space). */
+  dropdownDirection?: "up" | "down" | "auto";
 };
 
 export default function SearchableSelect({
@@ -29,9 +31,11 @@ export default function SearchableSelect({
   isLoading = false,
   className = "",
   noResultsText = "No results",
+  dropdownDirection = "auto",
 }: SearchableSelectProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [openUpward, setOpenUpward] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -64,13 +68,34 @@ export default function SearchableSelect({
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [open]);
+  // Determine direction when opening
+  const handleToggle = () => {
+    if (disabled || isLoading) return;
+    if (!open && dropdownDirection === "auto" && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      setOpenUpward(spaceBelow < 250);
+    } else if (dropdownDirection === "up") {
+      setOpenUpward(true);
+    } else {
+      setOpenUpward(false);
+    }
+    setOpen((prev) => !prev);
+  };
+
+  // Auto-focus search input when dropdown opens
+  useEffect(() => {
+    if (open && inputRef.current) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+  }, [open]);
 
   return (
     <div ref={containerRef} className="relative">
       <button
         type="button"
         disabled={disabled || isLoading}
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={handleToggle}
         className={`${className} flex items-center justify-between gap-2 w-full ${disabled || isLoading ? "opacity-60 cursor-not-allowed bg-gray-50" : ""}`}
       >
         <span className={selectedLabel ? "text-gray-900 truncate" : "text-gray-500 truncate"}>
@@ -84,7 +109,8 @@ export default function SearchableSelect({
       </button>
 
       {open && !disabled && !isLoading && (
-        <div className="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg">
+        <div className={`absolute z-50 w-full rounded-lg border border-gray-200 bg-white shadow-lg
+          ${openUpward ? "bottom-full mb-1" : "top-full mt-1"}`}>
           <div className="p-2 border-b border-gray-100">
             <input
               ref={inputRef}
