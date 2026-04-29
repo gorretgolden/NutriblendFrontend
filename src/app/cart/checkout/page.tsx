@@ -31,6 +31,7 @@ export default function Checkout() {
   const [loadingTowns, setLoadingTowns] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
+  const [checkoutErrors, setCheckoutErrors] = useState<Record<string, string | undefined>>({});
 
   // Check authentication — wait for auth to load, also check localStorage as fallback
   useEffect(() => {
@@ -175,12 +176,14 @@ export default function Checkout() {
   const handlePlaceOrder = async () => {
     // Validation
     if (deliveryMethod === 'delivery') {
-      if (!selectedRegion || !selectedTown) {
-        toast.error("Please select delivery region and town");
-        return;
-      }
-      if (!address.trim()) {
-        toast.error("Please enter your delivery address");
+      const errors: Record<string, string> = {};
+      if (!selectedRegion) errors.region = "Please select a delivery region";
+      if (!selectedTown) errors.town = "Please select a delivery town";
+      if (!address.trim()) errors.address = "Please enter your delivery address";
+
+      if (Object.keys(errors).length > 0) {
+        setCheckoutErrors(errors);
+        toast.error("Please fill in all delivery details");
         return;
       }
     }
@@ -397,12 +400,16 @@ export default function Checkout() {
                           return;
                         }
                         setSelectedRegion(Number(value));
+                        if (checkoutErrors.region) setCheckoutErrors((prev) => ({ ...prev, region: undefined }));
                       }}
                       options={regions.map((region) => ({ value: String(region.id), label: region.name }))}
                       placeholder="Select Region"
                       disabled={loadingRegions}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors text-left"
+                      className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors text-left ${checkoutErrors.region ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                     />
+                    {checkoutErrors.region && (
+                      <p className="mt-1 text-xs text-red-500">{checkoutErrors.region}</p>
+                    )}
                   </div>
 
                   {/* Town */}
@@ -419,6 +426,7 @@ export default function Checkout() {
 
                         const townId = Number(value);
                         setSelectedTown(townId);
+                        if (checkoutErrors.town) setCheckoutErrors((prev) => ({ ...prev, town: undefined }));
                         const selectedTownObj = towns.find((t) => t.id === townId);
                         if (selectedTownObj?.delivery_fee) {
                           setDeliveryFee(selectedTownObj.delivery_fee);
@@ -431,8 +439,11 @@ export default function Checkout() {
                       placeholder={loadingTowns ? "Loading towns..." : "Select Town"}
                       disabled={!selectedRegion || loadingTowns}
                       isLoading={loadingTowns}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors text-left"
+                      className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors text-left ${checkoutErrors.town ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                     />
+                    {checkoutErrors.town && (
+                      <p className="mt-1 text-xs text-red-500">{checkoutErrors.town}</p>
+                    )}
                   </div>
                 </div>
 
@@ -441,11 +452,17 @@ export default function Checkout() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Delivery Address</label>
                   <textarea
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={(e) => {
+                      setAddress(e.target.value);
+                      if (checkoutErrors.address) setCheckoutErrors((prev) => ({ ...prev, address: undefined }));
+                    }}
                     placeholder="e.g. Plot 12, Kampala Road, near Total Petrol Station..."
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors resize-none"
+                    className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors resize-none ${checkoutErrors.address ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                     rows={3}
                   />
+                  {checkoutErrors.address && (
+                    <p className="mt-1 text-xs text-red-500">{checkoutErrors.address}</p>
+                  )}
                 </div>
                 </>
                 )}
