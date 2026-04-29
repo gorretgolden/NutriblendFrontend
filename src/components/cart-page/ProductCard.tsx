@@ -70,7 +70,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
             <div className="mt-2 flex items-baseline gap-2">
               <span className="font-extrabold text-gray-900 text-lg">
-                UGX {displayPrice.toLocaleString()}
+                UGX {displayPrice.toLocaleString()} {data.unit && <span className="text-sm font-normal text-gray-500">/ {data.unit}</span>}
               </span>
               {hasDiscount && (
                 <span className="text-gray-400 line-through text-xs font-medium">

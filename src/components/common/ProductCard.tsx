@@ -56,6 +56,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           srcUrl: data.srcUrl,
           price: displayPrice,
           quantity: 1,
+          unit: data.unit,
         })
       ).unwrap();
       toast.success(`${data.title} added to cart!`);
