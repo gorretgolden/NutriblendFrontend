@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
-import { registerUser } from "@/lib/features/auth/authSlice";
+import { registerUser, clearError } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
@@ -48,6 +48,7 @@ const SignUpModal = ({
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string | undefined>>({});
 
   // Fetch regions from backend on mount
   useEffect(() => {
@@ -127,6 +128,13 @@ const SignUpModal = ({
         [target.name]: target.value,
       }));
     }
+
+    // Clear error for this field as user types
+    if (fieldErrors[target.name]) {
+      setFieldErrors((prev) => ({ ...prev, [target.name]: undefined }));
+    }
+    // Clear Redux auth error
+    if (error) dispatch(clearError());
   };
 
   const handleSelectChange = (name: "region_id" | "town_id", value: string) => {
@@ -136,13 +144,16 @@ const SignUpModal = ({
         region_id: value,
         town_id: "",
       }));
-      return;
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    // Clear error for this field
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -153,13 +164,23 @@ const SignUpModal = ({
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
+    // Field-level validation
+    const errors: Record<string, string> = {};
+    if (!formData.firstName.trim()) errors.firstName = "First name is required";
+    if (!formData.lastName.trim()) errors.lastName = "Last name is required";
+    if (!formData.email.trim()) errors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = "Enter a valid email";
+    if (!formData.phone.trim()) errors.phone = "Phone number is required";
+    if (!formData.password) errors.password = "Password is required";
+    else if (formData.password.length < 8) errors.password = "Password must be at least 8 characters";
+    if (formData.password !== formData.confirmPassword) errors.confirmPassword = "Passwords do not match";
+    if (!formData.region_id) errors.region_id = "Please select a region";
+    if (!formData.town_id) errors.town_id = "Please select a district";
+    if (!formData.location.trim()) errors.location = "Location is required";
 
-    if (!formData.region_id || !formData.town_id) {
-      toast.error("Please select both region and district");
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      toast.error("Please fix the errors before submitting");
       return;
     }
 
@@ -244,12 +265,15 @@ const SignUpModal = ({
                 type="text"
                 name="firstName"
                 placeholder="First Name"
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
+                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.firstName ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 value={formData.firstName}
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
               />
+              {fieldErrors.firstName && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.firstName}</p>
+              )}
             </div>
 
             <div>
@@ -257,12 +281,15 @@ const SignUpModal = ({
                 type="text"
                 name="lastName"
                 placeholder="Last Name"
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
+                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.lastName ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 value={formData.lastName}
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
               />
+              {fieldErrors.lastName && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.lastName}</p>
+              )}
             </div>
 
             <div>
@@ -270,12 +297,15 @@ const SignUpModal = ({
                 type="email"
                 name="email"
                 placeholder="Email Address"
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
+                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.email ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 value={formData.email}
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
               />
+              {fieldErrors.email && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.email}</p>
+              )}
             </div>
 
             <div>
@@ -283,12 +313,15 @@ const SignUpModal = ({
                 type="tel"
                 name="phone"
                 placeholder="Phone Number"
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
+                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.phone ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 value={formData.phone}
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
               />
+              {fieldErrors.phone && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.phone}</p>
+              )}
             </div>
 
             {/* Delivery Info */}
@@ -333,12 +366,15 @@ const SignUpModal = ({
                 type="text"
                 name="location"
                 placeholder="Specific Location"
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
+                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.location ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 value={formData.location}
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
               />
+              {fieldErrors.location && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.location}</p>
+              )}
             </div>
 
             {/* Security */}
