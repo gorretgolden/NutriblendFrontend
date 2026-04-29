@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
-import { loginUser } from "@/lib/features/auth/authSlice";
+import { loginUser, clearError } from "@/lib/features/auth/authSlice";
 import { toast } from "sonner";
 
 export default function LoginPage() {
@@ -15,6 +15,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -28,8 +29,32 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, router]);
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (error) dispatch(clearError());
+    if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (error) dispatch(clearError());
+    if (fieldErrors.password) setFieldErrors((prev) => ({ ...prev, password: undefined }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const errors: { email?: string; password?: string } = {};
+    if (!email.trim()) errors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = "Enter a valid email address";
+    if (!password) errors.password = "Password is required";
+    else if (password.length < 6) errors.password = "Password must be at least 6 characters";
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
       toast.success("You have successfully logged into your account");
@@ -88,12 +113,15 @@ export default function LoginPage() {
                 <input
                   type="email"
                   placeholder="you@example.com"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:bg-white focus:border-[#009E3C] focus:ring-3 focus:ring-[#009E3C]/10"
+                  className={`w-full rounded-xl border bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:bg-white focus:border-[#009E3C] focus:ring-3 focus:ring-[#009E3C]/10 ${fieldErrors.email ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-100' : 'border-gray-200'}`}
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleEmailChange}
                   required
                   disabled={isLoading}
                 />
+                {fieldErrors.email && (
+                  <p className="mt-1 text-xs text-red-500">{fieldErrors.email}</p>
+                )}
               </div>
 
               <div>
@@ -102,9 +130,9 @@ export default function LoginPage() {
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pr-11 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:bg-white focus:border-[#009E3C] focus:ring-3 focus:ring-[#009E3C]/10"
+                    className={`w-full rounded-xl border bg-gray-50 px-4 py-3 pr-11 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:bg-white focus:border-[#009E3C] focus:ring-3 focus:ring-[#009E3C]/10 ${fieldErrors.password ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-100' : 'border-gray-200'}`}
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handlePasswordChange}
                     required
                     disabled={isLoading}
                   />
@@ -125,6 +153,9 @@ export default function LoginPage() {
                     )}
                   </button>
                 </div>
+                {fieldErrors.password && (
+                  <p className="mt-1 text-xs text-red-500">{fieldErrors.password}</p>
+                )}
               </div>
 
               <button
