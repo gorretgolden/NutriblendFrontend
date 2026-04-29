@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
-import { registerWholesaleUser } from "@/lib/features/auth/authSlice";
+import { registerWholesaleUser, clearError } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
@@ -46,7 +46,7 @@ type FormErrors = Partial<Record<string, string>>;
 
 export default function WholesaleRegisterPage() {
     const dispatch = useAppDispatch();
-    const { isLoading } = useAppSelector((state) => state.auth);
+    const { isLoading, error: authError } = useAppSelector((state) => state.auth);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -124,6 +124,7 @@ export default function WholesaleRegisterPage() {
         setTouched((p) => ({ ...p, [name]: true }));
         const errs = validate(updated);
         setErrors((p) => ({ ...p, [name]: errs[name] }));
+        if (authError) dispatch(clearError());
     };
 
     const handleBlur = (name: string) => {
@@ -138,6 +139,7 @@ export default function WholesaleRegisterPage() {
         setFormData(updated);
         setTouched((p) => ({ ...p, [name]: true }));
         setErrors((p) => ({ ...p, [name]: validate(updated)[name] }));
+        if (authError) dispatch(clearError());
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
