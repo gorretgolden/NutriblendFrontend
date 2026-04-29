@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/router";
+import SearchableSelect from "@/components/ui/SearchableSelect";
 
 export default function EditAddress() {
   const router = useRouter();
@@ -16,8 +17,12 @@ export default function EditAddress() {
     city: "Ntinda",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
   const { name, value } = e.target;
+  setFormData({ ...formData, [name]: value });
+};
+
+const handleSelectChange = (name: "region" | "city", value: string) => {
   setFormData({ ...formData, [name]: value });
 };
 
@@ -105,29 +110,31 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Region</label>
-              <select
-                name="region"
+              <SearchableSelect
                 value={formData.region}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded p-2"
-              >
-                <option>Kampala Region</option>
-                <option>Central Region</option>
-                <option>Eastern Region</option>
-              </select>
+                onChange={(value) => handleSelectChange("region", value)}
+                options={[
+                  { value: "Kampala Region", label: "Kampala Region" },
+                  { value: "Central Region", label: "Central Region" },
+                  { value: "Eastern Region", label: "Eastern Region" },
+                ]}
+                placeholder="Select region"
+                className="w-full border border-gray-300 rounded p-2 text-left"
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">City</label>
-              <select
-                name="city"
+              <SearchableSelect
                 value={formData.city}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded p-2"
-              >
-                <option>Ntinda</option>
-                <option>Kampala</option>
-                <option>Entebbe</option>
-              </select>
+                onChange={(value) => handleSelectChange("city", value)}
+                options={[
+                  { value: "Ntinda", label: "Ntinda" },
+                  { value: "Kampala", label: "Kampala" },
+                  { value: "Entebbe", label: "Entebbe" },
+                ]}
+                placeholder="Select city"
+                className="w-full border border-gray-300 rounded p-2 text-left"
+              />
             </div>
           </div>
 

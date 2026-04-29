@@ -6,9 +6,8 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { registerUser } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
+import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
-
-type SelectChangeEvent = React.ChangeEvent<HTMLSelectElement>;
 
 export default function RegisterPage() {
     const dispatch = useAppDispatch();
@@ -83,18 +82,12 @@ export default function RegisterPage() {
         fetchTowns();
     }, [formData.region_id]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const target = e.target;
         if (target instanceof HTMLInputElement && target.type === "checkbox") {
             setFormData((prev) => ({
                 ...prev,
                 [target.name]: target.checked,
-            }));
-        } else if (target.name === "region_id") {
-            setFormData((prev) => ({
-                ...prev,
-                region_id: target.value,
-                town_id: "",
             }));
         } else {
             setFormData((prev) => ({
@@ -102,6 +95,22 @@ export default function RegisterPage() {
                 [target.name]: target.value,
             }));
         }
+    };
+
+    const handleSelectChange = (name: "region_id" | "town_id", value: string) => {
+        if (name === "region_id") {
+            setFormData((prev) => ({
+                ...prev,
+                region_id: value,
+                town_id: "",
+            }));
+            return;
+        }
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -114,6 +123,11 @@ export default function RegisterPage() {
 
         if (formData.password !== formData.confirmPassword) {
             toast.error("Passwords do not match");
+            return;
+        }
+
+        if (!formData.region_id || !formData.town_id) {
+            toast.error("Please select both region and district");
             return;
         }
 
@@ -231,47 +245,31 @@ export default function RegisterPage() {
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Region</label>
-                                <select
-                                    name="region_id"
+                                <SearchableSelect
                                     value={formData.region_id}
-                                    onChange={handleInputChange}
-                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
-                                    required
+                                    onChange={(value) => handleSelectChange("region_id", value)}
+                                    options={regions.map((region) => ({ value: String(region.id), label: region.name }))}
+                                    placeholder={loadingRegions ? "Loading regions..." : "Select Region"}
                                     disabled={isLoading || loadingRegions}
-                                >
-                                    <option value="">
-                                        {loadingRegions ? "Loading regions..." : "Select Region"}
-                                    </option>
-                                    {regions.map((region) => (
-                                        <option key={region.id} value={region.id}>
-                                            {region.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all text-left"
+                                />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
-                                <select
-                                    name="town_id"
+                                <SearchableSelect
                                     value={formData.town_id}
-                                    onChange={handleInputChange}
-                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all"
-                                    required
-                                    disabled={!formData.region_id || isLoading || loadingTowns}
-                                >
-                                    <option value="">
-                                        {loadingTowns
+                                    onChange={(value) => handleSelectChange("town_id", value)}
+                                    options={towns.map((town) => ({ value: String(town.id), label: town.name }))}
+                                    placeholder={
+                                        loadingTowns
                                             ? "Loading districts..."
                                             : formData.region_id
                                                 ? "Select District"
-                                                : "Select Region first"}
-                                    </option>
-                                    {towns.map((town) => (
-                                        <option key={town.id} value={town.id}>
-                                            {town.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                                : "Select Region first"
+                                    }
+                                    disabled={!formData.region_id || isLoading || loadingTowns}
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/15 transition-all text-left"
+                                />
                             </div>
                         </div>
 
