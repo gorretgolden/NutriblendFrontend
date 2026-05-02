@@ -133,6 +133,7 @@ export interface Category {
     icon_emoji?: string;
     parent_id?: number;
     is_active: boolean;
+    children?: Category[];
 }
 
 export interface Brand {

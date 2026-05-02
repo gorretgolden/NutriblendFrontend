@@ -63,7 +63,7 @@ export default function BrandsPage() {
   return (
     <main className="min-h-screen bg-[#fafdfb]">
       {/* ── Ultra-Premium Hero Header with Mesh Gradient ── */}
-      <section className="relative overflow-hidden bg-white pt-20 md:pt-28 pb-12 md:pb-16 border-b border-gray-50">
+      <section className="relative overflow-hidden bg-white pt-10 md:pt-14 pb-10 md:pb-12 border-b border-gray-50">
         {/* Complex Mesh Gradient Background */}
         <div className="absolute inset-0 z-0">
             <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-emerald-50/60 rounded-full blur-[140px] animate-pulse" />
@@ -79,17 +79,17 @@ export default function BrandsPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-md border border-emerald-100/50 mb-6 shadow-sm"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 backdrop-blur-md border border-emerald-100/50 mb-4 shadow-sm"
           >
             <div className="w-2 h-2 rounded-full bg-[#009E3C] animate-ping" />
-            <span className="text-[10px] font-black tracking-[0.3em] text-[#009E3C] uppercase">Global Partners</span>
+            <span className="text-[9px] font-black tracking-[0.3em] text-[#009E3C] uppercase">Global Partners</span>
           </motion.div>
 
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, type: "spring", stiffness: 100 }}
-            className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight mb-4"
+            className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight mb-2"
           >
             Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#009E3C] to-[#007a2e]">All Brands</span>
           </motion.h1>
@@ -98,7 +98,7 @@ export default function BrandsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-gray-400 text-sm md:text-base font-bold uppercase tracking-widest mb-10"
+            className="text-gray-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] mb-8"
           >
             Official Clinical Distributors & Wellness Partners
           </motion.p>
@@ -108,17 +108,17 @@ export default function BrandsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="relative max-w-2xl mx-auto"
+            className="relative max-w-xl mx-auto"
           >
-            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-              <Search className="text-[#009E3C] w-5 h-5 opacity-50" />
+            <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+              <Search className="text-[#009E3C] w-4 h-4 opacity-50" />
             </div>
             <input
               type="text"
               placeholder="Search by brand name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-16 pr-8 py-6 rounded-full border border-gray-100 bg-white shadow-[0_25px_60px_-15px_rgba(0,158,60,0.15)] focus:ring-8 focus:ring-emerald-500/5 focus:border-[#009E3C]/30 transition-all text-lg font-bold text-gray-800 placeholder:text-gray-300 placeholder:font-normal"
+              className="w-full pl-12 pr-6 py-4 rounded-full border border-gray-100 bg-white shadow-[0_15px_40px_-10px_rgba(0,158,60,0.1)] focus:ring-4 focus:ring-emerald-500/5 focus:border-[#009E3C]/30 transition-all text-base font-bold text-gray-800 placeholder:text-gray-300 placeholder:font-normal"
               disabled={loading}
             />
           </motion.div>
@@ -126,56 +126,56 @@ export default function BrandsPage() {
       </section>
 
       {/* ── Brand Grid ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-14">
         {loading ? (
-          <div className="flex flex-col justify-center items-center py-32 space-y-4">
+          <div className="flex flex-col justify-center items-center py-20 space-y-4">
             <div className="relative">
-              <Loader2 className="w-16 h-16 text-[#009E3C] animate-spin opacity-20" />
-              <Loader2 className="absolute top-0 left-0 w-16 h-16 text-[#009E3C] animate-[spin_1.5s_linear_infinite]" />
+              <Loader2 className="w-12 h-12 text-[#009E3C] animate-spin opacity-20" />
+              <Loader2 className="absolute top-0 left-0 w-12 h-12 text-[#009E3C] animate-[spin_1.5s_linear_infinite]" />
             </div>
-            <p className="text-gray-400 font-black tracking-[0.3em] uppercase text-[10px]">Syncing Brands...</p>
+            <p className="text-gray-400 font-black tracking-[0.3em] uppercase text-[9px]">Syncing Brands...</p>
           </div>
         ) : error ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-red-50/50 p-8 shadow-sm">
+          <div className="text-center py-16 bg-white rounded-3xl border border-red-50/50 p-8 shadow-sm">
             <p className="text-red-600 font-bold mb-6">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="h-14 px-10 bg-[#009E3C] text-white font-black rounded-2xl hover:bg-[#00752C] transition shadow-lg shadow-emerald-100"
+              className="h-12 px-8 bg-[#009E3C] text-white font-black rounded-xl hover:bg-[#00752C] transition shadow-lg shadow-emerald-100"
             >
               Try Again
             </button>
           </div>
         ) : filteredBrands.length === 0 ? (
-          <div className="text-center py-32">
-            <div className="w-24 h-24 bg-gray-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-gray-100">
-              <Search className="w-10 h-10 text-gray-200" />
+          <div className="text-center py-24">
+            <div className="w-20 h-20 bg-gray-50 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6 border border-gray-100">
+              <Search className="w-8 h-8 text-gray-200" />
             </div>
-            <p className="text-gray-900 text-2xl font-black tracking-tight">
+            <p className="text-gray-900 text-xl font-black tracking-tight">
               {search ? `No matches for "${search}"` : "No brands found"}
             </p>
             <button 
               onClick={() => setSearch("")}
-              className="mt-4 text-[#009E3C] font-black uppercase tracking-widest text-xs hover:underline underline-offset-8"
+              className="mt-4 text-[#009E3C] font-black uppercase tracking-widest text-[10px] hover:underline underline-offset-8"
             >
               Reset Search
             </button>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-4 md:gap-6">
               <AnimatePresence mode="popLayout">
                 {currentBrands.map((brand, idx) => (
                   <motion.div
                     key={brand.id}
                     layout
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.4, delay: (idx % itemsPerPage) * 0.05 }}
+                    transition={{ duration: 0.3, delay: (idx % itemsPerPage) * 0.03 }}
                   >
                     <Link
                       href={`/shop?brand_id=${brand.id}`}
-                      className="group relative flex flex-col items-center justify-center p-8 rounded-[2.5rem] bg-white border border-gray-100 hover:border-emerald-200 transition-all duration-500 hover:shadow-[0_30px_60px_-15px_rgba(0,158,60,0.18)] overflow-hidden aspect-square shadow-sm"
+                      className="group relative flex flex-col items-center justify-center p-5 rounded-[1.8rem] bg-white border border-gray-100 hover:border-emerald-200 transition-all duration-500 hover:shadow-[0_20px_40px_-10px_rgba(0,158,60,0.12)] overflow-hidden aspect-square shadow-sm"
                     >
                       {/* Logo Container */}
                       <div className="relative z-10 w-full flex-1 flex items-center justify-center">
@@ -183,25 +183,25 @@ export default function BrandsPage() {
                           <img
                             src={getImageUrl(brand.image)}
                             alt={brand.name}
-                            className="w-full h-auto max-h-[110px] object-contain filter group-hover:scale-110 transition-all duration-700 ease-out"
+                            className="w-full h-auto max-h-[60px] object-contain filter group-hover:scale-110 transition-all duration-700 ease-out"
                           />
                         ) : (
-                          <div className="text-5xl font-black text-gray-100 group-hover:text-emerald-50 transition-all duration-500 tracking-tighter uppercase">
+                          <div className="text-3xl font-black text-gray-100 group-hover:text-emerald-50 transition-all duration-500 tracking-tighter uppercase">
                             {brand.name.substring(0, 2)}
                           </div>
                         )}
                       </div>
 
                       {/* Brand Info Layer */}
-                      <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-gray-900/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                         <p className="text-gray-900 text-center text-[10px] font-black uppercase tracking-widest truncate">
+                      <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-gray-900/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                         <p className="text-gray-900 text-center text-[8px] font-black uppercase tracking-widest truncate">
                            {brand.name}
                          </p>
                       </div>
 
                       {/* Visible Label */}
-                      <div className="mt-4 text-center group-hover:opacity-0 transition-opacity duration-300">
-                        <h3 className="font-bold text-gray-600 text-xs md:text-sm uppercase tracking-widest truncate max-w-[120px]">
+                      <div className="mt-3 text-center group-hover:opacity-0 transition-opacity duration-300">
+                        <h3 className="font-bold text-gray-500 text-[10px] md:text-xs uppercase tracking-widest truncate max-w-[100px]">
                           {brand.name}
                         </h3>
                       </div>

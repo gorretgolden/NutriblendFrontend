@@ -33,10 +33,10 @@ const Header = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const cached = localStorage.getItem('categories_cache_v3');
+        const cached = localStorage.getItem('categories_cache_v5');
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 2 * 60 * 1000) {
+          if (Date.now() - timestamp < 5 * 60 * 1000) {
             setCategories(data);
             return;
           }
@@ -45,7 +45,7 @@ const Header = () => {
         const response = await apiClient.getCategoriesTree();
         if (response.status && response.data) {
           setCategories(response.data);
-          localStorage.setItem('categories_cache_v3', JSON.stringify({
+          localStorage.setItem('categories_cache_v5', JSON.stringify({
             data: response.data,
             timestamp: Date.now()
           }));
@@ -88,13 +88,13 @@ const Header = () => {
   const dynamicNavItems = categories.map(cat => ({
     name: cat.name,
     href: `/shop?category=${cat.slug}`,
-    subItems: cat.children?.length > 0 ? cat.children.map((child: any) => ({
+    subItems: (cat.children && cat.children.length > 0) ? cat.children.map((child: any) => ({
       name: child.name,
       href: `/shop?category=${child.slug}`
     })) : null
   }));
 
-  const navItems: { name: string; href?: string; subItems?: string[] | null }[] = [
+  const navItems: { name: string; href?: string; subItems?: { name: string; href: string }[] | null }[] = [
     ...dynamicNavItems,
   ];
 
