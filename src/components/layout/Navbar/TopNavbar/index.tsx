@@ -33,10 +33,10 @@ const Header = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const cached = localStorage.getItem('categories_cache_v2');
+        const cached = localStorage.getItem('categories_cache_v3');
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 10 * 60 * 1000) {
+          if (Date.now() - timestamp < 2 * 60 * 1000) {
             setCategories(data);
             return;
           }
@@ -45,7 +45,7 @@ const Header = () => {
         const response = await apiClient.getCategoriesTree();
         if (response.status && response.data) {
           setCategories(response.data);
-          localStorage.setItem('categories_cache_v2', JSON.stringify({
+          localStorage.setItem('categories_cache_v3', JSON.stringify({
             data: response.data,
             timestamp: Date.now()
           }));
