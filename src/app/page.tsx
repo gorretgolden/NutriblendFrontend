@@ -160,10 +160,21 @@ export default async function Home() {
       </section>
 
       {/* ── 2. Shop by Category (iHerb style) ── */}
-      <ShopByGoal />
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+      >
+        <ShopByGoal />
+      </motion.section>
 
       {/* ── 3. Trust Signals Bar ── */}
-      <section className="bg-white border-b border-gray-100">
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="bg-white border-b border-gray-100"
+      >
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 md:divide-x md:divide-gray-100">
             {trustBadges.map((t, i) => (
@@ -183,94 +194,159 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── 4. Flash Sales / Deals of the Day (Removed) ── */}
-
       {/* ── 5. Three-Column Promo Banners ── */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+        className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4"
+      >
         <ThreeColBanners />
-      </div>
+      </motion.div>
 
       {/* ── 6. New Arrivals ── */}
       {latestProducts.length > 0 && (
-        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1 }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4"
+        >
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Just In" title="New Arrivals" viewAllLink="/shop" />
             <ProductCarousel products={latestProducts} title="New Arrivals" hideHeader viewAllLink="/shop" />
           </div>
-        </FadeIn>
+        </motion.div>
       )}
 
       {/* ── 7. Brands Section ── */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+        className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4"
+      >
         <BrandsSection />
-      </div>
+      </motion.div>
 
       {/* ── 9. Men's Sexual Health ── */}
       {mensProducts.length > 0 && (
-        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4"
+        >
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Men's Health" title="Men's Sexual Health" viewAllLink="/shop?category=mens-sexual-health" />
             <ProductCarousel products={mensProducts} title="Men's Sexual Health" hideHeader viewAllLink="/shop?category=mens-sexual-health" />
           </div>
-        </FadeIn>
+        </motion.div>
       )}
 
       {/* ── 10. Women's Sexual Health ── */}
       {womensProducts.length > 0 && (
-        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4"
+        >
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Women's Health" title="Women's Sexual Health" viewAllLink="/shop?category=womens-sexual-health" />
             <ProductCarousel products={womensProducts} title="Women's Sexual Health" hideHeader viewAllLink="/shop?category=womens-sexual-health" />
           </div>
-        </FadeIn>
+        </motion.div>
       )}
 
       {/* ── 11. Nutritional Supplements ── */}
       {supplementsProducts.length > 0 && (
-        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4"
+        >
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Health & Wellness" title="Nutritional Supplements" viewAllLink="/shop?category=nutritional-supplements" />
             <ProductCarousel products={supplementsProducts} title="Nutritional Supplements" hideHeader viewAllLink="/shop?category=nutritional-supplements" />
           </div>
-        </FadeIn>
+        </motion.div>
       )}
 
       {/* ── 12. Gym & Fitness ── */}
       {fitnessProducts.length > 0 && (
-        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4"
+        >
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Active Living" title="Gym & Fitness" viewAllLink="/shop?category=gym-and-fitness" />
             <ProductCarousel products={fitnessProducts} title="Gym & Fitness" hideHeader viewAllLink="/shop?category=gym-and-fitness" />
           </div>
-        </FadeIn>
+        </motion.div>
       )}
 
       {/* ── 13. Why Choose Us ── */}
-      <WhyChooseUs />
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+      >
+        <WhyChooseUs />
+      </motion.div>
 
       {/* ── 14. Perfumes & Sprays ── */}
       {perfumesProducts.length > 0 && (
-        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6"
+        >
           <div className="bg-white rounded-2xl px-5 py-6 md:px-8 border border-gray-100 shadow-sm">
             <SectionHeading label="Luxury Fragrance" title="Perfumes & Sprays" viewAllLink="/shop?category=perfumes-and-sprays" />
             <ProductCarousel products={perfumesProducts} title="Perfumes & Sprays" hideHeader viewAllLink="/shop?category=perfumes-and-sprays" />
           </div>
-        </FadeIn>
+        </motion.div>
       )}
 
       {/* ── 15. Weight Management ── */}
       {weightProducts.length > 0 && (
-        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4"
+        >
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Body Goals" title="Weight Management" viewAllLink="/shop?category=weight-management" />
             <ProductCarousel products={weightProducts} title="Weight Management" hideHeader viewAllLink="/shop?category=weight-management" />
           </div>
-        </FadeIn>
+        </motion.div>
       )}
 
       {/* ── 16. Special Offers ── */}
       {onSaleProducts.length > 0 && (
-        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-6"
+        >
           <div className="bg-white border border-gray-100 rounded-2xl px-5 py-6 md:px-8 shadow-sm">
             <div className="flex items-center justify-between mb-5">
               <div>
@@ -289,11 +365,17 @@ export default async function Home() {
             </div>
             <ProductCarousel products={onSaleProducts} title="Special Offers" hideHeader viewAllLink="/shop?on_sale=true" />
           </div>
-        </FadeIn>
+        </motion.div>
       )}
-
+      
       {/* ── 17. Newsletter CTA ── */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-8">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+        className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-8"
+      >
         <div className="relative bg-gradient-to-r from-[#009E3C] to-[#007a2e] rounded-2xl overflow-hidden p-8 md:p-12 shadow-lg">
           {/* Decorative blob */}
           <div className="absolute top-0 right-0 bottom-0 w-1/3 opacity-10 pointer-events-none hidden md:block">
@@ -321,7 +403,7 @@ export default async function Home() {
             <NewsletterForm />
           </div>
         </div>
-      </div>
+      </motion.div>
 
     </main>
   );

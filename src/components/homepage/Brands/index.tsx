@@ -74,9 +74,9 @@ export default function BrandsSection() {
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-xl md:text-2xl font-black text-gray-900 tracking-tight uppercase"
+              className="text-[26px] sm:text-[34px] font-[900] text-gray-900 tracking-tight leading-none"
             >
-              Brands
+              Shop by Brand
             </motion.h2>
           </div>
 
