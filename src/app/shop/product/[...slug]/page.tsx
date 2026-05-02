@@ -78,7 +78,7 @@ export default async function ProductPage({
           <Header data={productData} />
         </section>
 
-        <section className="mb-8">
+        <section id="product-tabs" className="mb-8">
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <Tabs data={productData} />
           </div>

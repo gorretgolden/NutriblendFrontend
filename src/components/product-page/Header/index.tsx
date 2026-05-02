@@ -169,16 +169,21 @@ const Header = ({ data }: { data: Product }) => {
           )}
 
           {/* Short Description */}
-          {data.shortDescription ? (
-            <p className="text-sm text-gray-600 mb-5 leading-relaxed">
-              {data.shortDescription}
-            </p>
-          ) : data.description ? (
-            <div
-              className="text-sm text-gray-600 mb-5 leading-relaxed prose prose-sm max-w-none"
-              dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(data.description) }}
-            />
-          ) : null}
+          {data.shortDescription && (
+            <div className="mb-5">
+              <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+                {data.shortDescription}
+              </p>
+              {data.description && (
+                <button 
+                  onClick={() => document.getElementById('product-tabs')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-xs font-bold text-[#009E3C] mt-2 hover:underline cursor-pointer"
+                >
+                  View Full Details
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Size/Variant selection */}
           <SizeSelection data={data} />
