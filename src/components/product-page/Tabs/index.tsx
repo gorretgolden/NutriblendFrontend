@@ -44,7 +44,7 @@ const Tabs = ({ data }: { data: Product }) => {
               active === tab.id
                 ? "border-[#009E3C] border-b-2 font-bold text-[#009E3C]"
                 : "border-b border-transparent text-gray-500 font-normal hover:text-[#009E3C]",
-              "px-6 py-4 rounded-none transition-all duration-200",
+              "px-5 sm:px-6 py-4 sm:py-5 rounded-none transition-all duration-200 text-sm sm:text-[15px]",
             ])}
             onClick={() => setActive(tab.id)}
           >
@@ -52,7 +52,7 @@ const Tabs = ({ data }: { data: Product }) => {
           </Button>
         ))}
       </div>
-      <div className="mb-12 sm:mb-16">
+      <div className="mb-8 sm:mb-12">
         {active === 1 && <ProductDetailsContent data={data} />}
         {active === 2 && <ReviewsContent productId={data.id} />}
         {active === 3 && <FaqContent />}

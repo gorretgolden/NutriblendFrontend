@@ -16,6 +16,7 @@ type ProductCardProps = {
 };
 
 const ProductCard = ({ data }: ProductCardProps) => {
+  const [imgSrc, setImgSrc] = React.useState(data.srcUrl || '/images/placeholders/product.png');
   const dispatch = useAppDispatch();
   const router = useRouter();
   const hasDiscount = (data.discount?.percentage ?? 0) > 0 || (data.discount?.amount ?? 0) > 0;
@@ -147,15 +148,27 @@ const ProductCard = ({ data }: ProductCardProps) => {
           </span>
         )}
 
-        {/* Product Image */}
+        {/* Primary Image */}
         <Image
-          src={data.srcUrl}
+          src={imgSrc}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.07]"
+          className={`object-contain p-4 transition-all duration-500 ease-out group-hover:scale-[1.07] ${data.gallery && data.gallery.length > 0 ? 'group-hover:opacity-0' : ''}`}
           alt={data.title}
           priority
+          onError={() => setImgSrc('/images/placeholders/product.png')}
         />
+
+        {/* Secondary Hover Image */}
+        {data.gallery && data.gallery.length > 0 && (
+          <Image
+            src={data.gallery[0]}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-contain p-4 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100 group-hover:scale-[1.07] absolute inset-0"
+            alt={`${data.title} alternate view`}
+          />
+        )}
       </Link>
 
       {/* ── Content ── */}
