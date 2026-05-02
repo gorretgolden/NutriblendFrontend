@@ -2,9 +2,23 @@ import { Product } from "@/types/product.types";
 import React from "react";
 import ProductDetails from "./ProductDetails";
 
+import { sanitizeRichHtml } from "@/lib/utils/security";
+
 const ProductDetailsContent = ({ data }: { data: Product }) => {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-6 pb-8">
+      {/* Full Description Section */}
+      {data.description && (
+        <section className="prose prose-sm max-w-none text-gray-700">
+          <h3 className="text-xl font-bold text-black mb-4">
+            Product Description
+          </h3>
+          <div 
+            className="leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(data.description) }}
+          />
+        </section>
+      )}
       {/* Key Features Section */}
       {data.keyFeatures && data.keyFeatures.length > 0 && (
         <section className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">

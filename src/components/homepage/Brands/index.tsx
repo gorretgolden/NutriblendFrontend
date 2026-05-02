@@ -145,7 +145,5 @@ export default function BrandsSection() {
         </div>
       </div>
     </section>
-      </div>
-    </section>
   );
 }
