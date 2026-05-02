@@ -134,6 +134,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-size: 16px;
     font-feature-settings: "rlig" 1, "calt" 1, "kern" 1;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;

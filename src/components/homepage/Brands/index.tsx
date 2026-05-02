@@ -65,47 +65,19 @@ export default function BrandsSection() {
   if (brands.length === 0) return null;
 
   return (
-    <section className="relative w-full py-10 md:py-16 overflow-hidden bg-white rounded-3xl border border-gray-50">
-      {/* ── Decorative elements ── */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[500px] h-[500px] bg-emerald-50/40 rounded-full blur-[100px] pointer-events-none" />
-      
+    <section className="relative w-full py-8 md:py-12 overflow-hidden bg-white">
       <div className="relative max-w-[1560px] mx-auto px-4 sm:px-6">
         {/* ── Header ── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-10 md:mb-14">
-          <div className="max-w-2xl">
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 mb-5"
-            >
-              <span className="w-2 h-2 rounded-full bg-[#009E3C] animate-pulse" />
-              <span className="text-[10px] font-black tracking-[0.15em] text-[#009E3C] uppercase">Trusted Partners</span>
-            </motion.div>
-
+        <div className="flex items-center justify-between gap-8 mb-8 md:mb-10">
+          <div>
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-3xl md:text-5xl font-black text-gray-900 tracking-tight leading-[1.1] mb-5"
+              className="text-2xl md:text-4xl font-black text-gray-900 tracking-tight"
             >
-              Premium{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#009E3C] to-[#00bc49]">
-                Clinical Brands
-              </span>
+              Shop by <span className="text-[#009E3C]">Brands</span>
             </motion.h2>
-
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="text-gray-500 text-base md:text-lg leading-relaxed font-medium"
-            >
-              Partnering with global pharmaceutical leaders to bring you 
-              certified efficacy and rigorous wellness standards.
-            </motion.p>
           </div>
 
           <motion.div
@@ -115,11 +87,11 @@ export default function BrandsSection() {
           >
             <Link
               href="/brands"
-              className="group inline-flex items-center gap-3 h-14 px-8 rounded-2xl bg-gray-900 text-white font-bold text-sm hover:bg-[#009E3C] transition-all duration-300 shadow-xl shadow-gray-200 hover:shadow-emerald-100"
+              className="group inline-flex items-center gap-2 text-sm font-bold text-[#009E3C] hover:text-[#007a2e] transition-colors"
             >
-              Explore All Brands
-              <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              View all
+              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
               </svg>
             </Link>
           </motion.div>
@@ -127,54 +99,52 @@ export default function BrandsSection() {
 
         {/* ── Auto-Scrolling Brands Row ── */}
         <div className="relative group">
-          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
             <motion.div 
-              animate={{ x: [0, -1000] }}
+              animate={{ x: [0, -1200] }}
               transition={{ 
-                duration: 40, 
+                duration: 45, 
                 repeat: Infinity, 
                 ease: "linear",
                 repeatType: "loop"
               }}
-              className="flex gap-4 md:gap-6 py-4 pr-6 shrink-0"
+              className="flex gap-4 md:gap-5 py-4 pr-5 shrink-0"
             >
               {/* Duplicate brands for infinite scroll */}
               {[...brands, ...brands, ...brands].map((brand, i) => (
                 <Link
                   key={`${brand.id}-${i}`}
                   href={`/shop?brand_id=${brand.id}`}
-                  className="group/card relative flex flex-col items-center justify-center p-6 rounded-3xl bg-white border border-gray-100 hover:border-emerald-200 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,158,60,0.1)] overflow-hidden aspect-square w-[160px] md:w-[200px] shrink-0"
+                  className="group/card relative flex flex-col items-center justify-center p-5 rounded-2xl bg-white border border-gray-100 hover:border-emerald-200 transition-all duration-500 hover:shadow-lg overflow-hidden aspect-square w-[130px] md:w-[160px] shrink-0"
                 >
-                  {/* Subtle hover background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
-                  
                   {/* Logo Container */}
                   <div className="relative z-10 w-full flex-1 flex items-center justify-center">
                     {brand.image ? (
                       <img
                         src={getImageUrl(brand.image)}
                         alt={brand.name}
-                        className="w-full h-auto max-h-[80px] object-contain filter grayscale group-hover/card:grayscale-0 opacity-70 group-hover/card:opacity-100 scale-100 group-hover/card:scale-110 transition-all duration-700 ease-out"
+                        className="w-full h-auto max-h-[70px] object-contain group-hover/card:scale-110 transition-all duration-700 ease-out"
                       />
                     ) : (
-                      <div className="text-3xl font-black text-gray-200 group-hover/card:text-[#009E3C]/40 transition-all duration-500 tracking-tighter uppercase">
+                      <div className="text-2xl font-black text-gray-200 group-hover/card:text-[#009E3C]/40 transition-all duration-500 tracking-tighter uppercase">
                         {brand.name.substring(0, 2)}
                       </div>
                     )}
                   </div>
 
                   {/* Brand Info */}
-                  <div className="relative z-10 mt-4 text-center w-full">
-                    <h3 className="font-extrabold text-gray-800 group-hover/card:text-gray-900 text-sm md:text-base truncate transition-colors duration-300">
+                  <div className="relative z-10 mt-3 text-center w-full">
+                    <h3 className="font-bold text-gray-700 group-hover/card:text-[#009E3C] text-[13px] md:text-sm truncate transition-colors duration-300">
                       {brand.name}
                     </h3>
-                    <div className="h-1 w-0 group-hover/card:w-8 bg-[#009E3C] mx-auto mt-2 rounded-full transition-all duration-500" />
                   </div>
                 </Link>
               ))}
             </motion.div>
           </div>
         </div>
+      </div>
+    </section>
       </div>
     </section>
   );

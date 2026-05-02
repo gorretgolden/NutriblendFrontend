@@ -201,33 +201,39 @@ export default function ShopByGoal() {
             <Link
               key={goal.label}
               href={goal.href}
-              className="flex flex-col items-center gap-3 flex-none group text-center"
-              style={{ width: "100px" }}
+              className="flex flex-col items-start gap-4 flex-none group"
+              style={{ width: "120px" }}
             >
               <div
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-all duration-300 group-hover:shadow-lg group-hover:shadow-emerald-100 border-2 border-white group-hover:border-emerald-50 overflow-hidden bg-white"
-                style={{ backgroundColor: goal.imageUrl ? '#ffffff' : goal.bgColor }}
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-emerald-100 border border-gray-100 group-hover:border-emerald-200 overflow-hidden bg-white relative"
               >
                 {goal.imageUrl ? (
                   <img 
                     src={goal.imageUrl} 
                     alt={goal.label} 
-                    className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110" 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                   />
                 ) : (
                   <div 
-                    className="w-full h-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                    className="w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
                     style={{ color: goal.color, backgroundColor: goal.bgColor }}
                   >
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center">
                       {goal.fallbackIcon}
                     </div>
                   </div>
                 )}
+                {/* Subtle overlay */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
               </div>
-              <span className="text-[13px] sm:text-sm font-bold text-gray-700 leading-tight group-hover:text-[#009E3C] transition-colors line-clamp-2 px-1">
-                {goal.label}
-              </span>
+              <div className="space-y-1 w-full text-left">
+                <span className="block text-[15px] sm:text-[16px] font-black text-gray-900 leading-tight group-hover:text-[#009E3C] transition-colors line-clamp-1">
+                  {goal.label}
+                </span>
+                <span className="text-[11px] font-bold text-[#009E3C] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-1 group-hover:translate-y-0 duration-300">
+                  Shop Now
+                </span>
+              </div>
             </Link>
           ))}
         </div>

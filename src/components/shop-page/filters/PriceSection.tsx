@@ -57,18 +57,30 @@ const PriceSection = () => {
           <div className="flex flex-col space-y-4">
             <div className="flex items-center justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1 block">Min Price</label>
-                <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-3">
-                  <span className="text-sm font-black text-gray-900">UGX {values[0].toLocaleString()}</span>
-                </div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5 block">Min Price (UGX)</label>
+                <input 
+                  type="number"
+                  value={values[0]}
+                  onChange={(e) => setValues([Number(e.target.value), values[1]])}
+                  className="w-full rounded-xl border border-gray-200 bg-white p-3 text-sm font-black text-gray-900 outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/10 transition-all"
+                  placeholder="0"
+                />
               </div>
-              <div className="h-px w-4 bg-gray-200 mt-6 flex-none" />
               <div className="flex-1 min-w-0">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1 block">Max Price</label>
-                <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-3">
-                  <span className="text-sm font-black text-gray-900">UGX {values[1].toLocaleString()}</span>
-                </div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5 block">Max Price (UGX)</label>
+                <input 
+                  type="number"
+                  value={values[1]}
+                  onChange={(e) => setValues([values[0], Number(e.target.value)])}
+                  className="w-full rounded-xl border border-gray-200 bg-white p-3 text-sm font-black text-gray-900 outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/10 transition-all"
+                  placeholder="2,000,000"
+                />
               </div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] font-bold text-gray-400 px-1">
+              <span>{values[0].toLocaleString()} UGX</span>
+              <span>{values[1].toLocaleString()} UGX</span>
             </div>
 
             <button
