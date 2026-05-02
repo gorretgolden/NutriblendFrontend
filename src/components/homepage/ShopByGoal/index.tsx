@@ -110,7 +110,7 @@ export default function ShopByGoal() {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const cached = localStorage.getItem('categories_cache_v3');
+        const cached = localStorage.getItem('categories_cache_v4');
         let categories = [];
         
         if (cached) {
@@ -128,18 +128,35 @@ export default function ShopByGoal() {
         }
 
         if (categories.length > 0) {
-          const mappedGoals = categories.slice(0, 12).map((cat: any) => {
+          const mappedGoals = categories
+            .filter((cat: any) => cat.is_featured) // Only show featured categories
+            .slice(0, 12)
+            .map((cat: any) => {
             const { color, bgColor } = getColor(cat.name, cat.slug);
             return {
               label: cat.name,
               href: `/shop?category=${cat.slug}`,
               color: cat.color || color,
               bgColor: cat.bgColor || bgColor,
-              imageUrl: cat.full_icon_url || cat.full_image_url || null,
+              imageUrl: cat.full_image_url || cat.full_icon_url || null, // Use full image for banner first
               fallbackIcon: getIcon(cat.name, cat.slug)
             };
           });
-          setGoals(mappedGoals);
+          
+          // If no featured categories, fallback to first 12
+          const finalGoals = mappedGoals.length > 0 ? mappedGoals : categories.slice(0, 12).map((cat: any) => {
+            const { color, bgColor } = getColor(cat.name, cat.slug);
+            return {
+              label: cat.name,
+              href: `/shop?category=${cat.slug}`,
+              color: cat.color || color,
+              bgColor: cat.bgColor || bgColor,
+              imageUrl: cat.full_image_url || cat.full_icon_url || null,
+              fallbackIcon: getIcon(cat.name, cat.slug)
+            };
+          });
+
+          setGoals(finalGoals);
         }
       } catch (error) {
         console.error("Failed to fetch goals", error);
@@ -201,11 +218,10 @@ export default function ShopByGoal() {
             <Link
               key={goal.label}
               href={goal.href}
-              className="flex flex-col items-start gap-4 flex-none group"
-              style={{ width: "120px" }}
+              className="flex flex-col items-start gap-4 flex-none group w-[100px] sm:w-[120px]"
             >
               <div
-                className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-emerald-100 border border-gray-100 group-hover:border-emerald-200 overflow-hidden bg-white relative"
+                className="w-full aspect-square rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-emerald-100 border border-gray-100 group-hover:border-emerald-200 overflow-hidden bg-white relative"
               >
                 {goal.imageUrl ? (
                   <img 
@@ -227,10 +243,10 @@ export default function ShopByGoal() {
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
               </div>
               <div className="space-y-1 w-full text-left">
-                <span className="block text-[15px] sm:text-[16px] font-black text-gray-900 leading-tight group-hover:text-[#009E3C] transition-colors line-clamp-1">
+                <span className="block text-[14px] sm:text-[15px] font-black text-gray-900 leading-tight group-hover:text-[#009E3C] transition-colors line-clamp-2">
                   {goal.label}
                 </span>
-                <span className="text-[11px] font-bold text-[#009E3C] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-1 group-hover:translate-y-0 duration-300">
+                <span className="text-[11px] font-bold text-[#009E3C] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-1 group-hover:translate-y-0 duration-300 block">
                   Shop Now
                 </span>
               </div>

@@ -7,14 +7,26 @@ import { sanitizeRichHtml } from "@/lib/utils/security";
 const ProductDetailsContent = ({ data }: { data: Product }) => {
   return (
     <div className="space-y-8 px-6 pb-8">
+      {/* Short Description Section */}
+      {data.shortDescription && (
+        <section className="prose prose-base max-w-none text-gray-700">
+          <h3 className="text-xl font-bold text-black mb-4">
+            About this product
+          </h3>
+          <div className="leading-relaxed text-base">
+            {data.shortDescription}
+          </div>
+        </section>
+      )}
+
       {/* Full Description Section */}
       {data.description && (
-        <section className="prose prose-sm max-w-none text-gray-700">
+        <section className="prose prose-base max-w-none text-gray-700">
           <h3 className="text-xl font-bold text-black mb-4">
             Product Description
           </h3>
           <div 
-            className="leading-relaxed"
+            className="leading-relaxed text-base"
             dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(data.description) }}
           />
         </section>
@@ -27,7 +39,7 @@ const ProductDetailsContent = ({ data }: { data: Product }) => {
           </h3>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 list-disc list-inside text-gray-700">
             {data.keyFeatures.map((feature, idx) => (
-              <li key={idx} className="text-sm leading-relaxed">{feature}</li>
+              <li key={idx} className="text-base leading-relaxed">{feature}</li>
             ))}
           </ul>
         </section>
@@ -51,7 +63,7 @@ const ProductDetailsContent = ({ data }: { data: Product }) => {
           <h3 className="text-xl font-bold text-black mb-4">
             What&apos;s in the box
           </h3>
-          <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+          <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
             {data.whatsInBox}
           </div>
         </section>

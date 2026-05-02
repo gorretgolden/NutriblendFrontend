@@ -18,16 +18,56 @@ const PriceSection = () => {
   const currentMax = Number(searchParams.get("max_price")) || 2000000;
 
   const [values, setValues] = useState<[number, number]>([currentMin, currentMax]);
+  
+  // Local state for inputs to allow free typing
+  const [minInput, setMinInput] = useState(currentMin.toString());
+  const [maxInput, setMaxInput] = useState(currentMax.toString());
+
+  // Sync inputs when slider changes
+  const handleSliderChange = (v: number[]) => {
+    setValues([v[0], v[1]]);
+    setMinInput(v[0].toString());
+    setMaxInput(v[1].toString());
+  };
+
+  // Sync slider when inputs blur
+  const handleMinBlur = () => {
+    let val = Number(minInput);
+    if (isNaN(val) || val < 0) val = 0;
+    if (val > values[1]) val = values[1];
+    setValues([val, values[1]]);
+    setMinInput(val.toString());
+  };
+
+  const handleMaxBlur = () => {
+    let val = Number(maxInput);
+    if (isNaN(val)) val = 2000000;
+    if (val < values[0]) val = values[0];
+    setValues([values[0], val]);
+    setMaxInput(val.toString());
+  };
 
   const applyPriceFilter = () => {
+    // Ensure inputs are parsed before applying
+    let min = Number(minInput);
+    let max = Number(maxInput);
+    
+    if (isNaN(min) || min < 0) min = 0;
+    if (isNaN(max)) max = 2000000;
+    if (min > max) {
+      const temp = min;
+      min = max;
+      max = temp;
+    }
+
     const params = new URLSearchParams(searchParams.toString());
-    if (values[0] > 0) {
-      params.set("min_price", String(values[0]));
+    if (min > 0) {
+      params.set("min_price", String(min));
     } else {
       params.delete("min_price");
     }
-    if (values[1] < 2000000) {
-      params.set("max_price", String(values[1]));
+    if (max < 2000000) {
+      params.set("max_price", String(max));
     } else {
       params.delete("max_price");
     }
@@ -46,7 +86,7 @@ const PriceSection = () => {
             <Slider
               defaultValue={[currentMin, currentMax]}
               value={values}
-              onValueChange={(v: number[]) => setValues([v[0], v[1]])}
+              onValueChange={handleSliderChange}
               min={0}
               max={2000000}
               step={10000}
@@ -59,9 +99,10 @@ const PriceSection = () => {
               <div className="flex-1 min-w-0">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5 block">Min Price (UGX)</label>
                 <input 
-                  type="number"
-                  value={values[0]}
-                  onChange={(e) => setValues([Number(e.target.value), values[1]])}
+                  type="text"
+                  value={minInput}
+                  onChange={(e) => setMinInput(e.target.value)}
+                  onBlur={handleMinBlur}
                   className="w-full rounded-xl border border-gray-200 bg-white p-3 text-sm font-black text-gray-900 outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/10 transition-all"
                   placeholder="0"
                 />
@@ -69,18 +110,14 @@ const PriceSection = () => {
               <div className="flex-1 min-w-0">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5 block">Max Price (UGX)</label>
                 <input 
-                  type="number"
-                  value={values[1]}
-                  onChange={(e) => setValues([values[0], Number(e.target.value)])}
+                  type="text"
+                  value={maxInput}
+                  onChange={(e) => setMaxInput(e.target.value)}
+                  onBlur={handleMaxBlur}
                   className="w-full rounded-xl border border-gray-200 bg-white p-3 text-sm font-black text-gray-900 outline-none focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/10 transition-all"
-                  placeholder="2,000,000"
+                  placeholder="2000000"
                 />
               </div>
-            </div>
-
-            <div className="flex items-center justify-between text-[11px] font-bold text-gray-400 px-1">
-              <span>{values[0].toLocaleString()} UGX</span>
-              <span>{values[1].toLocaleString()} UGX</span>
             </div>
 
             <button

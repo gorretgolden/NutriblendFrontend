@@ -9,6 +9,7 @@ import NewsletterForm from "@/components/homepage/NewsletterForm";
 import { transformProduct } from "@/lib/transformers";
 import { apiClient } from "@/lib/api/client";
 import Link from "next/link";
+import FadeIn from "@/components/common/FadeIn";
 
 export const revalidate = 60;
 
@@ -86,6 +87,24 @@ async function getHomePageData() {
     heroSlideSettings.data.hero_carousel.length > 0
   ) ? heroSlideSettings.data.hero_carousel : carouselSlides;
 
+  const defaultBadges = [
+    { icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", title: "100% Authentic", desc: "Sourced directly from brands" },
+    { icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z", title: "Secure Payment", desc: "Flutterwave & mobile money" },
+    { icon: "M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0", title: "Fast Delivery", desc: "Across Uganda" },
+    { icon: "M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z", title: "24/7 Support", desc: "Always here to help" },
+  ];
+
+  const trustBadges = defaultBadges.map((badge, idx) => {
+    if (heroSlideSettings.status && Array.isArray(heroSlideSettings.data?.trust_badges) && heroSlideSettings.data.trust_badges[idx]) {
+      return {
+        icon: badge.icon,
+        title: heroSlideSettings.data.trust_badges[idx].title || badge.title,
+        desc: heroSlideSettings.data.trust_badges[idx].desc || badge.desc,
+      };
+    }
+    return badge;
+  });
+
   return {
     mensProducts,
     womensProducts,
@@ -96,6 +115,7 @@ async function getHomePageData() {
     latestProducts,
     onSaleProducts,
     heroSlides,
+    trustBadges,
   };
 }
 
@@ -126,7 +146,7 @@ function SectionHeading({
 export default async function Home() {
   const {
     mensProducts, womensProducts, supplementsProducts, perfumesProducts,
-    weightProducts, fitnessProducts, latestProducts, onSaleProducts, heroSlides
+    weightProducts, fitnessProducts, latestProducts, onSaleProducts, heroSlides, trustBadges
   } = await getHomePageData();
 
   return (
@@ -146,12 +166,7 @@ export default async function Home() {
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 md:divide-x md:divide-gray-100">
-            {[
-              { icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", title: "100% Authentic", sub: "Sourced directly from brands" },
-              { icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z", title: "Secure Payment", sub: "Flutterwave & mobile money" },
-              { icon: "M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0", title: "Fast Delivery", sub: "Across Uganda" },
-              { icon: "M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z", title: "24/7 Support", sub: "Always here to help" },
-            ].map((t, i) => (
+            {trustBadges.map((t, i) => (
               <div key={i} className="flex items-center gap-3 md:px-6 md:first:pl-0 md:last:pr-0">
                 <div className="w-10 h-10 rounded-xl bg-[#f0fbf4] border border-green-100 flex items-center justify-center flex-shrink-0">
                   <svg className="w-5 h-5 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,7 +175,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <p className="font-bold text-gray-900 text-sm leading-tight">{t.title}</p>
-                  <p className="text-gray-400 text-[11px] hidden sm:block">{t.sub}</p>
+                  <p className="text-gray-400 text-[11px] hidden sm:block">{t.desc}</p>
                 </div>
               </div>
             ))}
@@ -168,10 +183,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── 4. Flash Sales / Deals of the Day ── */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-6">
-        <FlashSale products={onSaleProducts} />
-      </div>
+      {/* ── 4. Flash Sales / Deals of the Day (Removed) ── */}
 
       {/* ── 5. Three-Column Promo Banners ── */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
@@ -180,12 +192,12 @@ export default async function Home() {
 
       {/* ── 6. New Arrivals ── */}
       {latestProducts.length > 0 && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Just In" title="New Arrivals" viewAllLink="/shop" />
             <ProductCarousel products={latestProducts} title="New Arrivals" hideHeader viewAllLink="/shop" />
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {/* ── 7. Brands Section ── */}
@@ -195,42 +207,42 @@ export default async function Home() {
 
       {/* ── 9. Men's Sexual Health ── */}
       {mensProducts.length > 0 && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Men's Health" title="Men's Sexual Health" viewAllLink="/shop?category=mens-sexual-health" />
             <ProductCarousel products={mensProducts} title="Men's Sexual Health" hideHeader viewAllLink="/shop?category=mens-sexual-health" />
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {/* ── 10. Women's Sexual Health ── */}
       {womensProducts.length > 0 && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Women's Health" title="Women's Sexual Health" viewAllLink="/shop?category=womens-sexual-health" />
             <ProductCarousel products={womensProducts} title="Women's Sexual Health" hideHeader viewAllLink="/shop?category=womens-sexual-health" />
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {/* ── 11. Nutritional Supplements ── */}
       {supplementsProducts.length > 0 && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Health & Wellness" title="Nutritional Supplements" viewAllLink="/shop?category=nutritional-supplements" />
             <ProductCarousel products={supplementsProducts} title="Nutritional Supplements" hideHeader viewAllLink="/shop?category=nutritional-supplements" />
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {/* ── 12. Gym & Fitness ── */}
       {fitnessProducts.length > 0 && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Active Living" title="Gym & Fitness" viewAllLink="/shop?category=gym-and-fitness" />
             <ProductCarousel products={fitnessProducts} title="Gym & Fitness" hideHeader viewAllLink="/shop?category=gym-and-fitness" />
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {/* ── 13. Why Choose Us ── */}
@@ -238,28 +250,28 @@ export default async function Home() {
 
       {/* ── 14. Perfumes & Sprays ── */}
       {perfumesProducts.length > 0 && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
+        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
           <div className="bg-white rounded-2xl px-5 py-6 md:px-8 border border-gray-100 shadow-sm">
             <SectionHeading label="Luxury Fragrance" title="Perfumes & Sprays" viewAllLink="/shop?category=perfumes-and-sprays" />
             <ProductCarousel products={perfumesProducts} title="Perfumes & Sprays" hideHeader viewAllLink="/shop?category=perfumes-and-sprays" />
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {/* ── 15. Weight Management ── */}
       {weightProducts.length > 0 && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Body Goals" title="Weight Management" viewAllLink="/shop?category=weight-management" />
             <ProductCarousel products={weightProducts} title="Weight Management" hideHeader viewAllLink="/shop?category=weight-management" />
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {/* ── 16. Special Offers ── */}
       {onSaleProducts.length > 0 && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-6">
-          <div className="bg-amber-50 border border-amber-100 rounded-2xl px-5 py-6 md:px-8 shadow-sm">
+        <FadeIn className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-6">
+          <div className="bg-white border border-gray-100 rounded-2xl px-5 py-6 md:px-8 shadow-sm">
             <div className="flex items-center justify-between mb-5">
               <div>
                 <div className="inline-flex items-center gap-1.5 bg-red-500 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full mb-2">
@@ -277,7 +289,7 @@ export default async function Home() {
             </div>
             <ProductCarousel products={onSaleProducts} title="Special Offers" hideHeader viewAllLink="/shop?on_sale=true" />
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {/* ── 17. Newsletter CTA ── */}

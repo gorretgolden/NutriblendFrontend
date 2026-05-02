@@ -71,12 +71,12 @@ export default function BrandsSection() {
         <div className="flex items-center justify-between gap-8 mb-8 md:mb-10">
           <div>
             <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-2xl md:text-4xl font-black text-gray-900 tracking-tight"
+              className="text-xl md:text-2xl font-black text-gray-900 tracking-tight uppercase"
             >
-              Shop by <span className="text-[#009E3C]">Brands</span>
+              Brands
             </motion.h2>
           </div>
 
@@ -115,7 +115,7 @@ export default function BrandsSection() {
                 <Link
                   key={`${brand.id}-${i}`}
                   href={`/shop?brand_id=${brand.id}`}
-                  className="group/card relative flex flex-col items-center justify-center p-5 rounded-2xl bg-white border border-gray-100 hover:border-emerald-200 transition-all duration-500 hover:shadow-lg overflow-hidden aspect-square w-[130px] md:w-[160px] shrink-0"
+                  className="group/card relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white border border-gray-100 hover:border-emerald-200 transition-all duration-500 hover:shadow-lg overflow-hidden aspect-square w-[100px] md:w-[130px] shrink-0"
                 >
                   {/* Logo Container */}
                   <div className="relative z-10 w-full flex-1 flex items-center justify-center">
@@ -123,18 +123,18 @@ export default function BrandsSection() {
                       <img
                         src={getImageUrl(brand.image)}
                         alt={brand.name}
-                        className="w-full h-auto max-h-[70px] object-contain group-hover/card:scale-110 transition-all duration-700 ease-out"
+                        className="w-full h-full max-h-[50px] md:max-h-[60px] object-contain group-hover/card:scale-110 transition-all duration-700 ease-out"
                       />
                     ) : (
-                      <div className="text-2xl font-black text-gray-200 group-hover/card:text-[#009E3C]/40 transition-all duration-500 tracking-tighter uppercase">
+                      <div className="text-xl md:text-2xl font-black text-gray-200 group-hover/card:text-[#009E3C]/40 transition-all duration-500 tracking-tighter uppercase">
                         {brand.name.substring(0, 2)}
                       </div>
                     )}
                   </div>
 
                   {/* Brand Info */}
-                  <div className="relative z-10 mt-3 text-center w-full">
-                    <h3 className="font-bold text-gray-700 group-hover/card:text-[#009E3C] text-[13px] md:text-sm truncate transition-colors duration-300">
+                  <div className="relative z-10 mt-2 text-center w-full">
+                    <h3 className="font-bold text-gray-700 group-hover/card:text-[#009E3C] text-[11px] md:text-xs truncate transition-colors duration-300">
                       {brand.name}
                     </h3>
                   </div>

@@ -161,16 +161,11 @@ const ProductCard = ({ data }: ProductCardProps) => {
       {/* ── Content ── */}
       <div className="relative z-10 px-2 sm:px-3 pt-2 pb-2.5 flex flex-col flex-grow border-t border-gray-100/80 bg-white">
 
-        {/* Category & Brand Row */}
+        {/* Category Row */}
         <div className="flex items-center gap-2 mb-1 overflow-hidden">
           {data.category && (
             <span className="bg-[#f0fdf4] text-[#009E3C] text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider whitespace-nowrap">
               {data.category}
-            </span>
-          )}
-          {data.brand && (
-            <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest truncate">
-              {data.brand}
             </span>
           )}
         </div>
