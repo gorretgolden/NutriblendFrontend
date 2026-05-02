@@ -38,36 +38,46 @@ const PriceSection = () => {
   return (
     <Accordion type="single" collapsible defaultValue="filter-price">
       <AccordionItem value="filter-price" className="border-none">
-        <AccordionTrigger className="text-black font-bold text-xl hover:no-underline p-0 py-0.5">
-          Price
+        <AccordionTrigger className="text-black font-bold text-xl hover:no-underline p-0 py-0.5 mb-2">
+          Price Range
         </AccordionTrigger>
-        <AccordionContent className="pt-4" contentClassName="overflow-visible">
-          <Slider
-            defaultValue={[currentMin, currentMax]}
-            value={values}
-            onValueChange={(v: number[]) => setValues([v[0], v[1]])}
-            min={0}
-            max={2000000}
-            step={5000}
-          />
-
-          <div className="mt-4 mb-4 grid grid-cols-2 gap-2">
-            <div className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-2 text-left min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Min</p>
-              <p className="text-sm sm:text-base font-bold text-gray-800 truncate">UGX {values[0].toLocaleString()}</p>
-            </div>
-            <div className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-2 text-right min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Max</p>
-              <p className="text-sm sm:text-base font-bold text-gray-800 truncate">UGX {values[1].toLocaleString()}</p>
-            </div>
+        <AccordionContent className="pt-6 px-1 overflow-visible">
+          <div className="px-2">
+            <Slider
+              defaultValue={[currentMin, currentMax]}
+              value={values}
+              onValueChange={(v: number[]) => setValues([v[0], v[1]])}
+              min={0}
+              max={2000000}
+              step={10000}
+              className="mb-8"
+            />
           </div>
 
-          <button
-            onClick={applyPriceFilter}
-            className="w-full bg-[#009E3C] hover:bg-[#00752C] text-white text-sm font-bold py-2.5 rounded-xl transition-colors"
-          >
-            Apply Price
-          </button>
+          <div className="flex flex-col space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1 block">Min Price</label>
+                <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-3">
+                  <span className="text-sm font-black text-gray-900">UGX {values[0].toLocaleString()}</span>
+                </div>
+              </div>
+              <div className="h-px w-4 bg-gray-200 mt-6 flex-none" />
+              <div className="flex-1 min-w-0">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1 block">Max Price</label>
+                <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-3">
+                  <span className="text-sm font-black text-gray-900">UGX {values[1].toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={applyPriceFilter}
+              className="w-full bg-[#009E3C] hover:bg-[#00752C] text-white text-sm font-extrabold py-3.5 rounded-xl shadow-lg shadow-emerald-100 transition-all active:scale-[0.98]"
+            >
+              Apply Filter
+            </button>
+          </div>
         </AccordionContent>
       </AccordionItem>
     </Accordion>
