@@ -26,8 +26,7 @@ const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
         className={cn([
-          integralCF.className,
-          "text-[22px] md:text-[28px] mb-6 md:mb-10 capitalize",
+          "font-bold text-[22px] md:text-[28px] mb-6 md:mb-10 capitalize",
         ])}
       >
         {title}

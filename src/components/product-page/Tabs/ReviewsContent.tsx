@@ -37,6 +37,7 @@ const ReviewsContent = ({ productId }: ReviewsContentProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [hasOrdered, setHasOrdered] = useState(false);
 
   const fetchReviews = async (p = 1, append = false) => {
     try {
@@ -56,7 +57,19 @@ const ReviewsContent = ({ productId }: ReviewsContentProps) => {
 
   useEffect(() => {
     fetchReviews(1);
-  }, [productId]);
+    
+    if (isAuthenticated) {
+      // Check if user has ordered this product
+      apiClient.getOrders().then(res => {
+        if (res.status && res.data?.data) {
+          const ordered = res.data.data.some((order: any) => 
+            order.items?.some((item: any) => item.product_id === productId)
+          );
+          setHasOrdered(ordered);
+        }
+      });
+    }
+  }, [productId, isAuthenticated]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,7 +106,7 @@ const ReviewsContent = ({ productId }: ReviewsContentProps) => {
           <h3 className="text-xl sm:text-2xl font-bold text-gray-900">All Reviews</h3>
           {!loading && <span className="text-sm text-gray-500">({reviews.length})</span>}
         </div>
-        {isAuthenticated && !showForm && (
+        {isAuthenticated && hasOrdered && !showForm && (
           <button
             onClick={() => setShowForm(true)}
             className="px-5 py-2.5 rounded-full bg-[#009E3C] text-white text-sm font-bold hover:bg-[#007a2e] transition-colors shadow-sm"
