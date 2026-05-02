@@ -130,7 +130,7 @@ export default function ShopByGoal() {
         if (categories.length > 0) {
           const mappedGoals = categories
             .filter((cat: any) => cat.is_featured) // Only show featured categories
-            .slice(0, 12)
+            .slice(0, 6)
             .map((cat: any) => {
             const { color, bgColor } = getColor(cat.name, cat.slug);
             return {
@@ -143,8 +143,8 @@ export default function ShopByGoal() {
             };
           });
           
-          // If no featured categories, fallback to first 12
-          const finalGoals = mappedGoals.length > 0 ? mappedGoals : categories.slice(0, 12).map((cat: any) => {
+          // If no featured categories, fallback to first 6
+          const finalGoals = mappedGoals.length > 0 ? mappedGoals : categories.slice(0, 6).map((cat: any) => {
             const { color, bgColor } = getColor(cat.name, cat.slug);
             return {
               label: cat.name,
