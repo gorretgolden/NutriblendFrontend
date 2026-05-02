@@ -129,8 +129,7 @@ export default function ShopByGoal() {
 
         if (categories.length > 0) {
           const mappedGoals = categories
-            .filter((cat: any) => cat.is_featured) // Only show featured categories
-            .slice(0, 6)
+            .slice(0, 8)
             .map((cat: any) => {
             const { color, bgColor } = getColor(cat.name, cat.slug);
             return {
@@ -174,10 +173,10 @@ export default function ShopByGoal() {
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
           <div className="h-8 w-64 bg-gray-100 rounded-lg mb-6" />
           <div className="flex gap-6 overflow-hidden">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-              <div key={i} className="flex flex-col items-center gap-3 flex-none">
-                <div className="w-20 h-20 rounded-full bg-gray-100" />
-                <div className="h-3 w-16 bg-gray-100 rounded" />
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <div key={i} className="flex flex-col items-start gap-4 flex-none w-[calc(50%-12px)] sm:w-[calc(33.333%-16px)] md:w-[calc(25%-18px)] lg:w-[calc(16.666%-20px)]">
+                <div className="w-full aspect-[4/3] rounded-[20px] bg-gray-100" />
+                <div className="h-4 w-24 bg-gray-100 rounded" />
               </div>
             ))}
           </div>
@@ -220,7 +219,7 @@ export default function ShopByGoal() {
               className="flex flex-col items-start gap-4 group"
             >
               <div
-                className="w-full aspect-[4/3] rounded-[24px] flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_20px_50px_rgba(0,158,60,0.12)] border border-gray-100 group-hover:border-emerald-200 overflow-hidden bg-[#f8f9fa] relative"
+                className="w-full aspect-[4/3] rounded-[20px] flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_20px_50px_rgba(0,158,60,0.12)] border border-gray-100 group-hover:border-emerald-200 overflow-hidden bg-[#f8f9fa] relative"
               >
                 {goal.imageUrl ? (
                   <img 
@@ -233,7 +232,7 @@ export default function ShopByGoal() {
                     className="w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
                     style={{ color: goal.color, backgroundColor: goal.bgColor }}
                   >
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
                       {goal.fallbackIcon}
                     </div>
                   </div>
@@ -241,15 +240,9 @@ export default function ShopByGoal() {
                 {/* Subtle overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
-              <div className="space-y-1.5 px-1 w-full text-left">
-                <span className="block text-[15px] sm:text-[17px] font-black text-gray-900 leading-tight group-hover:text-[#009E3C] transition-colors line-clamp-1">
+              <div className="space-y-1.5 px-1 w-full text-center sm:text-left">
+                <span className="block text-[14px] sm:text-[16px] font-black text-gray-900 leading-tight group-hover:text-[#009E3C] transition-colors line-clamp-1">
                   {goal.label}
-                </span>
-                <span className="text-[12px] font-bold text-gray-400 group-hover:text-[#009E3C] transition-colors flex items-center gap-1">
-                  Shop Now
-                  <svg className="w-3 h-3 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-                  </svg>
                 </span>
               </div>
             </Link>

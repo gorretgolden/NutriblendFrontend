@@ -81,9 +81,10 @@ export default function ThreeColBanners() {
         // The API returns { data: [...], status: true }
         const allCats: Record<string, unknown>[] = Array.isArray(res?.data) ? res.data as Record<string, unknown>[] : [];
 
-        // Prefer featured categories, fall back to first 3
+        // Prefer featured categories, fill with others if less than 3
         const featured = allCats.filter((c) => c.is_featured);
-        const selected = (featured.length >= 3 ? featured : allCats).slice(0, 3);
+        const others = allCats.filter((c) => !c.is_featured);
+        const selected = [...featured, ...others].slice(0, 3);
 
         if (selected.length >= 3) {
           setBanners(selected.map(mapCategoryToBanner));
