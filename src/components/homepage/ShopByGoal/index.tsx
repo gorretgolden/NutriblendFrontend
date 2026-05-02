@@ -72,7 +72,6 @@ const Icons = {
     </svg>
   )
 };
-};
 
 const getIcon = (name: string, slug: string) => {
   const n = (name + " " + slug).toLowerCase();
