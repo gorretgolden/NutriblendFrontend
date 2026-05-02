@@ -112,12 +112,12 @@ export default function HeroCarousel({
             >
               <div className={`flex h-full ${slide.layout === 'imageLeft' ? 'flex-row' : 'flex-row-reverse'}`}>
 
-                {/* Image panel */}
-                <div className="w-[48%] sm:w-1/2 relative overflow-hidden flex items-center justify-center bg-gradient-to-b from-[#f8fdf9] to-[#eef9f0]">
+                {/* Image panel — fills the full green section */}
+                <div className="w-[48%] sm:w-1/2 relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-b from-[#f8fdf9] to-[#eef9f0]">
                   <img
                     src={slide.image}
                     alt={slide.title}
-                    className="w-full h-full object-contain p-5 md:p-8 transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out"
                     style={{ transform: index === currentSlide ? 'scale(1)' : 'scale(1.05)' }}
                   />
 

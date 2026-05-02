@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { apiClient } from "@/lib/api/client";
 
 interface BannerItem {
   image: string;
@@ -14,7 +15,8 @@ interface BannerItem {
   subtitle: string;
 }
 
-const banners: BannerItem[] = [
+// Fallback banners shown while the API loads or if it returns nothing
+const FALLBACK_BANNERS: BannerItem[] = [
   {
     image: "/images/one.avif",
     alt: "Gym and Fitness",
@@ -44,7 +46,55 @@ const banners: BannerItem[] = [
   },
 ];
 
+const BADGE_COLORS = ["#f97316", "#009E3C", "#3b82f6", "#8b5cf6", "#ec4899", "#14b8a6"];
+const BADGE_LABELS = ["Hot Category", "Best Sellers", "New Arrivals", "Top Picks", "Trending", "Popular"];
+
+function mapCategoryToBanner(cat: Record<string, unknown>, idx: number): BannerItem {
+  const slug = (cat.slug as string) || "";
+  const name = (cat.name as string) || "Category";
+  const image =
+    (cat.illustration as string) ||
+    (cat.icon as string) ||
+    "/images/one.avif";
+
+  return {
+    image,
+    alt: name,
+    href: `/shop?category=${slug}`,
+    badge: BADGE_LABELS[idx % BADGE_LABELS.length],
+    badgeColor: BADGE_COLORS[idx % BADGE_COLORS.length],
+    title: name,
+    subtitle: (cat.description as string) || "Premium range",
+  };
+}
+
 export default function ThreeColBanners() {
+  const [banners, setBanners] = useState<BannerItem[]>(FALLBACK_BANNERS);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await apiClient.getCategories();
+        if (cancelled) return;
+
+        // The API returns { data: [...], status: true }
+        const allCats: Record<string, unknown>[] = Array.isArray(res?.data) ? res.data as Record<string, unknown>[] : [];
+
+        // Prefer featured categories, fall back to first 3
+        const featured = allCats.filter((c) => c.is_featured);
+        const selected = (featured.length >= 3 ? featured : allCats).slice(0, 3);
+
+        if (selected.length >= 3) {
+          setBanners(selected.map(mapCategoryToBanner));
+        }
+      } catch {
+        // keep fallback banners
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   const [large, topRight, bottomRight] = banners;
 
   return (
