@@ -60,22 +60,16 @@ async function fetchProducts(params: Record<string, unknown>, limit = 8) {
 // ── Server data fetch ───────────────────────────────────────────────────────
 async function getHomePageData() {
   const [
-    mensProducts,
-    womensProducts,
-    supplementsProducts,
-    perfumesProducts,
-    weightProducts,
-    fitnessProducts,
+    trendingProducts,
+    featuredProducts,
+    specialOfferProducts,
     latestProducts,
     onSaleProducts,
     heroSlideSettings,
   ] = await Promise.all([
-    fetchProducts({ category_slug: 'mens-sexual-health' }),
-    fetchProducts({ category_slug: 'womens-sexual-health' }),
-    fetchProducts({ category_slug: 'nutritional-supplements' }),
-    fetchProducts({ category_slug: 'perfumes-and-sprays' }),
-    fetchProducts({ category_slug: 'weight-management' }),
-    fetchProducts({ category_slug: 'gym-and-fitness' }),
+    fetchProducts({ is_trending: true }),
+    fetchProducts({ is_featured: true }),
+    fetchProducts({ is_special_offer: true }),
     fetchProducts({ per_page: 8 }),
     fetchProducts({ on_sale: true }),
     apiClient.getPublicSettings().catch(() => ({ status: false, data: null })),
@@ -106,12 +100,9 @@ async function getHomePageData() {
   });
 
   return {
-    mensProducts,
-    womensProducts,
-    supplementsProducts,
-    perfumesProducts,
-    weightProducts,
-    fitnessProducts,
+    trendingProducts,
+    featuredProducts,
+    specialOfferProducts,
     latestProducts,
     onSaleProducts,
     heroSlides,
@@ -145,8 +136,8 @@ function SectionHeading({
 // ── Page ────────────────────────────────────────────────────────────────────
 export default async function Home() {
   const {
-    mensProducts, womensProducts, supplementsProducts, perfumesProducts,
-    weightProducts, fitnessProducts, latestProducts, onSaleProducts, heroSlides, trustBadges
+    trendingProducts, featuredProducts, specialOfferProducts,
+    latestProducts, onSaleProducts, heroSlides, trustBadges
   } = await getHomePageData();
 
   return (
@@ -185,12 +176,12 @@ export default async function Home() {
         </div>
       </FadeIn>
 
-      {/* ── 5. Three-Column Promo Banners ── */}
+      {/* ── 4. Three-Column Promo Banners ── */}
       <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <ThreeColBanners />
       </FadeIn>
 
-      {/* ── 6. New Arrivals ── */}
+      {/* ── 5. New Arrivals ── */}
       {latestProducts.length > 0 && (
         <FadeIn duration={1} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
@@ -200,77 +191,89 @@ export default async function Home() {
         </FadeIn>
       )}
 
+      {/* ── 6. Trending Products 🔥 ── */}
+      {trendingProducts.length > 0 && (
+        <FadeIn direction="left" duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+          <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <div className="inline-flex items-center gap-1.5 bg-orange-500 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full mb-2">
+                  <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                  Hot Right Now
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Trending Products</h2>
+              </div>
+              <Link href="/shop?is_trending=true" className="inline-flex items-center gap-1 text-[13px] sm:text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors group border border-orange-200 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 hover:bg-orange-50">
+                View all
+                <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+            <ProductCarousel products={trendingProducts} title="Trending Products" hideHeader viewAllLink="/shop?is_trending=true" />
+          </div>
+        </FadeIn>
+      )}
+
       {/* ── 7. Brands Section ── */}
       <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
         <BrandsSection />
       </FadeIn>
 
-      {/* ── 9. Men's Sexual Health ── */}
-      {mensProducts.length > 0 && (
-        <FadeIn direction="left" duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-          <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
-            <SectionHeading label="Men's Health" title="Men's Sexual Health" viewAllLink="/shop?category=mens-sexual-health" />
-            <ProductCarousel products={mensProducts} title="Men's Sexual Health" hideHeader viewAllLink="/shop?category=mens-sexual-health" />
-          </div>
-        </FadeIn>
-      )}
-
-      {/* ── 10. Women's Sexual Health ── */}
-      {womensProducts.length > 0 && (
+      {/* ── 8. Featured Products ⭐ ── */}
+      {featuredProducts.length > 0 && (
         <FadeIn direction="right" duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
-            <SectionHeading label="Women's Health" title="Women's Sexual Health" viewAllLink="/shop?category=womens-sexual-health" />
-            <ProductCarousel products={womensProducts} title="Women's Sexual Health" hideHeader viewAllLink="/shop?category=womens-sexual-health" />
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <div className="inline-flex items-center gap-1.5 bg-[#009E3C] text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full mb-2">
+                  <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                  Staff Picks
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Featured Products</h2>
+              </div>
+              <Link href="/shop?is_featured=true" className="inline-flex items-center gap-1 text-[13px] sm:text-sm font-semibold text-[#009E3C] hover:text-[#007a2e] transition-colors group border border-[#009E3C]/30 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 hover:bg-[#009E3C]/5">
+                View all
+                <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+            <ProductCarousel products={featuredProducts} title="Featured Products" hideHeader viewAllLink="/shop?is_featured=true" />
           </div>
         </FadeIn>
       )}
 
-      {/* ── 11. Nutritional Supplements ── */}
-      {supplementsProducts.length > 0 && (
-        <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-          <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
-            <SectionHeading label="Health & Wellness" title="Nutritional Supplements" viewAllLink="/shop?category=nutritional-supplements" />
-            <ProductCarousel products={supplementsProducts} title="Nutritional Supplements" hideHeader viewAllLink="/shop?category=nutritional-supplements" />
-          </div>
-        </FadeIn>
-      )}
-
-      {/* ── 12. Gym & Fitness ── */}
-      {fitnessProducts.length > 0 && (
-        <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-          <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
-            <SectionHeading label="Active Living" title="Gym & Fitness" viewAllLink="/shop?category=gym-and-fitness" />
-            <ProductCarousel products={fitnessProducts} title="Gym & Fitness" hideHeader viewAllLink="/shop?category=gym-and-fitness" />
-          </div>
-        </FadeIn>
-      )}
-
-      {/* ── 13. Why Choose Us ── */}
+      {/* ── 9. Why Choose Us ── */}
       <FadeIn duration={0.8}>
         <WhyChooseUs />
       </FadeIn>
 
-      {/* ── 14. Perfumes & Sprays ── */}
-      {perfumesProducts.length > 0 && (
-        <FadeIn direction="none" duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="bg-white rounded-2xl px-5 py-6 md:px-8 border border-gray-100 shadow-sm">
-            <SectionHeading label="Luxury Fragrance" title="Perfumes & Sprays" viewAllLink="/shop?category=perfumes-and-sprays" />
-            <ProductCarousel products={perfumesProducts} title="Perfumes & Sprays" hideHeader viewAllLink="/shop?category=perfumes-and-sprays" />
-          </div>
-        </FadeIn>
-      )}
-
-      {/* ── 15. Weight Management ── */}
-      {weightProducts.length > 0 && (
+      {/* ── 10. Special Offers 🏷️ ── */}
+      {specialOfferProducts.length > 0 && (
         <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-          <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
-            <SectionHeading label="Body Goals" title="Weight Management" viewAllLink="/shop?category=weight-management" />
-            <ProductCarousel products={weightProducts} title="Weight Management" hideHeader viewAllLink="/shop?category=weight-management" />
+          <div className="bg-white border border-gray-100 rounded-2xl px-5 py-6 md:px-8 shadow-sm">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <div className="inline-flex items-center gap-1.5 bg-purple-500 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full mb-2">
+                  <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                  Exclusive Deals
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Special Offers</h2>
+              </div>
+              <Link href="/shop?is_special_offer=true" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-purple-500 hover:text-purple-600 transition-colors group border border-purple-200 rounded-full px-4 py-1.5 hover:bg-purple-50">
+                View all deals
+                <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+            <ProductCarousel products={specialOfferProducts} title="Special Offers" hideHeader viewAllLink="/shop?is_special_offer=true" />
           </div>
         </FadeIn>
       )}
 
-      {/* ── 16. Special Offers ── */}
+      {/* ── 11. On Sale (Legacy) ── */}
       {onSaleProducts.length > 0 && (
         <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-6">
           <div className="bg-white border border-gray-100 rounded-2xl px-5 py-6 md:px-8 shadow-sm">
@@ -280,7 +283,7 @@ export default async function Home() {
                   <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                   Limited Time
                 </div>
-                <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Special Offers</h2>
+                <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">On Sale Now</h2>
               </div>
               <Link href="/shop?on_sale=true" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-red-500 hover:text-red-600 transition-colors group border border-red-200 rounded-full px-4 py-1.5 hover:bg-red-50">
                 View all deals
@@ -289,7 +292,7 @@ export default async function Home() {
                 </svg>
               </Link>
             </div>
-            <ProductCarousel products={onSaleProducts} title="Special Offers" hideHeader viewAllLink="/shop?on_sale=true" />
+            <ProductCarousel products={onSaleProducts} title="On Sale" hideHeader viewAllLink="/shop?on_sale=true" />
           </div>
         </FadeIn>
       )}
