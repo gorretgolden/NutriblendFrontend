@@ -130,29 +130,32 @@ export default function ShopByGoal() {
             <Link
               key={goal.label}
               href={goal.href}
-              className="flex flex-col items-start gap-3 group"
+              className="flex flex-col group border border-gray-100 rounded-2xl overflow-hidden hover:shadow-[0_12px_28px_rgba(0,158,60,0.08)] hover:border-emerald-200 transition-all duration-300 hover:-translate-y-1 bg-white"
             >
+              {/* Image Area - Uniform Shade */}
               <div
-                className="w-full aspect-square rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_20px_50px_rgba(0,158,60,0.12)] border border-gray-100 group-hover:border-emerald-200 overflow-hidden bg-gray-50 relative"
+                className="w-full aspect-[5/4] bg-[#f8f9fa] flex items-center justify-center p-5 relative overflow-hidden"
               >
                 {goal.imageUrl ? (
                   <img 
                     src={goal.imageUrl} 
                     alt={goal.label} 
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 mix-blend-multiply" 
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 transition-transform duration-500 group-hover:scale-110">
+                  <div className="w-full h-full flex items-center justify-center text-gray-300 transition-transform duration-500 group-hover:scale-110">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-10 h-10">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
                 )}
                 {/* Subtle overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
-              <div className="space-y-1.5 px-1 w-full text-center sm:text-left">
-                <span className="block text-[14px] sm:text-[16px] font-black text-gray-900 leading-tight group-hover:text-[#009E3C] transition-colors line-clamp-1">
+              
+              {/* Title Bar Area */}
+              <div className="w-full bg-[#f1f5f9] py-3 px-2 flex items-center justify-center border-t border-gray-100">
+                <span className="block text-[13.5px] sm:text-[14.5px] font-[800] text-gray-700 leading-tight group-hover:text-[#009E3C] transition-colors text-center line-clamp-1">
                   {goal.label}
                 </span>
               </div>
