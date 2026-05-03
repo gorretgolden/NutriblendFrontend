@@ -142,21 +142,21 @@ export default function ThreeColBanners() {
                   <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
                   <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
 
-                  <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-8 text-white">
+                  <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-8 pb-7 text-white">
                     <span
-                      className="inline-flex items-center gap-1.5 text-white text-[9px] font-black px-2.5 py-1 rounded-full w-fit mb-2.5 uppercase tracking-widest shadow-sm"
+                      className="inline-flex items-center gap-1.5 text-white text-[8px] font-black px-2 py-0.5 rounded-full w-fit mb-2 uppercase tracking-widest shadow-sm"
                       style={{ backgroundColor: topRight.badgeColor }}
                     >
                       <span className="w-1 h-1 bg-white rounded-full" />
                       {topRight.badge}
                     </span>
-                    <h3 className="text-2xl md:text-3xl font-black mb-1.5 leading-none tracking-tight">
+                    <h3 className="text-xl md:text-2xl font-black mb-1.5 leading-tight tracking-tight text-white drop-shadow-md">
                       {topRight.title}
                     </h3>
-                    <p className="text-xs text-white/80 mb-4 font-medium leading-snug line-clamp-2">
+                    <p className="text-[10px] text-white/90 mb-3 font-medium leading-snug line-clamp-1">
                       {topRight.subtitle}
                     </p>
-                    <div className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-white bg-white/15 border border-white/25 backdrop-blur-sm px-3.5 py-1.5 rounded-full w-fit group-hover:bg-white group-hover:text-gray-900 transition-all duration-300">
+                    <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white bg-white/10 border border-white/20 backdrop-blur-md px-3 py-1 rounded-full w-fit group-hover:bg-white group-hover:text-gray-900 transition-all duration-300">
                       Explore
                       <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
@@ -188,21 +188,21 @@ export default function ThreeColBanners() {
                   <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
                   <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
 
-                  <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-8 text-white">
+                  <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-8 pb-7 text-white">
                     <span
-                      className="inline-flex items-center gap-1.5 text-white text-[9px] font-black px-2.5 py-1 rounded-full w-fit mb-2.5 uppercase tracking-widest shadow-sm"
+                      className="inline-flex items-center gap-1.5 text-white text-[8px] font-black px-2 py-0.5 rounded-full w-fit mb-2 uppercase tracking-widest shadow-sm"
                       style={{ backgroundColor: bottomRight.badgeColor }}
                     >
                       <span className="w-1 h-1 bg-white rounded-full animate-pulse" />
                       {bottomRight.badge}
                     </span>
-                    <h3 className="text-2xl md:text-3xl font-black mb-1.5 leading-none tracking-tight">
+                    <h3 className="text-xl md:text-2xl font-black mb-1.5 leading-tight tracking-tight text-white drop-shadow-md">
                       {bottomRight.title}
                     </h3>
-                    <p className="text-xs text-white/80 mb-4 font-medium leading-snug line-clamp-2">
+                    <p className="text-[10px] text-white/90 mb-3 font-medium leading-snug line-clamp-1">
                       {bottomRight.subtitle}
                     </p>
-                    <div className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-white bg-white/15 border border-white/25 backdrop-blur-sm px-3.5 py-1.5 rounded-full w-fit group-hover:bg-white group-hover:text-gray-900 transition-all duration-300">
+                    <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white bg-white/10 border border-white/20 backdrop-blur-md px-3 py-1 rounded-full w-fit group-hover:bg-white group-hover:text-gray-900 transition-all duration-300">
                       Explore
                       <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
