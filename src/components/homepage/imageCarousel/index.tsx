@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { apiClient } from '@/lib/api/client';
 
 export interface CarouselSlide {
   id: number;
@@ -20,12 +21,35 @@ interface HeroCarouselProps {
 }
 
 export default function HeroCarousel({
-  slides = [],
+  slides: initialSlides = [],
   autoPlay = true,
   interval = 5000
 }: HeroCarouselProps) {
+  // Client-side fetch so admin edits reflect immediately (the page is
+  // statically exported via `output: 'export'`, so build-time data is stale).
+  const [slides, setSlides] = useState<CarouselSlide[]>(initialSlides);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await apiClient.getPublicSettings();
+        if (cancelled) return;
+        const fresh = res?.status && Array.isArray(res.data?.hero_carousel)
+          ? res.data!.hero_carousel as CarouselSlide[]
+          : [];
+        if (fresh.length > 0) {
+          setSlides(fresh);
+          setCurrentSlide(0);
+        }
+      } catch {
+        // keep initial/fallback slides
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const goToNext = useCallback(() => {
     if (isTransitioning) return;
@@ -88,12 +112,12 @@ export default function HeroCarousel({
             >
               <div className={`flex h-full ${slide.layout === 'imageLeft' ? 'flex-row' : 'flex-row-reverse'}`}>
 
-                {/* Image panel */}
-                <div className="w-[48%] sm:w-1/2 relative overflow-hidden flex items-center justify-center bg-gradient-to-b from-[#f8fdf9] to-[#eef9f0]">
+                {/* Image panel — fills the full green section */}
+                <div className="w-[48%] sm:w-1/2 relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-b from-[#f8fdf9] to-[#eef9f0]">
                   <img
                     src={slide.image}
                     alt={slide.title}
-                    className="w-full h-full object-contain p-5 md:p-8 transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out"
                     style={{ transform: index === currentSlide ? 'scale(1)' : 'scale(1.05)' }}
                   />
 

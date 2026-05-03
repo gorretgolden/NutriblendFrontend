@@ -33,10 +33,10 @@ const Header = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const cached = localStorage.getItem('categories_cache_v2');
+        const cached = localStorage.getItem('categories_cache_v5');
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 10 * 60 * 1000) {
+          if (Date.now() - timestamp < 5 * 60 * 1000) {
             setCategories(data);
             return;
           }
@@ -45,7 +45,7 @@ const Header = () => {
         const response = await apiClient.getCategoriesTree();
         if (response.status && response.data) {
           setCategories(response.data);
-          localStorage.setItem('categories_cache_v2', JSON.stringify({
+          localStorage.setItem('categories_cache_v5', JSON.stringify({
             data: response.data,
             timestamp: Date.now()
           }));
@@ -88,13 +88,13 @@ const Header = () => {
   const dynamicNavItems = categories.map(cat => ({
     name: cat.name,
     href: `/shop?category=${cat.slug}`,
-    subItems: cat.children?.length > 0 ? cat.children.map((child: any) => ({
+    subItems: (cat.children && cat.children.length > 0) ? cat.children.map((child: any) => ({
       name: child.name,
       href: `/shop?category=${child.slug}`
     })) : null
   }));
 
-  const navItems: { name: string; href?: string; subItems?: string[] | null }[] = [
+  const navItems: { name: string; href?: string; subItems?: { name: string; href: string }[] | null }[] = [
     ...dynamicNavItems,
   ];
 
@@ -199,12 +199,12 @@ const Header = () => {
     <>
       <header className="bg-white sticky top-0 z-50 border-b border-gray-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         {/* Main header */}
-        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 py-2 md:py-3">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3">
           <div className="flex items-center justify-between gap-3">
             {/* Logo */}
             <div className="flex items-center flex-shrink-0">
               <Link href="/" className="flex items-center gap-2.5 group">
-                <div className="relative w-9 h-9 md:w-11 md:h-11 rounded-xl overflow-hidden border-2 border-[#009E3C]/30 group-hover:border-[#009E3C] transition-all duration-250 shadow-sm group-hover:shadow-[0_4px_12px_rgba(0,158,60,0.20)]">
+                <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden border-2 border-[#009E3C]/30 bg-white group-hover:border-[#009E3C] transition-all duration-250 shadow-sm group-hover:shadow-[0_4px_12px_rgba(0,158,60,0.20)]">
                   <Image
                     src="/images/logo.png"
                     alt="Company Logo"
@@ -212,9 +212,6 @@ const Header = () => {
                     className="object-contain p-1"
                   />
                 </div>
-                <span className="hidden sm:block font-black text-sm text-gray-900 leading-tight tracking-tight">
-                  NutriBlend<br /><span className="text-[#009E3C]">Haven</span>
-                </span>
               </Link>
             </div>
 
@@ -354,7 +351,7 @@ const Header = () => {
 
         {/* Desktop Navigation Bar — white iHerb-style */}
         <div className="hidden md:block bg-white border-t border-gray-100 shadow-[0_1px_0_rgba(0,0,0,0.05)]">
-          <div className="max-w-[1600px] mx-auto px-3">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center overflow-x-auto no-scrollbar">
               {/* All Categories CTA */}
               <Link
@@ -713,6 +710,11 @@ function DesktopSearchBar({
     }
   };
 
+  const resolveSearchImage = (product: any) => {
+    const rawPath = product.main_image || product.images?.[0]?.image_path || product.images?.[0] || '';
+    return getImageUrl(rawPath);
+  };
+
   return (
     <div ref={ref} className="relative flex-1 max-w-3xl xl:max-w-4xl">
       <form
@@ -793,9 +795,16 @@ function DesktopSearchBar({
                       <div className="w-11 h-11 bg-gray-50 rounded-xl flex-shrink-0 overflow-hidden border border-gray-100">
                         {(product.main_image || product.images?.[0]) && (
                           <img
-                            src={product.main_image || getImageUrl(product.images?.[0]?.image_path || product.images?.[0] || '')}
+                            src={resolveSearchImage(product)}
                             alt={product.name}
                             className="w-full h-full object-contain p-1"
+                            loading="eager"
+                            decoding="async"
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              target.onerror = null;
+                              target.src = '/images/placeholder.jpg';
+                            }}
                           />
                         )}
                       </div>

@@ -19,6 +19,7 @@ export type CartItem = {
     amount: number;
     percentage: number;
   };
+  unit?: string;
 };
 
 export type Cart = {
@@ -58,6 +59,7 @@ function transformBackendCart(backendCart: any): { cart: Cart; totalPrice: numbe
     quantity: Number(item.quantity),
     product_id: item.product_id,
     variation_id: item.variation_id,
+    unit: item.product?.unit || item.unit,
   }));
 
   const totalQuantities = items.length;
@@ -133,6 +135,7 @@ export const addToCart = createAsyncThunk(
           name: item.name || "Product",
           price: item.price || 0,
           srcUrl: item.srcUrl || "",
+          unit: item.unit,
         };
 
         dispatch(addToCartLocal(localItem));

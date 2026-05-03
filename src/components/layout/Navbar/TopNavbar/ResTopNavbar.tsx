@@ -9,8 +9,6 @@ import {
 } from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import { NavMenu } from "../navbar.types";
 import {
   Accordion,
@@ -36,8 +34,14 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
         <SheetHeader className="mb-10">
           <SheetTitle asChild>
             <SheetClose asChild>
-              <Link href="/" className={cn([integralCF.className, "text-2xl"])}>
-                NUTRIBLENDHAVEN
+              <Link href="/" className="relative block w-14 h-14 rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm">
+                <Image
+                  priority
+                  src="/images/logo.png"
+                  alt="NutriBlend Logo"
+                  fill
+                  className="object-contain p-2"
+                />
               </Link>
             </SheetClose>
           </SheetTitle>
@@ -60,7 +64,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
                         {item.label}
                       </AccordionTrigger>
                       <AccordionContent className="p-4 pb-0 border-l flex flex-col">
-                        {item.children.map((itemChild, idx) => (
+                        {item.children.map((itemChild) => (
                           <SheetClose
                             key={itemChild.id}
                             asChild

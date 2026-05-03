@@ -10,63 +10,87 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const dispatch = useAppDispatch();
     const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
     const [isReady, setIsReady] = useState(false);
+    const [hasChecked, setHasChecked] = useState(false);
 
+    // Single unified auth check on mount
     useEffect(() => {
-        // If Redux says not authenticated, check localStorage as fallback
-        // (handles race condition where redux-persist hasn't rehydrated yet)
-        if (!isAuthenticated && typeof window !== 'undefined') {
+        const checkAuth = async () => {
+            if (typeof window === 'undefined') {
+                setIsReady(true);
+                setHasChecked(true);
+                return;
+            }
+
+            // If Redux already has auth state, use it
+            if (isAuthenticated) {
+                setIsReady(true);
+                setHasChecked(true);
+                return;
+            }
+
+            // Otherwise check localStorage
             const token = localStorage.getItem('auth_token');
             const userStr = localStorage.getItem('user');
+
             if (token && userStr) {
                 try {
                     const user = JSON.parse(userStr);
+                    // Restore from localStorage
                     dispatch(setCredentials({ user, token }));
-                    // Mark ready after dispatching - the next render will have isAuthenticated=true
                     setIsReady(true);
+                    setHasChecked(true);
                     return;
                 } catch (e) {
-                    // Invalid stored data
+                    // Invalid stored data - fall through
                 }
             }
-        }
-        setIsReady(true);
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Also mark ready once redux confirms authentication
-    useEffect(() => {
-        if (isAuthenticated) {
+            // No valid auth found
             setIsReady(true);
-        }
-    }, [isAuthenticated]);
+            setHasChecked(true);
+        };
 
+        checkAuth();
+    }, []); // Run once on mount
+
+    // Handle redirect only after initial check
     useEffect(() => {
-        // Only redirect after ready, not loading, and confirmed not authenticated
-        if (isReady && !isLoading && !isAuthenticated) {
-            // Final localStorage check before redirecting
-            const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
-            if (!token) {
-                sessionStorage.setItem('returnUrl', window.location.pathname);
-                router.push('/login');
-            }
+        if (!hasChecked) return; // Wait for initial mount check
+
+        // If loading Redux state, wait
+        if (isLoading) return;
+
+        // Token exists in localStorage - consider authenticated
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+
+        // If token exists OR Redux confirms auth, stay on page
+        if (token || isAuthenticated) {
+            return; // User is authenticated, don't redirect
         }
-    }, [isAuthenticated, isLoading, isReady, router]);
+
+        // No token and not authenticated - redirect to login
+        if (typeof window !== 'undefined') {
+            sessionStorage.setItem('returnUrl', window.location.pathname);
+            router.push('/login');
+        }
+    }, [hasChecked, isLoading, isAuthenticated, router]);
 
     // Show loading state while checking authentication
     if (!isReady || isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-                    <p className="mt-4 text-gray-600">Loading...</p>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#009E3C] mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Verifying authentication...</p>
                 </div>
             </div>
         );
     }
 
-    // Don't render children if not authenticated (and no token in storage)
-    if (!isAuthenticated) {
-        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
-        if (!token) return null;
+    // Final check: only show if we have token OR Redux confirms auth
+    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    if (!token && !isAuthenticated) {
+        return null; // Prevent flash of unauth content
     }
 
     return <>{children}</>;

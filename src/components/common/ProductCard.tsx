@@ -16,6 +16,7 @@ type ProductCardProps = {
 };
 
 const ProductCard = ({ data }: ProductCardProps) => {
+  const [imgSrc, setImgSrc] = React.useState(data.srcUrl || '/images/placeholders/product.png');
   const dispatch = useAppDispatch();
   const router = useRouter();
   const hasDiscount = (data.discount?.percentage ?? 0) > 0 || (data.discount?.amount ?? 0) > 0;
@@ -56,6 +57,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           srcUrl: data.srcUrl,
           price: displayPrice,
           quantity: 1,
+          unit: data.unit,
         })
       ).unwrap();
       toast.success(`${data.title} added to cart!`);
@@ -83,30 +85,30 @@ const ProductCard = ({ data }: ProductCardProps) => {
         <div className="absolute -inset-full top-0 left-[-60%] w-[40%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg] opacity-0 group-hover:opacity-100 group-hover:translate-x-[400%] transition-all duration-700 ease-out" />
       </div>
 
-      {/* ── Quick View Overlay ── */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            router.push(`/shop/product/${data.id}/${productSlug}`);
-          }}
-          className="flex items-center gap-1.5 bg-white/95 backdrop-blur-sm text-[#009E3C] text-[11px] font-bold px-4 py-2 rounded-full shadow-lg border border-[#009E3C]/20 hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C] transition-all duration-200 translate-y-3 group-hover:translate-y-0"
-          title="Quick View"
-        >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-          Quick View
-        </button>
-      </div>
-
       {/* ── Image Container ── */}
       <Link
         href={`/shop/product/${data.id}/${productSlug}`}
-        className="relative block bg-gradient-to-b from-gray-50 to-white w-full overflow-hidden" style={{height: '160px'}}
+        className="relative block bg-gradient-to-b from-gray-50 to-white w-full overflow-hidden h-[220px] sm:h-[240px]"
       >
+        {/* Quick View Overlay */}
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push(`/shop/product/${data.id}/${productSlug}`);
+            }}
+            className="flex items-center gap-1.5 bg-white/95 backdrop-blur-sm text-[#009E3C] text-[11px] font-bold px-4 py-2 rounded-full shadow-lg border border-[#009E3C]/20 hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C] transition-all duration-200 translate-y-3 group-hover:translate-y-0"
+            title="Quick View"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            Quick View
+          </button>
+        </div>
+
         {/* Wishlist */}
         <div
           className="absolute top-2.5 right-2.5 z-10"
@@ -146,33 +148,45 @@ const ProductCard = ({ data }: ProductCardProps) => {
           </span>
         )}
 
-        {/* Product Image */}
-        <div className="flex items-center justify-center w-full h-full p-2 sm:p-3">
+        {/* Primary Image */}
+        <Image
+          src={imgSrc}
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          className={`object-contain p-4 transition-all duration-500 ease-out group-hover:scale-[1.07] ${data.gallery && data.gallery.length > 0 ? 'group-hover:opacity-0' : ''}`}
+          alt={data.title}
+          priority
+          onError={() => setImgSrc('/images/placeholders/product.png')}
+        />
+
+        {/* Secondary Hover Image */}
+        {data.gallery && data.gallery.length > 0 && (
           <Image
-            src={data.srcUrl}
-            width={140}
-            height={140}
-            className="object-contain max-h-full w-auto transition-transform duration-500 ease-out group-hover:scale-[1.07]"
-            alt={data.title}
-            priority
+            src={data.gallery[0]}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-contain p-4 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100 group-hover:scale-[1.07] absolute inset-0"
+            alt={`${data.title} alternate view`}
           />
-        </div>
+        )}
       </Link>
 
       {/* ── Content ── */}
-      <div className="relative z-10 px-2 sm:px-3 pt-2 pb-2.5 flex flex-col flex-grow border-t border-gray-100/80">
+      <div className="relative z-10 px-2 sm:px-3 pt-2 pb-2.5 flex flex-col flex-grow border-t border-gray-100/80 bg-white">
 
-        {/* Brand */}
-        {data.brand && (
-          <p className="text-[#009E3C] text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest mb-1 truncate">
-            {data.brand}
-          </p>
-        )}
+        {/* Category Row */}
+        <div className="flex items-center gap-2 mb-1 overflow-hidden">
+          {data.category && (
+            <span className="bg-[#f0fdf4] text-[#009E3C] text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider whitespace-nowrap">
+              {data.category}
+            </span>
+          )}
+        </div>
 
         {/* Title */}
         <Link
           href={`/shop/product/${data.id}/${productSlug}`}
-          className="text-gray-900 text-[11px] sm:text-xs font-semibold mb-1 line-clamp-2 hover:text-[#009E3C] transition-colors duration-200 leading-snug"
+          className="text-gray-900 text-[14px] sm:text-[16px] font-bold mb-1 line-clamp-2 hover:text-[#009E3C] transition-colors duration-200 leading-snug"
         >
           {data.title}
         </Link>

@@ -69,16 +69,16 @@ const TopBanner = () => {
 
   return (
     <div className="w-full bg-[#009E3C] text-white">
-      <div className="max-w-[1600px] mx-auto px-4 py-1.5">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5">
         <div className="flex flex-row justify-between items-center gap-2">
           {/* Left — phone */}
           <div className="flex items-center gap-1.5 shrink-0">
             <PhoneIcon />
-            <span className="text-[11px] font-medium whitespace-nowrap">{settings?.top_banner_phone || "0200 804 020"}</span>
+            <span className="text-xs sm:text-sm font-semibold whitespace-nowrap">{settings?.top_banner_phone || "0200 804 020"}</span>
           </div>
 
           {/* Center — rotating promo text */}
-          <div className="flex items-center gap-2 text-[11px] font-medium">
+          <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
             <span className="hidden sm:inline text-white/80">✦</span>
             <div className="rotating-text-container">
               {rotatingTexts.map((text: string, index: number) => (
@@ -88,14 +88,14 @@ const TopBanner = () => {
               ))}
             </div>
             <span className="hidden sm:inline text-white/80">✦</span>
-            <span className="hidden sm:inline bg-white/20 text-white font-bold px-2 py-0.5 rounded text-[10px] uppercase tracking-wide whitespace-nowrap">
+            <span className="hidden sm:inline bg-white/20 text-white font-black px-2 py-0.5 rounded text-[11px] uppercase tracking-widest whitespace-nowrap">
               {settings?.top_banner_discount_text || "GET 60% OFF"}
             </span>
           </div>
 
           {/* Right — event + close */}
           <div className="flex items-center gap-2 shrink-0">
-            <span className="hidden md:inline text-[11px] font-medium text-white/90 whitespace-nowrap">
+            <span className="hidden md:inline text-xs sm:text-sm font-semibold text-white/90 whitespace-nowrap">
               {settings?.top_banner_event_name || "Free delivery over UGX 100k"}
             </span>
             <Button

@@ -8,11 +8,17 @@ const envApi = process.env.NEXT_PUBLIC_API_URL || '';
 const isDev = process.env.NODE_ENV === 'development';
 
 const isServer = typeof window === 'undefined';
-let API_BASE_URL = envApi || 'https://admin.rasmuspharmaceuticals.com/api/v1';
+const PROD_API = 'https://admin.rasmuspharmaceuticals.com/api/v1';
+const isLocalUrl = (url: string) => /localhost|127\.0\.0\.1|0\.0\.0\.0/.test(url);
 
-// Node.js 18+ resolves localhost to IPv6 (::1). We must replace it with 127.0.0.1 ONLY on the server
-// so that server-side fetches hit the Laravel IPv4 server, while the client browsers continue hitting localhost
-if (isServer && API_BASE_URL.includes('localhost')) {
+// In production, never use localhost/127.0.0.1 URLs
+let API_BASE_URL = envApi || PROD_API;
+if (!isDev && isLocalUrl(API_BASE_URL)) {
+    API_BASE_URL = PROD_API;
+}
+
+// Node.js 18+ resolves localhost to IPv6 (::1). Replace with 127.0.0.1 ONLY during dev server-side fetches
+if (isDev && isServer && API_BASE_URL.includes('localhost')) {
     API_BASE_URL = API_BASE_URL.replace('localhost', '127.0.0.1');
 }
 // ==================== Type Definitions ====================
@@ -127,6 +133,7 @@ export interface Category {
     icon_emoji?: string;
     parent_id?: number;
     is_active: boolean;
+    children?: Category[];
 }
 
 export interface Brand {
@@ -295,6 +302,7 @@ class NutriBlendApiClient {
             const config: RequestInit = {
                 ...options,
                 cache: 'no-store' as RequestCache, // Prevent Next.js from caching API responses
+                credentials: 'include', // Required for cross-subdomain auth cookies (frontend -> admin API)
                 headers: {
                     ...this.getAuthHeaders(),
                     ...options.headers,
@@ -305,6 +313,12 @@ class NutriBlendApiClient {
 
             // Handle logical errors before parsing JSON
             if (!response.ok) {
+                if (response.status === 401 && typeof window !== 'undefined') {
+                    // Keep auth state in sync when backend rejects current auth context
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('user');
+                }
+
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                     const errorData = await response.json();
@@ -368,6 +382,9 @@ class NutriBlendApiClient {
         phone: string;
         password: string;
         password_confirmation: string;
+        region_id?: number;
+        town_id?: number;
+        location?: string;
     }): Promise<ApiResponse<{ user: User; token: string }>> {
         const response = await this.request<{ user: User; token: string }>(
             '/auth/register',
@@ -392,6 +409,9 @@ class NutriBlendApiClient {
         password: string;
         wholesale_business_name: string;
         wholesale_business_details: string;
+        region_id?: string | number;
+        town_id?: string | number;
+        location?: string;
     }): Promise<ApiResponse<User>> {
         return this.request<User>(
             '/auth/register-wholesale',
@@ -812,15 +832,29 @@ export const getImageUrl = (path: string): string => {
     if (path.startsWith('/images/')) return path;
     if (path.startsWith('images/')) return '/' + path;
 
-    // Derive backend origin from NEXT_PUBLIC_API_URL (strip /api/v1 suffix)
+    // Helper: detect local/dev URLs that should not be used in production
+    const isLocalUrl = (url: string) => /localhost|127\.0\.0\.1|0\.0\.0\.0/.test(url);
+
+    const PROD_BACKEND = 'https://admin.rasmuspharmaceuticals.com';
     const isDevEnv = process.env.NODE_ENV === 'development';
     const envApi = process.env.NEXT_PUBLIC_API_URL || '';
-    const apiUrl = (!isDevEnv && envApi.includes('localhost'))
-        ? 'https://admin.rasmuspharmaceuticals.com/api/v1'
-        : (envApi || 'https://admin.rasmuspharmaceuticals.com/api/v1');
-    const baseUrl = process.env.NEXT_PUBLIC_ASSET_URL && (!(!isDevEnv && process.env.NEXT_PUBLIC_ASSET_URL.includes('localhost')))
-        ? process.env.NEXT_PUBLIC_ASSET_URL
-        : apiUrl.replace(/\/api\/v1\/?$/, '');
+    const envAsset = process.env.NEXT_PUBLIC_ASSET_URL || '';
+
+    // In production, always use the real backend URL for assets
+    let baseUrl: string;
+    if (!isDevEnv) {
+        // Production: never use localhost/127.0.0.1
+        if (envAsset && !isLocalUrl(envAsset)) {
+            baseUrl = envAsset;
+        } else if (envApi && !isLocalUrl(envApi)) {
+            baseUrl = envApi.replace(/\/api\/v1\/?$/, '');
+        } else {
+            baseUrl = PROD_BACKEND;
+        }
+    } else {
+        // Development: prefer asset URL, fallback to API URL
+        baseUrl = envAsset || envApi.replace(/\/api\/v1\/?$/, '') || PROD_BACKEND;
+    }
 
     // If it's a backend storage path, ensure it starts with /storage/
     let finalPath = path.startsWith('/') ? path : '/' + path;

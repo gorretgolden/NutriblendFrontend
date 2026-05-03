@@ -35,7 +35,8 @@ const WishlistButton = ({
         e.preventDefault();
         e.stopPropagation();
 
-        if (!isAuthenticated) {
+        const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+        if (!isAuthenticated && !token) {
             toast.error("Please log in to save items to your wishlist.");
             return;
         }
@@ -102,7 +103,7 @@ const WishlistButton = ({
             onClick={handleToggle}
             disabled={isProcessing}
             className={`group/wish relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 backdrop-blur-sm ${isInWishlist
-                ? "bg-[#009E3C] shadow-lg shadow-[#009E3C]/30"
+                ? "bg-white shadow-md shadow-[#009E3C]/20 border border-[#009E3C]/30"
                 : "bg-white/90 shadow-md hover:bg-[#009E3C]/6 hover:shadow-lg"
                 } ${isProcessing ? "opacity-60 cursor-wait" : ""} ${className}`}
             aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
@@ -111,7 +112,7 @@ const WishlistButton = ({
             <svg
                 className={`w-4 h-4 transition-all duration-300 ${isAnimating ? "scale-125" : "scale-100"
                     } ${isInWishlist
-                        ? "fill-white text-white"
+                        ? "fill-[#009E3C] text-[#009E3C]"
                         : "fill-none text-gray-500 group-hover/wish:text-[#009E3C]"
                     }`}
                 viewBox="0 0 24 24"

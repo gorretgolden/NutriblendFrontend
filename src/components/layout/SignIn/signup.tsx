@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
-import { registerUser } from "@/lib/features/auth/authSlice";
+import { registerUser, clearError } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
+import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
 
 type SignUpModalProps = {
@@ -47,6 +48,7 @@ const SignUpModal = ({
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string | undefined>>({});
 
   // Fetch regions from backend on mount
   useEffect(() => {
@@ -95,21 +97,24 @@ const SignUpModal = ({
     } else {
       document.body.style.overflow = "";
     }
+    // Always restore scroll on unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [visible]);
 
-  // Auto-dismiss success toast after 5 seconds
+  // Auto-dismiss success toast after 3 seconds
   useEffect(() => {
     if (!showSuccessToast) return;
     const timer = setTimeout(() => {
       setShowSuccessToast(false);
+      document.body.style.overflow = "";
       onClose();
-    }, 5000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, [showSuccessToast, onClose]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.currentTarget;
 
     if (target instanceof HTMLInputElement && target.type === "checkbox") {
@@ -118,19 +123,36 @@ const SignUpModal = ({
         [target.name]: target.checked,
       }));
     } else {
-      // Reset town when region changes
-      if (target.name === "region_id") {
-        setFormData((prev) => ({
-          ...prev,
-          region_id: target.value,
-          town_id: "",
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          [target.name]: target.value,
-        }));
-      }
+      setFormData((prev) => ({
+        ...prev,
+        [target.name]: target.value,
+      }));
+    }
+
+    // Clear error for this field as user types
+    if (fieldErrors[target.name]) {
+      setFieldErrors((prev) => ({ ...prev, [target.name]: undefined }));
+    }
+    // Clear Redux auth error
+    if (error) dispatch(clearError());
+  };
+
+  const handleSelectChange = (name: "region_id" | "town_id", value: string) => {
+    if (name === "region_id") {
+      setFormData((prev) => ({
+        ...prev,
+        region_id: value,
+        town_id: "",
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+    // Clear error for this field
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
@@ -142,8 +164,23 @@ const SignUpModal = ({
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match");
+    // Field-level validation
+    const errors: Record<string, string> = {};
+    if (!formData.firstName.trim()) errors.firstName = "First name is required";
+    if (!formData.lastName.trim()) errors.lastName = "Last name is required";
+    if (!formData.email.trim()) errors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = "Enter a valid email";
+    if (!formData.phone.trim()) errors.phone = "Phone number is required";
+    if (!formData.password) errors.password = "Password is required";
+    else if (formData.password.length < 8) errors.password = "Password must be at least 8 characters";
+    if (formData.password !== formData.confirmPassword) errors.confirmPassword = "Passwords do not match";
+    if (!formData.region_id) errors.region_id = "Please select a region";
+    if (!formData.town_id) errors.town_id = "Please select a district";
+    if (!formData.location.trim()) errors.location = "Location is required";
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      toast.error("Please fix the errors before submitting");
       return;
     }
 
@@ -154,7 +191,10 @@ const SignUpModal = ({
       email: formData.email,
       phone: formData.phone,
       password: formData.password,
-      password_confirmation: formData.confirmPassword
+      password_confirmation: formData.confirmPassword,
+      region_id: formData.region_id ? Number(formData.region_id) : undefined,
+      town_id: formData.town_id ? Number(formData.town_id) : undefined,
+      location: formData.location || undefined,
     };
 
     const resultAction = await dispatch(registerUser(apiData));
@@ -225,12 +265,15 @@ const SignUpModal = ({
                 type="text"
                 name="firstName"
                 placeholder="First Name"
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
+                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.firstName ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 value={formData.firstName}
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
               />
+              {fieldErrors.firstName && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.firstName}</p>
+              )}
             </div>
 
             <div>
@@ -238,12 +281,15 @@ const SignUpModal = ({
                 type="text"
                 name="lastName"
                 placeholder="Last Name"
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
+                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.lastName ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 value={formData.lastName}
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
               />
+              {fieldErrors.lastName && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.lastName}</p>
+              )}
             </div>
 
             <div>
@@ -251,12 +297,15 @@ const SignUpModal = ({
                 type="email"
                 name="email"
                 placeholder="Email Address"
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
+                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.email ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 value={formData.email}
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
               />
+              {fieldErrors.email && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.email}</p>
+              )}
             </div>
 
             <div>
@@ -264,12 +313,15 @@ const SignUpModal = ({
                 type="tel"
                 name="phone"
                 placeholder="Phone Number"
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
+                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.phone ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 value={formData.phone}
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
               />
+              {fieldErrors.phone && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.phone}</p>
+              )}
             </div>
 
             {/* Delivery Info */}
@@ -280,47 +332,33 @@ const SignUpModal = ({
             </div>
 
             <div>
-              <select
-                name="region_id"
+              <SearchableSelect
                 value={formData.region_id}
-                onChange={handleInputChange}
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
-                required
+                onChange={(value) => handleSelectChange("region_id", value)}
+                options={regions.map((region) => ({ value: String(region.id), label: region.name }))}
+                placeholder={loadingRegions ? "Loading regions..." : "Select Region"}
                 disabled={isLoading || loadingRegions}
-              >
-                <option value="">
-                  {loadingRegions ? "Loading regions..." : "Select Region"}
-                </option>
-                {regions.map((region) => (
-                  <option key={region.id} value={region.id}>
-                    {region.name}
-                  </option>
-                ))}
-              </select>
+                isLoading={loadingRegions}
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 text-left"
+              />
             </div>
 
             <div>
-              <select
-                name="town_id"
+              <SearchableSelect
                 value={formData.town_id}
-                onChange={handleInputChange}
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
-                required
-                disabled={!formData.region_id || isLoading || loadingTowns}
-              >
-                <option value="">
-                  {loadingTowns
+                onChange={(value) => handleSelectChange("town_id", value)}
+                options={towns.map((town) => ({ value: String(town.id), label: town.name }))}
+                placeholder={
+                  loadingTowns
                     ? "Loading districts..."
                     : formData.region_id
                       ? "Select District"
-                      : "Select Region first"}
-                </option>
-                {towns.map((town) => (
-                  <option key={town.id} value={town.id}>
-                    {town.name}
-                  </option>
-                ))}
-              </select>
+                      : "Select Region first"
+                }
+                disabled={!formData.region_id || isLoading || loadingTowns}
+                isLoading={loadingTowns}
+                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 text-left"
+              />
             </div>
 
             <div className="col-span-2">
@@ -328,12 +366,15 @@ const SignUpModal = ({
                 type="text"
                 name="location"
                 placeholder="Specific Location"
-                className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100"
+                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.location ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                 value={formData.location}
                 onChange={handleInputChange}
                 required
                 disabled={isLoading}
               />
+              {fieldErrors.location && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.location}</p>
+              )}
             </div>
 
             {/* Security */}

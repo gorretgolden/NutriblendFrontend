@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
-import { loginUser } from "@/lib/features/auth/authSlice";
+import { loginUser, clearError } from "@/lib/features/auth/authSlice";
 import { clearCartLocal, fetchCart } from "@/lib/features/carts/cartsSlice";
 import { clearWishlist, fetchWishlist } from "@/lib/features/wishlist/wishlistSlice";
 import { toast } from "sonner";
@@ -20,6 +20,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
   const { isLoading, error } = useAppSelector((state) => state.auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
 
   useEffect(() => {
     if (visible) {
@@ -27,10 +28,44 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
     } else {
       document.body.style.overflow = "";
     }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [visible]);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    if (error) dispatch(clearError());
+    if (fieldErrors.email) {
+      setFieldErrors((prev) => ({ ...prev, email: undefined }));
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (error) dispatch(clearError());
+    if (fieldErrors.password) {
+      setFieldErrors((prev) => ({ ...prev, password: undefined }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Real-time field validation
+    const errors: { email?: string; password?: string } = {};
+    if (!email.trim()) errors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = "Enter a valid email address";
+    if (!password) errors.password = "Password is required";
+    else if (password.length < 6) errors.password = "Password must be at least 6 characters";
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+
     const resultAction = await dispatch(loginUser({ email, password }));
     if (loginUser.fulfilled.match(resultAction)) {
       // Clear stale data from previous session
@@ -96,23 +131,29 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
             <input
               type="text"
               placeholder="Email"
-              className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors ${fieldErrors.email ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               required
               disabled={isLoading}
             />
+            {fieldErrors.email && (
+              <p className="mt-1 text-xs text-red-500">{fieldErrors.email}</p>
+            )}
           </div>
           <div className="mb-4">
             <input
               type="password"
               placeholder="Password"
-              className="w-full rounded border border-gray-300 p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors ${fieldErrors.password ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               required
               disabled={isLoading}
             />
+            {fieldErrors.password && (
+              <p className="mt-1 text-xs text-red-500">{fieldErrors.password}</p>
+            )}
           </div>
           <button
             type="submit"

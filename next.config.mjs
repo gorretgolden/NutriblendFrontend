@@ -1,10 +1,12 @@
+const isVercel = process.env.VERCEL === '1';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Performance Optimizations
   reactStrictMode: true,
   
-  // Static export for cPanel FTP deployment
-  output: 'export',
+  // Keep static export for cPanel flows, but allow full SSR/ISR on Vercel.
+  output: isVercel ? undefined : 'export',
 
   // Image Optimization
   images: {

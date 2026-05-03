@@ -10,11 +10,41 @@ import AddToCardSection from "./AddToCardSection";
 import ChatHelp from "./ChatHelp";
 import { sanitizeRichHtml } from "@/lib/utils/security";
 import { useAppSelector } from "@/lib/hooks/redux";
+import { toast } from "sonner";
 
 const Header = ({ data }: { data: Product }) => {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const isWholesaleUser = isAuthenticated && user?.is_wholesale_approved;
   const isUsingWholesalePrice = isWholesaleUser && !!data.wholesale_price;
+
+  const handleShareProduct = async () => {
+    const shareUrl = typeof window !== 'undefined'
+      ? window.location.href
+      : `https://nutriblendhaven.com/shop/product/${data.id}/${data.slug || 'product'}`;
+
+    const sharePayload = {
+      title: data.title,
+      text: `Check out ${data.title} on NutriBlend Haven`,
+      url: shareUrl,
+    };
+
+    try {
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        await navigator.share(sharePayload);
+        return;
+      }
+
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success('Product link copied to clipboard');
+        return;
+      }
+
+      window.open(shareUrl, '_blank', 'noopener,noreferrer');
+    } catch {
+      toast.error('Unable to share right now. Please try again.');
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
@@ -27,25 +57,25 @@ const Header = ({ data }: { data: Product }) => {
         {/* Right column — Product info */}
         <div className="p-5 md:p-8 flex flex-col">
           {/* Brand + SKU bar */}
-          <div className="flex flex-wrap items-center gap-x-2 text-xs mb-3 pb-3 border-b border-gray-100">
+          <div className="flex flex-wrap items-center gap-x-2.5 text-sm mb-3 pb-3 border-b border-gray-100">
             <span className="text-gray-400">Brand:</span>
             <span className="font-bold text-[#009E3C] hover:underline cursor-pointer">
               {data.brand || "Generic"}
             </span>
             <span className="text-gray-200">|</span>
-            <span className="text-gray-400 hover:underline cursor-pointer text-[11px]">
+            <span className="text-gray-400 hover:underline cursor-pointer text-xs">
               More from {data.brand || "this brand"}
             </span>
             {data.sku && (
               <>
                 <span className="text-gray-200">|</span>
-                <span className="text-gray-400 text-[11px]">SKU: {data.sku}</span>
+                <span className="text-gray-400 text-xs">SKU: {data.sku}</span>
               </>
             )}
           </div>
 
           {/* Product Title */}
-          <h1 className="text-xl md:text-2xl lg:text-[28px] font-bold text-gray-900 mb-3 leading-tight capitalize">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[32px] font-bold text-gray-900 mb-3 leading-tight capitalize">
             {data.title}
           </h1>
 
@@ -57,13 +87,16 @@ const Header = ({ data }: { data: Product }) => {
               SVGclassName="inline-block"
               emptyClassName="fill-gray-200"
               fillClassName="fill-amber-400"
-              size={18}
+              size={20}
               readonly
             />
-            <span className="text-[#009E3C] text-sm font-medium hover:underline cursor-pointer">
+            <span className="text-[#009E3C] text-sm font-semibold hover:underline cursor-pointer">
               {data.reviews || 0} Ratings
             </span>
-            <button className="flex items-center gap-1 ml-auto text-gray-400 hover:text-[#009E3C] transition-colors group">
+            <button
+              onClick={handleShareProduct}
+              className="flex items-center gap-1 ml-auto text-gray-400 hover:text-[#009E3C] transition-colors group"
+            >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.316a3 3 0 100-2.684 3 3 0 000 2.684z" />
               </svg>
@@ -136,16 +169,21 @@ const Header = ({ data }: { data: Product }) => {
           )}
 
           {/* Short Description */}
-          {data.shortDescription ? (
-            <p className="text-sm text-gray-600 mb-5 leading-relaxed">
-              {data.shortDescription}
-            </p>
-          ) : data.description ? (
-            <div
-              className="text-sm text-gray-600 mb-5 leading-relaxed prose prose-sm max-w-none"
-              dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(data.description) }}
-            />
-          ) : null}
+          {data.shortDescription && (
+            <div className="mb-5">
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed line-clamp-3">
+                {data.shortDescription}
+              </p>
+              {data.description && (
+                <button 
+                  onClick={() => document.getElementById('product-tabs')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-xs font-bold text-[#009E3C] mt-2 hover:underline cursor-pointer"
+                >
+                  View Full Details
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Size/Variant selection */}
           <SizeSelection data={data} />
@@ -175,7 +213,7 @@ const Header = ({ data }: { data: Product }) => {
                 <svg className="w-5 h-5 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {item.icon}
                 </svg>
-                <span className="text-[11px] font-bold text-[#007a2e] leading-tight">{item.label}</span>
+                <span className="text-[11px] sm:text-xs font-bold text-[#007a2e] leading-tight">{item.label}</span>
               </div>
             ))}
           </div>

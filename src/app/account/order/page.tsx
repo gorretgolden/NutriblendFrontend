@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { apiClient, getImageUrl, formatPrice } from "@/lib/api/client";
+import SearchableSelect from "@/components/ui/SearchableSelect";
 import {
   FiPackage, FiChevronRight, FiClock, FiCheckCircle, FiTruck,
   FiXCircle, FiFilter, FiChevronLeft, FiLoader
@@ -120,15 +121,13 @@ export default function OrdersPage() {
         <div className="flex items-center gap-3">
           <div className="relative">
             <FiFilter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <select
+            <SearchableSelect
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] appearance-none cursor-pointer"
-            >
-              {STATUS_OPTIONS.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
+              onChange={setStatusFilter}
+              options={STATUS_OPTIONS.map((opt) => ({ value: opt.value, label: opt.label }))}
+              placeholder="All Statuses"
+              className="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] cursor-pointer text-left min-w-[180px]"
+            />
           </div>
         </div>
       </div>

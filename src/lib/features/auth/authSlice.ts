@@ -64,6 +64,9 @@ export const registerUser = createAsyncThunk(
         phone: string;
         password: string;
         password_confirmation: string;
+        region_id?: number;
+        town_id?: number;
+        location?: string;
     }, { rejectWithValue }) => {
         try {
             const response = await apiClient.register(userData);
@@ -86,6 +89,9 @@ export const registerWholesaleUser = createAsyncThunk(
         password: string;
         wholesale_business_name: string;
         wholesale_business_details: string;
+        region_id?: string | number;
+        town_id?: string | number;
+        location?: string;
     }, { rejectWithValue }) => {
         try {
             const response = await apiClient.registerWholesale(userData);
@@ -137,6 +143,9 @@ const authSlice = createSlice({
             state.user = action.payload.user;
             state.token = action.payload.token;
             state.isAuthenticated = true;
+        },
+        clearError: (state) => {
+            state.error = null;
         },
         logout: (state) => {
             state.user = null;
@@ -247,5 +256,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, clearError, logout } = authSlice.actions;
 export default authSlice.reducer;

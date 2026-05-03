@@ -31,6 +31,8 @@ export default function MyAccountManagement() {
 
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
+  const [profileErrors, setProfileErrors] = useState<Record<string, string | undefined>>({});
+  const [passwordErrors, setPasswordErrors] = useState<Record<string, string | undefined>>({});
 
   useEffect(() => {
     if (user) {
@@ -43,15 +45,38 @@ export default function MyAccountManagement() {
   }, [user]);
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    if (profileErrors[name]) {
+      setProfileErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setPasswordData({ ...passwordData, [name]: value });
+    if (passwordErrors[name]) {
+      setPasswordErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate profile fields
+    const errors: Record<string, string> = {};
+    if (!formData.name.trim()) errors.name = "Full name is required";
+    else if (formData.name.trim().length < 2) errors.name = "Name must be at least 2 characters";
+    if (!formData.email.trim()) errors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = "Enter a valid email address";
+    if (!formData.phone.trim()) errors.phone = "Phone number is required";
+
+    if (Object.keys(errors).length > 0) {
+      setProfileErrors(errors);
+      toast.error("Please fix the highlighted errors");
+      return;
+    }
+
     setIsSavingProfile(true);
 
     try {
@@ -78,13 +103,17 @@ export default function MyAccountManagement() {
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (passwordData.password !== passwordData.password_confirmation) {
-      toast.error("New password and confirmation do not match");
-      return;
-    }
+    // Validate password fields
+    const errors: Record<string, string> = {};
+    if (!passwordData.old_password) errors.old_password = "Current password is required";
+    if (!passwordData.password) errors.password = "New password is required";
+    else if (passwordData.password.length < 8) errors.password = "Password must be at least 8 characters";
+    if (!passwordData.password_confirmation) errors.password_confirmation = "Please confirm your new password";
+    else if (passwordData.password !== passwordData.password_confirmation) errors.password_confirmation = "Passwords do not match";
 
-    if (passwordData.password.length < 8) {
-      toast.error("New password must be at least 8 characters");
+    if (Object.keys(errors).length > 0) {
+      setPasswordErrors(errors);
+      toast.error("Please fix the highlighted errors");
       return;
     }
 
@@ -147,8 +176,11 @@ export default function MyAccountManagement() {
                 value={formData.name}
                 onChange={handleProfileChange}
                 placeholder="Enter your full name"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
+                className={`w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:outline-none transition-all ${profileErrors.name ? 'border-red-400 bg-red-50 focus:ring-red-100 focus:border-red-500' : 'border-gray-300 focus:ring-[#009E3C]/20 focus:border-[#009E3C]'}`}
               />
+              {profileErrors.name && (
+                <p className="mt-1 text-xs text-red-500">{profileErrors.name}</p>
+              )}
             </div>
 
             <div>
@@ -161,8 +193,11 @@ export default function MyAccountManagement() {
                 value={formData.email}
                 onChange={handleProfileChange}
                 placeholder="Enter your email"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
+                className={`w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:outline-none transition-all ${profileErrors.email ? 'border-red-400 bg-red-50 focus:ring-red-100 focus:border-red-500' : 'border-gray-300 focus:ring-[#009E3C]/20 focus:border-[#009E3C]'}`}
               />
+              {profileErrors.email && (
+                <p className="mt-1 text-xs text-red-500">{profileErrors.email}</p>
+              )}
             </div>
 
             <div>
@@ -175,8 +210,11 @@ export default function MyAccountManagement() {
                 value={formData.phone}
                 onChange={handleProfileChange}
                 placeholder="Enter your phone number"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
+                className={`w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:outline-none transition-all ${profileErrors.phone ? 'border-red-400 bg-red-50 focus:ring-red-100 focus:border-red-500' : 'border-gray-300 focus:ring-[#009E3C]/20 focus:border-[#009E3C]'}`}
               />
+              {profileErrors.phone && (
+                <p className="mt-1 text-xs text-red-500">{profileErrors.phone}</p>
+              )}
             </div>
           </div>
 
@@ -215,7 +253,7 @@ export default function MyAccountManagement() {
                   onChange={handlePasswordChange}
                   required
                   placeholder="Enter your current password"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
+                  className={`w-full border rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:outline-none transition-all ${passwordErrors.old_password ? 'border-red-400 bg-red-50 focus:ring-red-100 focus:border-red-500' : 'border-gray-300 focus:ring-[#009E3C]/20 focus:border-[#009E3C]'}`}
                 />
                 <button
                   type="button"
@@ -225,6 +263,9 @@ export default function MyAccountManagement() {
                   {showPasswords.old ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
                 </button>
               </div>
+              {passwordErrors.old_password && (
+                <p className="mt-1 text-xs text-red-500">{passwordErrors.old_password}</p>
+              )}
             </div>
 
             <div>
@@ -239,7 +280,7 @@ export default function MyAccountManagement() {
                   onChange={handlePasswordChange}
                   required
                   placeholder="Enter new password"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
+                  className={`w-full border rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:outline-none transition-all ${passwordErrors.password ? 'border-red-400 bg-red-50 focus:ring-red-100 focus:border-red-500' : 'border-gray-300 focus:ring-[#009E3C]/20 focus:border-[#009E3C]'}`}
                 />
                 <button
                   type="button"
@@ -249,7 +290,11 @@ export default function MyAccountManagement() {
                   {showPasswords.new ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
                 </button>
               </div>
-              <p className="text-xs text-gray-400 mt-1">Minimum 8 characters</p>
+              {passwordErrors.password ? (
+                <p className="text-xs text-red-500 mt-1">{passwordErrors.password}</p>
+              ) : (
+                <p className="text-xs text-gray-400 mt-1">Minimum 8 characters</p>
+              )}
             </div>
 
             <div>
@@ -264,7 +309,7 @@ export default function MyAccountManagement() {
                   onChange={handlePasswordChange}
                   required
                   placeholder="Confirm new password"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
+                  className={`w-full border rounded-lg px-4 py-2.5 pr-10 text-sm focus:ring-2 focus:outline-none transition-all ${passwordErrors.password_confirmation ? 'border-red-400 bg-red-50 focus:ring-red-100 focus:border-red-500' : 'border-gray-300 focus:ring-[#009E3C]/20 focus:border-[#009E3C]'}`}
                 />
                 <button
                   type="button"
@@ -274,6 +319,9 @@ export default function MyAccountManagement() {
                   {showPasswords.confirm ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
                 </button>
               </div>
+              {passwordErrors.password_confirmation && (
+                <p className="mt-1 text-xs text-red-500">{passwordErrors.password_confirmation}</p>
+              )}
             </div>
           </div>
 

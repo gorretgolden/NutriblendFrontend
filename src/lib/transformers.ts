@@ -69,6 +69,7 @@ export const transformProduct = (p: ApiProduct): Product => {
         rating: p.average_rating || 0,
         reviews: p.review_count || 0,
         brand: p.brand?.name,
+        category: p.category?.name,
         description: p.description || '',
         shortDescription: p.short_description || '',
         keyFeatures: p.key_features ? p.key_features.map((f: any) => typeof f === 'string' ? f : f.feature) : [],

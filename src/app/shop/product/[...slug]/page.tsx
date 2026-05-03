@@ -72,14 +72,17 @@ export default async function ProductPage({
         </div>
       </div>
 
-      {/* Product Detail */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
-        <section className="mb-8">
+      {/* Product Detail — Images + Key Info */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6 space-y-6">
+        
+        {/* Hero Section: Photo + Pricing */}
+        <section>
           <Header data={productData} />
         </section>
 
-        <section className="mb-8">
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        {/* Product Details Section — Main Content */}
+        <section id="product-tabs">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <Tabs data={productData} />
           </div>
         </section>

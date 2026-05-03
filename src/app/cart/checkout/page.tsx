@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
 import { clearCartAsync } from "@/lib/features/carts/cartsSlice";
 import { apiClient, type Region, type Town } from "@/lib/api/client";
+import SearchableSelect from "@/components/ui/SearchableSelect";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
@@ -14,6 +15,7 @@ export default function Checkout() {
   const dispatch = useAppDispatch();
   const { cart, adjustedTotalPrice, isLoading: cartLoading } = useAppSelector((state) => state.carts);
   const { user, isAuthenticated, isLoading: authLoading } = useAppSelector((state) => state.auth);
+  const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
 
   const [regions, setRegions] = useState<Region[]>([]);
   const [towns, setTowns] = useState<Town[]>([]);
@@ -26,14 +28,16 @@ export default function Checkout() {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadingRegions, setLoadingRegions] = useState(true);
+  const [loadingTowns, setLoadingTowns] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cod');
+  const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
+  const [checkoutErrors, setCheckoutErrors] = useState<Record<string, string | undefined>>({});
 
   // Check authentication — wait for auth to load, also check localStorage as fallback
   useEffect(() => {
     // Don't redirect while auth state is still loading
     if (authLoading) return;
 
-    const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
     if (!isAuthenticated && !hasToken) {
       toast.error("Please login to checkout");
       router.push('/cart');
@@ -64,10 +68,10 @@ export default function Checkout() {
       }
     }
 
-    if (isAuthenticated && cart?.items && cart.items.length > 0) {
+    if ((isAuthenticated || hasToken) && cart?.items && cart.items.length > 0) {
       fetchRegions();
     }
-  }, [isAuthenticated, cart]);
+  }, [isAuthenticated, hasToken, cart]);
 
   // Fetch towns when region changes
   useEffect(() => {
@@ -80,6 +84,9 @@ export default function Checkout() {
 
     async function fetchTowns() {
       try {
+        setLoadingTowns(true);
+        setTowns([]);
+        setSelectedTown(null);
         const response = await apiClient.getTowns(selectedRegion!);
         if (response.status && response.data) {
           setTowns(response.data);
@@ -87,6 +94,8 @@ export default function Checkout() {
       } catch (error) {
         console.error("Error fetching towns:", error);
         toast.error("Failed to load towns");
+      } finally {
+        setLoadingTowns(false);
       }
     }
 
@@ -118,7 +127,8 @@ export default function Checkout() {
   }, [selectedRegion, selectedTown]);
 
   const subtotal = Number(adjustedTotalPrice) || 0;
-  const finalTotal = subtotal + Number(deliveryFee) - Number(discountAmount);
+  const actualDeliveryFee = deliveryMethod === 'pickup' ? 0 : Number(deliveryFee);
+  const finalTotal = subtotal + actualDeliveryFee - Number(discountAmount);
 
   const config = {
     public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
@@ -165,33 +175,42 @@ export default function Checkout() {
 
   const handlePlaceOrder = async () => {
     // Validation
-    if (!selectedRegion || !selectedTown) {
-      toast.error("Please select delivery region and town");
-      return;
-    }
+    if (deliveryMethod === 'delivery') {
+      const errors: Record<string, string> = {};
+      if (!selectedRegion) errors.region = "Please select a delivery region";
+      if (!selectedTown) errors.town = "Please select a delivery town";
+      if (!address.trim()) errors.address = "Please enter your delivery address";
 
-    if (!address.trim()) {
-      toast.error("Please enter your delivery address");
-      return;
+      if (Object.keys(errors).length > 0) {
+        setCheckoutErrors(errors);
+        toast.error("Please fill in all delivery details");
+        return;
+      }
     }
 
     try {
       setLoading(true);
 
-      const orderData = {
+      const orderData: any = {
         items: (cart?.items || []).map((item: any) => ({
           product_id: item.product_id,
           quantity: item.quantity,
           variation_id: item.variation_id,
         })),
-        delivery_region_id: selectedRegion,
-        delivery_town_id: selectedTown,
-        delivery_address: address,
-        delivery_fee: Number(deliveryFee) || 0,
+        delivery_method: deliveryMethod,
+        delivery_fee: deliveryMethod === 'pickup' ? 0 : (Number(deliveryFee) || 0),
         discount_code: discountCode || undefined,
         notes: notes || undefined,
         payment_method: paymentMethod,
       };
+
+      if (deliveryMethod === 'delivery') {
+        orderData.delivery_region_id = selectedRegion;
+        orderData.delivery_town_id = selectedTown;
+        orderData.delivery_address = address;
+      } else {
+        orderData.delivery_address = 'Store Pickup - Shop C212, Nakivubo Trading Center, Kampala';
+      }
 
       if (paymentMethod === 'flutterwave') {
         handleFlutterPayment({
@@ -235,6 +254,11 @@ export default function Checkout() {
         // Redirect to orders tab
         router.push(`/account/order`);
       } else {
+        if ((response.message || '').toLowerCase().includes('unauthenticated')) {
+          toast.error('Session expired. Please log in again.');
+          router.push('/login');
+          return;
+        }
         toast.error(response.message || "Failed to create order");
       }
     } catch (error: any) {
@@ -307,55 +331,119 @@ export default function Checkout() {
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
               <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
                 <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#009E3C] text-white text-xs font-bold flex items-center justify-center">2</span>
-                <h2 className="font-semibold text-gray-900">Delivery Information</h2>
+                <h2 className="font-semibold text-gray-900">Delivery Method</h2>
               </div>
               <div className="p-5 space-y-4">
+                {/* Delivery Method Toggle */}
+                <div className="grid grid-cols-2 gap-3">
+                  <label htmlFor="deliveryMethodDelivery" className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${deliveryMethod === 'delivery' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                    <input
+                      id="deliveryMethodDelivery"
+                      name="deliveryMethod"
+                      type="radio"
+                      className="h-4 w-4 accent-[#009E3C]"
+                      checked={deliveryMethod === 'delivery'}
+                      onChange={() => {
+                        setDeliveryMethod('delivery');
+                      }}
+                    />
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+                      </svg>
+                      <span className="text-sm font-medium text-gray-800">Delivery</span>
+                    </div>
+                  </label>
+
+                  <label htmlFor="deliveryMethodPickup" className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${deliveryMethod === 'pickup' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                    <input
+                      id="deliveryMethodPickup"
+                      name="deliveryMethod"
+                      type="radio"
+                      className="h-4 w-4 accent-[#009E3C]"
+                      checked={deliveryMethod === 'pickup'}
+                      onChange={() => {
+                        setDeliveryMethod('pickup');
+                        setSelectedRegion(null);
+                        setSelectedTown(null);
+                        setDeliveryFee(0);
+                      }}
+                    />
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+                      </svg>
+                      <span className="text-sm font-medium text-gray-800">Store Pickup</span>
+                    </div>
+                  </label>
+                </div>
+
+                {deliveryMethod === 'pickup' && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <p className="text-sm font-semibold text-green-800 mb-1">Pickup Location</p>
+                    <p className="text-sm text-green-700">Shop C212, Nakivubo Trading Center, Kampala, Uganda</p>
+                    <p className="text-xs text-green-600 mt-1">Mon–Sat: 8:00 AM – 7:00 PM | Sun: 10:00 AM – 5:00 PM</p>
+                  </div>
+                )}
+
+                {deliveryMethod === 'delivery' && (
+                <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Region */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Region</label>
-                    <select
-                      value={selectedRegion || ""}
-                      onChange={(e) => setSelectedRegion(Number(e.target.value))}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors"
+                    <SearchableSelect
+                      value={selectedRegion ? String(selectedRegion) : ""}
+                      onChange={(value) => {
+                        if (!value) {
+                          setSelectedRegion(null);
+                          return;
+                        }
+                        setSelectedRegion(Number(value));
+                        if (checkoutErrors.region) setCheckoutErrors((prev) => ({ ...prev, region: undefined }));
+                      }}
+                      options={regions.map((region) => ({ value: String(region.id), label: region.name }))}
+                      placeholder="Select Region"
                       disabled={loadingRegions}
-                    >
-                      <option value="">Select Region</option>
-                      {regions.map((region) => (
-                        <option key={region.id} value={region.id}>{region.name}</option>
-                      ))}
-                    </select>
+                      className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors text-left ${checkoutErrors.region ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
+                    />
+                    {checkoutErrors.region && (
+                      <p className="mt-1 text-xs text-red-500">{checkoutErrors.region}</p>
+                    )}
                   </div>
 
                   {/* Town */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Town</label>
-                    <select
-                      value={selectedTown || ""}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (!val) {
+                    <SearchableSelect
+                      value={selectedTown ? String(selectedTown) : ""}
+                      onChange={(value) => {
+                        if (!value) {
                           setSelectedTown(null);
                           setDeliveryFee(0);
                           return;
                         }
-                        const townId = Number(val);
+
+                        const townId = Number(value);
                         setSelectedTown(townId);
-                        const selectedTownObj = towns.find(t => t.id === townId);
+                        if (checkoutErrors.town) setCheckoutErrors((prev) => ({ ...prev, town: undefined }));
+                        const selectedTownObj = towns.find((t) => t.id === townId);
                         if (selectedTownObj?.delivery_fee) {
                           setDeliveryFee(selectedTownObj.delivery_fee);
                         }
                       }}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors"
-                      disabled={!selectedRegion || towns.length === 0}
-                    >
-                      <option value="">Select Town</option>
-                      {towns.map((town) => (
-                        <option key={town.id} value={town.id}>
-                          {town.name}{town.delivery_fee ? ` (Fee: UGX ${Number(town.delivery_fee).toLocaleString()})` : ''}
-                        </option>
-                      ))}
-                    </select>
+                      options={towns.map((town) => ({
+                        value: String(town.id),
+                        label: `${town.name}${town.delivery_fee ? ` (Fee: UGX ${Number(town.delivery_fee).toLocaleString()})` : ""}`,
+                      }))}
+                      placeholder={loadingTowns ? "Loading towns..." : "Select Town"}
+                      disabled={!selectedRegion || loadingTowns}
+                      isLoading={loadingTowns}
+                      className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors text-left ${checkoutErrors.town ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
+                    />
+                    {checkoutErrors.town && (
+                      <p className="mt-1 text-xs text-red-500">{checkoutErrors.town}</p>
+                    )}
                   </div>
                 </div>
 
@@ -364,12 +452,20 @@ export default function Checkout() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Delivery Address</label>
                   <textarea
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={(e) => {
+                      setAddress(e.target.value);
+                      if (checkoutErrors.address) setCheckoutErrors((prev) => ({ ...prev, address: undefined }));
+                    }}
                     placeholder="e.g. Plot 12, Kampala Road, near Total Petrol Station..."
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors resize-none"
+                    className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors resize-none ${checkoutErrors.address ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
                     rows={3}
                   />
+                  {checkoutErrors.address && (
+                    <p className="mt-1 text-xs text-red-500">{checkoutErrors.address}</p>
+                  )}
                 </div>
+                </>
+                )}
 
                 {/* Notes */}
                 <div>
@@ -462,7 +558,7 @@ export default function Checkout() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Delivery Fee</span>
-                    <span className="font-medium text-gray-900">{deliveryFee > 0 ? `UGX ${deliveryFee.toLocaleString()}` : 'Free'}</span>
+                    <span className="font-medium text-gray-900">{deliveryMethod === 'pickup' ? 'Free (Pickup)' : deliveryFee > 0 ? `UGX ${deliveryFee.toLocaleString()}` : 'Free'}</span>
                   </div>
                   {discountAmount > 0 && (
                     <div className="flex justify-between text-sm text-[#009E3C]">
@@ -498,7 +594,7 @@ export default function Checkout() {
 
                 <button
                   onClick={handlePlaceOrder}
-                  disabled={loading || !selectedRegion || !selectedTown || !address}
+                  disabled={loading || (deliveryMethod === 'delivery' && (!selectedRegion || !selectedTown || !address))}
                   className="w-full bg-[#009E3C] text-white py-3.5 rounded-xl font-bold hover:bg-[#00752C] transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(0,158,60,0.30)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.40)] disabled:shadow-none active:scale-[0.98]"
                 >
                   {loading && <Loader2 className="w-5 h-5 animate-spin" />}

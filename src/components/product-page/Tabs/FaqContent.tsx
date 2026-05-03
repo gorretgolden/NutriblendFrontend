@@ -46,20 +46,28 @@ const faqsData: FaqItem[] = [
 
 const FaqContent = () => {
   return (
-    <section>
-      <h3 className="text-xl sm:text-2xl font-bold text-black mb-5 sm:mb-6">
-        Frequently asked questions
+    <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+      <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8 text-center sm:text-left">
+        Frequently Asked Questions
       </h3>
-      <Accordion type="single" collapsible>
-        {faqsData.map((faq, idx) => (
-          <AccordionItem key={idx} value={`item-${idx + 1}`}>
-            <AccordionTrigger className="text-left">
-              {faq.question}
-            </AccordionTrigger>
-            <AccordionContent>{faq.answer}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      <div className="max-w-4xl">
+        <Accordion type="single" collapsible className="space-y-4">
+          {faqsData.map((faq, idx) => (
+            <AccordionItem 
+              key={idx} 
+              value={`item-${idx + 1}`}
+              className="border border-gray-100 rounded-xl px-5 bg-gray-50/50 overflow-hidden"
+            >
+              <AccordionTrigger className="text-left font-semibold text-gray-800 py-4 hover:text-[#009E3C] hover:no-underline transition-colors">
+                {faq.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-gray-600 leading-relaxed pb-5 pt-1">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
     </section>
   );
 };

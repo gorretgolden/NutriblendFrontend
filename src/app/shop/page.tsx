@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import BreadcrumbShop from "@/components/shop-page/BreadcrumbShop";
 import MobileFilters from "@/components/shop-page/filters/MobileFilters";
 import Filters from "@/components/shop-page/filters";

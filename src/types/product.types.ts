@@ -27,6 +27,7 @@ export type Product = {
   reviews?: number;
   reviewList?: Review[];
   brand?: string;
+  category?: string;
   description?: string;
   shortDescription?: string;
   keyFeatures?: string[];
