@@ -48,14 +48,14 @@ const Header = ({ data }: { data: Product }) => {
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-        {/* Left column — Photo gallery */}
-        <div className="bg-white p-4 md:p-8 border-r border-gray-100">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
+        {/* Left column — Photo gallery (5 cols) */}
+        <div className="lg:col-span-5 bg-white p-4 md:p-8 border-r border-gray-100">
           <PhotoSection data={data} />
         </div>
 
-        {/* Right column — Product info */}
-        <div className="p-5 md:p-8 flex flex-col">
+        {/* Right column — Product info (7 cols) */}
+        <div className="lg:col-span-7 p-5 md:p-8 flex flex-col">
           {/* Brand + SKU bar */}
           <div className="flex flex-wrap items-center gap-x-2.5 text-sm mb-3 pb-3 border-b border-gray-100">
             <span className="text-gray-400">Brand:</span>

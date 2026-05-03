@@ -7,6 +7,11 @@ export const transformProduct = (p: ApiProduct): Product => {
     // 2. p.product_images - Related ProductImage records with image_url field
     let allImages: string[] = [];
 
+    // 0. p.image - Direct image field from model (Seeder stores here)
+    if ((p as any).image) {
+        allImages.push(getImageUrl((p as any).image));
+    }
+
     // 1. main_image & gallery_images (Preferred from ProductResource)
     if ((p as any).main_image) {
         allImages.push(getImageUrl((p as any).main_image));
