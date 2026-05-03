@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { apiClient } from "@/lib/api/client";
+import { apiClient, getImageUrl } from "@/lib/api/client";
 
 interface BannerItem {
   image: string;
@@ -23,7 +23,8 @@ function mapCategoryToBanner(cat: any, idx: number): BannerItem {
   const slug = cat.slug || "";
   const name = cat.name || "Category";
   // Prioritize banner for featured section
-  const image = cat.full_banner_url || cat.full_image_url || "/images/placeholders/category.png";
+  const rawImage = cat.full_banner_url || cat.banner || cat.full_image_url || cat.image || "";
+  const image = getImageUrl(rawImage);
 
   return {
     image,
