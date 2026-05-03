@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { apiClient, getImageUrl, formatPrice } from "@/lib/api/client";
+import Link from "next/link";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import {
   FiPackage, FiChevronRight, FiClock, FiCheckCircle, FiTruck,
@@ -172,9 +173,10 @@ export default function OrdersPage() {
                 || null;
 
               return (
-                <div
+                <Link
                   key={order.id}
-                  className="bg-white rounded-xl border border-gray-100 hover:shadow-md transition-all duration-200 overflow-hidden group"
+                  href={`/account/order/${order.order_number}`}
+                  className="bg-white rounded-xl border border-gray-100 hover:shadow-md transition-all duration-200 overflow-hidden group block"
                 >
                   <div className="p-4 md:p-5">
                     {/* Order Header */}
@@ -187,8 +189,9 @@ export default function OrdersPage() {
                         </span>
                       </div>
                       <span className="text-xs text-gray-500">
-                        {new Date(order.created_at).toLocaleDateString("en-US", {
+                        {new Date(order.created_at).toLocaleString("en-US", {
                           year: "numeric", month: "short", day: "numeric",
+                          hour: "2-digit", minute: "2-digit"
                         })}
                       </span>
                     </div>
@@ -226,7 +229,7 @@ export default function OrdersPage() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
