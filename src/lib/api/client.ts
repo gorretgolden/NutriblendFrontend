@@ -22,13 +22,6 @@ if (isDev && isServer && API_BASE_URL.includes('localhost')) {
     API_BASE_URL = API_BASE_URL.replace('localhost', '127.0.0.1');
 }
 
-export const getImageUrl = (path?: string | null) => {
-    if (!path) return '';
-    if (path.startsWith('http')) return path;
-    const base = API_BASE_URL.replace('/api/v1', '');
-    return `${base}/storage/${path}`;
-};
-
 // ==================== Type Definitions ====================
 
 export interface ApiResponse<T = any> {
