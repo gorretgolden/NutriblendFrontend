@@ -115,28 +115,21 @@ export default function BrandsSection() {
                 <Link
                   key={`${brand.id}-${i}`}
                   href={`/shop?brand_id=${brand.id}`}
-                  className="group/card relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white border border-gray-100 hover:border-emerald-200 transition-all duration-500 hover:shadow-lg overflow-hidden aspect-square w-[100px] md:w-[130px] shrink-0"
+                  className="group/card relative flex items-center justify-center rounded-2xl bg-white border border-gray-100 hover:border-emerald-200 transition-all duration-500 hover:shadow-lg overflow-hidden aspect-square w-[100px] md:w-[130px] shrink-0"
                 >
                   {/* Logo Container */}
-                  <div className="relative z-10 w-full flex-1 flex items-center justify-center">
+                  <div className="absolute inset-0 w-full h-full">
                     {brand.image ? (
                       <img
                         src={getImageUrl(brand.image)}
                         alt={brand.name}
-                        className="w-full h-full max-h-[50px] md:max-h-[60px] object-contain group-hover/card:scale-110 transition-all duration-700 ease-out"
+                        className="w-full h-full object-cover group-hover/card:scale-110 transition-all duration-700 ease-out"
                       />
                     ) : (
-                      <div className="text-xl md:text-2xl font-black text-gray-200 group-hover/card:text-[#009E3C]/40 transition-all duration-500 tracking-tighter uppercase">
+                      <div className="w-full h-full flex items-center justify-center text-xl md:text-2xl font-black text-gray-200 group-hover/card:text-[#009E3C]/40 transition-all duration-500 tracking-tighter uppercase">
                         {brand.name.substring(0, 2)}
                       </div>
                     )}
-                  </div>
-
-                  {/* Brand Info */}
-                  <div className="relative z-10 mt-2 text-center w-full">
-                    <h3 className="font-bold text-gray-700 group-hover/card:text-[#009E3C] text-[11px] md:text-xs truncate transition-colors duration-300">
-                      {brand.name}
-                    </h3>
                   </div>
                 </Link>
               ))}

@@ -101,10 +101,10 @@ export default function ThreeColBanners() {
                 <span className="w-1 h-1 bg-white rounded-full" />
                 {large.badge}
               </span>
-              <h3 className="text-3xl md:text-4xl lg:text-5xl font-black mb-2 leading-none tracking-tight text-white drop-shadow-md">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black mb-2 leading-none tracking-tight text-white drop-shadow-md">
                 {large.title}
               </h3>
-              <p className="text-sm text-white/90 mb-5 font-medium leading-snug max-w-md line-clamp-2">
+              <p className="text-xs sm:text-sm text-white/90 mb-5 font-medium leading-snug max-w-md line-clamp-2">
                 {large.subtitle}
               </p>
               <div className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-white bg-white/15 border border-white/25 backdrop-blur-sm px-4 py-2 rounded-full w-fit group-hover:bg-white group-hover:text-gray-900 transition-all duration-300">
@@ -150,7 +150,7 @@ export default function ThreeColBanners() {
                       <span className="w-1 h-1 bg-white rounded-full" />
                       {topRight.badge}
                     </span>
-                    <h3 className="text-xl md:text-2xl font-black mb-1.5 leading-tight tracking-tight text-white drop-shadow-md">
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black mb-1.5 leading-tight tracking-tight text-white drop-shadow-md">
                       {topRight.title}
                     </h3>
                     <p className="text-[10px] text-white/90 mb-3 font-medium leading-snug line-clamp-1">
@@ -196,7 +196,7 @@ export default function ThreeColBanners() {
                       <span className="w-1 h-1 bg-white rounded-full animate-pulse" />
                       {bottomRight.badge}
                     </span>
-                    <h3 className="text-xl md:text-2xl font-black mb-1.5 leading-tight tracking-tight text-white drop-shadow-md">
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black mb-1.5 leading-tight tracking-tight text-white drop-shadow-md">
                       {bottomRight.title}
                     </h3>
                     <p className="text-[10px] text-white/90 mb-3 font-medium leading-snug line-clamp-1">
