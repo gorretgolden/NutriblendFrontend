@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { apiClient, getImageUrl } from "@/lib/api/client";
 
@@ -15,44 +15,42 @@ const categoryColors: Record<string, { bg: string; text: string; border: string;
 };
 
 const defaultColor = categoryColors.green;
-
 const getColors = (color?: string) =>
   (color && categoryColors[color]) ? categoryColors[color] : defaultColor;
 
 // ── Category icons (SVG) ───────────────────────────────────
 function CategoryIcon({ name, color }: { name: string; color: string }) {
   const lower = name.toLowerCase();
-
   if (lower.includes("men") && lower.includes("sexual")) return (
-    <svg viewBox="0 0 48 48" className={`w-10 h-10 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
+    <svg viewBox="0 0 48 48" className={`w-8 h-8 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
       <circle cx="24" cy="16" r="8" />
       <path d="M18 28h12c3.3 0 6 2.7 6 6v6H12v-6c0-3.3 2.7-6 6-6z" />
       <path d="M32 8l6-6m0 0h-4m4 0v4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
   if (lower.includes("women") && lower.includes("sexual")) return (
-    <svg viewBox="0 0 48 48" className={`w-10 h-10 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
+    <svg viewBox="0 0 48 48" className={`w-8 h-8 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
       <circle cx="24" cy="14" r="8" />
       <path d="M24 22v8m-5 0h10m-5 0v6" strokeLinecap="round" />
       <path d="M14 42c0-5.5 4.5-10 10-10s10 4.5 10 10" />
     </svg>
   );
   if (lower.includes("nutrition") || lower.includes("supplement")) return (
-    <svg viewBox="0 0 48 48" className={`w-10 h-10 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
+    <svg viewBox="0 0 48 48" className={`w-8 h-8 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
       <rect x="16" y="8" width="16" height="28" rx="8" />
       <path d="M16 24h16" strokeLinecap="round" />
       <path d="M24 4v4m0 32v4" strokeLinecap="round" />
     </svg>
   );
   if (lower.includes("weight")) return (
-    <svg viewBox="0 0 48 48" className={`w-10 h-10 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
+    <svg viewBox="0 0 48 48" className={`w-8 h-8 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
       <ellipse cx="24" cy="32" rx="14" ry="8" />
       <path d="M18 32V18a6 6 0 1112 0v14" />
       <path d="M12 20h8m8 0h8" strokeLinecap="round" />
     </svg>
   );
   if (lower.includes("gym") || lower.includes("fitness")) return (
-    <svg viewBox="0 0 48 48" className={`w-10 h-10 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
+    <svg viewBox="0 0 48 48" className={`w-8 h-8 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
       <rect x="4" y="20" width="6" height="8" rx="2" />
       <rect x="38" y="20" width="6" height="8" rx="2" />
       <rect x="10" y="16" width="6" height="16" rx="2" />
@@ -61,7 +59,7 @@ function CategoryIcon({ name, color }: { name: string; color: string }) {
     </svg>
   );
   if (lower.includes("perfume") || lower.includes("spray") || lower.includes("fragrance")) return (
-    <svg viewBox="0 0 48 48" className={`w-10 h-10 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
+    <svg viewBox="0 0 48 48" className={`w-8 h-8 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
       <rect x="14" y="20" width="20" height="22" rx="3" />
       <path d="M20 20v-6h8v6" />
       <path d="M24 14v-4" strokeLinecap="round" />
@@ -71,7 +69,7 @@ function CategoryIcon({ name, color }: { name: string; color: string }) {
   );
   // fallback
   return (
-    <svg viewBox="0 0 48 48" className={`w-10 h-10 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
+    <svg viewBox="0 0 48 48" className={`w-8 h-8 ${color}`} fill="none" stroke="currentColor" strokeWidth="1.8">
       <rect x="8" y="12" width="32" height="28" rx="4" />
       <path d="M16 12V8a8 8 0 0116 0v4" strokeLinecap="round" />
     </svg>
@@ -81,55 +79,109 @@ function CategoryIcon({ name, color }: { name: string; color: string }) {
 // ── Skeleton ───────────────────────────────────────────────
 function CategorySkeleton() {
   return (
-    <section className="py-8 sm:py-10">
-      <div className="flex items-center justify-between mb-6 px-1">
+    <section className="py-6 sm:py-8">
+      <div className="flex items-center justify-between mb-4 px-1">
         <div className="space-y-2">
-          <div className="h-3 w-32 bg-gray-100 animate-shimmer rounded-full" />
-          <div className="h-7 w-48 bg-gray-100 animate-shimmer rounded-lg" />
+          <div className="h-3 w-24 bg-gray-100 animate-pulse rounded-full" />
+          <div className="h-6 w-40 bg-gray-100 animate-pulse rounded-lg" />
         </div>
       </div>
-      <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-        {[1,2,3,4,5,6].map((i) => (
-          <div key={i} className="h-36 sm:h-40 bg-gray-50 animate-shimmer rounded-2xl border border-gray-100" />
+      <div className="flex gap-3 overflow-hidden">
+        {[1,2,3,4,5,6,7,8].map((i) => (
+          <div key={i} className="flex-shrink-0 w-24 h-24 bg-gray-50 animate-pulse rounded-2xl border border-gray-100" />
         ))}
       </div>
     </section>
   );
 }
 
-export default function CategoryGrid() {
-  const [categories, setCategories] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+// ── Single category card ───────────────────────────────────
+function CategoryCard({ category, idx }: { category: any; idx: number }) {
+  const colors = getColors(category.color);
+  return (
+    <Link
+      href={`/shop?category=${category.slug}`}
+      className={`
+        group relative flex-shrink-0 flex flex-col items-center justify-center gap-2
+        ${colors.bg} ${colors.border}
+        border rounded-2xl p-3
+        w-24 h-24
+        hover:shadow-md hover:-translate-y-0.5
+        transition-all duration-200 ease-out
+        overflow-hidden
+      `}
+      style={{ animationDelay: `${idx * 40}ms` }}
+    >
+      {/* Subtle accent circle */}
+      <div className={`absolute -top-3 -right-3 w-12 h-12 rounded-full opacity-10 ${colors.accent}`} />
 
+      {/* Image / icon */}
+      {category.icon ? (
+        <img
+          src={getImageUrl(category.icon)}
+          alt={category.name}
+          className="w-8 h-8 object-contain group-hover:scale-110 transition-transform duration-300"
+        />
+      ) : category.image ? (
+        <img
+          src={getImageUrl(category.image)}
+          alt={category.name}
+          className="w-8 h-8 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+        />
+      ) : (
+        <div className={`w-8 h-8 flex items-center justify-center opacity-60`}>
+          <CategoryIcon name={category.name} color={colors.text} />
+        </div>
+      )}
+
+      {/* Name */}
+      <span className={`text-[10px] font-bold ${colors.text} text-center leading-tight line-clamp-2 relative z-10`}>
+        {category.name}
+      </span>
+    </Link>
+  );
+}
+
+// ── Main component ─────────────────────────────────────────
+export default function CategoryGrid() {
+  const [parentCategories, setParentCategories] = useState<any[]>([]);
+  const [allCategories, setAllCategories]       = useState<any[]>([]);
+  const [loading, setLoading]                   = useState(true);
+  const [showAll, setShowAll]                   = useState(false);
+  const [loadingAll, setLoadingAll]             = useState(false);
+
+  const scrollRef    = useRef<HTMLDivElement>(null);
+  const autoScrollId = useRef<ReturnType<typeof setInterval> | null>(null);
+  const autoStartId  = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ── Fetch parent categories on mount ──
   useEffect(() => {
     const fetchCategories = async () => {
+      // Try cache first
       try {
-        const cached = localStorage.getItem('homepage_categories_cache_v2');
+        const cached = localStorage.getItem('homepage_parent_categories_v3');
         if (cached) {
           const parsed = JSON.parse(cached);
-          if (parsed?.data?.categories?.length > 0) {
-            setCategories(parsed.data.categories);
+          if (parsed?.cats?.length > 0 && Date.now() - parsed.ts < 5 * 60 * 1000) {
+            setParentCategories(parsed.cats);
             setLoading(false);
           }
         }
-      } catch (e) {}
+      } catch {}
 
       try {
+        // /categories/tree returns only active parents with their children
         const response = await apiClient.getCategoriesTree();
         if (response.status) {
-          const rawCats: any = response.data;
-          const cats = Array.isArray(rawCats) ? rawCats : (Array.isArray(rawCats?.data) ? rawCats.data : []);
-          if (cats && cats.length > 0) {
-            setCategories(cats);
-            const subs = cats.flatMap((cat: any) => cat.children || []);
-            localStorage.setItem('homepage_categories_cache_v2', JSON.stringify({
-              data: { categories: cats, subcategories: subs.slice(0, 15) },
-              timestamp: Date.now()
-            }));
+          const raw: any = response.data;
+          const cats = Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
+          if (cats.length > 0) {
+            setParentCategories(cats);
+            localStorage.setItem('homepage_parent_categories_v3', JSON.stringify({ cats, ts: Date.now() }));
           }
         }
-      } catch (error) {
-        console.error("Failed to fetch categories", error);
+      } catch (err) {
+        console.error("Failed to fetch categories", err);
       } finally {
         setLoading(false);
       }
@@ -137,97 +189,135 @@ export default function CategoryGrid() {
     fetchCategories();
   }, []);
 
+  // ── Auto-scroll: starts after 1 minute, scrolls left slowly ──
+  const startAutoScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    autoScrollId.current = setInterval(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+      // Wrap around
+      if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 2) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: 96, behavior: "smooth" }); // one card width
+      }
+    }, 2000); // scroll one card every 2s
+  }, []);
+
+  useEffect(() => {
+    autoStartId.current = setTimeout(startAutoScroll, 60_000); // start after 1 minute
+    return () => {
+      if (autoStartId.current)  clearTimeout(autoStartId.current);
+      if (autoScrollId.current) clearInterval(autoScrollId.current);
+    };
+  }, [startAutoScroll]);
+
+  // Pause auto-scroll when user touches/hovers the row
+  const pauseScroll = () => {
+    if (autoScrollId.current) { clearInterval(autoScrollId.current); autoScrollId.current = null; }
+  };
+  const resumeScroll = () => {
+    if (!autoScrollId.current) startAutoScroll();
+  };
+
+  // ── Fetch all categories when "See All" is clicked ──
+  const handleSeeAll = async () => {
+    if (showAll) { setShowAll(false); return; }
+    if (allCategories.length > 0) { setShowAll(true); return; }
+
+    setLoadingAll(true);
+    try {
+      const response = await apiClient.getCategories();
+      if (response.status) {
+        const raw: any = response.data;
+        const cats = Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
+        setAllCategories(cats);
+      }
+    } catch {}
+    setLoadingAll(false);
+    setShowAll(true);
+  };
+
   if (loading) return <CategorySkeleton />;
 
+  const displayedCategories = showAll ? allCategories : parentCategories;
+
   return (
-    <section className="py-8 sm:py-10">
-      {/* Section header */}
-      <div className="flex items-center justify-between mb-5 sm:mb-6 px-1">
+    <section className="py-6 sm:py-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4 px-1">
         <div>
-          <p className="text-[11px] font-black uppercase tracking-widest text-[#009E3C] mb-1">Discover Wellness</p>
-          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
-            Shop by Category
-          </h2>
-          <p className="mt-1 text-sm text-gray-500 max-w-md">Explore our curated selection of premium health and wellness products.</p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-[#009E3C] mb-0.5">Discover Wellness</p>
+          <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Shop by Category</h2>
+          <p className="mt-0.5 text-xs text-gray-400 max-w-sm">Explore our premium selection curated just for you.</p>
         </div>
-        <Link
-          href="/shop"
-          className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-[#009E3C] hover:text-[#007a2e] transition-colors group"
+        <button
+          onClick={handleSeeAll}
+          disabled={loadingAll}
+          className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-[#009E3C] hover:text-[#007a2e] transition-colors group border border-[#009E3C]/30 rounded-full px-3 py-1.5 hover:bg-[#009E3C]/5"
         >
-          View all
-          <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-          </svg>
-        </Link>
+          {loadingAll ? (
+            <span className="w-3 h-3 border-2 border-[#009E3C] border-t-transparent rounded-full animate-spin" />
+          ) : showAll ? (
+            <>Show Less <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg></>
+          ) : (
+            <>See All Categories <svg className="w-3 h-3 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg></>
+          )}
+        </button>
       </div>
 
-      {categories.length === 0 && !loading && (
-        <div className="py-12 text-center text-gray-400 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+      {/* Empty state */}
+      {parentCategories.length === 0 && (
+        <div className="py-10 text-center text-gray-400 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
           <p className="text-sm">No categories available.</p>
         </div>
       )}
 
-      {/* ── Clean card grid — iHerb style ── */}
-      {categories.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {categories.map((category, idx) => {
-            const colors = getColors(category.color);
-            return (
-              <Link
-                key={category.id}
-                href={`/shop?category=${category.slug}`}
-                className={`
-                  group relative flex flex-col items-center justify-center gap-3
-                  ${colors.bg} ${colors.border}
-                  border rounded-2xl p-5 sm:p-6
-                  hover:shadow-lg hover:-translate-y-1
-                  transition-all duration-250 ease-out
-                  overflow-hidden
-                `}
-                style={{ animationDelay: `${idx * 50}ms` }}
-              >
-                {/* Background accent circle */}
-                <div className={`absolute -top-4 -right-4 w-20 h-20 rounded-full opacity-10 ${colors.accent}`} />
-
-                {/* Category image or icon */}
-                {category.icon ? (
-                  <div className="relative w-16 h-16 flex-shrink-0">
-                    <img
-                      src={getImageUrl(category.icon)}
-                      alt={category.name}
-                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                ) : category.image ? (
-                  <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
-                    <img
-                      src={getImageUrl(category.image)}
-                      alt={category.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                ) : (
-                  <div className={`w-14 h-14 rounded-xl ${colors.bg} border ${colors.border} flex items-center justify-center flex-shrink-0 shadow-sm opacity-50`}>
-                    <CategoryIcon name={category.name} color={colors.text} />
-                  </div>
-                )}
-
-                {/* Name */}
-                <span className={`text-[12px] sm:text-[13px] font-bold ${colors.text} text-center leading-tight relative z-10`}>
-                  {category.name}
-                </span>
-
-                {/* Hover arrow */}
-                <div className={`absolute bottom-2 right-2 w-5 h-5 rounded-full ${colors.accent} opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center`}>
-                  <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </Link>
-            );
-          })}
+      {/* ── DEFAULT VIEW: scrollable row of parent categories ── */}
+      {!showAll && parentCategories.length > 0 && (
+        <div
+          ref={scrollRef}
+          onMouseEnter={pauseScroll}
+          onMouseLeave={resumeScroll}
+          onTouchStart={pauseScroll}
+          onTouchEnd={resumeScroll}
+          className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {parentCategories.map((category, idx) => (
+            <div key={category.id} className="snap-start">
+              <CategoryCard category={category} idx={idx} />
+            </div>
+          ))}
         </div>
       )}
+
+      {/* ── EXPANDED VIEW: grid of all categories ── */}
+      {showAll && (
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+          {loadingAll
+            ? [1,2,3,4,5,6,7,8].map(i => (
+                <div key={i} className="w-24 h-24 bg-gray-50 animate-pulse rounded-2xl border border-gray-100" />
+              ))
+            : allCategories.map((category, idx) => (
+                <CategoryCard key={category.id} category={category} idx={idx} />
+              ))
+          }
+        </div>
+      )}
+
+      {/* Mobile "See All" button */}
+      <div className="mt-4 flex sm:hidden justify-center">
+        <button
+          onClick={handleSeeAll}
+          disabled={loadingAll}
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#009E3C] border border-[#009E3C]/30 rounded-full px-4 py-1.5 hover:bg-[#009E3C]/5"
+        >
+          {loadingAll ? (
+            <span className="w-3 h-3 border-2 border-[#009E3C] border-t-transparent rounded-full animate-spin" />
+          ) : showAll ? "Show Less" : "See All Categories"}
+        </button>
+      </div>
     </section>
   );
 }
