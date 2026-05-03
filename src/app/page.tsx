@@ -154,7 +154,7 @@ export default async function Home() {
 
       {/* ── 1. Hero Carousel ── */}
       <section className="bg-white shadow-sm border-b border-gray-200/80">
-        <div className="max-w-[1500px] mx-auto">
+        <div className="max-w-[1600px] mx-auto">
           <HeroCarousel slides={heroSlides} autoPlay={true} interval={6000} />
         </div>
       </section>
@@ -166,7 +166,7 @@ export default async function Home() {
 
       {/* ── 3. Trust Signals Bar ── */}
       <FadeIn duration={0.8} className="bg-white border-b border-gray-100">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 md:divide-x md:divide-gray-100">
             {trustBadges.map((t, i) => (
               <div key={i} className="flex items-center gap-3 md:px-6 md:first:pl-0 md:last:pr-0">
@@ -186,13 +186,13 @@ export default async function Home() {
       </FadeIn>
 
       {/* ── 5. Three-Column Promo Banners ── */}
-      <FadeIn duration={0.8} className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
+      <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <ThreeColBanners />
       </FadeIn>
 
       {/* ── 6. New Arrivals ── */}
       {latestProducts.length > 0 && (
-        <FadeIn duration={1} className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn duration={1} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Just In" title="New Arrivals" viewAllLink="/shop" />
             <ProductCarousel products={latestProducts} title="New Arrivals" hideHeader viewAllLink="/shop" />
@@ -201,13 +201,13 @@ export default async function Home() {
       )}
 
       {/* ── 7. Brands Section ── */}
-      <FadeIn duration={0.8} className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+      <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
         <BrandsSection />
       </FadeIn>
 
       {/* ── 9. Men's Sexual Health ── */}
       {mensProducts.length > 0 && (
-        <FadeIn direction="left" duration={0.8} className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn direction="left" duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Men's Health" title="Men's Sexual Health" viewAllLink="/shop?category=mens-sexual-health" />
             <ProductCarousel products={mensProducts} title="Men's Sexual Health" hideHeader viewAllLink="/shop?category=mens-sexual-health" />
@@ -217,7 +217,7 @@ export default async function Home() {
 
       {/* ── 10. Women's Sexual Health ── */}
       {womensProducts.length > 0 && (
-        <FadeIn direction="right" duration={0.8} className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn direction="right" duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Women's Health" title="Women's Sexual Health" viewAllLink="/shop?category=womens-sexual-health" />
             <ProductCarousel products={womensProducts} title="Women's Sexual Health" hideHeader viewAllLink="/shop?category=womens-sexual-health" />
@@ -227,7 +227,7 @@ export default async function Home() {
 
       {/* ── 11. Nutritional Supplements ── */}
       {supplementsProducts.length > 0 && (
-        <FadeIn duration={0.8} className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Health & Wellness" title="Nutritional Supplements" viewAllLink="/shop?category=nutritional-supplements" />
             <ProductCarousel products={supplementsProducts} title="Nutritional Supplements" hideHeader viewAllLink="/shop?category=nutritional-supplements" />
@@ -237,7 +237,7 @@ export default async function Home() {
 
       {/* ── 12. Gym & Fitness ── */}
       {fitnessProducts.length > 0 && (
-        <FadeIn duration={0.8} className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Active Living" title="Gym & Fitness" viewAllLink="/shop?category=gym-and-fitness" />
             <ProductCarousel products={fitnessProducts} title="Gym & Fitness" hideHeader viewAllLink="/shop?category=gym-and-fitness" />
@@ -252,7 +252,7 @@ export default async function Home() {
 
       {/* ── 14. Perfumes & Sprays ── */}
       {perfumesProducts.length > 0 && (
-        <FadeIn direction="none" duration={0.8} className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
+        <FadeIn direction="none" duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="bg-white rounded-2xl px-5 py-6 md:px-8 border border-gray-100 shadow-sm">
             <SectionHeading label="Luxury Fragrance" title="Perfumes & Sprays" viewAllLink="/shop?category=perfumes-and-sprays" />
             <ProductCarousel products={perfumesProducts} title="Perfumes & Sprays" hideHeader viewAllLink="/shop?category=perfumes-and-sprays" />
@@ -262,7 +262,7 @@ export default async function Home() {
 
       {/* ── 15. Weight Management ── */}
       {weightProducts.length > 0 && (
-        <FadeIn duration={0.8} className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-4">
+        <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
           <div className="bg-white rounded-2xl px-4 py-5 md:px-6 border border-gray-100 shadow-sm">
             <SectionHeading label="Body Goals" title="Weight Management" viewAllLink="/shop?category=weight-management" />
             <ProductCarousel products={weightProducts} title="Weight Management" hideHeader viewAllLink="/shop?category=weight-management" />
@@ -272,7 +272,7 @@ export default async function Home() {
 
       {/* ── 16. Special Offers ── */}
       {onSaleProducts.length > 0 && (
-        <FadeIn duration={0.8} className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-6">
+        <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-6">
           <div className="bg-white border border-gray-100 rounded-2xl px-5 py-6 md:px-8 shadow-sm">
             <div className="flex items-center justify-between mb-5">
               <div>
@@ -295,7 +295,7 @@ export default async function Home() {
       )}
       
       {/* ── 17. Newsletter CTA ── */}
-      <FadeIn direction="none" duration={0.8} className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-8">
+      <FadeIn direction="none" duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <div className="relative bg-gradient-to-r from-[#009E3C] to-[#007a2e] rounded-2xl overflow-hidden p-8 md:p-12 shadow-lg">
           {/* Decorative blob */}
           <div className="absolute top-0 right-0 bottom-0 w-1/3 opacity-10 pointer-events-none hidden md:block">

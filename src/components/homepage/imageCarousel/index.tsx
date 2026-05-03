@@ -81,7 +81,7 @@ export default function HeroCarousel({
   if (!slides || slides.length === 0) return null;
 
   return (
-    <div className="relative w-full max-w-[1560px] mx-auto px-3 sm:px-5 lg:px-8 py-3 md:py-5">
+    <div className="relative w-full max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-8 py-3 md:py-5">
       {/* ── Main carousel wrapper ── */}
       <div className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-white shadow-[0_8px_40px_rgba(0,0,0,0.10),0_2px_8px_rgba(0,0,0,0.06)] border border-gray-100/70">
 

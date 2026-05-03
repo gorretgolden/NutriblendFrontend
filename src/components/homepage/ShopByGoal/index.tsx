@@ -153,7 +153,7 @@ export default function ShopByGoal() {
 
   return (
     <section className="w-full bg-white border-b border-gray-100 py-6 sm:py-8">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section header */}
         <div className="flex items-end justify-between mb-6 sm:mb-8">
