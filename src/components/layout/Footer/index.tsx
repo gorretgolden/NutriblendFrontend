@@ -230,7 +230,7 @@ const Footer = () => {
 
       {/* ── WhatsApp floating button ── */}
       <a
-        href={`https://wa.me/${settings?.phone?.replace(/\+/g, '') || "256700000000"}`}
+        href={`https://wa.me/${settings?.phone?.replace(/\+/g, '') || "256784640607"}`}
         className="fixed bottom-6 right-4 sm:bottom-8 sm:right-6 z-50 w-12 h-12 sm:w-14 sm:h-14 bg-[#25d366] text-white rounded-2xl flex items-center justify-center text-xl sm:text-2xl shadow-[0_8px_28px_rgba(37,211,102,0.40)] hover:bg-[#1fba59] hover:scale-110 hover:shadow-[0_12px_36px_rgba(37,211,102,0.50)] transition-all duration-250"
         target="_blank"
         rel="noopener noreferrer"

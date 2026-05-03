@@ -9,7 +9,7 @@ const ChatHelp = () => {
         <h3 className="text-gray-600 text-lg font-medium mb-4">Questions about this product?</h3>
         
         <button 
-          onClick={() => window.open('https://wa.me/256700000000', '_blank')}
+          onClick={() => window.open('https://wa.me/256784640607', '_blank')}
           className="flex items-center space-x-3 px-8 py-3 bg-[#009E3C] border-2 border-[#009E3C] text-white rounded-lg hover:bg-[#007a2e] hover:border-[#007a2e] transition-all duration-300 transform group-hover:scale-105"
         >
           <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
