@@ -111,11 +111,10 @@ export default function ShopByGoal() {
   if (parentCategories.length === 0) return null;
 
   const CategoryCardItem = ({ cat }: { cat: any }) => {
-    // Priority: image (Category Image square) -> banner (Banner)
-    let imageUrl = cat.full_image_url || cat.full_banner_url || null;
-    if (!imageUrl) {
-      if (cat.image) imageUrl = getImageUrl(cat.image);
-      else if (cat.banner) imageUrl = getImageUrl(cat.banner);
+    // Only use Category Image, no banner fallback
+    let imageUrl = cat.full_image_url || null;
+    if (!imageUrl && cat.image) {
+      imageUrl = getImageUrl(cat.image);
     }
 
     return (
