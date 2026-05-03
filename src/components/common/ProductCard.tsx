@@ -88,7 +88,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       {/* ── Image Container ── */}
       <Link
         href={`/shop/product/${data.id}/${productSlug}`}
-        className="relative block bg-[#f8f9fa] w-full overflow-hidden h-[220px] sm:h-[240px]"
+        className="relative block bg-white w-full overflow-hidden h-[220px] sm:h-[240px]"
       >
         {/* Quick View Overlay */}
         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
@@ -152,7 +152,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           src={imgSrc}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className={`object-contain transition-all duration-500 ease-out group-hover:scale-[1.07] mix-blend-multiply ${data.gallery && data.gallery.length > 0 ? 'group-hover:opacity-0' : ''}`}
+          className={`object-contain transition-all duration-500 ease-out group-hover:scale-[1.07] ${data.gallery && data.gallery.length > 0 ? 'group-hover:opacity-0' : ''}`}
           alt={data.title}
           priority
           onError={() => setImgSrc('/images/placeholders/product.png')}
@@ -164,7 +164,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
             src={data.gallery[0]}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain transition-all duration-500 ease-out opacity-0 group-hover:opacity-100 group-hover:scale-[1.07] absolute inset-0 mix-blend-multiply"
+            className="object-contain transition-all duration-500 ease-out opacity-0 group-hover:opacity-100 group-hover:scale-[1.07] absolute inset-0"
             alt={`${data.title} alternate view`}
           />
         )}
