@@ -107,10 +107,9 @@ const MyList = () => {
           if (!product) return null;
 
           const imageUrl =
-            // product_images is an array of objects with image_url
-            product.product_images?.[0]?.image_url
+            product.main_image
+            || product.product_images?.[0]?.image_url
             || product.product_images?.[0]?.image_path
-            // images may be a flat array of strings
             || (Array.isArray(product.images) && typeof product.images[0] === 'string' ? product.images[0] : null)
             || product.images?.[0]?.image_url
             || product.images?.[0]?.image_path

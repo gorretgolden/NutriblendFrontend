@@ -90,7 +90,8 @@ export default function ThreeColBanners() {
               fill
               className="object-cover group-hover:scale-[1.04] transition-transform duration-700 ease-out"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/85 via-[#0f172a]/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
 
             <div className="absolute inset-0 flex flex-col justify-end px-7 md:px-9 pb-8 text-white">
               <span
@@ -138,7 +139,8 @@ export default function ThreeColBanners() {
                     fill
                     className="object-cover group-hover:scale-[1.04] transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/80 via-[#0f172a]/35 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
+                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
 
                   <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-8 text-white">
                     <span
@@ -183,7 +185,8 @@ export default function ThreeColBanners() {
                     fill
                     className="object-cover group-hover:scale-[1.04] transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/80 via-[#0f172a]/35 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
+                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
 
                   <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-8 text-white">
                     <span
