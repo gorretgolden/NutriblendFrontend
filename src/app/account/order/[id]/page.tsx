@@ -19,7 +19,7 @@ export default function OrderDetailPage() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await apiClient.getOrderDetails(orderNumber as string);
+        const response = await apiClient.getOrder(orderNumber as string);
         if (response.status && response.data) {
           setOrder(response.data);
         } else {
