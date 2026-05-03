@@ -101,10 +101,7 @@ export default function CartPage() {
                     </div>
                   )}
 
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-500">Shipping</span>
-                    <span className="font-bold text-[#009E3C] uppercase text-[10px] bg-[#f4fcf6] px-2 py-0.5 rounded">Calculated at checkout</span>
-                  </div>
+
 
                   <div className="border-t border-gray-100 pt-4 flex justify-between items-center">
                     <span className="text-lg font-bold text-gray-900">Estimated Total</span>
