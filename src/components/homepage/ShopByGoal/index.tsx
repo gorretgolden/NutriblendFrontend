@@ -2,106 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { apiClient } from "@/lib/api/client";
-
-interface GoalItem {
-  label: string;
-  href: string;
-  color: string;
-  bgColor: string;
-  icon: React.ReactNode;
-}
-
-// Icons extracted from the previous static implementation for reuse
-const Icons = {
-  Vitamins: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
-    </svg>
-  ),
-  MensHealth: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-    </svg>
-  ),
-  WomensHealth: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <circle cx="12" cy="8" r="4" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 12v8m-3-3h6" />
-    </svg>
-  ),
-  Fitness: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-    </svg>
-  ),
-  WeightLoss: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-    </svg>
-  ),
-  Perfumes: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
-    </svg>
-  ),
-  Beauty: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
-    </svg>
-  ),
-  Immune: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-    </svg>
-  ),
-  Heart: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-    </svg>
-  ),
-  Brain: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
-    </svg>
-  ),
-  Default: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-    </svg>
-  )
-};
-
-const getIcon = (name: string, slug: string) => {
-  const n = (name + " " + slug).toLowerCase();
-  if (n.includes('vitamin') || n.includes('mineral') || n.includes('supplement')) return Icons.Vitamins;
-  if (n.includes('men')) return Icons.MensHealth;
-  if (n.includes('women')) return Icons.WomensHealth;
-  if (n.includes('fitness') || n.includes('gym') || n.includes('sport')) return Icons.Fitness;
-  if (n.includes('weight') || n.includes('diet') || n.includes('slim')) return Icons.WeightLoss;
-  if (n.includes('perfume') || n.includes('spray') || n.includes('fragrance') || n.includes('scent')) return Icons.Perfumes;
-  if (n.includes('beauty') || n.includes('skin') || n.includes('care')) return Icons.Beauty;
-  if (n.includes('immune')) return Icons.Immune;
-  if (n.includes('heart')) return Icons.Heart;
-  if (n.includes('brain') || n.includes('focus') || n.includes('memory')) return Icons.Brain;
-  return Icons.Default;
-};
-
-const getColor = (name: string, slug: string) => {
-  const n = (name + " " + slug).toLowerCase();
-  if (n.includes('vitamin')) return { color: "#f97316", bgColor: "#fff7ed" };
-  if (n.includes('men')) return { color: "#3b82f6", bgColor: "#eff6ff" };
-  if (n.includes('women')) return { color: "#ec4899", bgColor: "#fdf2f8" };
-  if (n.includes('fitness')) return { color: "#8b5cf6", bgColor: "#f5f3ff" };
-  if (n.includes('weight')) return { color: "#14b8a6", bgColor: "#f0fdfa" };
-  if (n.includes('perfume')) return { color: "#a855f7", bgColor: "#faf5ff" };
-  if (n.includes('beauty')) return { color: "#f43f5e", bgColor: "#fff1f2" };
-  if (n.includes('immune')) return { color: "#009E3C", bgColor: "#f0fdf4" };
-  if (n.includes('heart')) return { color: "#ef4444", bgColor: "#fef2f2" };
-  if (n.includes('brain')) return { color: "#6366f1", bgColor: "#eef2ff" };
-  return { color: "#64748b", bgColor: "#f8fafc" };
-};
+import { apiClient, getImageUrl } from "@/lib/api/client";
 
 export default function ShopByGoal() {
   const [goals, setGoals] = useState<any[]>([]);
@@ -110,7 +11,7 @@ export default function ShopByGoal() {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const cached = localStorage.getItem('categories_cache_v4');
+        const cached = localStorage.getItem('featured_categories_v2');
         let categories = [];
         
         if (cached) {
@@ -121,39 +22,52 @@ export default function ShopByGoal() {
         }
 
         if (categories.length === 0) {
-          const response = await apiClient.getCategoriesTree();
+          // fetch all categories
+          const response = await apiClient.getCategories();
           if (response.status && response.data) {
-            categories = response.data;
+            const raw = Array.isArray(response.data) ? response.data : (response.data.data || []);
+            categories = raw;
+            localStorage.setItem('featured_categories_v2', JSON.stringify({ data: categories, timestamp: Date.now() }));
           }
         }
 
         if (categories.length > 0) {
-          const mappedGoals = categories
+          // filter by is_featured
+          const featured = categories.filter((cat: any) => cat.is_featured);
+          
+          const mappedGoals = featured
             .slice(0, 8)
             .map((cat: any) => {
-            const { color, bgColor } = getColor(cat.name, cat.slug);
-            return {
-              label: cat.name,
-              href: `/shop?category=${cat.slug}`,
-              color: cat.color || color,
-              bgColor: cat.bgColor || bgColor,
-              imageUrl: cat.full_image_url || cat.full_icon_url || null, // Use full image for banner first
-              fallbackIcon: getIcon(cat.name, cat.slug)
-            };
-          });
+              let imageUrl = cat.full_image_url || cat.full_icon_url || null;
+              if (!imageUrl) {
+                if (cat.image) imageUrl = getImageUrl(cat.image);
+                else if (cat.icon) imageUrl = getImageUrl(cat.icon);
+              }
+
+              return {
+                label: cat.name,
+                href: `/shop?category=${cat.slug}`,
+                imageUrl: imageUrl,
+              };
+            });
           
-          // If no featured categories, fallback to first 6
-          const finalGoals = mappedGoals.length > 0 ? mappedGoals : categories.slice(0, 6).map((cat: any) => {
-            const { color, bgColor } = getColor(cat.name, cat.slug);
-            return {
-              label: cat.name,
-              href: `/shop?category=${cat.slug}`,
-              color: cat.color || color,
-              bgColor: cat.bgColor || bgColor,
-              imageUrl: cat.full_image_url || cat.full_icon_url || null,
-              fallbackIcon: getIcon(cat.name, cat.slug)
-            };
-          });
+          // If no featured categories, fallback to first 6 active parents
+          const finalGoals = mappedGoals.length > 0 
+            ? mappedGoals 
+            : categories.filter((cat: any) => cat.is_active && !cat.parent_id).slice(0, 6).map((cat: any) => {
+                let imageUrl = cat.full_image_url || cat.full_icon_url || null;
+                
+                if (!imageUrl) {
+                  if (cat.image) imageUrl = getImageUrl(cat.image);
+                  else if (cat.icon) imageUrl = getImageUrl(cat.icon);
+                }
+
+                return {
+                  label: cat.name,
+                  href: `/shop?category=${cat.slug}`,
+                  imageUrl: imageUrl,
+                };
+              });
 
           setGoals(finalGoals);
         }
@@ -194,7 +108,7 @@ export default function ShopByGoal() {
         {/* Section header */}
         <div className="flex items-end justify-between mb-8 sm:mb-10">
           <div className="space-y-1">
-            <h2 className="text-[26px] sm:text-[34px] font-[900] text-gray-900 tracking-tight leading-none">Shop by Category</h2>
+            <h2 className="text-[26px] sm:text-[34px] font-[900] text-gray-900 tracking-tight leading-none">Featured Categories</h2>
             <p className="text-gray-500 text-sm sm:text-base font-medium">Explore our premium selection curated just for you.</p>
           </div>
           <Link
@@ -216,10 +130,10 @@ export default function ShopByGoal() {
             <Link
               key={goal.label}
               href={goal.href}
-              className="flex flex-col items-start gap-4 group"
+              className="flex flex-col items-start gap-3 group"
             >
               <div
-                className="w-full aspect-[4/3] rounded-[20px] flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_20px_50px_rgba(0,158,60,0.12)] border border-gray-100 group-hover:border-emerald-200 overflow-hidden bg-[#f8f9fa] relative"
+                className="w-full aspect-square rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_20px_50px_rgba(0,158,60,0.12)] border border-gray-100 group-hover:border-emerald-200 overflow-hidden bg-gray-50 relative"
               >
                 {goal.imageUrl ? (
                   <img 
@@ -228,17 +142,14 @@ export default function ShopByGoal() {
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
                   />
                 ) : (
-                  <div 
-                    className="w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
-                    style={{ color: goal.color, backgroundColor: goal.bgColor }}
-                  >
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-                      {goal.fallbackIcon}
-                    </div>
+                  <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 transition-transform duration-500 group-hover:scale-110">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-10 h-10">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
                   </div>
                 )}
                 {/* Subtle overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
               <div className="space-y-1.5 px-1 w-full text-center sm:text-left">
                 <span className="block text-[14px] sm:text-[16px] font-black text-gray-900 leading-tight group-hover:text-[#009E3C] transition-colors line-clamp-1">
@@ -261,4 +172,3 @@ export default function ShopByGoal() {
     </section>
   );
 }
-
