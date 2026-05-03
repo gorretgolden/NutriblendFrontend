@@ -86,33 +86,27 @@ const PriceSection = () => {
             />
           </div>
 
-          <div className="flex flex-col space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="flex-1">
-                <div className="relative group">
-                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 group-focus-within:text-[#009E3C] transition-colors">MIN</span>
-                   <input 
-                    type="number"
-                    value={minInput}
-                    onChange={(e) => handleInputChange('min', e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-none rounded-xl text-sm font-black text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 transition-all outline-none"
-                    placeholder="0"
-                  />
-                </div>
-              </div>
-              <div className="w-2 h-[2px] bg-gray-200" />
-              <div className="flex-1">
-                <div className="relative group">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 group-focus-within:text-[#009E3C] transition-colors">MAX</span>
-                  <input 
-                    type="number"
-                    value={maxInput}
-                    onChange={(e) => handleInputChange('max', e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-none rounded-xl text-sm font-black text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 transition-all outline-none"
-                    placeholder="2000000"
-                  />
-                </div>
-              </div>
+          <div className="flex flex-col space-y-3">
+            <div className="relative group">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 group-focus-within:text-[#009E3C] transition-colors">MIN</span>
+              <input 
+                type="number"
+                value={minInput}
+                onChange={(e) => handleInputChange('min', e.target.value)}
+                className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-none rounded-xl text-sm font-black text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 transition-all outline-none"
+                placeholder="0"
+              />
+            </div>
+            
+            <div className="relative group">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 group-focus-within:text-[#009E3C] transition-colors">MAX</span>
+              <input 
+                type="number"
+                value={maxInput}
+                onChange={(e) => handleInputChange('max', e.target.value)}
+                className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-none rounded-xl text-sm font-black text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 transition-all outline-none"
+                placeholder="2000000"
+              />
             </div>
 
             <div className="pt-2">

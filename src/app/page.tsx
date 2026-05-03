@@ -131,7 +131,7 @@ function SectionHeading({
       </div>
       <Link
         href={viewAllLink}
-        className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-[#009E3C] hover:text-[#007a2e] transition-colors group border border-[#009E3C]/30 rounded-full px-4 py-1.5 hover:bg-[#009E3C]/5"
+        className="inline-flex items-center gap-1 text-[13px] sm:text-sm font-semibold text-[#009E3C] hover:text-[#007a2e] transition-colors group border border-[#009E3C]/30 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 hover:bg-[#009E3C]/5"
       >
         View all
         <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -177,7 +177,7 @@ export default async function Home() {
                 </div>
                 <div>
                   <p className="font-bold text-gray-900 text-sm leading-tight">{t.title}</p>
-                  <p className="text-gray-400 text-[11px] hidden sm:block">{t.desc}</p>
+                  <p className="text-gray-400 text-[11px] block">{t.desc}</p>
                 </div>
               </div>
             ))}
