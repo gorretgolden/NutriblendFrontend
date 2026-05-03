@@ -8,6 +8,7 @@ import { registerUser } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function RegisterPage() {
     const dispatch = useAppDispatch();
@@ -304,9 +305,9 @@ export default function RegisterPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-9 text-gray-400 hover:text-[#009E3C]"
+                                    className="absolute right-3 top-9 text-gray-400 hover:text-[#009E3C] transition-colors"
                                 >
-                                    {showPassword ? "Hide" : "Show"}
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
                             <div className="relative">
@@ -324,9 +325,9 @@ export default function RegisterPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute right-3 top-9 text-gray-400 hover:text-[#009E3C]"
+                                    className="absolute right-3 top-9 text-gray-400 hover:text-[#009E3C] transition-colors"
                                 >
-                                    {showConfirmPassword ? "Hide" : "Show"}
+                                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
                         </div>

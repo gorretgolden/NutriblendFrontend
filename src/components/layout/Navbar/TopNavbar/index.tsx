@@ -9,7 +9,7 @@ import { apiClient, getImageUrl } from "@/lib/api/client";
 import { toast } from "sonner";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
-import { logoutUser } from "@/lib/features/auth/authSlice";
+import { logoutUser, logout } from "@/lib/features/auth/authSlice";
 import { clearCartLocal } from "@/lib/features/carts/cartsSlice";
 import { clearWishlist } from "@/lib/features/wishlist/wishlistSlice";
 import { useRouter } from "next/navigation";
@@ -162,6 +162,7 @@ const Header = () => {
       router.push("/");
     } catch {
       // Force local logout even if API fails
+      dispatch(logout());
       dispatch(clearCartLocal());
       dispatch(clearWishlist());
       setIsAccountOpen(false);

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import ProductCard from './ProductCard';
 import { Product } from '@/types/product.types';
 
@@ -138,13 +139,16 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {products.map((product, index) => (
-              <div
+              <motion.div
                 key={product.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
                 className="flex-none w-[165px] sm:w-[260px] md:w-[280px] lg:w-[300px] snap-start"
-                style={{ animationDelay: `${index * 80}ms` }}
               >
                 <ProductCard data={product} />
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

@@ -521,6 +521,25 @@ export default function Checkout() {
                     </div>
                   </label>
                 </div>
+
+                {/* Manual Payment Note */}
+                <div className="mt-6 p-4 rounded-xl bg-amber-50 border border-amber-100">
+                  <h3 className="text-sm font-bold text-amber-800 mb-2 flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    Supported Payment Methods
+                  </h3>
+                  <div className="flex flex-wrap gap-3 mb-3">
+                    <span className="px-2 py-1 bg-white rounded border border-amber-200 text-[10px] font-bold text-amber-700">MTN</span>
+                    <span className="px-2 py-1 bg-white rounded border border-amber-200 text-[10px] font-bold text-amber-700">Airtel</span>
+                    <span className="px-2 py-1 bg-white rounded border border-amber-200 text-[10px] font-bold text-amber-700">Visa</span>
+                    <span className="px-2 py-1 bg-white rounded border border-amber-200 text-[10px] font-bold text-amber-700">Cash</span>
+                  </div>
+                  <p className="text-xs text-amber-700 leading-relaxed">
+                    <strong>Note:</strong> We don't handle MTN/Airtel Money directly via the site. If you choose Mobile Money, you must perform the transaction manually to our merchant code provided after confirmation.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -543,7 +562,10 @@ export default function Checkout() {
                   {cart.items.map((item: any, index: number) => (
                     <div key={index} className="flex justify-between items-start text-sm">
                       <div className="flex-1 min-w-0 mr-3">
-                        <span className="text-gray-700 line-clamp-1">{item.name}</span>
+                        <span className="text-gray-700 font-medium line-clamp-1">{item.name}</span>
+                        {item.short_description && (
+                          <p className="text-[10px] text-gray-400 line-clamp-1 mt-0.5">{item.short_description}</p>
+                        )}
                         <span className="text-gray-400 text-xs"> × {item.quantity}</span>
                       </div>
                       <span className="font-semibold text-gray-900 whitespace-nowrap">UGX {(item.price * item.quantity).toLocaleString()}</span>

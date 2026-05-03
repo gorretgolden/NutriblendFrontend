@@ -181,7 +181,7 @@ export default function BrandsPage() {
                       <div className="relative z-10 w-full flex-1 flex items-center justify-center">
                         {brand.image ? (
                           <img
-                            src={getImageUrl(brand.image)}
+                            src={getImageUrl(brand.full_image_url || brand.image || '')}
                             alt={brand.name}
                             className="w-full h-auto max-h-[60px] object-contain filter group-hover:scale-110 transition-all duration-700 ease-out"
                           />

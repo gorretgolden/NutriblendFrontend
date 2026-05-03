@@ -129,6 +129,10 @@ export interface Category {
     slug: string;
     description?: string;
     image_path?: string;
+    image?: string;
+    banner?: string;
+    full_image_url?: string;
+    full_banner_url?: string;
     icon?: string;
     color?: string;
     icon_emoji?: string;
@@ -142,6 +146,7 @@ export interface Brand {
     name: string;
     slug: string;
     image?: string;
+    full_image_url?: string;
     is_active: boolean;
 }
 
@@ -318,6 +323,7 @@ class NutriBlendApiClient {
                     // Keep auth state in sync when backend rejects current auth context
                     localStorage.removeItem('auth_token');
                     localStorage.removeItem('user');
+                    window.dispatchEvent(new CustomEvent('auth-unauthorized'));
                 }
 
                 const contentType = response.headers.get('content-type');

@@ -4,7 +4,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/lib/hooks/redux";
-import { setCredentials } from "@/lib/features/auth/authSlice";
+import { setCredentials, logout } from "@/lib/features/auth/authSlice";
 import { fetchCart } from "@/lib/features/carts/cartsSlice";
 import { fetchWishlist } from "@/lib/features/wishlist/wishlistSlice";
 import { toast } from "sonner";
@@ -46,6 +46,19 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       }
     }
   }, [searchParams, dispatch]);
++
++  // Handle Unauthorized Session
++  useEffect(() => {
++    const handleUnauthorized = () => {
++      dispatch(logout());
++      // Don't toast if we're already on login/register/cart
++      if (!pathname.includes('login') && !pathname.includes('register')) {
++        toast.error("Session expired. Please log in again.");
++      }
++    };
++    window.addEventListener('auth-unauthorized', handleUnauthorized);
++    return () => window.removeEventListener('auth-unauthorized', handleUnauthorized);
++  }, [dispatch, pathname]);
 
   // Fetch cart on mount if authenticated
   useEffect(() => {

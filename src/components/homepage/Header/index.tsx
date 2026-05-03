@@ -13,16 +13,29 @@ const Header = () => {
       <div className="md:max-w-frame mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
         <section className="max-w-frame px-4">
           <motion.h2
-            initial={{ y: "100px", opacity: 0, rotate: 10 }}
-            whileInView={{ y: "0", opacity: 1, rotate: 0 }}
+            initial={{ opacity: 1 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
             className={cn([
               integralCF.className,
               "text-4xl lg:text-[64px] lg:leading-[64px] mb-5 lg:mb-8",
             ])}
           >
-            YOUR PREMIER HUB FOR HEALTH AND WELLNESS
+            {"YOUR PREMIER HUB FOR HEALTH AND WELLNESS".split("").map((char, idx) => (
+              <motion.span
+                key={idx}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ 
+                  duration: 0.01, 
+                  delay: idx * 0.04,
+                  ease: "easeInOut"
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
           </motion.h2>
           <motion.p
             initial={{ y: "100px", opacity: 0 }}

@@ -152,7 +152,10 @@ const authSlice = createSlice({
             state.token = null;
             state.isAuthenticated = false;
             state.error = null;
-            // Clear local storage manually if needed (apiClient does it too)
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user');
+            }
         },
     },
     extraReducers: (builder) => {

@@ -158,10 +158,10 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             {/* Category Header */}
             {selectedCategory ? (
               <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-6">
-                {selectedCategory.image ? (
+                {(selectedCategory.full_banner_url || selectedCategory.banner || selectedCategory.image) ? (
                   <div className="relative h-[200px] sm:h-[260px] w-full overflow-hidden">
                     <img 
-                      src={getImageUrl(selectedCategory.image)} 
+                      src={getImageUrl(selectedCategory.full_banner_url || selectedCategory.banner || selectedCategory.image)} 
                       alt={selectedCategory.name} 
                       className="w-full h-full object-cover" 
                     />

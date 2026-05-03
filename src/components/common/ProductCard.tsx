@@ -16,7 +16,7 @@ type ProductCardProps = {
 };
 
 const ProductCard = ({ data }: ProductCardProps) => {
-  const [imgSrc, setImgSrc] = React.useState(data.srcUrl || '/images/placeholders/product.png');
+  const [imgSrc, setImgSrc] = React.useState(data.srcUrl || '/images/placeholder.jpg');
   const dispatch = useAppDispatch();
   const router = useRouter();
   const hasDiscount = (data.discount?.percentage ?? 0) > 0 || (data.discount?.amount ?? 0) > 0;
@@ -88,7 +88,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       {/* ── Image Container ── */}
       <Link
         href={`/shop/product/${data.id}/${productSlug}`}
-        className="relative block bg-white w-full overflow-hidden h-[220px] sm:h-[240px]"
+        className="relative block bg-white w-full overflow-hidden h-[180px] sm:h-[220px] md:h-[240px]"
       >
         {/* Quick View Overlay */}
         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
@@ -155,7 +155,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           className={`object-cover transition-all duration-700 ease-out group-hover:scale-[1.12] ${data.gallery && data.gallery.length > 0 ? 'group-hover:opacity-0' : ''}`}
           alt={data.title}
           priority
-          onError={() => setImgSrc('/images/placeholders/product.png')}
+          onError={() => setImgSrc('/images/placeholder.jpg')}
         />
 
         {/* Secondary Hover Image */}
