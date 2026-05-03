@@ -21,6 +21,7 @@ if (!isDev && isLocalUrl(API_BASE_URL)) {
 if (isDev && isServer && API_BASE_URL.includes('localhost')) {
     API_BASE_URL = API_BASE_URL.replace('localhost', '127.0.0.1');
 }
+
 // ==================== Type Definitions ====================
 
 export interface ApiResponse<T = any> {

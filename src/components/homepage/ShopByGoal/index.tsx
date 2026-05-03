@@ -1,182 +1,105 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { apiClient } from "@/lib/api/client";
-
-interface GoalItem {
-  label: string;
-  href: string;
-  color: string;
-  bgColor: string;
-  icon: React.ReactNode;
-}
-
-// Icons extracted from the previous static implementation for reuse
-const Icons = {
-  Vitamins: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
-    </svg>
-  ),
-  MensHealth: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-    </svg>
-  ),
-  WomensHealth: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <circle cx="12" cy="8" r="4" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 12v8m-3-3h6" />
-    </svg>
-  ),
-  Fitness: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-    </svg>
-  ),
-  WeightLoss: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-    </svg>
-  ),
-  Perfumes: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
-    </svg>
-  ),
-  Beauty: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
-    </svg>
-  ),
-  Immune: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-    </svg>
-  ),
-  Heart: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-    </svg>
-  ),
-  Brain: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
-    </svg>
-  ),
-  Default: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-    </svg>
-  )
-};
-
-const getIcon = (name: string, slug: string) => {
-  const n = (name + " " + slug).toLowerCase();
-  if (n.includes('vitamin') || n.includes('mineral') || n.includes('supplement')) return Icons.Vitamins;
-  if (n.includes('men')) return Icons.MensHealth;
-  if (n.includes('women')) return Icons.WomensHealth;
-  if (n.includes('fitness') || n.includes('gym') || n.includes('sport')) return Icons.Fitness;
-  if (n.includes('weight') || n.includes('diet') || n.includes('slim')) return Icons.WeightLoss;
-  if (n.includes('perfume') || n.includes('spray') || n.includes('fragrance') || n.includes('scent')) return Icons.Perfumes;
-  if (n.includes('beauty') || n.includes('skin') || n.includes('care')) return Icons.Beauty;
-  if (n.includes('immune')) return Icons.Immune;
-  if (n.includes('heart')) return Icons.Heart;
-  if (n.includes('brain') || n.includes('focus') || n.includes('memory')) return Icons.Brain;
-  return Icons.Default;
-};
-
-const getColor = (name: string, slug: string) => {
-  const n = (name + " " + slug).toLowerCase();
-  if (n.includes('vitamin')) return { color: "#f97316", bgColor: "#fff7ed" };
-  if (n.includes('men')) return { color: "#3b82f6", bgColor: "#eff6ff" };
-  if (n.includes('women')) return { color: "#ec4899", bgColor: "#fdf2f8" };
-  if (n.includes('fitness')) return { color: "#8b5cf6", bgColor: "#f5f3ff" };
-  if (n.includes('weight')) return { color: "#14b8a6", bgColor: "#f0fdfa" };
-  if (n.includes('perfume')) return { color: "#a855f7", bgColor: "#faf5ff" };
-  if (n.includes('beauty')) return { color: "#f43f5e", bgColor: "#fff1f2" };
-  if (n.includes('immune')) return { color: "#009E3C", bgColor: "#f0fdf4" };
-  if (n.includes('heart')) return { color: "#ef4444", bgColor: "#fef2f2" };
-  if (n.includes('brain')) return { color: "#6366f1", bgColor: "#eef2ff" };
-  return { color: "#64748b", bgColor: "#f8fafc" };
-};
+import { apiClient, getImageUrl } from "@/lib/api/client";
 
 export default function ShopByGoal() {
-  const [goals, setGoals] = useState<any[]>([]);
+  const [parentCategories, setParentCategories] = useState<any[]>([]);
+  const [allCategories, setAllCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
+  const [loadingAll, setLoadingAll] = useState(false);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const autoScrollId = useRef<ReturnType<typeof setInterval> | null>(null);
+  const autoStartId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const fetchGoals = async () => {
+    const fetchCategories = async () => {
       try {
-        const cached = localStorage.getItem('categories_cache_v4');
-        let categories = [];
-        
+        const cached = localStorage.getItem('homepage_parent_categories_v4');
         if (cached) {
-          const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 2 * 60 * 1000) {
-            categories = data;
+          const parsed = JSON.parse(cached);
+          if (parsed?.cats?.length > 0 && Date.now() - parsed.ts < 5 * 60 * 1000) {
+            setParentCategories(parsed.cats);
+            setLoading(false);
           }
         }
 
-        if (categories.length === 0) {
-          const response = await apiClient.getCategoriesTree();
-          if (response.status && response.data) {
-            categories = response.data;
+        const response = await apiClient.getCategoriesTree();
+        if (response.status) {
+          const raw: any = response.data;
+          const cats = Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
+          if (cats.length > 0) {
+            setParentCategories(cats);
+            localStorage.setItem('homepage_parent_categories_v4', JSON.stringify({ cats, ts: Date.now() }));
           }
         }
-
-        if (categories.length > 0) {
-          const mappedGoals = categories
-            .slice(0, 8)
-            .map((cat: any) => {
-            const { color, bgColor } = getColor(cat.name, cat.slug);
-            return {
-              label: cat.name,
-              href: `/shop?category=${cat.slug}`,
-              color: cat.color || color,
-              bgColor: cat.bgColor || bgColor,
-              imageUrl: cat.full_image_url || cat.full_icon_url || null, // Use full image for banner first
-              fallbackIcon: getIcon(cat.name, cat.slug)
-            };
-          });
-          
-          // If no featured categories, fallback to first 6
-          const finalGoals = mappedGoals.length > 0 ? mappedGoals : categories.slice(0, 6).map((cat: any) => {
-            const { color, bgColor } = getColor(cat.name, cat.slug);
-            return {
-              label: cat.name,
-              href: `/shop?category=${cat.slug}`,
-              color: cat.color || color,
-              bgColor: cat.bgColor || bgColor,
-              imageUrl: cat.full_image_url || cat.full_icon_url || null,
-              fallbackIcon: getIcon(cat.name, cat.slug)
-            };
-          });
-
-          setGoals(finalGoals);
-        }
-      } catch (error) {
-        console.error("Failed to fetch goals", error);
+      } catch (err) {
+        console.error("Failed to fetch categories", err);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchGoals();
+    fetchCategories();
   }, []);
 
-  if (loading && goals.length === 0) {
+  const startAutoScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    autoScrollId.current = setInterval(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+      if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 2) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: 160, behavior: "smooth" }); // scroll by approximately one card
+      }
+    }, 2000); // every 2s
+  }, []);
+
+  useEffect(() => {
+    autoStartId.current = setTimeout(startAutoScroll, 60_000); // 1 minute
+    return () => {
+      if (autoStartId.current) clearTimeout(autoStartId.current);
+      if (autoScrollId.current) clearInterval(autoScrollId.current);
+    };
+  }, [startAutoScroll]);
+
+  const pauseScroll = () => {
+    if (autoScrollId.current) { clearInterval(autoScrollId.current); autoScrollId.current = null; }
+  };
+  const resumeScroll = () => {
+    if (!autoScrollId.current) startAutoScroll();
+  };
+
+  const handleSeeAll = async () => {
+    if (showAll) { setShowAll(false); return; }
+    if (allCategories.length > 0) { setShowAll(true); return; }
+
+    setLoadingAll(true);
+    try {
+      const response = await apiClient.getCategories();
+      if (response.status) {
+        const raw: any = response.data;
+        const cats = Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
+        setAllCategories(cats);
+      }
+    } catch {}
+    setLoadingAll(false);
+    setShowAll(true);
+  };
+
+  if (loading && parentCategories.length === 0) {
     return (
-      <div className="w-full bg-white py-6 animate-pulse">
+      <div className="w-full bg-white py-6 animate-pulse border-b border-gray-100">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
           <div className="h-8 w-64 bg-gray-100 rounded-lg mb-6" />
-          <div className="flex gap-6 overflow-hidden">
+          <div className="flex gap-4 overflow-hidden">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="flex flex-col items-start gap-4 flex-none w-[calc(50%-12px)] sm:w-[calc(33.333%-16px)] md:w-[calc(25%-18px)] lg:w-[calc(16.666%-20px)]">
-                <div className="w-full aspect-[4/3] rounded-[20px] bg-gray-100" />
-                <div className="h-4 w-24 bg-gray-100 rounded" />
+              <div key={i} className="flex flex-col flex-none w-[160px] sm:w-[180px]">
+                <div className="w-full aspect-[5/4] rounded-t-2xl bg-gray-100" />
+                <div className="h-10 w-full bg-gray-50 rounded-b-2xl border-t border-gray-100" />
               </div>
             ))}
           </div>
@@ -185,69 +108,116 @@ export default function ShopByGoal() {
     );
   }
 
-  if (goals.length === 0) return null;
+  if (parentCategories.length === 0) return null;
+
+  const CategoryCardItem = ({ cat }: { cat: any }) => {
+    // Only use Category Image, no banner fallback
+    let imageUrl = cat.full_image_url || null;
+    if (!imageUrl && cat.image) {
+      imageUrl = getImageUrl(cat.image);
+    }
+
+    return (
+      <Link
+        href={`/shop?category=${cat.slug}`}
+        className="flex flex-col group border border-gray-100 rounded-2xl overflow-hidden hover:shadow-[0_12px_28px_rgba(0,158,60,0.08)] hover:border-emerald-200 transition-all duration-300 hover:-translate-y-1 bg-white h-full"
+      >
+        <div className="w-full aspect-[5/4] bg-[#f8f9fa] flex items-center justify-center relative overflow-hidden">
+          {imageUrl ? (
+            <img 
+              src={imageUrl} 
+              alt={cat.name} 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.parentElement?.classList.add('fallback-bg');
+              }}
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-300">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-10 h-10 mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        </div>
+        <div className="w-full bg-[#f1f5f9] py-3 px-2 flex items-center justify-center border-t border-gray-100 mt-auto">
+          <span className="block text-[13.5px] sm:text-[14.5px] font-[800] text-gray-700 leading-tight group-hover:text-[#009E3C] transition-colors text-center line-clamp-1">
+            {cat.name}
+          </span>
+        </div>
+      </Link>
+    );
+  };
 
   return (
     <section className="w-full bg-white border-b border-gray-100 py-6 sm:py-8">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
 
         {/* Section header */}
-        <div className="flex items-end justify-between mb-8 sm:mb-10">
+        <div className="flex items-end justify-between mb-6 sm:mb-8">
           <div className="space-y-1">
             <h2 className="text-[26px] sm:text-[34px] font-[900] text-gray-900 tracking-tight leading-none">Shop by Category</h2>
             <p className="text-gray-500 text-sm sm:text-base font-medium">Explore our premium selection curated just for you.</p>
           </div>
-          <Link
-            href="/shop"
+          <button
+            onClick={handleSeeAll}
+            disabled={loadingAll}
             className="hidden sm:inline-flex items-center gap-2.5 text-[15px] font-extrabold text-[#009E3C] hover:text-[#007a2e] transition-all group px-5 py-2.5 bg-emerald-50 rounded-full hover:bg-emerald-100"
           >
-            See All Categories
-            <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
+            {loadingAll ? (
+              <span className="w-4 h-4 border-2 border-[#009E3C] border-t-transparent rounded-full animate-spin" />
+            ) : showAll ? (
+              <>Show Less</>
+            ) : (
+              <>
+                See All Categories
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+                </svg>
+              </>
+            )}
+          </button>
         </div>
 
         {/* Dynamic Category List */}
-        <div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6"
-        >
-          {goals.map((goal) => (
-            <Link
-              key={goal.label}
-              href={goal.href}
-              className="flex flex-col items-start gap-4 group"
-            >
-              <div
-                className="w-full aspect-[4/3] rounded-[20px] flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_20px_50px_rgba(0,158,60,0.12)] border border-gray-100 group-hover:border-emerald-200 overflow-hidden bg-[#f8f9fa] relative"
-              >
-                {goal.imageUrl ? (
-                  <img 
-                    src={goal.imageUrl} 
-                    alt={goal.label} 
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
-                  />
-                ) : (
-                  <div 
-                    className="w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
-                    style={{ color: goal.color, backgroundColor: goal.bgColor }}
-                  >
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-                      {goal.fallbackIcon}
-                    </div>
-                  </div>
-                )}
-                {/* Subtle overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        {!showAll ? (
+          <div
+            ref={scrollRef}
+            onMouseEnter={pauseScroll}
+            onMouseLeave={resumeScroll}
+            onTouchStart={pauseScroll}
+            onTouchEnd={resumeScroll}
+            className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {parentCategories.map((cat) => (
+              <div key={cat.id} className="snap-start flex-none w-[160px] sm:w-[180px]">
+                <CategoryCardItem cat={cat} />
               </div>
-              <div className="space-y-1.5 px-1 w-full text-center sm:text-left">
-                <span className="block text-[14px] sm:text-[16px] font-black text-gray-900 leading-tight group-hover:text-[#009E3C] transition-colors line-clamp-1">
-                  {goal.label}
-                </span>
-              </div>
-            </Link>
-          ))}
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4">
+            {(allCategories.length > 0 ? allCategories : parentCategories).map((cat) => (
+              <CategoryCardItem key={cat.id} cat={cat} />
+            ))}
+          </div>
+        )}
+
+        <div className="mt-4 flex sm:hidden justify-center">
+          <button
+            onClick={handleSeeAll}
+            disabled={loadingAll}
+            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#009E3C] border border-[#009E3C]/30 rounded-full px-5 py-2 hover:bg-[#009E3C]/5"
+          >
+            {loadingAll ? (
+              <span className="w-4 h-4 border-2 border-[#009E3C] border-t-transparent rounded-full animate-spin" />
+            ) : showAll ? "Show Less" : "See All Categories"}
+          </button>
         </div>
+
       </div>
 
       <style jsx>{`
@@ -257,8 +227,10 @@ export default function ShopByGoal() {
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
       `}</style>
     </section>
   );
 }
-
