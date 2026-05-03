@@ -111,15 +111,11 @@ export default function ShopByGoal() {
   if (parentCategories.length === 0) return null;
 
   const CategoryCardItem = ({ cat }: { cat: any }) => {
-    let imageUrl = cat.full_image_url || cat.full_icon_url || null;
+    // Priority: icon (Category Image square) -> image (Banner)
+    let imageUrl = cat.full_icon_url || cat.full_image_url || null;
     if (!imageUrl) {
-      if (cat.image) imageUrl = getImageUrl(cat.image);
-      else if (cat.icon) imageUrl = getImageUrl(cat.icon);
-    }
-    
-    // Default placeholder if no image exists
-    if (!imageUrl) {
-      imageUrl = '/images/placeholders/category.png';
+      if (cat.icon) imageUrl = getImageUrl(cat.icon);
+      else if (cat.image) imageUrl = getImageUrl(cat.image);
     }
 
     return (
@@ -127,15 +123,24 @@ export default function ShopByGoal() {
         href={`/shop?category=${cat.slug}`}
         className="flex flex-col group border border-gray-100 rounded-2xl overflow-hidden hover:shadow-[0_12px_28px_rgba(0,158,60,0.08)] hover:border-emerald-200 transition-all duration-300 hover:-translate-y-1 bg-white h-full"
       >
-        <div className="w-full aspect-[5/4] bg-[#f8f9fa] flex items-center justify-center p-3 sm:p-5 relative overflow-hidden">
-          <img 
-            src={imageUrl} 
-            alt={cat.name} 
-            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 mix-blend-multiply" 
-            onError={(e) => {
-              e.currentTarget.src = '/images/placeholders/category.png';
-            }}
-          />
+        <div className="w-full aspect-[5/4] bg-[#f8f9fa] flex items-center justify-center relative overflow-hidden">
+          {imageUrl ? (
+            <img 
+              src={imageUrl} 
+              alt={cat.name} 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.parentElement?.classList.add('fallback-bg');
+              }}
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-300">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-10 h-10 mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </div>
         <div className="w-full bg-[#f1f5f9] py-3 px-2 flex items-center justify-center border-t border-gray-100 mt-auto">
