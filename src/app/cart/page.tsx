@@ -95,21 +95,24 @@ export default function CartPage() {
                   </div>
 
                   {(totalPrice - adjustedTotalPrice > 0) && (
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-500">Discount ({Math.round(((totalPrice - adjustedTotalPrice) / totalPrice) * 100)}%)</span>
-                      <span className="font-bold text-[#E53935]">-UGX {Math.round(totalPrice - adjustedTotalPrice).toLocaleString()}</span>
+                    <div className="bg-[#009E3C]/5 border border-[#009E3C]/20 rounded-xl p-3 mb-2 shadow-sm">
+                      <div className="flex justify-between items-center text-sm">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-[#009E3C] text-white flex items-center justify-center">
+                            <MdOutlineLocalOffer className="text-xs" />
+                          </div>
+                          <span className="text-[#009E3C] font-bold">Discount Savings ({Math.round(((totalPrice - adjustedTotalPrice) / totalPrice) * 100)}%)</span>
+                        </div>
+                        <span className="font-black text-[#009E3C]">-UGX {Math.round(totalPrice - adjustedTotalPrice).toLocaleString()}</span>
+                      </div>
                     </div>
                   )}
 
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-500">Shipping</span>
-                    <span className="font-bold text-[#009E3C] uppercase text-[10px] bg-[#f4fcf6] px-2 py-0.5 rounded">Calculated at checkout</span>
-                  </div>
 
                   <div className="border-t border-gray-100 pt-4 flex justify-between items-center">
                     <span className="text-lg font-bold text-gray-900">Estimated Total</span>
                     <div className="text-right">
-                      <span className="text-2xl font-black text-gray-900">UGX {Math.round(adjustedTotalPrice).toLocaleString()}</span>
+                      <span className="text-2xl font-black text-gray-900">UGX {Math.round(adjustedTotalPrice - discountAmount).toLocaleString()}</span>
                       <p className="text-[10px] text-gray-400 font-medium">VAT Included</p>
                     </div>
                   </div>
@@ -162,7 +165,9 @@ export default function CartPage() {
                     sessionStorage.setItem('checkoutCart', JSON.stringify({
                       items: cart.items,
                       totalPrice,
-                      adjustedTotalPrice
+                      adjustedTotalPrice,
+                      discountCode: promoApplied ? promoCode : null,
+                      discountAmount: discountAmount
                     }));
                     router.push('/cart/checkout');
                   }}
