@@ -32,6 +32,24 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   const [checkoutErrors, setCheckoutErrors] = useState<Record<string, string | undefined>>({});
+  const [isPreloaded, setIsPreloaded] = useState(false);
+
+  // Load pre-applied discount from cart
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !isPreloaded) {
+      const savedCart = sessionStorage.getItem('checkoutCart');
+      if (savedCart) {
+        try {
+          const data = JSON.parse(savedCart);
+          if (data.discountCode) setDiscountCode(data.discountCode);
+          if (data.discountAmount) setDiscountAmount(data.discountAmount);
+          setIsPreloaded(true);
+        } catch (e) {
+          console.error("Error parsing checkoutCart", e);
+        }
+      }
+    }
+  }, [isPreloaded]);
 
   // Check authentication — wait for auth to load, also check localStorage as fallback
   useEffect(() => {
@@ -584,18 +602,35 @@ export default function Checkout() {
                     })}
                   </div>
 
-                  <div className="border-t border-gray-100 pt-4 space-y-2.5 mb-5">
+                  <div className="border-t border-gray-100 pt-4 space-y-3 mb-5">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Subtotal</span>
-                      <span className="font-medium text-gray-900">UGX {subtotal.toLocaleString()}</span>
+                      <span className="font-medium text-gray-900 line-through decoration-gray-400 decoration-1">UGX {(useAppSelector((state) => state.carts.totalPrice) || subtotal).toLocaleString()}</span>
                     </div>
+
+                    {((useAppSelector((state) => state.carts.totalPrice) || 0) - subtotal > 0) && (
+                      <div className="flex justify-between text-sm text-[#009E3C] font-medium bg-green-50/50 px-3 py-1.5 rounded-lg border border-green-100">
+                        <span>Store Discount</span>
+                        <span>-UGX {((useAppSelector((state) => state.carts.totalPrice) || 0) - subtotal).toLocaleString()}</span>
+                      </div>
+                    )}
+
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600 font-semibold">Adjusted Subtotal</span>
+                      <span className="font-bold text-gray-900">UGX {subtotal.toLocaleString()}</span>
+                    </div>
+
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Delivery Fee</span>
                       <span className="font-medium text-gray-900">{deliveryMethod === 'pickup' ? 'Free (Pickup)' : deliveryFee > 0 ? `UGX ${deliveryFee.toLocaleString()}` : 'Free'}</span>
                     </div>
+
                     {discountAmount > 0 && (
-                      <div className="flex justify-between text-sm text-[#009E3C]">
-                        <span>Discount</span>
+                      <div className="flex justify-between text-sm text-[#009E3C] font-bold animate-pulse bg-green-50 px-3 py-2 rounded-lg border-2 border-green-200 shadow-sm">
+                        <span className="flex items-center gap-1.5">
+                          <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd"></path></svg>
+                          Promo Code Applied
+                        </span>
                         <span>-UGX {discountAmount.toLocaleString()}</span>
                       </div>
                     )}

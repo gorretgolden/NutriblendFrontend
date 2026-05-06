@@ -6,7 +6,7 @@ const nextConfig = {
   reactStrictMode: true,
   
   // Keep static export for cPanel flows, but allow full SSR/ISR on Vercel.
-  output: isVercel ? undefined : 'export',
+ // output: isVercel ? undefined : 'export',
 
   // Image Optimization
   images: {
@@ -16,6 +16,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'admin.rasmuspharmaceuticals.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
       },
       {
         protocol: 'https',

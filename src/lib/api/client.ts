@@ -203,7 +203,7 @@ export interface Order {
     id: number;
     order_number: string;
     user_id: number;
-    status: 'pending' | 'processing' | 'completed' | 'cancelled';
+    status: 'pending' | 'approved' | 'completed' | 'incomplete' | 'rejected';
     subtotal: number;
     delivery_fee: number;
     discount_amount: number;

@@ -42,9 +42,10 @@ export default function OrderDetailPage() {
   const getStatusInfo = (status: string) => {
     switch (status?.toLowerCase()) {
       case "pending": return { label: "Pending", color: "text-yellow-600 bg-yellow-50 border-yellow-100", icon: <FiClock /> };
-      case "processing": return { label: "Processing", color: "text-blue-600 bg-blue-50 border-blue-100", icon: <FiTruck /> };
+      case "approved": return { label: "Approved", color: "text-blue-600 bg-blue-50 border-blue-100", icon: <FiTruck /> };
       case "completed": case "delivered": return { label: "Completed", color: "text-green-600 bg-green-50 border-green-100", icon: <FiCheckCircle /> };
-      case "cancelled": return { label: "Cancelled", color: "text-red-600 bg-red-50 border-red-100", icon: <FiXCircle /> };
+      case "rejected": return { label: "Rejected", color: "text-red-600 bg-red-50 border-red-100", icon: <FiXCircle /> };
+      case "incomplete": return { label: "Incomplete", color: "text-gray-600 bg-gray-50 border-gray-100", icon: <FiPackage /> };
       default: return { label: status, color: "text-gray-600 bg-gray-50 border-gray-100", icon: <FiPackage /> };
     }
   };
@@ -114,7 +115,10 @@ export default function OrderDetailPage() {
                   <div key={idx} className="flex gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
                     <div className="w-16 h-16 rounded-lg bg-gray-100 flex-shrink-0 overflow-hidden border border-gray-100">
                       <img 
-                        src={getImageUrl(item.product?.product_images?.[0]?.image_url || item.product?.images?.[0])} 
+                        src={getImageUrl(
+                          item.product?.product_images?.[0]?.image_url || 
+                          (typeof item.product?.images?.[0] === 'string' ? item.product?.images?.[0] : item.product?.images?.[0]?.image_url)
+                        )} 
                         alt={item.product?.name}
                         className="w-full h-full object-contain"
                       />
@@ -203,7 +207,7 @@ export default function OrderDetailPage() {
                </div>
             </div>
 
-            {order.status === 'pending' && (
+            {['pending', 'approved', 'incomplete'].includes(order.status) && (
               <button 
                 className="w-full mt-6 py-3 px-4 bg-white border border-red-200 text-red-600 rounded-xl text-sm font-bold hover:bg-red-50 transition-colors"
                 onClick={() => {
@@ -220,7 +224,7 @@ export default function OrderDetailPage() {
             )}
 
             <Link
-              href="https://api.whatsapp.com/send/?phone=256784640607&text=Hello, I have an inquiry about my order #" + order.order_number
+              href={`https://api.whatsapp.com/send/?phone=256784640607&text=${encodeURIComponent(`Hello, I have an inquiry about my order #${order.order_number}`)}`}
               target="_blank"
               className="w-full mt-3 py-3 px-4 bg-[#009E3C] text-white rounded-xl text-sm font-bold hover:bg-[#00752C] transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-100"
             >

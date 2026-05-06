@@ -65,11 +65,13 @@ function transformBackendCart(backendCart: any): { cart: Cart; totalPrice: numbe
   }));
 
   const totalQuantities = items.length;
-  const totalPrice = Number(backendCart.total || backendCart.subtotal || items.reduce((sum, item) => sum + item.price * item.quantity, 0));
+  const adjustedTotalPrice = Number(backendCart.total || backendCart.subtotal || items.reduce((sum, item) => sum + item.price * item.quantity, 0));
+  const totalPrice = Number(backendCart.original_total || adjustedTotalPrice);
 
   return {
     cart: { items, totalQuantities },
     totalPrice,
+    adjustedTotalPrice,
   };
 }
 
@@ -307,10 +309,10 @@ export const cartsSlice = createSlice({
     builder.addCase(fetchCart.fulfilled, (state, action: any) => {
       state.isLoading = false;
       state.isSynced = true;
-      const { cart, totalPrice } = transformBackendCart(action.payload);
+      const { cart, totalPrice, adjustedTotalPrice } = transformBackendCart(action.payload);
       state.cart = cart;
       state.totalPrice = totalPrice;
-      state.adjustedTotalPrice = totalPrice;
+      state.adjustedTotalPrice = adjustedTotalPrice;
     });
     builder.addCase(fetchCart.rejected, (state, action) => {
       state.isLoading = false;
@@ -326,10 +328,10 @@ export const cartsSlice = createSlice({
       state.isLoading = false;
       if (action.payload.backend && action.payload.backendCart) {
         // Immediately update local state from backend response
-        const { cart, totalPrice } = transformBackendCart(action.payload.backendCart);
+        const { cart, totalPrice, adjustedTotalPrice } = transformBackendCart(action.payload.backendCart);
         state.cart = cart;
         state.totalPrice = totalPrice;
-        state.adjustedTotalPrice = totalPrice;
+        state.adjustedTotalPrice = adjustedTotalPrice;
         state.isSynced = true;
       }
       // Local cart is already updated by dispatch(addToCartLocal) for guests
@@ -352,10 +354,10 @@ export const cartsSlice = createSlice({
     builder.addCase(removeFromCart.fulfilled, (state, action: any) => {
       state.isLoading = false;
       if (action.payload.backend && action.payload.backendCart) {
-        const { cart, totalPrice } = transformBackendCart(action.payload.backendCart);
+        const { cart, totalPrice, adjustedTotalPrice } = transformBackendCart(action.payload.backendCart);
         state.cart = cart;
         state.totalPrice = totalPrice;
-        state.adjustedTotalPrice = totalPrice;
+        state.adjustedTotalPrice = adjustedTotalPrice;
         state.isSynced = true;
       } else if (!action.payload.backend) {
         // Local cart already updated by dispatch(removeFromCartLocal)
@@ -367,10 +369,10 @@ export const cartsSlice = createSlice({
     builder.addCase(updateCartItemAsync.fulfilled, (state, action: any) => {
       state.isLoading = false;
       if (action.payload.backend && action.payload.backendCart) {
-        const { cart, totalPrice } = transformBackendCart(action.payload.backendCart);
+        const { cart, totalPrice, adjustedTotalPrice } = transformBackendCart(action.payload.backendCart);
         state.cart = cart;
         state.totalPrice = totalPrice;
-        state.adjustedTotalPrice = totalPrice;
+        state.adjustedTotalPrice = adjustedTotalPrice;
         state.isSynced = true;
       } else if (!action.payload.backend) {
         const { itemId, quantity } = action.payload;
