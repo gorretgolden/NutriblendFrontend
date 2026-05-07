@@ -70,9 +70,8 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, "");
-    window.location.href = `${baseUrl}/auth/google/redirect`;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+    window.location.href = `${apiUrl}/auth/google/redirect`;
   };
 
   return (

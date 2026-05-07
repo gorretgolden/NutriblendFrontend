@@ -136,7 +136,7 @@ export default function RegisterPage() {
             first_name: formData.firstName,
             last_name: formData.lastName,
             email: formData.email,
-            phone: formData.phone,
+            phone: `+256${formData.phone.replace(/^(\+256|256|0)/, '')}`,
             password: formData.password,
             password_confirmation: formData.confirmPassword,
             region_id: formData.region_id ? Number(formData.region_id) : undefined,
@@ -154,9 +154,8 @@ export default function RegisterPage() {
     };
 
     const handleGoogleSignup = () => {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-        const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, "");
-        window.location.href = `${baseUrl}/auth/google/redirect`;
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+        window.location.href = `${apiUrl}/auth/google/redirect`;
     };
 
     return (
