@@ -49,7 +49,14 @@ export default function Checkout() {
       router.push('/cart');
       return;
     }
-  }, [isAuthenticated, authLoading, cart, cartLoading, router]);
+
+    // Pre-populate location from user profile
+    if (user && !selectedRegion && !selectedTown && !address) {
+      if (user.delivery_region_id) setSelectedRegion(user.delivery_region_id);
+      if (user.delivery_town_id) setSelectedTown(user.delivery_town_id);
+      if (user.delivery_address) setAddress(user.delivery_address);
+    }
+  }, [isAuthenticated, authLoading, cart, cartLoading, router, user, selectedRegion, selectedTown, address]);
 
   // Fetch regions
   useEffect(() => {
@@ -568,7 +575,7 @@ export default function Checkout() {
                   {/* Items */}
                   <div className="space-y-3 mb-5">
                     {cart.items.map((item: any, index: number) => {
-                      const itemPrice = Number(item.price || item.product?.price || 0);
+                      const itemPrice = Number(item.unit_price || item.price || item.product?.price || 0);
                       return (
                       <div key={index} className="flex justify-between items-start text-sm">
                         <div className="flex-1 min-w-0 mr-3">

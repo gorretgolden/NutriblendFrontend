@@ -56,7 +56,7 @@ function transformBackendCart(backendCart: any): { cart: Cart; totalPrice: numbe
         ? getImageUrl(firstImg)
         : getImageUrl(firstImg.image_path || firstImg.image_url || "");
     })(),
-    price: Number(item.price || item.product?.price || 0),
+    price: Number(item.unit_price || item.price || item.product?.price || 0),
     quantity: Number(item.quantity),
     product_id: item.product_id,
     variation_id: item.variation_id,
