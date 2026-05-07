@@ -220,7 +220,7 @@ export default function OrderDetailPage() {
             )}
 
             <Link
-              href="https://api.whatsapp.com/send/?phone=256784640607&text=Hello, I have an inquiry about my order #" + order.order_number
+              href={`https://api.whatsapp.com/send/?phone=256784640607&text=Hello, I have an inquiry about my order #${order.order_number}`}
               target="_blank"
               className="w-full mt-3 py-3 px-4 bg-[#009E3C] text-white rounded-xl text-sm font-bold hover:bg-[#00752C] transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-100"
             >
