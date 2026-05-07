@@ -179,7 +179,7 @@ const Footer = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                   </div>
-                  <span className="text-gray-500 text-sm">{settings?.phone || "+256 700 000 000"}</span>
+                  <span className="text-gray-500 text-sm">{settings?.phone || "+256 784 640 607"}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="w-7 h-7 rounded-lg bg-white/6 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -230,7 +230,7 @@ const Footer = () => {
 
       {/* ── WhatsApp floating button ── */}
       <a
-        href={`https://wa.me/${settings?.phone?.replace(/\+/g, '') || "256784640607"}`}
+        href={`https://wa.me/${settings?.whatsapp_number || settings?.phone?.replace(/\+/g, '') || "256784640607"}`}
         className="fixed bottom-6 right-4 sm:bottom-8 sm:right-6 z-50 w-12 h-12 sm:w-14 sm:h-14 bg-[#25d366] text-white rounded-2xl flex items-center justify-center text-xl sm:text-2xl shadow-[0_8px_28px_rgba(37,211,102,0.40)] hover:bg-[#1fba59] hover:scale-110 hover:shadow-[0_12px_36px_rgba(37,211,102,0.50)] transition-all duration-250"
         target="_blank"
         rel="noopener noreferrer"
