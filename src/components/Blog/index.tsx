@@ -13,54 +13,8 @@ interface WellnessArticle {
   meta_description?: string;
 }
 
-// Fallback static articles when no blog pages exist in the backend
-const fallbackArticles: WellnessArticle[] = [
-  {
-    id: 1,
-    title: 'The 7 Best Immune Supplements For Kids',
-    slug: 'immune-supplements-for-kids',
-    image: '/images/bottle2.avif',
-    excerpt: 'Discover the top immune-boosting supplements that are safe and effective for children.',
-  },
-  {
-    id: 2,
-    title: 'Top 5 Tips To Thrive in Menopause & Beyond',
-    slug: 'menopause-tips',
-    image: '/images/bottle3.avif',
-    excerpt: 'Natural strategies and supplements to make menopause manageable.',
-  },
-  {
-    id: 3,
-    title: 'Buffered Vitamin C With Bioflavonoids',
-    slug: 'buffered-vitamin-c',
-    image: '/images/bottle4.avif',
-    excerpt: 'Why buffered vitamin C is gentler on your stomach and more effective.',
-  },
-  {
-    id: 4,
-    title: "How Vitamin D Affects Your Brain",
-    slug: 'vitamin-d-brain',
-    image: '/images/bottle5.avif',
-    excerpt: "A doctor's guide to the cognitive benefits of optimal vitamin D levels.",
-  },
-  {
-    id: 5,
-    title: 'How To Start Working Out Again',
-    slug: 'start-working-out',
-    image: '/images/bottle6.avif',
-    excerpt: 'A 7-step guide to getting back into fitness after a long break.',
-  },
-  {
-    id: 6,
-    title: 'Oil Of Oregano For Cold & Flu',
-    slug: 'oregano-oil-cold-flu',
-    image: '/images/bottle7.avif',
-    excerpt: 'This powerful natural remedy can help you fight seasonal illness.',
-  },
-];
-
 const WellnessHub = () => {
-  const [articles, setArticles] = useState<WellnessArticle[]>(fallbackArticles);
+  const [articles, setArticles] = useState<WellnessArticle[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);

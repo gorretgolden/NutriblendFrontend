@@ -157,18 +157,6 @@ export default function CategoryGrid() {
   // ── Fetch parent categories on mount ──
   useEffect(() => {
     const fetchCategories = async () => {
-      // Try cache first
-      try {
-        const cached = localStorage.getItem('homepage_parent_categories_v3');
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (parsed?.cats?.length > 0 && Date.now() - parsed.ts < 5 * 60 * 1000) {
-            setParentCategories(parsed.cats);
-            setLoading(false);
-          }
-        }
-      } catch {}
-
       try {
         // /categories/tree returns only active parents with their children
         const response = await apiClient.getCategoriesTree();
@@ -177,7 +165,6 @@ export default function CategoryGrid() {
           const cats = Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
           if (cats.length > 0) {
             setParentCategories(cats);
-            localStorage.setItem('homepage_parent_categories_v3', JSON.stringify({ cats, ts: Date.now() }));
           }
         }
       } catch (err) {

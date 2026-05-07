@@ -18,22 +18,12 @@ export default function ShopByGoal() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const cached = localStorage.getItem('homepage_parent_categories_v4');
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (parsed?.cats?.length > 0 && Date.now() - parsed.ts < 5 * 60 * 1000) {
-            setParentCategories(parsed.cats);
-            setLoading(false);
-          }
-        }
-
         const response = await apiClient.getCategoriesTree();
         if (response.status) {
           const raw: any = response.data;
           const cats = Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
           if (cats.length > 0) {
             setParentCategories(cats);
-            localStorage.setItem('homepage_parent_categories_v4', JSON.stringify({ cats, ts: Date.now() }));
           }
         }
       } catch (err) {

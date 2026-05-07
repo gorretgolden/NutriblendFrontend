@@ -13,37 +13,6 @@ import FadeIn from "@/components/common/FadeIn";
 
 export const revalidate = 60;
 
-// ── Static hero slides ──────────────────────────────────────────────────────
-const carouselSlides: CarouselSlide[] = [
-  {
-    id: 1,
-    image: '/images/hero1.png',
-    title: "Men's Vitality & Performance",
-    subtitle: "Top-rated supplements for stamina, strength, and confidence — trusted brands, authentic products",
-    ctaText: "Shop Men's Health",
-    ctaLink: '/shop?category=mens-sexual-health',
-    layout: 'imageLeft'
-  },
-  {
-    id: 2,
-    image: '/images/hero2.png',
-    title: 'Premium Nutritional Supplements',
-    subtitle: 'LifeCell Collagen, Omega-3, Vitamins & more — fuel your body from the inside out',
-    ctaText: 'Explore Supplements',
-    ctaLink: '/shop?category=nutritional-supplements',
-    layout: 'imageRight'
-  },
-  {
-    id: 3,
-    image: '/images/hero3.png',
-    title: 'Luxury Perfumes & Sprays',
-    subtitle: 'Lattafa, Fragrance World, Dior & more — discover your signature scent',
-    ctaText: 'Browse Fragrances',
-    ctaLink: '/shop?category=perfumes-and-sprays',
-    layout: 'imageLeft'
-  }
-];
-
 // ── Safe product fetch helper ───────────────────────────────────────────────
 async function fetchProducts(params: Record<string, unknown>, limit = 8) {
   try {
@@ -79,7 +48,7 @@ async function getHomePageData() {
     heroSlideSettings.status &&
     Array.isArray(heroSlideSettings.data?.hero_carousel) &&
     heroSlideSettings.data.hero_carousel.length > 0
-  ) ? heroSlideSettings.data.hero_carousel : carouselSlides;
+  ) ? heroSlideSettings.data.hero_carousel : [];
 
   const defaultBadges = [
     { icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", title: "100% Authentic", desc: "Sourced directly from brands" },
