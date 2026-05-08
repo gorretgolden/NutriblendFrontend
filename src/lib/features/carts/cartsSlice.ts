@@ -64,7 +64,7 @@ function transformBackendCart(backendCart: any): { cart: Cart; totalPrice: numbe
     short_description: item.product?.short_description || item.short_description || "",
   }));
 
-  const totalQuantities = items.length;
+  const totalQuantities = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = Number(backendCart.total || backendCart.subtotal || items.reduce((sum, item) => sum + item.price * item.quantity, 0));
 
   return {
@@ -261,7 +261,7 @@ export const cartsSlice = createSlice({
         } else {
           state.cart.items.push(action.payload);
         }
-        state.cart.totalQuantities = state.cart.items.length;
+        state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
       }
 
       state.totalPrice = state.cart.items.reduce(
@@ -275,7 +275,7 @@ export const cartsSlice = createSlice({
       if (!state.cart) return;
 
       state.cart.items = state.cart.items.filter((i) => i.id !== action.payload);
-      state.cart.totalQuantities = state.cart.items.length;
+      state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
       state.totalPrice = state.cart.items.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
@@ -378,7 +378,7 @@ export const cartsSlice = createSlice({
           state.cart.items = state.cart.items.map((item) =>
             item.id === itemId ? { ...item, quantity } : item
           );
-          state.cart.totalQuantities = state.cart.items.length;
+          state.cart.totalQuantities = state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
           state.totalPrice = state.cart.items.reduce(
             (sum, item) => sum + item.price * item.quantity,
             0
