@@ -115,6 +115,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         to: Number(metaObj.to) || 0
       };
     } else if (!response.status) {
+      console.error("API Error Response:", response);
       error = response.message || "Failed to load products. Please try again later.";
     }
   } catch (err: any) {

@@ -86,7 +86,7 @@ export default function CartPage() {
             {/* Order Summary Sidebar */}
             <div className="w-full lg:w-[380px] flex flex-col gap-4 sticky top-32">
               <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 overflow-hidden">
-                <h2 className="text-lg font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4 uppercase tracking-wider text-sm">Order Summary</h2>
+                <h2 className="text-lg font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4 uppercase tracking-wider text-sm">Cart Summary</h2>
 
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between items-center text-sm">

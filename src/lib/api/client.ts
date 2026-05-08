@@ -281,12 +281,13 @@ export interface PageContent {
 class NutriBlendApiClient {
     private baseURL: string;
     private headers: HeadersInit;
-
     constructor() {
         this.baseURL = API_BASE_URL;
+        console.log(`[API Client] Initialized with baseURL: ${this.baseURL}`);
         this.headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'User-Agent': 'NutriBlend-Frontend/1.0.0 (Next.js Server)'
         };
     }
 
@@ -319,6 +320,8 @@ class NutriBlendApiClient {
             };
 
             const response = await fetch(url, config);
+
+            console.log(`[API Client] Response status: ${response.status}, Content-Type: ${response.headers.get('content-type')}`);
 
             // Handle logical errors before parsing JSON
             if (!response.ok) {
