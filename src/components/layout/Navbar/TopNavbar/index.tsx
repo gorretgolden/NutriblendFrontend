@@ -872,18 +872,18 @@ function DesktopSearchBar({
                   </Link>
                 </div>
               ) : (
-              {categories.slice(0, 9).map((category) => (
-                <Link
-                  key={category.id}
-                  href={`/shop?category=${category.slug}`}
-                  className="block bg-gray-50/80 hover:bg-[#009E3C] hover:text-white text-gray-700 px-3 py-2.5 rounded-xl text-xs font-semibold text-center transition-all duration-200 border border-gray-100/80 hover:border-[#009E3C] hover:shadow-[0_4px_12px_rgba(0,158,60,0.20)] active:scale-[0.97]"
-                  onClick={() => setOpen(false)}
-                >
-                  {category.name}
-                </Link>
-              ))}
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-500 font-bold">No results for &quot;{searchQuery}&quot;</p>
+                  <p className="text-gray-400 text-xs mt-1">Try protein, vitamins or keto supplements</p>
+                </div>
+              )}
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>
