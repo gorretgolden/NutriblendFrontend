@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
 import { clearCartAsync } from "@/lib/features/carts/cartsSlice";
+import { fetchUserProfile } from "@/lib/features/auth/authSlice";
 import { apiClient, type Region, type Town } from "@/lib/api/client";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { Loader2 } from "lucide-react";
@@ -45,6 +46,17 @@ export default function Checkout() {
       router.push('/cart');
       return;
     }
+
+    // Refresh profile to get latest location details
+    if (isAuthenticated || hasToken) {
+      dispatch(fetchUserProfile());
+    }
+  }, [isAuthenticated, hasToken, dispatch]);
+
+  // Pre-populate logic
+  useEffect(() => {
+    // Don't redirect while auth state is still loading
+    if (authLoading) return;
 
     if (!cartLoading && cart && cart.items.length === 0) {
       toast.error("Your cart is empty");
