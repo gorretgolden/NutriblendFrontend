@@ -17,6 +17,7 @@ import {
 import { apiClient, getImageUrl } from "@/lib/api/client";
 import { transformProduct } from "@/lib/transformers";
 import Link from "next/link";
+/** Nutriblend Shop Page - Stable Version */
 import { Product } from "@/types/product.types";
 
 interface ShopPageProps {
