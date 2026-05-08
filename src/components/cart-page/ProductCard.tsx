@@ -75,7 +75,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
               {/* Badges */}
               <div className="mt-2 flex items-center gap-2">
-                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-tighter bg-orange-50 text-orange-600 border border-orange-100">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-[#009E3C]/10 text-[#009E3C] border border-[#009E3C]/20">
                   Nutriblend Express
                 </span>
               </div>
@@ -91,7 +91,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
                     <span className="text-gray-400 line-through text-[11px] font-medium">
                       UGX {data.price.toLocaleString()}
                     </span>
-                    <span className="bg-orange-100 text-orange-600 text-[10px] font-black px-1.5 py-0.5 rounded">
+                    <span className="bg-[#009E3C]/10 text-[#009E3C] text-[10px] font-black px-1.5 py-0.5 rounded border border-[#009E3C]/20">
                       -{discount.percentage || Math.round((data.price - displayPrice) / data.price * 100)}%
                     </span>
                   </div>
@@ -106,9 +106,9 @@ const ProductCard = ({ data }: ProductCardProps) => {
               {/* Remove Action - Visible by Default */}
               <button
                 onClick={() => dispatch(removeFromCart(data.id))}
-                className="flex items-center gap-2 text-orange-600 hover:text-orange-700 transition-colors py-1"
+                className="flex items-center gap-2 text-[#009E3C] hover:text-[#007a2e] transition-colors py-1 group/remove"
               >
-                <PiTrashFill className="text-lg" />
+                <PiTrashFill className="text-lg text-gray-400 group-hover/remove:text-[#009E3C] transition-colors" />
                 <span className="text-xs font-bold uppercase tracking-wide">Remove</span>
               </button>
             </div>
