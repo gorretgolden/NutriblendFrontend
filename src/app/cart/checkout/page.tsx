@@ -32,6 +32,7 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   const [checkoutErrors, setCheckoutErrors] = useState<Record<string, string | undefined>>({});
+  const [hasPrepopulated, setHasPrepopulated] = useState(false);
 
   // Check authentication — wait for auth to load, also check localStorage as fallback
   useEffect(() => {
@@ -51,12 +52,16 @@ export default function Checkout() {
     }
 
     // Pre-populate location from user profile
-    if (user && !selectedRegion && !selectedTown && !address) {
-      if (user.delivery_region_id) setSelectedRegion(user.delivery_region_id);
-      if (user.delivery_town_id) setSelectedTown(user.delivery_town_id);
-      if (user.delivery_address) setAddress(user.delivery_address);
+    if (user && !hasPrepopulated) {
+      if (user.region_id) {
+        setSelectedRegion(user.region_id);
+      }
+      if (user.location) {
+        setAddress(user.location);
+      }
+      setHasPrepopulated(true);
     }
-  }, [isAuthenticated, authLoading, cart, cartLoading, router, user, selectedRegion, selectedTown, address]);
+  }, [isAuthenticated, authLoading, cart, cartLoading, router, user, hasPrepopulated]);
 
   // Fetch regions
   useEffect(() => {
@@ -97,6 +102,18 @@ export default function Checkout() {
         const response = await apiClient.getTowns(selectedRegion!);
         if (response.status && response.data) {
           setTowns(response.data);
+          
+          // If we're pre-populating and have a user town_id, set it
+          if (hasPrepopulated && user?.town_id && !selectedTown) {
+            const townExists = response.data.some((t: Town) => t.id === user.town_id);
+            if (townExists) {
+              setSelectedTown(user.town_id);
+              const townObj = response.data.find((t: Town) => t.id === user.town_id);
+              if (townObj?.delivery_fee) {
+                setDeliveryFee(Number(townObj.delivery_fee));
+              }
+            }
+          }
         }
       } catch (error) {
         console.error("Error fetching towns:", error);
@@ -107,7 +124,7 @@ export default function Checkout() {
     }
 
     fetchTowns();
-  }, [selectedRegion]);
+  }, [selectedRegion, user?.town_id, hasPrepopulated]);
 
   // Calculate delivery fee when town changes
   useEffect(() => {

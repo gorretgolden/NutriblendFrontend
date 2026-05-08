@@ -58,6 +58,9 @@ export interface User {
     role?: string;
     profile_photo?: string;
     address?: string;
+    region_id?: number;
+    town_id?: number;
+    location?: string;
     status?: string;
     is_wholesale_approved?: boolean;
     wholesale_business_name?: string;
