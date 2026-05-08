@@ -21,6 +21,7 @@ const STATUS_OPTIONS = [
 export default function OrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 4;
@@ -29,16 +30,22 @@ export default function OrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        setError(null);
         const response = await apiClient.getOrders();
+        console.log("[Orders] API response:", JSON.stringify(response).substring(0, 300));
         if (response.status && response.data) {
           const rawData = response.data;
           const ordersArray = Array.isArray(rawData)
             ? rawData
             : (rawData as any).data || [];
           setOrders(ordersArray);
+        } else {
+          console.error("[Orders] API error:", response.message);
+          setError(response.message || "Failed to load orders");
         }
-      } catch (error) {
-        console.error("Failed to fetch orders", error);
+      } catch (error: any) {
+        console.error("[Orders] Fetch error:", error);
+        setError(error?.message || "Network error loading orders");
         setOrders([]);
       } finally {
         setLoading(false);
@@ -134,7 +141,19 @@ export default function OrdersPage() {
       </div>
 
       {/* Orders List */}
-      {filteredOrders.length === 0 ? (
+      {error ? (
+        <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-red-100">
+          <FiXCircle className="w-12 h-12 mx-auto text-red-300 mb-4" />
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">Could not load orders</h3>
+          <p className="text-gray-500 text-sm mb-6">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-2.5 bg-[#009E3C] text-white rounded-lg text-sm font-medium hover:bg-[#00752C] transition"
+          >
+            Try Again
+          </button>
+        </div>
+      ) : filteredOrders.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
           <FiPackage className="w-16 h-16 mx-auto text-gray-300 mb-4" />
           <h3 className="text-lg font-semibold text-gray-700 mb-2">
