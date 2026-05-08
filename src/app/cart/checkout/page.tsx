@@ -34,7 +34,6 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   const [checkoutErrors, setCheckoutErrors] = useState<Record<string, string | undefined>>({});
-  const [hasPrepopulated, setHasPrepopulated] = useState(false);
 
   // Check authentication — wait for auth to load, also check localStorage as fallback
   useEffect(() => {
@@ -64,17 +63,16 @@ export default function Checkout() {
       return;
     }
 
-    // Pre-populate location from user profile
-    if (user && !hasPrepopulated) {
-      if (user.region_id) {
-        setSelectedRegion(user.region_id);
+    // Pre-populate location from user profile if not already set
+    if (user) {
+      if (user.region_id && !selectedRegion) {
+        setSelectedRegion(Number(user.region_id));
       }
-      if (user.location) {
+      if (user.location && !address) {
         setAddress(user.location);
       }
-      setHasPrepopulated(true);
     }
-  }, [isAuthenticated, authLoading, cart, cartLoading, router, user, hasPrepopulated]);
+  }, [isAuthenticated, authLoading, cart, cartLoading, router, user, selectedRegion, address]);
 
   // Fetch regions
   useEffect(() => {
@@ -116,12 +114,13 @@ export default function Checkout() {
         if (response.status && response.data) {
           setTowns(response.data);
           
-          // If we're pre-populating and have a user town_id, set it
-          if (hasPrepopulated && user?.town_id && !selectedTown) {
-            const townExists = response.data.some((t: Town) => t.id === user.town_id);
+          // If we have a user town_id and no town is selected yet, set it
+          if (user?.town_id && !selectedTown) {
+            const townExists = response.data.some((t: Town) => t.id === Number(user.town_id));
             if (townExists) {
-              setSelectedTown(user.town_id);
-              const townObj = response.data.find((t: Town) => t.id === user.town_id);
+              const townId = Number(user.town_id);
+              setSelectedTown(townId);
+              const townObj = response.data.find((t: Town) => t.id === townId);
               if (townObj?.delivery_fee) {
                 setDeliveryFee(Number(townObj.delivery_fee));
               }
@@ -137,7 +136,7 @@ export default function Checkout() {
     }
 
     fetchTowns();
-  }, [selectedRegion, user?.town_id, hasPrepopulated]);
+  }, [selectedRegion, user?.town_id]);
 
   // Calculate delivery fee when town changes
   useEffect(() => {
