@@ -637,6 +637,8 @@ export default function Checkout() {
                 <div className="p-5">
                   {/* Items */}
                   <div className="space-y-3 mb-5">
+                    {cart.items.map((item: any, index: number) => {
+                      const itemPrice = Number(item.unit_price || item.price || item.product?.price || 0);
                       return (
                       <div key={index} className="flex justify-between items-center text-sm group">
                         <div className="flex items-center gap-3 min-w-0">

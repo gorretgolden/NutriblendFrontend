@@ -720,69 +720,113 @@ function DesktopSearchBar({
     <div ref={ref} className="relative flex-1 max-w-3xl xl:max-w-4xl">
       <form
         onSubmit={handleSearch}
-        className="flex rounded-full overflow-hidden border-2 border-gray-200 bg-white transition-all duration-250 focus-within:border-[#009E3C] focus-within:shadow-[0_0_0_3px_rgba(0,158,60,0.12)] hover:border-gray-300 group shadow-sm"
+        className="flex items-center rounded-full overflow-hidden border-2 border-gray-200 bg-white transition-all duration-300 focus-within:border-[#009E3C] focus-within:shadow-[0_0_0_4px_rgba(0,158,60,0.1)] hover:border-gray-300 group shadow-sm"
       >
-        <div className="flex items-center pl-5">
+        <div className="flex items-center pl-6">
           <svg className="w-5 h-5 text-gray-400 group-focus-within:text-[#009E3C] transition-colors duration-200 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
         <input
           type="text"
-          placeholder="Search for supplements, brands, health products..."
+          placeholder="Search products, brands and categories"
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          className="w-full outline-none text-gray-800 placeholder:text-gray-400 bg-transparent text-sm px-3 py-3 md:py-3.5"
+          className="w-full outline-none text-gray-800 placeholder:text-gray-400 bg-transparent text-[15px] font-medium px-4 py-3.5 md:py-4"
         />
-        {searchQuery && (
+        <div className="flex items-center gap-1 pr-1">
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => { setSearchQuery(""); setOpen(false); }}
+              className="flex items-center justify-center p-2 text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
           <button
-            type="button"
-            onClick={() => { setSearchQuery(""); setOpen(false); }}
-            className="flex items-center justify-center px-2 text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
+            type="submit"
+            className="bg-[#009E3C] hover:bg-[#00752C] text-white px-8 py-3 md:py-3.5 rounded-full transition-all duration-300 font-black text-xs uppercase tracking-widest active:scale-95 flex-shrink-0 mr-1 shadow-md hover:shadow-lg"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            Search
           </button>
-        )}
-        <button
-          type="submit"
-          className="flex items-center justify-center bg-[#009E3C] hover:bg-[#00752C] text-white px-6 sm:px-8 py-3 md:py-3.5 transition-colors duration-200 font-bold text-sm active:scale-95 flex-shrink-0 gap-2 rounded-r-full"
-        >
-          <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <span className="hidden sm:inline">Search</span>
-        </button>
+        </div>
       </form>
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 w-full mt-2.5 bg-white shadow-[0_16px_48px_rgba(0,0,0,0.14)] rounded-2xl p-4 sm:p-5 z-50 border border-gray-100/80 max-h-[72vh] overflow-y-auto">
-          {searchQuery.trim() && (
-            <div className="mb-5">
-              <div className="flex items-center gap-2 mb-3">
-                <h3 className="font-extrabold text-xs text-gray-400 uppercase tracking-widest">Search Results</h3>
+        <div className="absolute top-full left-0 w-full mt-3 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.15)] rounded-3xl p-6 z-50 border border-gray-100/80 max-h-[75vh] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-300">
+          {!searchQuery.trim() ? (
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-black text-[11px] text-gray-400 uppercase tracking-widest">Trending Searches</h3>
+                <svg className="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                {['Protein', 'Vitamins', 'Fat Burners', 'Creatine', 'Multivitamins', 'Omega 3', 'Pre-workout', 'Keto'].map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => {
+                      setSearchQuery(tag);
+                      router.push(`/shop?search=${encodeURIComponent(tag)}`);
+                      setOpen(false);
+                    }}
+                    className="px-4 py-2 bg-gray-50 hover:bg-[#009E3C]/10 text-gray-600 hover:text-[#009E3C] rounded-xl text-xs font-bold transition-all duration-200 border border-gray-100 hover:border-[#009E3C]/30"
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-8">
+                <h3 className="font-black text-[11px] text-gray-400 uppercase tracking-widest mb-4">Top Categories</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {categories.slice(0, 4).map((cat) => (
+                    <Link
+                      key={cat.id}
+                      href={`/shop?category=${cat.slug}`}
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-white rounded-2xl border border-transparent hover:border-[#009E3C]/20 hover:shadow-sm transition-all duration-200 group/cat"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-[#009E3C] group-hover/cat:scale-110 transition-transform">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                      </div>
+                      <span className="text-sm font-bold text-gray-700 group-hover/cat:text-[#009E3C]">{cat.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <h3 className="font-black text-[11px] text-gray-400 uppercase tracking-widest">Search Results</h3>
                 {isSearching && <div className="w-3 h-3 border-2 border-[#009E3C] border-t-transparent rounded-full animate-spin" />}
               </div>
               {isSearching ? (
-                <div className="space-y-2">
-                  {[1,2,3].map(i => (
-                    <div key={i} className="flex items-center gap-3 p-2">
-                      <div className="w-10 h-10 bg-gray-100 rounded-lg animate-shimmer flex-shrink-0" />
-                      <div className="flex-1 space-y-1.5">
-                        <div className="h-3 bg-gray-100 rounded animate-shimmer w-3/4" />
-                        <div className="h-3 bg-gray-100 rounded animate-shimmer w-1/4" />
+                <div className="space-y-3">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="flex items-center gap-4 p-2">
+                      <div className="w-14 h-14 bg-gray-50 rounded-2xl animate-pulse flex-shrink-0" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-gray-50 rounded animate-pulse w-3/4" />
+                        <div className="h-4 bg-gray-50 rounded animate-pulse w-1/4" />
                       </div>
                     </div>
                   ))}
                 </div>
               ) : searchResults.length > 0 ? (
-                <div className="space-y-1">
+                <div className="grid grid-cols-1 gap-2">
                   {searchResults.map((product) => (
                     <Link
                       key={product.id}
@@ -791,59 +835,44 @@ function DesktopSearchBar({
                         setOpen(false);
                         setSearchQuery("");
                       }}
-                      className="flex items-center gap-3 p-2.5 hover:bg-gray-50 rounded-xl transition-colors duration-150 group/result"
+                      className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-2xl transition-all duration-200 group/result"
                     >
-                      <div className="w-11 h-11 bg-gray-50 rounded-xl flex-shrink-0 overflow-hidden border border-gray-100">
+                      <div className="w-16 h-16 bg-white rounded-xl flex-shrink-0 overflow-hidden border border-gray-100 p-1">
                         {(product.main_image || product.images?.[0]) && (
                           <img
                             src={resolveSearchImage(product)}
                             alt={product.name}
-                            className="w-full h-full object-contain p-1"
-                            loading="eager"
-                            decoding="async"
-                            onError={(e) => {
-                              const target = e.currentTarget;
-                              target.onerror = null;
-                              target.src = '/images/placeholder.jpg';
-                            }}
+                            className="w-full h-full object-contain group-hover/result:scale-110 transition-transform duration-500"
                           />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900 text-sm truncate group-hover/result:text-[#009E3C] transition-colors">{product.name}</p>
-                        <p className="text-xs text-[#009E3C] font-bold mt-0.5">
-                          UGX {Number(product.price).toLocaleString()}
-                        </p>
+                        <p className="font-bold text-gray-900 text-[15px] truncate group-hover/result:text-[#009E3C] transition-colors leading-tight">{product.name}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <p className="text-[#009E3C] font-black text-sm">
+                            UGX {Number(product.price).toLocaleString()}
+                          </p>
+                        </div>
                       </div>
-                      <svg className="w-3.5 h-3.5 text-gray-300 group-hover/result:text-[#009E3C] flex-shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
+                      <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover/result:bg-[#009E3C] group-hover/result:text-white transition-all">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
                     </Link>
                   ))}
                   <Link
                     href={`/shop?search=${encodeURIComponent(searchQuery)}`}
                     onClick={() => { setOpen(false); setSearchQuery(""); }}
-                    className="flex items-center justify-center gap-2 text-[#009E3C] font-bold py-2.5 bg-[#009E3C]/6 hover:bg-[#009E3C]/10 rounded-xl text-sm transition-colors"
+                    className="flex items-center justify-center gap-2 text-white font-black py-4 bg-[#009E3C] hover:bg-[#00752C] rounded-2xl text-xs uppercase tracking-widest mt-4 transition-all shadow-[0_4px_12px_rgba(0,158,60,0.2)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.3)] active:scale-[0.98]"
                   >
-                    View all results for &quot;{searchQuery}&quot;
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    View all results
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                   </Link>
                 </div>
               ) : (
-                <div className="text-center py-5">
-                  <p className="text-gray-400 text-sm font-medium">No results for &quot;{searchQuery}&quot;</p>
-                  <p className="text-gray-300 text-xs mt-1">Try different keywords</p>
-                </div>
-              )}
-              <div className="h-px bg-gray-100 my-4" />
-            </div>
-          )}
-
-          <div>
-            <h3 className="font-extrabold mb-3 text-gray-400 text-[10px] uppercase tracking-widest">Browse Categories</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {categories.slice(0, 9).map((category) => (
                 <Link
                   key={category.id}

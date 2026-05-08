@@ -107,7 +107,6 @@ export default function CartPage() {
                     <span className="text-lg font-bold text-gray-900">Estimated Total</span>
                     <div className="text-right">
                       <span className="text-2xl font-black text-gray-900">UGX {Math.round(adjustedTotalPrice).toLocaleString()}</span>
-                      <p className="text-[10px] text-gray-400 font-medium">VAT Included</p>
                     </div>
                   </div>
                 </div>
