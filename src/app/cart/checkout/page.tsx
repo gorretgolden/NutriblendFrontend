@@ -652,67 +652,115 @@ export default function Checkout() {
                       </div>
                       );
                     })}
-                  </div>
-
-                  <div className="border-t border-gray-100 pt-4 space-y-2.5 mb-5">
+                              <div className="border-t border-gray-100 pt-4 space-y-3 mb-6">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Subtotal</span>
-                      <span className="font-medium text-gray-900">UGX {subtotal.toLocaleString()}</span>
+                      <span className="text-gray-500 font-medium">Subtotal</span>
+                      <span className="font-bold text-gray-900">UGX {subtotal.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Delivery Fee</span>
-                      <span className="font-medium text-gray-900">{deliveryMethod === 'pickup' ? 'Free (Pickup)' : deliveryFee > 0 ? `UGX ${deliveryFee.toLocaleString()}` : 'Free'}</span>
+                      <span className="text-gray-500 font-medium">Delivery Fee</span>
+                      <span className="font-bold text-gray-900">
+                        {deliveryMethod === 'pickup' ? (
+                          <span className="text-[#009E3C]">Free (Pickup)</span>
+                        ) : deliveryFee > 0 ? (
+                          `UGX ${deliveryFee.toLocaleString()}`
+                        ) : (
+                          <span className="text-[#009E3C]">Free</span>
+                        )}
+                      </span>
                     </div>
                     {discountAmount > 0 && (
-                      <div className="flex justify-between text-sm text-[#009E3C]">
-                        <span>Discount</span>
-                        <span>-UGX {discountAmount.toLocaleString()}</span>
+                      <div className="flex justify-between text-sm text-[#009E3C] bg-[#009E3C]/5 px-3 py-2 rounded-lg">
+                        <span className="font-medium">Discount Applied</span>
+                        <span className="font-bold">-UGX {discountAmount.toLocaleString()}</span>
                       </div>
                     )}
                   </div>
 
+                  {/* Delivery & Payment Preview */}
+                  <div className="bg-gray-50 rounded-xl p-4 space-y-3 mb-6 border border-gray-100">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] uppercase tracking-wider font-bold text-gray-400 mb-0.5">Shipping to</p>
+                        {deliveryMethod === 'pickup' ? (
+                          <p className="text-xs font-semibold text-gray-700">Store Pickup (Kampala)</p>
+                        ) : (
+                          <div className="text-xs font-semibold text-gray-700 truncate">
+                            {selectedRegion ? regions.find(r => r.id === selectedRegion)?.name : <span className="text-gray-300 italic font-normal">Select region</span>}
+                            {selectedTown && `, ${towns.find(t => t.id === selectedTown)?.name}`}
+                            {address && <p className="text-[11px] text-gray-500 font-medium truncate mt-0.5">{address}</p>}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] uppercase tracking-wider font-bold text-gray-400 mb-0.5">Payment</p>
+                        <p className="text-xs font-semibold text-gray-700">
+                          {paymentMethod === 'cod' ? 'Cash on Delivery' : 'Card / Mobile Money'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Discount Code */}
-                  <div className="mb-5">
+                  <div className="mb-6">
                     <div className="flex gap-2">
                       <input
                         type="text"
                         disabled={loading}
-                        placeholder="Enter promo code"
+                        placeholder="Promo code"
                         value={discountCode}
                         onChange={(e) => setDiscountCode(e.target.value)}
-                        className={`flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none text-sm ${loading ? 'bg-gray-50 opacity-70' : ''}`}
+                        className={`flex-1 border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none text-sm transition-all ${loading ? 'bg-gray-50 opacity-70' : ''}`}
                       />
                       <button
                         onClick={handleApplyDiscount}
                         disabled={loading || !discountCode.trim()}
-                        className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium disabled:bg-gray-400"
+                        className="bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition-all text-sm font-bold disabled:bg-gray-200 disabled:text-gray-400 shadow-sm active:scale-95"
                       >
                         Apply
                       </button>
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center border-t border-gray-200 pt-4 mb-5">
-                    <span className="text-base font-bold text-gray-900">Total</span>
-                    <span className="text-xl font-bold text-gray-900">UGX {Math.round(finalTotal).toLocaleString()}</span>
+                  <div className="flex justify-between items-center border-t border-gray-100 pt-5 mb-6">
+                    <span className="text-gray-900 font-bold">Total Amount</span>
+                    <span className="text-2xl font-black text-gray-900">UGX {Math.round(finalTotal).toLocaleString()}</span>
                   </div>
 
                   <button
                     onClick={handlePlaceOrder}
                     disabled={loading || (deliveryMethod === 'delivery' && (!selectedRegion || !selectedTown || !address))}
-                    className="w-full bg-[#009E3C] text-white py-3.5 rounded-xl font-bold hover:bg-[#00752C] transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(0,158,60,0.30)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.40)] disabled:shadow-none active:scale-[0.98]"
+                    className="w-full bg-[#009E3C] text-white py-4 rounded-xl font-bold hover:bg-[#00752C] transition-all duration-300 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-[0_4px_14px_rgba(0,158,60,0.30)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.40)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
                   >
-                    {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
                     {loading ? 'Processing...' : 'Confirm Order'}
                   </button>
 
-                  <p className="text-xs text-gray-400 text-center mt-4 leading-relaxed">
-                    By placing your order, you agree to our{' '}
-                    <a href="/terms" className="underline hover:text-gray-600">Terms & Conditions</a>.
+                  <p className="text-[11px] text-gray-400 text-center mt-5 leading-relaxed font-medium">
+                    By confirming, you agree to our{' '}
+                    <a href="/terms" className="underline hover:text-gray-600 transition-colors">Terms of Service</a>.
                   </p>
                 </div>
               </div>
-            </div>
+            </div>          </div>
         </div>
       </main>
     </div>
