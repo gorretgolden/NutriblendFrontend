@@ -142,10 +142,10 @@ export default function OrdersPage() {
 
       {/* Orders List */}
       {error ? (
-        <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-red-100">
-          <FiXCircle className="w-12 h-12 mx-auto text-red-300 mb-4" />
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">Could not load orders</h3>
-          <p className="text-gray-500 text-sm mb-6">{error}</p>
+        <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
+          <FiPackage className="w-14 h-14 mx-auto text-gray-300 mb-4" />
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">Something went wrong</h3>
+          <p className="text-gray-500 text-sm mb-6">We couldn&apos;t load your orders right now. Please try again later.</p>
           <button
             onClick={() => window.location.reload()}
             className="px-6 py-2.5 bg-[#009E3C] text-white rounded-lg text-sm font-medium hover:bg-[#00752C] transition"
