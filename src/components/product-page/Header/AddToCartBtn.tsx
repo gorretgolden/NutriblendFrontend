@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { RootState } from "@/lib/store";
 import { Product } from "@/types/product.types";
 import React from "react";
-
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
@@ -26,11 +26,27 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
     ? data.wholesale_price
     : (hasDiscount ? discountedPrice : data.price);
 
+  const cartItems = useAppSelector((state) => state.carts.cart?.items ?? []);
+  const isInCart = cartItems.some(
+    (item) => Number(item.product_id) === Number(data.id)
+  );
+
+  const router = useRouter();
+
   return (
     <button
       type="button"
-      className="bg-[#009E3C] hover:bg-[#00752C] w-full ml-3 sm:ml-5 rounded-full h-11 md:h-[52px] text-sm sm:text-base text-white transition-all duration-300 shadow-[0_4px_14px_rgba(0,158,60,0.28)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.38)] transform hover:scale-[1.02]"
+      className={`w-full ml-3 sm:ml-5 rounded-full h-11 md:h-[52px] text-sm sm:text-base transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2 font-bold ${
+        isInCart
+          ? "bg-[#009E3C] text-white shadow-[0_4px_14px_rgba(0,158,60,0.28)]"
+          : "bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[0_4px_14px_rgba(0,158,60,0.28)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.38)]"
+      }`}
       onClick={async () => {
+        if (isInCart) {
+          router.push("/cart");
+          return;
+        }
+
         try {
           await dispatch(
             addToCart({
@@ -48,7 +64,16 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
         }
       }}
     >
-      Add to Cart
+      {isInCart ? (
+        <>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          </svg>
+          In Cart — View
+        </>
+      ) : (
+        "Add to Cart"
+      )}
     </button>
   );
 };

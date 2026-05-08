@@ -37,7 +37,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
   const cartItems = useAppSelector((state) => state.carts.cart?.items ?? []);
   const isInCart = cartItems.some(
-    (item) => item.product_id === data.id
+    (item) => Number(item.product_id) === Number(data.id)
   );
 
   const handleAddToCart = async (e: React.MouseEvent) => {
@@ -238,11 +238,11 @@ const ProductCard = ({ data }: ProductCardProps) => {
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock}
-          className={`mt-2 w-full py-1.5 rounded-lg text-[11px] font-bold transition-all duration-200 flex items-center justify-center gap-1 ${
+          className={`mt-2 w-full py-1.5 rounded-lg text-[11px] font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
             isOutOfStock
               ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
               : isInCart
-                ? "active:scale-[0.97] bg-[#f0fbf4] text-[#009E3C] border-2 border-[#009E3C]/30 hover:bg-[#e4f8ec] hover:border-[#009E3C]/50"
+                ? "active:scale-[0.97] bg-[#009E3C] text-white shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)]"
                 : "active:scale-[0.97] bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)]"
           }`}
         >
@@ -251,7 +251,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           ) : isInCart ? (
             <>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
               </svg>
               In Cart — View
             </>
