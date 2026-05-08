@@ -21,6 +21,7 @@ export type CartItem = {
   };
   unit?: string;
   short_description?: string;
+  stock_quantity?: number;
 };
 
 export type Cart = {
@@ -62,6 +63,11 @@ function transformBackendCart(backendCart: any): { cart: Cart; totalPrice: numbe
     variation_id: item.variation_id,
     unit: item.product?.unit || item.unit,
     short_description: item.product?.short_description || item.short_description || "",
+    stock_quantity: item.product?.stock_quantity ?? 0,
+    discount: {
+      amount: Number(item.product?.discount_amount || 0),
+      percentage: Number(item.product?.discount_percentage || 0),
+    },
   }));
 
   const totalQuantities = items.reduce((sum, item) => sum + item.quantity, 0);
