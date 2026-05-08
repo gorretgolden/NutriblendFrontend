@@ -637,18 +637,20 @@ export default function Checkout() {
                 <div className="p-5">
                   {/* Items */}
                   <div className="space-y-3 mb-5">
-                    {cart.items.map((item: any, index: number) => {
-                      const itemPrice = Number(item.unit_price || item.price || item.product?.price || 0);
                       return (
-                      <div key={index} className="flex justify-between items-start text-sm">
-                        <div className="flex-1 min-w-0 mr-3">
-                          <span className="text-gray-700 font-medium line-clamp-1">{item.name || item.product?.name}</span>
-                          {item.short_description && (
-                            <p className="text-[10px] text-gray-400 line-clamp-1 mt-0.5">{item.short_description}</p>
-                          )}
-                          <span className="text-gray-400 text-xs"> × {item.quantity}</span>
+                      <div key={index} className="flex justify-between items-center text-sm group">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="flex-shrink-0 w-6 h-6 rounded-md bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-500 border border-gray-200">
+                            {item.quantity}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-gray-900 font-semibold truncate leading-tight">{item.name || item.product?.name}</p>
+                            {item.short_description && (
+                              <p className="text-[10px] text-gray-400 truncate mt-0.5">{item.short_description}</p>
+                            )}
+                          </div>
                         </div>
-                        <span className="font-semibold text-gray-900 whitespace-nowrap">UGX {(itemPrice * item.quantity).toLocaleString()}</span>
+                        <span className="font-bold text-gray-900 ml-4">UGX {(itemPrice * item.quantity).toLocaleString()}</span>
                       </div>
                       );
                     })}
@@ -679,19 +681,18 @@ export default function Checkout() {
 
                   {/* Delivery & Payment Preview */}
                   <div className="bg-gray-50 rounded-xl p-4 space-y-3 mb-6 border border-gray-100">
-                    <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-[#009E3C] flex-shrink-0 shadow-sm">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                       </div>
                       <div className="min-w-0">
-                        <p className="text-[10px] uppercase tracking-wider font-bold text-gray-400 mb-0.5">Shipping to</p>
                         {deliveryMethod === 'pickup' ? (
-                          <p className="text-xs font-semibold text-gray-700">Store Pickup (Kampala)</p>
+                          <p className="text-xs font-bold text-gray-700">Store Pickup (Kampala)</p>
                         ) : (
-                          <div className="text-xs font-semibold text-gray-700 truncate">
+                          <div className="text-xs font-bold text-gray-700 leading-snug">
                             {selectedRegion ? regions.find(r => r.id === selectedRegion)?.name : <span className="text-gray-300 italic font-normal">Select region</span>}
                             {selectedTown && `, ${towns.find(t => t.id === selectedTown)?.name}`}
                             {address && <p className="text-[11px] text-gray-500 font-medium truncate mt-0.5">{address}</p>}
@@ -700,15 +701,14 @@ export default function Checkout() {
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-500 flex-shrink-0 shadow-sm">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
                       </div>
                       <div className="min-w-0">
-                        <p className="text-[10px] uppercase tracking-wider font-bold text-gray-400 mb-0.5">Payment</p>
-                        <p className="text-xs font-semibold text-gray-700">
+                        <p className="text-xs font-bold text-gray-700">
                           {paymentMethod === 'cod' ? 'Cash on Delivery' : 'Card / Mobile Money'}
                         </p>
                       </div>
