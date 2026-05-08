@@ -15,7 +15,15 @@ export default function MyAccountManagement() {
     name: "",
     email: "",
     phone: "",
+    region_id: "" as string | number,
+    town_id: "" as string | number,
+    location: "",
   });
+
+  const [regions, setRegions] = useState<any[]>([]);
+  const [towns, setTowns] = useState<any[]>([]);
+  const [isLoadingLocations, setIsLoadingLocations] = useState(false);
+  const [isLoadingTowns, setIsLoadingTowns] = useState(false);
 
   const [passwordData, setPasswordData] = useState({
     old_password: "",
@@ -40,11 +48,50 @@ export default function MyAccountManagement() {
         name: user.name || `${user.first_name || ""} ${user.last_name || ""}`.trim(),
         email: user.email || "",
         phone: user.phone || user.contact || "",
+        region_id: user.region_id || "",
+        town_id: user.town_id || "",
+        location: user.location || "",
       });
     }
   }, [user]);
 
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Fetch Regions
+  useEffect(() => {
+    const fetchRegions = async () => {
+      try {
+        setIsLoadingLocations(true);
+        const res = await apiClient.getRegions();
+        if (res.status) setRegions(res.data);
+      } catch (err) {
+        console.error("Failed to fetch regions", err);
+      } finally {
+        setIsLoadingLocations(false);
+      }
+    };
+    fetchRegions();
+  }, []);
+
+  // Fetch Towns when region changes
+  useEffect(() => {
+    if (!formData.region_id) {
+      setTowns([]);
+      return;
+    }
+    const fetchTowns = async () => {
+      try {
+        setIsLoadingTowns(true);
+        const res = await apiClient.getTowns(Number(formData.region_id));
+        if (res.status) setTowns(res.data);
+      } catch (err) {
+        console.error("Failed to fetch towns", err);
+      } finally {
+        setIsLoadingTowns(false);
+      }
+    };
+    fetchTowns();
+  }, [formData.region_id]);
+
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     if (profileErrors[name]) {
@@ -84,6 +131,9 @@ export default function MyAccountManagement() {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
+        region_id: formData.region_id ? Number(formData.region_id) : undefined,
+        town_id: formData.town_id ? Number(formData.town_id) : undefined,
+        location: formData.location || undefined,
       });
 
       if (response.status) {
@@ -215,6 +265,58 @@ export default function MyAccountManagement() {
               {profileErrors.phone && (
                 <p className="mt-1 text-xs text-red-500">{profileErrors.phone}</p>
               )}
+            </div>
+
+            {/* Region */}
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                Region
+              </label>
+              <select
+                name="region_id"
+                value={formData.region_id}
+                onChange={handleProfileChange}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
+                disabled={isLoadingLocations}
+              >
+                <option value="">Select Region</option>
+                {regions.map((r) => (
+                  <option key={r.id} value={r.id}>{r.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Town */}
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                Town
+              </label>
+              <select
+                name="town_id"
+                value={formData.town_id}
+                onChange={handleProfileChange}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all"
+                disabled={!formData.region_id || isLoadingTowns}
+              >
+                <option value="">Select Town</option>
+                {towns.map((t) => (
+                  <option key={t.id} value={t.id}>{t.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                Delivery Address
+              </label>
+              <textarea
+                name="location"
+                value={formData.location}
+                onChange={handleProfileChange}
+                placeholder="e.g. Plot 12, Kampala Road..."
+                rows={3}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-all resize-none"
+              />
             </div>
           </div>
 
