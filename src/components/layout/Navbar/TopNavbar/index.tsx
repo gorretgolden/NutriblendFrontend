@@ -758,9 +758,8 @@ function DesktopSearchBar({
         </div>
       </form>
 
-      {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 w-full mt-3 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.15)] rounded-3xl p-6 z-50 border border-gray-100/80 max-h-[75vh] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="absolute top-full left-0 w-full mt-3 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.15)] rounded-3xl p-6 z-50 border border-gray-100/80 max-h-[75vh] overflow-y-auto">
           {!searchQuery.trim() ? (
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -770,7 +769,7 @@ function DesktopSearchBar({
                 </svg>
               </div>
               <div className="flex flex-wrap gap-2.5">
-                {['Protein', 'Vitamins', 'Fat Burners', 'Creatine', 'Multivitamins', 'Omega 3', 'Pre-workout', 'Keto'].map((tag) => (
+                {["Protein", "Vitamins", "Fat Burners", "Creatine", "Multivitamins", "Omega 3", "Pre-workout", "Keto"].map((tag) => (
                   <button
                     key={tag}
                     onClick={() => {
@@ -814,7 +813,7 @@ function DesktopSearchBar({
               </div>
               {isSearching ? (
                 <div className="space-y-3">
-                  {[1, 2, 3].map(i => (
+                  {[1, 2, 3].map((i) => (
                     <div key={i} className="flex items-center gap-4 p-2">
                       <div className="w-14 h-14 bg-gray-50 rounded-2xl animate-pulse flex-shrink-0" />
                       <div className="flex-1 space-y-2">
