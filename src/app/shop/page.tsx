@@ -39,42 +39,50 @@ interface ShopPageProps {
 }
 
 export default async function ShopPage({ searchParams }: ShopPageProps) {
-  const page = Number(searchParams.page) || 1;
-  const sort = searchParams.sort || "created_at";
+  // Safely get parameters (Next.js searchParams can be string or string[])
+  const getParam = (param: string | string[] | undefined): string | undefined => {
+    if (Array.isArray(param)) return param[0];
+    return param;
+  };
+
+  const page = Number(getParam(searchParams.page)) || 1;
+  const sort = getParam(searchParams.sort) || "created_at";
+  const searchStr = getParam(searchParams.search);
+  const categorySlug = getParam(searchParams.category);
 
   const apiParams: any = {
     page,
     per_page: 24,
-    category_slug: searchParams.category || undefined,
-    category_id: !searchParams.category && searchParams.category_id
-      ? Number(searchParams.category_id) : undefined,
-    brand_id: searchParams.brand_id ? Number(searchParams.brand_id) : undefined,
-    min_price: searchParams.min_price ? Number(searchParams.min_price) : undefined,
-    max_price: searchParams.max_price ? Number(searchParams.max_price) : undefined,
-    search: searchParams.search || undefined,
-    is_special_offer: searchParams.is_special_offer === 'true' ? true : undefined,
-    is_trending: searchParams.is_trending === 'true' ? true : undefined,
-    is_recommended: searchParams.is_recommended === 'true' ? true : undefined,
-    is_new_arrival: searchParams.is_new_arrival === 'true' ? true : undefined,
-    on_sale: searchParams.on_sale === 'true' ? true : undefined,
-    is_featured: searchParams.is_featured === 'true' ? true : undefined,
+    category_slug: categorySlug || undefined,
+    category_id: !categorySlug && searchParams.category_id
+      ? Number(getParam(searchParams.category_id)) : undefined,
+    brand_id: searchParams.brand_id ? Number(getParam(searchParams.brand_id)) : undefined,
+    min_price: searchParams.min_price ? Number(getParam(searchParams.min_price)) : undefined,
+    max_price: searchParams.max_price ? Number(getParam(searchParams.max_price)) : undefined,
+    search: searchStr || undefined,
+    is_special_offer: getParam(searchParams.is_special_offer) === 'true' ? true : undefined,
+    is_trending: getParam(searchParams.is_trending) === 'true' ? true : undefined,
+    is_recommended: getParam(searchParams.is_recommended) === 'true' ? true : undefined,
+    is_new_arrival: getParam(searchParams.is_new_arrival) === 'true' ? true : undefined,
+    on_sale: getParam(searchParams.on_sale) === 'true' ? true : undefined,
+    is_featured: getParam(searchParams.is_featured) === 'true' ? true : undefined,
     sort: sort === 'most-popular' ? 'sales_count'
       : sort === 'low-price' ? 'price_asc'
         : sort === 'high-price' ? 'price_desc'
           : 'created_at'
   };
 
-  const categoryName = searchParams.category
-    ? searchParams.category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  const categoryName = categorySlug
+    ? categorySlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
     : null;
 
-  const pageTitle = searchParams.is_special_offer === 'true' ? 'Special Offers'
-    : searchParams.is_trending === 'true' ? 'Trending Now'
-      : searchParams.is_recommended === 'true' ? 'Recommended For You'
-        : searchParams.is_new_arrival === 'true' ? 'New Arrivals'
-          : searchParams.on_sale === 'true' ? 'On Sale'
-            : searchParams.is_featured === 'true' ? 'Featured Products'
-              : searchParams.search ? `Results for "${searchParams.search}"`
+  const pageTitle = getParam(searchParams.is_special_offer) === 'true' ? 'Special Offers'
+    : getParam(searchParams.is_trending) === 'true' ? 'Trending Now'
+      : getParam(searchParams.is_recommended) === 'true' ? 'Recommended For You'
+        : getParam(searchParams.is_new_arrival) === 'true' ? 'New Arrivals'
+          : getParam(searchParams.on_sale) === 'true' ? 'On Sale'
+            : getParam(searchParams.is_featured) === 'true' ? 'Featured Products'
+              : searchStr ? `Results for "${searchStr}"`
                 : categoryName ? categoryName
                   : 'All Products';
 
@@ -84,8 +92,8 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   let error: string | null = null;
 
   try {
-    if (searchParams.category) {
-      const catRes = await apiClient.getCategoryBySlug(searchParams.category);
+    if (categorySlug) {
+      const catRes = await apiClient.getCategoryBySlug(categorySlug);
       if (catRes.status) {
         selectedCategory = catRes.data;
       }
@@ -94,7 +102,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     const response = await apiClient.getProducts(apiParams);
     if (response.status && response.data) {
       const items = Array.isArray(response.data) ? response.data : (response.data.data || []);
-      const metaObj = (response as any).meta || response.data;
+      const metaObj = (response as any).meta || (response.data as any).meta || response.data;
 
       products = items.map(transformProduct);
       meta = {
