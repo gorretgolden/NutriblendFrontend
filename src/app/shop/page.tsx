@@ -105,12 +105,13 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
       const metaObj = (response as any).meta || (response.data as any).meta || response.data;
 
       products = items.map(transformProduct);
+      const lastPage = Math.min(Number(metaObj.last_page) || 1, 500);
       meta = {
-        current_page: metaObj.current_page || 1,
-        last_page: metaObj.last_page || 1,
-        total: metaObj.total || 0,
-        from: metaObj.from || 0,
-        to: metaObj.to || 0
+        current_page: Number(metaObj.current_page) || 1,
+        last_page: lastPage,
+        total: Number(metaObj.total) || 0,
+        from: Number(metaObj.from) || 0,
+        to: Number(metaObj.to) || 0
       };
     } else if (!response.status) {
       error = response.message || "Failed to load products. Please try again later.";
@@ -268,9 +269,9 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                   {error}
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
-                  <button onClick={() => window.location.reload()} className="px-6 py-2.5 bg-gray-900 text-white rounded-lg font-bold text-sm hover:bg-gray-800 transition-all shadow-md">
+                  <Link href="/shop" className="px-6 py-2.5 bg-gray-900 text-white rounded-lg font-bold text-sm hover:bg-gray-800 transition-all shadow-md">
                     Try Again
-                  </button>
+                  </Link>
                   <Link href="/" className="px-6 py-2.5 bg-white text-gray-700 border border-gray-200 rounded-lg font-bold text-sm hover:bg-gray-50 transition-all">
                     Return Home
                   </Link>

@@ -67,23 +67,38 @@ const NewsLetterSection = () => {
           {/* Right side: form card */}
           <div className="w-full max-w-md">
             <div className="bg-white/[0.06] backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/[0.08]">
-              {isSubscribed ? (
-                /* ✅ Success state */
-                <div className="text-center py-4 animate-in fade-in duration-500">
-                  <div className="w-16 h-16 bg-[#009E3C]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-[#00bc49]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <h3 className="text-white text-lg font-bold mb-2">You&apos;re Subscribed!</h3>
-                  <p className="text-white/50 text-sm mb-4">
-                    Welcome to the NutriBlend Haven community! Check your inbox for a welcome surprise.
-                  </p>
-                  <div className="bg-white/[0.07] rounded-xl px-4 py-3 border border-white/[0.1]">
-                    <p className="text-[#009E3C]/80 text-sm font-medium">{email}</p>
+              {isSubscribed && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 backdrop-blur-md bg-black/40 animate-in fade-in duration-300">
+                  <div className="bg-white rounded-[2rem] p-8 md:p-12 max-w-lg w-full text-center shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-500 delay-100">
+                    {/* Decorative Background */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#009E3C]/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#009E3C]/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+
+                    <div className="relative z-10">
+                      <div className="w-20 h-20 bg-[#009E3C]/10 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                        <svg className="w-10 h-10 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      
+                      <h3 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">Welcome to the Tribe!</h3>
+                      <p className="text-gray-500 text-base leading-relaxed mb-8">
+                        We&apos;re thrilled to have you! You&apos;ve successfully subscribed with <span className="font-bold text-[#009E3C]">{email}</span>. 
+                        Check your inbox shortly for exclusive wellness tips and your first deal.
+                      </p>
+
+                      <button
+                        onClick={() => setIsSubscribed(false)}
+                        className="w-full bg-[#009E3C] hover:bg-[#007a2e] text-white font-black py-4 px-8 rounded-2xl transition-all duration-300 shadow-lg shadow-[#009E3C]/20 hover:shadow-xl active:scale-95 text-sm uppercase tracking-widest"
+                      >
+                        Great, Thank You!
+                      </button>
+                    </div>
                   </div>
                 </div>
-              ) : (
+              )}
+
+              {!isSubscribed && (
                 /* 📝 Form state */
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="relative">

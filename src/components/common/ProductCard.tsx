@@ -190,21 +190,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           {data.title}
         </Link>
 
-        {/* Rating */}
-        <div className="flex items-center gap-1 mb-1.5">
-          <Rating
-            initialValue={data.rating}
-            allowFraction
-            SVGclassName="inline-block"
-            emptyClassName="fill-gray-200"
-            fillClassName="fill-amber-400"
-            size={12}
-            readonly
-          />
-          <span className="text-gray-400 text-[10px] font-medium">
-            ({data.reviews?.toLocaleString() || "0"})
-          </span>
-        </div>
+
 
 
         {/* Price Block */}

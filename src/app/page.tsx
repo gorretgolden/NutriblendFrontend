@@ -266,36 +266,7 @@ export default async function Home() {
         </FadeIn>
       )}
       
-      {/* ── 17. Newsletter CTA ── */}
-      <FadeIn direction="none" duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-        <div className="relative bg-gradient-to-r from-[#009E3C] to-[#007a2e] rounded-2xl overflow-hidden p-8 md:p-12 shadow-lg">
-          {/* Decorative blob */}
-          <div className="absolute top-0 right-0 bottom-0 w-1/3 opacity-10 pointer-events-none hidden md:block">
-            <svg viewBox="0 0 200 200" className="w-full h-full translate-x-1/3 scale-150">
-              <path fill="white" d="M46,-77.7C58.3,-68.1,65.6,-51.4,71.8,-35.4C78,-19.4,83,-4.1,79.4,9.2C75.7,22.5,63.3,33.7,51,43.1C38.8,52.4,26.7,60,12.1,65.9C-2.5,71.7,-19.6,75.8,-34.4,70.6C-49.2,65.5,-61.8,51.1,-69.2,35.3C-76.6,19.5,-78.9,2.2,-74.9,-13.3C-70.9,-28.8,-60.6,-42.5,-47.5,-52.1C-34.4,-61.7,-18.5,-67.3,-0.8,-66.3C16.9,-65.2,33.8,-57.5,46,-77.7Z" transform="translate(100 100)" />
-            </svg>
-          </div>
 
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-            {/* Text */}
-            <div className="text-center md:text-left">
-              <div className="inline-flex items-center gap-2 bg-white/15 border border-white/25 rounded-full px-3 py-1 mb-3">
-                <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-white">Stay in the Loop</span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-black text-white mb-2 leading-tight">
-                Get Wellness Tips & Exclusive Deals
-              </h3>
-              <p className="text-green-100 text-sm md:text-base leading-relaxed max-w-md">
-                Join thousands of health-conscious Ugandans. Get first access to new arrivals, expert wellness tips, and subscriber-only discounts.
-              </p>
-            </div>
-
-            {/* Email signup */}
-            <NewsletterForm />
-          </div>
-        </div>
-      </FadeIn>
 
     </main>
   );
