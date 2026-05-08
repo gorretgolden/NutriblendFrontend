@@ -38,7 +38,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
     <div className="flex gap-4 sm:gap-6 items-start group">
       {/* Product Image — white card border like iHerb */}
       <Link
-        href={`/shop/product/${data.id}/${(data.name ?? "product").split(" ").join("-")}`}
+        href={`/shop/product/${data.product_id}/${(data.name ?? "product").split(" ").join("-")}`}
         className="relative w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-white border border-gray-100 rounded-lg overflow-hidden"
       >
         <Image
@@ -56,7 +56,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         <div className="flex justify-between items-start gap-4">
           <div>
             <Link
-              href={`/shop/product/${data.id}/${(data.name ?? "product").split(" ").join("-")}`}
+              href={`/shop/product/${data.product_id}/${(data.name ?? "product").split(" ").join("-")}`}
               className="text-gray-900 font-bold text-sm sm:text-base hover:text-[#009E3C] transition-colors line-clamp-2 leading-tight"
             >
               {data.name ?? "Unnamed Product"}

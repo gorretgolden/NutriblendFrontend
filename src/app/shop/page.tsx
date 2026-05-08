@@ -81,6 +81,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   let products: Product[] = [];
   let meta = { current_page: 1, last_page: 1, total: 0, from: 0, to: 0 };
   let selectedCategory: any = null;
+  let error: string | null = null;
 
   try {
     if (searchParams.category) {
@@ -103,9 +104,12 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         from: metaObj.from || 0,
         to: metaObj.to || 0
       };
+    } else if (!response.status) {
+      error = response.message || "Failed to load products. Please try again later.";
     }
-  } catch (error) {
-    console.error("Failed to load shop products:", error);
+  } catch (err: any) {
+    console.error("Failed to load shop products:", err);
+    error = err.message || "An unexpected error occurred while loading products.";
   }
 
   const getPageLink = (p: number) => {
@@ -244,8 +248,27 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               </div>
             )}
 
-            {/* Product Grid */}
-            {products.length > 0 ? (
+            {error ? (
+              <div className="bg-white rounded-lg border border-red-100 py-16 px-6 text-center shadow-sm">
+                <div className="w-16 h-16 mx-auto mb-4 bg-red-50 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <h3 className="text-gray-900 font-bold text-xl mb-2">Service Temporarily Unavailable</h3>
+                <p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
+                  {error}
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+                  <button onClick={() => window.location.reload()} className="px-6 py-2.5 bg-gray-900 text-white rounded-lg font-bold text-sm hover:bg-gray-800 transition-all shadow-md">
+                    Try Again
+                  </button>
+                  <Link href="/" className="px-6 py-2.5 bg-white text-gray-700 border border-gray-200 rounded-lg font-bold text-sm hover:bg-gray-50 transition-all">
+                    Return Home
+                  </Link>
+                </div>
+              </div>
+            ) : products.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {products.map((product) => (
                   <ProductCard key={product.id} data={product} />
