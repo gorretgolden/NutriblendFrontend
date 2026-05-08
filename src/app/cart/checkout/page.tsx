@@ -7,6 +7,7 @@ import { clearCartAsync } from "@/lib/features/carts/cartsSlice";
 import { apiClient, type Region, type Town } from "@/lib/api/client";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 
@@ -297,8 +298,42 @@ export default function Checkout() {
 
   if (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading) {
     return (
-      <div className="min-h-screen bg-[#f2f4f3] flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-[#009E3C] animate-spin" />
+      <div className="min-h-screen bg-gray-50">
+        <header className="bg-white border-b border-gray-200">
+          <div className="max-w-frame mx-auto px-4 py-4 flex justify-between items-center">
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-6 w-24" />
+          </div>
+        </header>
+        <main className="max-w-frame mx-auto px-4 py-6 md:py-10">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            <div className="lg:w-2/3 space-y-5">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
+                    <Skeleton className="w-7 h-7 rounded-full" />
+                    <Skeleton className="h-5 w-40" />
+                  </div>
+                  <div className="p-5 space-y-3">
+                    <Skeleton className="h-12 w-full" />
+                    {i === 2 && <Skeleton className="h-24 w-full" />}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="lg:w-1/3">
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                <Skeleton className="h-14 w-full" />
+                <div className="p-5 space-y-4">
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-14 w-full rounded-xl" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
