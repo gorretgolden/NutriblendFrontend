@@ -202,7 +202,7 @@ export default function Checkout() {
   const finalTotal = subtotal + actualDeliveryFee - Number(discountAmount);
 
   const config = {
-    public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
+    public_key: settings?.flutterwave_public_key || process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
     tx_ref: `NB-${Date.now()}`,
     amount: Math.round(finalTotal),
     currency: 'UGX',
@@ -641,7 +641,7 @@ export default function Checkout() {
                           <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                           </svg>
-                          <span className="text-sm font-medium text-gray-800">Card / Mobile Money</span>
+                          <span className="text-sm font-medium text-gray-800">Mobile Money / Card</span>
                         </div>
                       </label>
                     </div>
@@ -758,7 +758,7 @@ export default function Checkout() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs font-bold text-gray-700">
-                          {paymentMethod === 'cod' ? 'Cash on Delivery' : 'Card / Mobile Money'}
+                          {paymentMethod === 'cod' ? 'Cash on Delivery' : 'Mobile Money / Card'}
                         </p>
                       </div>
                     </div>
