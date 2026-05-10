@@ -115,7 +115,7 @@ const Header = ({ data }: { data: Product }) => {
             <div className="flex items-baseline gap-3 flex-wrap">
               {isUsingWholesalePrice ? (
                 <>
-                  <span className="font-extrabold text-blue-600 text-3xl lg:text-4xl">
+                  <span className="font-extrabold text-blue-600 text-2xl lg:text-3xl">
                     UGX {data.wholesale_price?.toLocaleString()}
                   </span>
                   <span className="text-gray-400 line-through text-lg">
@@ -124,7 +124,7 @@ const Header = ({ data }: { data: Product }) => {
                 </>
               ) : (data.discount?.percentage ?? 0) > 0 ? (
                 <>
-                  <span className="font-extrabold text-[#E53935] text-3xl lg:text-4xl">
+                  <span className="font-extrabold text-[#E53935] text-2xl lg:text-3xl">
                     UGX {Math.round((data.price || 0) - ((data.price || 0) * (data.discount?.percentage ?? 0)) / 100).toLocaleString()}
                   </span>
                   <span className="text-gray-400 line-through text-lg">
@@ -136,7 +136,7 @@ const Header = ({ data }: { data: Product }) => {
                 </>
               ) : (data.discount?.amount ?? 0) > 0 ? (
                 <>
-                  <span className="font-extrabold text-[#E53935] text-3xl lg:text-4xl">
+                  <span className="font-extrabold text-[#E53935] text-2xl lg:text-3xl">
                     UGX {((data.price || 0) - (data.discount?.amount ?? 0)).toLocaleString()}
                   </span>
                   <span className="text-gray-400 line-through text-lg">
@@ -147,7 +147,7 @@ const Header = ({ data }: { data: Product }) => {
                   </span>
                 </>
               ) : (
-                <span className="font-extrabold text-gray-900 text-3xl lg:text-4xl">
+                <span className="font-extrabold text-gray-900 text-2xl lg:text-3xl">
                   UGX {(data.price || 0).toLocaleString()}
                 </span>
               )}
