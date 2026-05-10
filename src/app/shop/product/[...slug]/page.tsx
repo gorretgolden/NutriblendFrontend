@@ -7,30 +7,7 @@ import { apiClient } from "@/lib/api/client";
 import { transformProduct } from "@/lib/transformers";
 import { Product } from "@/types/product.types";
 
-export async function generateStaticParams() {
-  let allSlugs: { slug: string[] }[] = [];
-  try {
-    let page = 1;
-    let lastPage = 1;
-    do {
-      const response = await apiClient.getProducts({ per_page: 100, page });
-      if (response.status && response.data?.data) {
-        const paths = response.data.data.map((p: any) => ({
-          slug: [p.id.toString(), p.slug || "product"],
-        }));
-        allSlugs = [...allSlugs, ...paths];
-        lastPage = response.data.last_page || 1;
-      } else {
-        break;
-      }
-      page++;
-    } while (page <= lastPage);
-  } catch (error) {
-    console.error("Failed to fetch products for static paths:", error);
-  }
-  
-  return allSlugs;
-}
+export const dynamic = 'force-dynamic';
 
 export default async function ProductPage({
   params,
