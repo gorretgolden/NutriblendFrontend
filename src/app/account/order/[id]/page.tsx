@@ -204,7 +204,7 @@ export default function OrderDetailPage() {
                </div>
             </div>
 
-            {order.status === 'pending' && (
+            {order.status === 'pending' && (new Date().getTime() - new Date(order.created_at).getTime() <= 10 * 60 * 1000) && (
               <button 
                 className="w-full mt-6 py-3 px-4 bg-white border border-red-200 text-red-600 rounded-xl text-sm font-bold hover:bg-red-50 transition-colors"
                 onClick={() => {
