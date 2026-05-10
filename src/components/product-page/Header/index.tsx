@@ -218,7 +218,7 @@ const Header = ({ data }: { data: Product }) => {
             ))}
           </div>
 
-          <ChatHelp />
+          <ChatHelp data={data} />
         </div>
       </div>
     </div>

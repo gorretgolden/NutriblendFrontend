@@ -1,15 +1,25 @@
 "use client";
 
 import React from "react";
+import { Product } from "@/types/product.types";
 
-const ChatHelp = () => {
+const ChatHelp = ({ data }: { data: Product }) => {
+  const handleChat = () => {
+    const productUrl = typeof window !== 'undefined'
+      ? window.location.href
+      : `https://nutriblendhaven.com/shop/product/${data.id}/${data.slug || 'product'}`;
+      
+    const message = encodeURIComponent(`Hello, can someone assist me? I'm inquiring about this product: ${data.title} - ${productUrl}`);
+    window.open(`https://wa.me/256784640607?text=${message}`, '_blank');
+  };
+
   return (
     <div className="mt-8 bg-white rounded-xl border border-gray-100 shadow-sm p-6 overflow-hidden relative group">
       <div className="flex flex-col items-center text-center">
         <h3 className="text-gray-600 text-lg font-medium mb-4">Questions about this product?</h3>
         
         <button 
-          onClick={() => window.open('https://wa.me/256784640607', '_blank')}
+          onClick={handleChat}
           className="flex items-center space-x-3 px-8 py-3 bg-[#009E3C] border-2 border-[#009E3C] text-white rounded-lg hover:bg-[#007a2e] hover:border-[#007a2e] transition-all duration-300 transform group-hover:scale-105"
         >
           <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
