@@ -21,7 +21,9 @@ export default async function ProductPage({
   try {
     const response = await apiClient.getProduct(productId);
     if (response.status && response.data) {
-      productData = transformProduct(response.data);
+      // Handle potential Laravel Resource double-wrapping where data is inside response.data.data
+      const rawProduct = (response.data as any).data ? (response.data as any).data : response.data;
+      productData = transformProduct(rawProduct);
     }
 
     const relatedRes = await apiClient.getProducts({ per_page: 6 });
