@@ -43,6 +43,7 @@ export default function OrderDetailPage() {
     switch (status?.toLowerCase()) {
       case "pending": return { label: "Pending", color: "text-yellow-600 bg-yellow-50 border-yellow-100", icon: <FiClock /> };
       case "processing": return { label: "Processing", color: "text-blue-600 bg-blue-50 border-blue-100", icon: <FiTruck /> };
+      case "approved": return { label: "Approved", color: "text-green-600 bg-green-50 border-green-100", icon: <FiCheckCircle /> };
       case "completed": case "delivered": return { label: "Completed", color: "text-green-600 bg-green-50 border-green-100", icon: <FiCheckCircle /> };
       case "cancelled": return { label: "Cancelled", color: "text-red-600 bg-red-50 border-red-100", icon: <FiXCircle /> };
       default: return { label: status, color: "text-gray-600 bg-gray-50 border-gray-100", icon: <FiPackage /> };

@@ -80,7 +80,7 @@ export default function OrdersPage() {
     switch (status?.toLowerCase()) {
       case "pending": return <FiClock className="w-3.5 h-3.5" />;
       case "processing": return <FiTruck className="w-3.5 h-3.5" />;
-      case "completed": case "delivered": return <FiCheckCircle className="w-3.5 h-3.5" />;
+      case "approved": case "completed": case "delivered": return <FiCheckCircle className="w-3.5 h-3.5" />;
       case "cancelled": return <FiXCircle className="w-3.5 h-3.5" />;
       default: return <FiClock className="w-3.5 h-3.5" />;
     }
@@ -90,7 +90,7 @@ export default function OrdersPage() {
     switch (status?.toLowerCase()) {
       case "pending": return "bg-yellow-50 text-yellow-700 border-yellow-200";
       case "processing": return "bg-blue-50 text-blue-700 border-blue-200";
-      case "completed": case "delivered": return "bg-[#f0fbf4] text-[#007a2e] border-[#009E3C]/25";
+      case "approved": case "completed": case "delivered": return "bg-[#f0fbf4] text-[#007a2e] border-[#009E3C]/25";
       case "cancelled": return "bg-red-50 text-red-700 border-red-200";
       default: return "bg-gray-50 text-gray-700 border-gray-200";
     }
