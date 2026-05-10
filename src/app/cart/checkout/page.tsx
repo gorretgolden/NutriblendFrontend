@@ -10,7 +10,6 @@ import SearchableSelect from "@/components/ui/SearchableSelect";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 
 export default function Checkout() {
   const router = useRouter();
@@ -201,25 +200,7 @@ export default function Checkout() {
   const actualDeliveryFee = deliveryMethod === 'pickup' ? 0 : Number(deliveryFee);
   const finalTotal = subtotal + actualDeliveryFee - Number(discountAmount);
 
-  const config = {
-    public_key: settings?.flutterwave_public_key || process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
-    tx_ref: `NB-${Date.now()}`,
-    amount: Math.round(finalTotal),
-    currency: 'UGX',
-    payment_options: 'card,mobilemoney,ussd',
-    customer: {
-      email: user?.email || '',
-      phone_number: user?.phone || '',
-      name: `${user?.first_name || user?.name || ''} ${user?.last_name || ''}`,
-    },
-    customizations: {
-      title: 'NutriBlend Haven',
-      description: 'Payment for wellness products',
-      logo: 'https://nutriblendhaven.com/logo.png',
-    },
-  };
-
-  const handleFlutterPayment = useFlutterwave(config);
+  // Payment method is recorded on the order — no online payment gateway.
 
   const handleApplyDiscount = async () => {
     if (!discountCode.trim()) {
@@ -288,31 +269,7 @@ export default function Checkout() {
         orderData.delivery_address = `Store Pickup - ${settings?.address || 'Shop C212, Nakivubo Trading Center, Kampala'}`;
       }
 
-      if (paymentMethod === 'flutterwave') {
-        handleFlutterPayment({
-          callback: async (response) => {
-            if (response.status === "successful") {
-              const apiOrderData = { ...orderData, payment_id: response.transaction_id };
-              const apiResponse = await apiClient.createOrder(apiOrderData);
-
-              if (apiResponse.status && apiResponse.data) {
-                toast.success("Order placed and payment successful!");
-                await dispatch(clearCartAsync()).unwrap();
-                router.push(`/account/order`);
-              } else {
-                toast.error(apiResponse.message || "Failed to finalize order");
-              }
-            } else {
-              toast.error("Payment failed or cancelled");
-            }
-            closePaymentModal();
-          },
-          onClose: () => {
-            setLoading(false);
-          },
-        });
-        return;
-      }
+      // All payment methods just place the order — money is handled manually offline.
 
       const response = await apiClient.createOrder(orderData);
 
@@ -629,39 +586,38 @@ export default function Checkout() {
                         </div>
                       </label>
 
-                      <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'flutterwave' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                      <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'mobile_money' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                         <input
                           type="radio"
                           disabled={loading}
                           className="h-4 w-4 accent-[#009E3C]"
-                          checked={paymentMethod === 'flutterwave'}
-                          onChange={() => setPaymentMethod('flutterwave')}
+                          checked={paymentMethod === 'mobile_money'}
+                          onChange={() => setPaymentMethod('mobile_money')}
                         />
                         <div className="flex items-center gap-2.5">
                           <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
                           </svg>
-                          <span className="text-sm font-medium text-gray-800">Mobile Money / Card</span>
+                          <span className="text-sm font-medium text-gray-800">Mobile Money</span>
                         </div>
                       </label>
                     </div>
 
-                    {/* Manual Payment Note */}
-                    <div className="mt-6 p-4 rounded-xl bg-amber-50 border border-amber-100">
-                      <h3 className="text-sm font-bold text-amber-800 mb-2 flex items-center gap-2">
+                    {/* Payment Info Note */}
+                    <div className="mt-6 p-4 rounded-xl bg-blue-50 border border-blue-100">
+                      <h3 className="text-sm font-bold text-blue-800 mb-2 flex items-center gap-2">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                         </svg>
-                        Supported Payment Methods
+                        How Payment Works
                       </h3>
                       <div className="flex flex-wrap gap-3 mb-3">
-                        <span className="px-2 py-1 bg-white rounded border border-amber-200 text-[10px] font-bold text-amber-700">MTN</span>
-                        <span className="px-2 py-1 bg-white rounded border border-amber-200 text-[10px] font-bold text-amber-700">Airtel</span>
-                        <span className="px-2 py-1 bg-white rounded border border-amber-200 text-[10px] font-bold text-amber-700">Visa</span>
-                        <span className="px-2 py-1 bg-white rounded border border-amber-200 text-[10px] font-bold text-amber-700">Cash</span>
+                        <span className="px-2 py-1 bg-white rounded border border-blue-200 text-[10px] font-bold text-blue-700">MTN MoMo</span>
+                        <span className="px-2 py-1 bg-white rounded border border-blue-200 text-[10px] font-bold text-blue-700">Airtel Money</span>
+                        <span className="px-2 py-1 bg-white rounded border border-blue-200 text-[10px] font-bold text-blue-700">Cash</span>
                       </div>
-                      <p className="text-xs text-amber-700 leading-relaxed">
-                        <strong>Note:</strong> We don't handle MTN/Airtel Money directly via the site. If you choose Mobile Money, you must perform the transaction manually to our merchant code provided after confirmation.
+                      <p className="text-xs text-blue-700 leading-relaxed">
+                        <strong>Note:</strong> Your selected payment method will be recorded on the order. Our team will contact you to arrange and confirm payment after your order is approved.
                       </p>
                     </div>
                   </div>
@@ -758,7 +714,7 @@ export default function Checkout() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs font-bold text-gray-700">
-                          {paymentMethod === 'cod' ? 'Cash on Delivery' : 'Mobile Money / Card'}
+                          {paymentMethod === 'cod' ? 'Cash on Delivery' : 'Mobile Money'}
                         </p>
                       </div>
                     </div>
