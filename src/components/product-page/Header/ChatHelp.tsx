@@ -9,7 +9,11 @@ const ChatHelp = ({ data }: { data: Product }) => {
       ? window.location.href
       : `https://nutriblendhaven.com/shop/product/${data.id}/${data.slug || 'product'}`;
       
-    const message = encodeURIComponent(`Hello, can someone assist me? I'm inquiring about this product: ${data.title} - ${productUrl}`);
+    const message = encodeURIComponent(`Hello, I'm inquiring about this product:
+*${data.title}*
+Link: ${productUrl}
+${data.srcUrl ? `Image: ${data.srcUrl}` : ''}
+Please assist me with more details.`);
     window.open(`https://wa.me/256784640607?text=${message}`, '_blank');
   };
 

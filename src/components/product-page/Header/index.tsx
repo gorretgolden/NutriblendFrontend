@@ -57,8 +57,8 @@ const Header = ({ data }: { data: Product }) => {
         {/* Right column — Product info (7 cols) */}
         <div className="lg:col-span-7 p-5 md:p-8 flex flex-col">
           {/* Brand + SKU bar */}
-          <div className="flex flex-wrap items-center gap-x-2.5 text-sm mb-3 pb-3 border-b border-gray-100">
-            <span className="text-gray-400">Brand:</span>
+          <div className="flex flex-wrap items-center gap-x-2 text-[13px] mb-2.5 pb-2.5 border-b border-gray-100">
+            <span className="text-gray-500">Brand:</span>
             <span className="font-bold text-[#009E3C] hover:underline cursor-pointer">
               {data.brand || "Generic"}
             </span>
@@ -75,7 +75,7 @@ const Header = ({ data }: { data: Product }) => {
           </div>
 
           {/* Product Title */}
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[32px] font-bold text-gray-900 mb-3 leading-tight capitalize">
+          <h1 className="text-lg md:text-xl font-bold text-gray-900 mb-2 leading-snug capitalize">
             {data.title}
           </h1>
 
@@ -115,43 +115,43 @@ const Header = ({ data }: { data: Product }) => {
             <div className="flex items-baseline gap-3 flex-wrap">
               {isUsingWholesalePrice ? (
                 <>
-                  <span className="font-extrabold text-blue-600 text-2xl lg:text-3xl">
+                  <span className="font-bold text-blue-600 text-lg lg:text-xl">
                     UGX {data.wholesale_price?.toLocaleString()}
                   </span>
-                  <span className="text-gray-400 line-through text-lg">
+                  <span className="text-gray-400 line-through text-xs">
                     UGX {(data.price || 0).toLocaleString()}
                   </span>
                 </>
               ) : (data.discount?.percentage ?? 0) > 0 ? (
                 <>
-                  <span className="font-extrabold text-[#E53935] text-2xl lg:text-3xl">
+                  <span className="font-bold text-[#E53935] text-lg lg:text-xl">
                     UGX {Math.round((data.price || 0) - ((data.price || 0) * (data.discount?.percentage ?? 0)) / 100).toLocaleString()}
                   </span>
-                  <span className="text-gray-400 line-through text-lg">
+                  <span className="text-gray-400 line-through text-xs">
                     UGX {(data.price || 0).toLocaleString()}
                   </span>
-                  <span className="bg-[#E53935] text-white font-bold text-xs px-2.5 py-1 rounded">
+                  <span className="bg-[#E53935]/10 text-[#E53935] font-bold text-[10px] px-2 py-0.5 rounded-md">
                     Save {data.discount?.percentage}%
                   </span>
                 </>
               ) : (data.discount?.amount ?? 0) > 0 ? (
                 <>
-                  <span className="font-extrabold text-[#E53935] text-2xl lg:text-3xl">
+                  <span className="font-bold text-[#E53935] text-lg lg:text-xl">
                     UGX {((data.price || 0) - (data.discount?.amount ?? 0)).toLocaleString()}
                   </span>
-                  <span className="text-gray-400 line-through text-lg">
+                  <span className="text-gray-400 line-through text-xs">
                     UGX {(data.price || 0).toLocaleString()}
                   </span>
-                  <span className="bg-[#E53935] text-white font-bold text-xs px-2.5 py-1 rounded">
+                  <span className="bg-[#E53935]/10 text-[#E53935] font-bold text-[10px] px-2 py-0.5 rounded-md">
                     -UGX {data.discount?.amount?.toLocaleString() ?? 0}
                   </span>
                 </>
               ) : (
-                <span className="font-extrabold text-gray-900 text-2xl lg:text-3xl">
+                <span className="font-bold text-gray-900 text-lg lg:text-xl">
                   UGX {(data.price || 0).toLocaleString()}
                 </span>
               )}
-              {data.unit && <span className="text-sm text-gray-400 font-normal">/ {data.unit}</span>}
+              {data.unit && <span className="text-sm text-gray-500 font-medium">/ {data.unit}</span>}
             </div>
             {isUsingWholesalePrice && (
               <p className="text-[10px] text-gray-500 mt-1 italic">* Business pricing applied based on your account status.</p>
@@ -170,8 +170,8 @@ const Header = ({ data }: { data: Product }) => {
 
           {/* Short Description */}
           {data.shortDescription && (
-            <div className="mb-5">
-              <p className="text-sm sm:text-base text-gray-600 leading-relaxed line-clamp-3">
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
                 {data.shortDescription}
               </p>
               {data.description && (

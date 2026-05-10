@@ -34,6 +34,24 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   const [checkoutErrors, setCheckoutErrors] = useState<Record<string, string | undefined>>({});
+  const [settings, setSettings] = useState<Record<string, any> | null>(null);
+  const [hasPendingOrder, setHasPendingOrder] = useState(false);
+  const [checkingPending, setCheckingPending] = useState(true);
+
+  // Fetch settings
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await apiClient.getPublicSettings();
+        if (res.status && res.data) {
+          setSettings(res.data);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   // Check authentication — wait for auth to load, also check localStorage as fallback
   useEffect(() => {
@@ -49,6 +67,23 @@ export default function Checkout() {
     // Refresh profile to get latest location details
     if (isAuthenticated || hasToken) {
       dispatch(fetchUserProfile());
+      
+      // Check for pending orders
+      const checkPending = async () => {
+        try {
+          setCheckingPending(true);
+          const res = await apiClient.getOrders({ status: 'pending' });
+          if (res.status && res.data && res.data.data.length > 0) {
+            setHasPendingOrder(true);
+            toast.error("You already have a pending order. Please wait for it to be approved.");
+          }
+        } catch (e) {
+          console.error("Error checking pending orders:", e);
+        } finally {
+          setCheckingPending(false);
+        }
+      };
+      checkPending();
     }
   }, [isAuthenticated, hasToken, dispatch]);
 
@@ -224,6 +259,11 @@ export default function Checkout() {
       }
     }
 
+    if (hasPendingOrder) {
+      toast.error("You cannot place a new order while you have a pending order.");
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -245,7 +285,7 @@ export default function Checkout() {
         orderData.delivery_town_id = selectedTown;
         orderData.delivery_address = address;
       } else {
-        orderData.delivery_address = 'Store Pickup - Shop C212, Nakivubo Trading Center, Kampala';
+        orderData.delivery_address = `Store Pickup - ${settings?.address || 'Shop C212, Nakivubo Trading Center, Kampala'}`;
       }
 
       if (paymentMethod === 'flutterwave') {
@@ -290,6 +330,11 @@ export default function Checkout() {
         // Redirect to orders tab
         router.push(`/account/order`);
       } else {
+        // Handle specific error for pending order if backend returned it
+        if (response.message && response.message.includes('pending order')) {
+          setHasPendingOrder(true);
+        }
+        
         if ((response.message || '').toLowerCase().includes('unauthenticated')) {
           toast.error('Session expired. Please log in again.');
           router.push('/login');
@@ -301,50 +346,52 @@ export default function Checkout() {
       console.error("Error placing order:", error);
       toast.error(error.message || "Failed to place order");
     } finally {
-      if (paymentMethod !== 'flutterwave') {
-        setLoading(false);
-      }
+      // ALWAYS set loading to false in finally block to avoid "endless processing"
+      setLoading(false);
     }
   };
 
-  if (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading) {
+  if (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading || checkingPending) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white border-b border-gray-200">
-          <div className="max-w-frame mx-auto px-4 py-4 flex justify-between items-center">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-6 w-24" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="w-10 h-10 animate-spin text-[#009E3C] mx-auto" />
+          <p className="text-gray-500 font-medium">Preparing your checkout...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (hasPendingOrder) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-8 text-center space-y-6">
+          <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto">
+            <svg className="w-10 h-10 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
           </div>
-        </header>
-        <main className="max-w-frame mx-auto px-4 py-6 md:py-10">
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-            <div className="lg:w-2/3 space-y-5">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                  <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
-                    <Skeleton className="w-7 h-7 rounded-full" />
-                    <Skeleton className="h-5 w-40" />
-                  </div>
-                  <div className="p-5 space-y-3">
-                    <Skeleton className="h-12 w-full" />
-                    {i === 2 && <Skeleton className="h-24 w-full" />}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="lg:w-1/3">
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <Skeleton className="h-14 w-full" />
-                <div className="p-5 space-y-4">
-                  <Skeleton className="h-20 w-full" />
-                  <Skeleton className="h-12 w-full" />
-                  <Skeleton className="h-10 w-full" />
-                  <Skeleton className="h-14 w-full rounded-xl" />
-                </div>
-              </div>
-            </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-gray-900">Pending Order Active</h2>
+            <p className="text-gray-600">
+              You already have an order currently being processed. Please wait for it to be completed or contact support before placing another one.
+            </p>
           </div>
-        </main>
+          <div className="flex flex-col gap-3 pt-2">
+            <button 
+              onClick={() => router.push('/account/order')}
+              className="w-full py-3.5 bg-[#009E3C] text-white font-bold rounded-xl shadow-[0_10px_20px_-5px_rgba(0,158,60,0.3)] hover:bg-[#008a34] transition-all"
+            >
+              View My Orders
+            </button>
+            <button 
+              onClick={() => router.push('/')}
+              className="w-full py-3.5 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all"
+            >
+              Return Home
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -454,8 +501,8 @@ export default function Checkout() {
                     {deliveryMethod === 'pickup' && (
                       <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                         <p className="text-sm font-semibold text-green-800 mb-1">Pickup Location</p>
-                        <p className="text-sm text-green-700">Shop C212, Nakivubo Trading Center, Kampala, Uganda</p>
-                        <p className="text-xs text-green-600 mt-1">Mon–Sat: 8:00 AM – 7:00 PM | Sun: 10:00 AM – 5:00 PM</p>
+                        <p className="text-sm text-green-700">{settings?.address || 'Shop C212, Nakivubo Trading Center, Kampala, Uganda'}</p>
+                        <p className="text-xs text-green-600 mt-1">{settings?.opening_hours || 'Mon–Sat: 8:00 AM – 7:00 PM | Sun: 10:00 AM – 5:00 PM'}</p>
                       </div>
                     )}
 

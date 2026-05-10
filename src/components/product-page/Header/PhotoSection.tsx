@@ -145,7 +145,7 @@ const PhotoSection = ({ data }: { data: Product }) => {
                   src={photo}
                   width={152}
                   height={167}
-                  className="rounded-md w-full h-full object-cover mix-blend-multiply hover:scale-110 transition-all duration-500"
+                  className="rounded-md w-full h-full object-contain hover:scale-110 transition-all duration-500"
                   alt={data.title}
                   priority
                 />
@@ -170,7 +170,8 @@ const PhotoSection = ({ data }: { data: Product }) => {
               src={selected}
               width={444}
               height={530}
-              className={`rounded-md w-full h-full object-contain mix-blend-multiply transition-transform duration-300 ${isZoomed ? 'scale-150' : 'hover:scale-110'
+              className={`rounded-md w-full h-full object-contain transition-all duration-300 ${
+                isZoomed ? 'scale-150' : 'hover:scale-110'
                 }`}
               alt={data.title}
               priority

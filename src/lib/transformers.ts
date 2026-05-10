@@ -26,20 +26,24 @@ export const transformProduct = (p: ApiProduct): Product => {
     }
 
     // 2. p.images - JSON array fallback
-    if (p.images && Array.isArray(p.images) && allImages.length === 0) {
+    if (p.images && Array.isArray(p.images)) {
         for (const img of p.images) {
+            let url = "";
             if (typeof img === 'string' && img.length > 0) {
-                allImages.push(getImageUrl(img));
+                url = getImageUrl(img);
             } else if (typeof img === 'object' && img !== null) {
-                if (img.image_path) allImages.push(getImageUrl(img.image_path));
-                else if (img.image_url) allImages.push(getImageUrl(img.image_url));
+                if ((img as any).image_path) url = getImageUrl((img as any).image_path);
+                else if ((img as any).image_url) url = getImageUrl((img as any).image_url);
+            }
+            if (url && !allImages.includes(url)) {
+                allImages.push(url);
             }
         }
     }
 
     // 3. p.product_images - Related ProductImage fallback
     const productImages = (p as any).product_images;
-    if (productImages && Array.isArray(productImages) && allImages.length === 0) {
+    if (productImages && Array.isArray(productImages)) {
         for (const img of productImages) {
             if (typeof img === 'object' && img !== null) {
                 const url = img.image_url || img.image_path;
