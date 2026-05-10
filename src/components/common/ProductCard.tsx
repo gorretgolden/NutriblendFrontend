@@ -207,11 +207,11 @@ const ProductCard = ({ data }: ProductCardProps) => {
                   : "text-gray-900"
             }`}>
               <span className="text-[9px] font-semibold text-gray-400 mr-0.5 align-baseline">UGX</span>
-              {displayPrice.toLocaleString()}
+              {(displayPrice || 0).toLocaleString()}
             </span>
             {(hasDiscount || isUsingWholesalePrice) && (
               <span className="text-gray-300 text-[10px] sm:text-xs line-through leading-none">
-                UGX {data.price.toLocaleString()}
+                UGX {(data.price || 0).toLocaleString()}
               </span>
             )}
           </div>

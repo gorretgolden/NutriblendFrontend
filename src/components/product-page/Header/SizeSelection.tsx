@@ -58,7 +58,7 @@ const SizeSelection = ({ data }: { data: Product }) => {
               "text-xs mt-1",
               sizeSelection === variation.name ? "text-dark-100" : "text-dark-600"
             ])}>
-              UGX {variation.price.toLocaleString()}
+              UGX {(variation.price || 0).toLocaleString()}
             </span>
             {variation.stock <= 5 && variation.stock > 0 && (
               <span className="text-[10px] text-red-500 mt-1">

@@ -119,16 +119,16 @@ const Header = ({ data }: { data: Product }) => {
                     UGX {data.wholesale_price?.toLocaleString()}
                   </span>
                   <span className="text-gray-400 line-through text-lg">
-                    UGX {data.price.toLocaleString()}
+                    UGX {(data.price || 0).toLocaleString()}
                   </span>
                 </>
               ) : (data.discount?.percentage ?? 0) > 0 ? (
                 <>
                   <span className="font-extrabold text-[#E53935] text-3xl lg:text-4xl">
-                    UGX {Math.round(data.price - (data.price * (data.discount?.percentage ?? 0)) / 100).toLocaleString()}
+                    UGX {Math.round((data.price || 0) - ((data.price || 0) * (data.discount?.percentage ?? 0)) / 100).toLocaleString()}
                   </span>
                   <span className="text-gray-400 line-through text-lg">
-                    UGX {data.price.toLocaleString()}
+                    UGX {(data.price || 0).toLocaleString()}
                   </span>
                   <span className="bg-[#E53935] text-white font-bold text-xs px-2.5 py-1 rounded">
                     Save {data.discount?.percentage}%
@@ -137,18 +137,18 @@ const Header = ({ data }: { data: Product }) => {
               ) : (data.discount?.amount ?? 0) > 0 ? (
                 <>
                   <span className="font-extrabold text-[#E53935] text-3xl lg:text-4xl">
-                    UGX {(data.price - (data.discount?.amount ?? 0)).toLocaleString()}
+                    UGX {((data.price || 0) - (data.discount?.amount ?? 0)).toLocaleString()}
                   </span>
                   <span className="text-gray-400 line-through text-lg">
-                    UGX {data.price.toLocaleString()}
+                    UGX {(data.price || 0).toLocaleString()}
                   </span>
                   <span className="bg-[#E53935] text-white font-bold text-xs px-2.5 py-1 rounded">
-                    -UGX {data.discount?.amount.toLocaleString()}
+                    -UGX {data.discount?.amount?.toLocaleString() ?? 0}
                   </span>
                 </>
               ) : (
                 <span className="font-extrabold text-gray-900 text-3xl lg:text-4xl">
-                  UGX {data.price.toLocaleString()}
+                  UGX {(data.price || 0).toLocaleString()}
                 </span>
               )}
               {data.unit && <span className="text-sm text-gray-400 font-normal">/ {data.unit}</span>}
