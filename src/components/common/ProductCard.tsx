@@ -173,11 +173,11 @@ const ProductCard = ({ data }: ProductCardProps) => {
       {/* ── Content ── */}
       <div className="relative z-10 px-2 sm:px-3 pt-2 pb-2.5 flex flex-col flex-grow border-t border-gray-100/80 bg-white">
 
-        {/* Category Row */}
-        <div className="flex items-center gap-2 mb-1 overflow-hidden">
-          {data.category && (
-            <span className="bg-[#f0fdf4] text-[#009E3C] text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider whitespace-nowrap">
-              {data.category}
+        {/* Brand Row */}
+        <div className="flex items-center gap-2 mb-1.5 overflow-hidden">
+          {(data.brand || data.category) && (
+            <span className="bg-[#f0fdf4] text-[#009E3C] text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider whitespace-nowrap">
+              {data.brand || data.category}
             </span>
           )}
         </div>
@@ -185,7 +185,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         {/* Title */}
         <Link
           href={`/shop/product/${data.id}/${productSlug}`}
-          className="text-gray-700 text-[13px] sm:text-[14px] font-normal mb-1 line-clamp-2 hover:text-[#009E3C] transition-colors duration-200 leading-snug"
+          className="text-gray-700 text-[13px] sm:text-[14px] font-normal mb-1 truncate hover:text-[#009E3C] transition-colors duration-200 leading-snug"
         >
           {data.title}
         </Link>
@@ -216,15 +216,31 @@ const ProductCard = ({ data }: ProductCardProps) => {
             )}
           </div>
           {data.unit && (
-            <span className="text-[10px] text-gray-400 mt-0.5">per {data.unit}</span>
+             <span className="text-[10px] text-gray-400 mt-0.5">per {data.unit}</span>
           )}
+
+          {/* Rating */}
+          <div className="flex items-center gap-1.5 mt-2">
+            <Rating
+              initialValue={data.rating || 0}
+              allowFraction
+              size={14}
+              readonly
+              SVGclassName="inline-block"
+              emptyClassName="fill-gray-300"
+              fillClassName="fill-[#f68b1e]"
+            />
+            <span className="text-gray-400 text-[11px]">
+              ({data.reviews || 0})
+            </span>
+          </div>
         </div>
 
         {/* Add to Cart Button */}
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock}
-          className={`mt-2 w-full py-1.5 rounded-lg text-[11px] font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
+          className={`mt-3 w-full py-2.5 rounded-full text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-2 ${
             isOutOfStock
               ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
               : isInCart
