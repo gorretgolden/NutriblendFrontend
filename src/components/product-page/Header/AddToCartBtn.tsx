@@ -33,6 +33,14 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
 
   const router = useRouter();
 
+  if (data.stock_quantity !== undefined && data.stock_quantity <= 0) {
+    return (
+      <div className="w-full ml-3 sm:ml-5 rounded-full h-11 md:h-[52px] text-sm sm:text-base flex items-center justify-center font-bold bg-gray-100 text-gray-500 cursor-not-allowed">
+        Out of Stock
+      </div>
+    );
+  }
+
   return (
     <button
       type="button"
