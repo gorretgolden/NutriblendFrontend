@@ -190,9 +190,6 @@ const ProductCard = ({ data }: ProductCardProps) => {
           {data.title}
         </Link>
 
-
-
-
         {/* Price Block */}
         <div className="flex flex-col mt-auto">
           {isUsingWholesalePrice && (
@@ -220,7 +217,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           )}
 
           {/* Rating */}
-          <div className="flex items-center gap-1.5 mt-2">
+          <div className="flex items-center gap-1.5 mt-1">
             <Rating
               initialValue={data.rating || 0}
               allowFraction
@@ -240,7 +237,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock}
-          className={`mt-3 w-full py-2.5 rounded-full text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-2 ${
+          className={`mt-2 w-full py-2.5 rounded-full text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-2 ${
             isOutOfStock
               ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
               : isInCart
