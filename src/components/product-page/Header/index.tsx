@@ -47,178 +47,189 @@ const Header = ({ data }: { data: Product }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
+    <div className="bg-white rounded-3xl border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
         {/* Left column — Photo gallery (5 cols) */}
-        <div className="lg:col-span-5 bg-white p-4 md:p-8 border-r border-gray-100">
+        <div className="lg:col-span-6 bg-white p-4 md:p-10 lg:p-12 border-r border-gray-50 flex flex-col items-center">
           <PhotoSection data={data} />
         </div>
 
-        {/* Right column — Product info (7 cols) */}
-        <div className="lg:col-span-7 p-5 md:p-8 flex flex-col">
-          {/* Brand + SKU bar */}
-          <div className="flex flex-wrap items-center gap-x-2 text-[13px] mb-2.5 pb-2.5 border-b border-gray-100">
-            <span className="text-gray-500">Brand:</span>
-            <span className="font-bold text-[#009E3C] hover:underline cursor-pointer">
-              {data.brand || "Generic"}
-            </span>
-            <span className="text-gray-200">|</span>
-            <span className="text-gray-400 hover:underline cursor-pointer text-xs">
-              More from {data.brand || "this brand"}
-            </span>
-            {data.sku && (
-              <>
-                <span className="text-gray-200">|</span>
-                <span className="text-gray-400 text-xs">SKU: {data.sku}</span>
-              </>
-            )}
-          </div>
-
-          {/* Product Title */}
-          <h1 className="text-lg md:text-xl font-bold text-gray-900 mb-2 leading-snug capitalize">
-            {data.title}
-          </h1>
-
-          {/* Rating row */}
-          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
-            <Rating
-              initialValue={data.rating}
-              allowFraction
-              SVGclassName="inline-block"
-              emptyClassName="fill-gray-200"
-              fillClassName="fill-amber-400"
-              size={20}
-              readonly
-            />
-            <span className="text-[#009E3C] text-sm font-semibold hover:underline cursor-pointer">
-              {data.reviews || 0} Ratings
-            </span>
+        {/* Right column — Product info (6 cols) */}
+        <div className="lg:col-span-6 p-6 md:p-10 lg:p-12 flex flex-col">
+          {/* Top Info Bar */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="bg-[#f0fdf4] text-[#009E3C] text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest border border-[#009E3C]/10">
+                {data.brand || data.category || "Authentic"}
+              </span>
+              {data.sku && (
+                <span className="text-[10px] text-gray-400 font-medium tracking-wider">SKU: {data.sku}</span>
+              )}
+            </div>
             <button
               onClick={handleShareProduct}
-              className="flex items-center gap-1 ml-auto text-gray-400 hover:text-[#009E3C] transition-colors group"
+              className="p-2 rounded-full bg-gray-50 text-gray-400 hover:text-[#009E3C] hover:bg-[#f0fdf4] transition-all group"
+              title="Share Product"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.316a3 3 0 100-2.684 3 3 0 000 2.684z" />
               </svg>
-              <span className="text-xs font-medium">Share</span>
             </button>
           </div>
 
-          {/* Price Block — iHerb-style prominent pricing */}
-          <div className="bg-gradient-to-br from-[#f0fbf4] to-[#f8fffe] rounded-xl p-4 mb-4 border border-[#009E3C]/12">
-            {isUsingWholesalePrice && (
-              <div className="flex items-center gap-2 mb-2">
-                <span className="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">WHOLESALE</span>
-                <span className="text-xs text-blue-600 font-bold">Approved Business Rate</span>
+          {/* Title & Rating */}
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-3 leading-tight tracking-tight capitalize">
+            {data.title}
+          </h1>
+
+          <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
+              <Rating
+                initialValue={data.rating}
+                allowFraction
+                SVGclassName="inline-block"
+                emptyClassName="fill-amber-200"
+                fillClassName="fill-amber-500"
+                size={18}
+                readonly
+              />
+              <span className="text-amber-700 text-sm font-bold">{data.rating || 0}</span>
+            </div>
+            <span className="text-gray-400 text-sm font-medium">|</span>
+            <span className="text-[#009E3C] text-sm font-bold hover:underline cursor-pointer">
+              {data.reviews || 0} Verifed Reviews
+            </span>
+          </div>
+
+          {/* Main Content Area — Reorganized for Importance */}
+          <div className="flex flex-col gap-8">
+            {/* Price & Primary Action Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+              {/* Price */}
+              <div className="flex flex-col">
+                <span className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">Price</span>
+                <div className="flex items-baseline gap-2">
+                  {isUsingWholesalePrice ? (
+                    <span className="font-black text-blue-600 text-2xl lg:text-3xl">
+                      UGX {data.wholesale_price?.toLocaleString()}
+                    </span>
+                  ) : (data.discount?.percentage ?? 0) > 0 ? (
+                    <span className="font-black text-[#E53935] text-2xl lg:text-3xl">
+                      UGX {Math.round((data.price || 0) - ((data.price || 0) * (data.discount?.percentage ?? 0)) / 100).toLocaleString()}
+                    </span>
+                  ) : (
+                    <span className="font-black text-gray-900 text-2xl lg:text-3xl">
+                      UGX {(data.price || 0).toLocaleString()}
+                    </span>
+                  )}
+                  {data.unit && <span className="text-sm text-gray-400 font-bold">/ {data.unit}</span>}
+                </div>
+                {(hasDiscount || isUsingWholesalePrice) && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-gray-300 line-through text-sm font-medium">UGX {(data.price || 0).toLocaleString()}</span>
+                    <span className="text-[#E53935] text-xs font-bold bg-red-50 px-1.5 py-0.5 rounded">
+                      {isUsingWholesalePrice ? 'Wholesale Rate' : `Save ${data.discount?.percentage}%`}
+                    </span>
+                  </div>
+                )}
               </div>
-            )}
-            <div className="flex items-baseline gap-3 flex-wrap">
-              {isUsingWholesalePrice ? (
-                <>
-                  <span className="font-bold text-blue-600 text-lg lg:text-xl">
-                    UGX {data.wholesale_price?.toLocaleString()}
-                  </span>
-                  <span className="text-gray-400 line-through text-xs">
-                    UGX {(data.price || 0).toLocaleString()}
-                  </span>
-                </>
-              ) : (data.discount?.percentage ?? 0) > 0 ? (
-                <>
-                  <span className="font-bold text-[#E53935] text-lg lg:text-xl">
-                    UGX {Math.round((data.price || 0) - ((data.price || 0) * (data.discount?.percentage ?? 0)) / 100).toLocaleString()}
-                  </span>
-                  <span className="text-gray-400 line-through text-xs">
-                    UGX {(data.price || 0).toLocaleString()}
-                  </span>
-                  <span className="bg-[#E53935]/10 text-[#E53935] font-bold text-[10px] px-2 py-0.5 rounded-md">
-                    Save {data.discount?.percentage}%
-                  </span>
-                </>
-              ) : (data.discount?.amount ?? 0) > 0 ? (
-                <>
-                  <span className="font-bold text-[#E53935] text-lg lg:text-xl">
-                    UGX {((data.price || 0) - (data.discount?.amount ?? 0)).toLocaleString()}
-                  </span>
-                  <span className="text-gray-400 line-through text-xs">
-                    UGX {(data.price || 0).toLocaleString()}
-                  </span>
-                  <span className="bg-[#E53935]/10 text-[#E53935] font-bold text-[10px] px-2 py-0.5 rounded-md">
-                    -UGX {data.discount?.amount?.toLocaleString() ?? 0}
-                  </span>
-                </>
-              ) : (
-                <span className="font-bold text-gray-900 text-lg lg:text-xl">
-                  UGX {(data.price || 0).toLocaleString()}
-                </span>
+
+              {/* Action */}
+              <div className="flex flex-col gap-4">
+                <SizeSelection data={data} />
+                <AddToCardSection data={data} />
+              </div>
+            </div>
+
+            {/* Availability & Quick Info */}
+            <div className="flex flex-wrap gap-4 py-6 border-y border-gray-50">
+              {data.stock !== undefined && (
+                <div className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-2xl border text-sm font-bold transition-colors",
+                  data.stock > 0 && data.stock <= 10 
+                    ? "bg-red-50 border-red-100 text-red-600" 
+                    : data.stock > 10 
+                      ? "bg-emerald-50 border-emerald-100 text-[#009E3C]"
+                      : "bg-gray-50 border-gray-200 text-gray-500"
+                )}>
+                  <span className={cn(
+                    "w-2 h-2 rounded-full",
+                    data.stock > 10 ? "bg-emerald-500" : "bg-red-500 animate-pulse"
+                  )} />
+                  {data.stock > 10 ? 'In Stock' : data.stock > 0 ? `Limited: Only ${data.stock} Left` : 'Out of Stock'}
+                </div>
               )}
-              {data.unit && <span className="text-sm text-gray-500 font-medium">/ {data.unit}</span>}
-            </div>
-            {isUsingWholesalePrice && (
-              <p className="text-[10px] text-gray-500 mt-1 italic">* Business pricing applied based on your account status.</p>
-            )}
-          </div>
-
-          {/* Low Stock Warning */}
-          {(data.stock !== undefined && data.stock > 0 && data.stock <= 10) && (
-            <div className="flex items-center gap-2 mb-4 bg-red-50 border border-red-100 rounded-lg px-4 py-2.5">
-              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-              <span className="text-red-600 font-bold text-sm">
-                Low Stock — Only {data.stock} units remaining
-              </span>
-            </div>
-          )}
-
-          {/* Short Description */}
-          {data.shortDescription && (
-            <div className="mb-4">
-              <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
-                {data.shortDescription}
-              </p>
-              {data.description && (
-                <button 
-                  onClick={() => document.getElementById('product-tabs')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="text-xs font-bold text-[#009E3C] mt-2 hover:underline cursor-pointer"
-                >
-                  View Full Details
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Size/Variant selection */}
-          <SizeSelection data={data} />
-
-          {/* Add to cart section */}
-          <div className="mt-4 pt-4 border-t border-gray-100">
-            <AddToCardSection data={data} />
-          </div>
-
-          {/* Trust indicators */}
-          <div className="mt-5 grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
-            {[
-              {
-                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />,
-                label: "100% Authentic",
-              },
-              {
-                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />,
-                label: "Fast Delivery",
-              },
-              {
-                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />,
-                label: "Easy Returns",
-              },
-            ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-[#f0fbf4] border border-[#009E3C]/10 text-center">
-                <svg className="w-5 h-5 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {item.icon}
+              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl border border-gray-100 bg-gray-50/50 text-gray-600 text-sm font-bold">
+                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-[11px] sm:text-xs font-bold text-[#007a2e] leading-tight">{item.label}</span>
+                Direct Sourcing
               </div>
-            ))}
+              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl border border-gray-100 bg-gray-50/50 text-gray-600 text-sm font-bold">
+                <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Fast Dispatch
+              </div>
+            </div>
+
+            {/* Highlights Section */}
+            {data.shortDescription && (
+              <div className="flex flex-col gap-3">
+                <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Product Highlights</h3>
+                <div className="text-base text-gray-600 leading-relaxed prose prose-sm max-w-none"
+                     dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(data.shortDescription) }} />
+                {data.description && (
+                  <button 
+                    onClick={() => document.getElementById('product-tabs')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="text-sm font-bold text-[#009E3C] mt-2 flex items-center gap-1 hover:underline group"
+                  >
+                    Read Full Technical Details
+                    <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Premium Trust Icons */}
+            <div className="grid grid-cols-3 gap-4 mt-4">
+              {[
+                {
+                  icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+                  label: "100% Original",
+                  color: "text-emerald-600",
+                  bg: "bg-emerald-50"
+                },
+                {
+                  icon: "M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0",
+                  label: "Fast Shipping",
+                  color: "text-blue-600",
+                  bg: "bg-blue-50"
+                },
+                {
+                  icon: "M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15",
+                  label: "Safe Returns",
+                  color: "text-purple-600",
+                  bg: "bg-purple-50"
+                },
+              ].map((item, i) => (
+                <div key={i} className={cn("flex flex-col items-center gap-2 p-4 rounded-2xl border border-transparent transition-all hover:shadow-lg hover:bg-white hover:border-gray-50", item.bg)}>
+                  <div className={cn("p-2 rounded-full bg-white shadow-sm", item.color)}>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] sm:text-xs font-black text-gray-900 uppercase tracking-wider">{item.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <ChatHelp data={data} />
+          <div className="mt-auto pt-8">
+            <ChatHelp data={data} />
+          </div>
         </div>
       </div>
     </div>

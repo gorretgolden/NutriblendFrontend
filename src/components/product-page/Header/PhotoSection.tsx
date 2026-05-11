@@ -126,17 +126,16 @@ const PhotoSection = ({ data }: { data: Product }) => {
     <>
       <div className="flex flex-col-reverse lg:flex-row lg:space-x-3.5">
         {data?.gallery && data.gallery.length > 0 && (
-          <div className="flex lg:flex-col space-x-3 lg:space-x-0 lg:space-y-3.5 w-full lg:w-fit items-center lg:justify-start justify-center">
+          <div className="flex lg:flex-col space-x-3 lg:space-x-0 lg:space-y-4 w-full lg:w-fit items-center lg:justify-start justify-center">
             {data.gallery.map((photo, index) => (
               <button
                 key={index}
                 type="button"
                 className={`
-                rounded-[13px] xl:rounded-[20px] w-full max-w-[111px] xl:max-w-[152px] max-h-[106px] xl:max-h-[167px] xl:min-h-[167px] 
-                aspect-square overflow-hidden border-2 transition-all duration-300
+                rounded-2xl w-full max-w-[80px] xl:max-w-[100px] aspect-square overflow-hidden border-2 transition-all duration-300
                 ${selected === photo
-                    ? 'border-green-500 bg-green-50 shadow-md'
-                    : 'border-green-100 bg-green-50 hover:border-green-300 hover:bg-green-100'
+                    ? 'border-[#009E3C] bg-white shadow-lg scale-105'
+                    : 'border-gray-100 bg-white hover:border-gray-300'
                   }
               `}
                 onClick={() => setSelected(photo)}
@@ -145,7 +144,7 @@ const PhotoSection = ({ data }: { data: Product }) => {
                   src={photo}
                   width={152}
                   height={167}
-                  className="rounded-md w-full h-full object-contain hover:scale-110 transition-all duration-500"
+                  className="w-full h-full object-contain p-2"
                   alt={data.title}
                   priority
                 />
@@ -154,7 +153,7 @@ const PhotoSection = ({ data }: { data: Product }) => {
           </div>
         )}
 
-        <div className="relative flex items-center justify-center bg-green-50 rounded-[13px] sm:rounded-[20px] w-full sm:w-96 md:w-full mx-auto h-full max-h-[530px] min-h-[330px] lg:min-h-[380px] xl:min-h-[530px] overflow-hidden mb-3 lg:mb-0 border border-green-100">
+        <div className="relative flex items-center justify-center bg-gray-50/50 rounded-3xl w-full mx-auto h-full max-h-[600px] min-h-[400px] lg:min-h-[500px] overflow-hidden mb-6 lg:mb-0 border border-gray-100/50 shadow-inner group">
           {/* Main image with zoom functionality */}
           <div
             ref={imageRef}
