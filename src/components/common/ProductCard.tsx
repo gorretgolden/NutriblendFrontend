@@ -191,7 +191,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         </Link>
 
         {/* Price Block */}
-        <div className="flex flex-col mt-auto">
+        <div className="flex flex-col mt-2">
           {isUsingWholesalePrice && (
             <p className="text-[9px] text-blue-600 font-bold uppercase tracking-wider mb-0.5">Wholesale Price</p>
           )}
@@ -217,7 +217,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           )}
 
           {/* Rating */}
-          <div className="flex items-center gap-1.5 mt-1">
+          <div className="flex items-center gap-1.5 mt-0">
             <Rating
               initialValue={data.rating || 0}
               allowFraction
