@@ -14,6 +14,7 @@ export default function OrderDetailPage() {
   const { id: orderNumber } = useParams();
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -207,14 +208,7 @@ export default function OrderDetailPage() {
             {order.status === 'pending' && (new Date().getTime() - new Date(order.created_at).getTime() <= 10 * 60 * 1000) && (
               <button 
                 className="w-full mt-6 py-3 px-4 bg-white border border-red-200 text-red-600 rounded-xl text-sm font-bold hover:bg-red-50 transition-colors"
-                onClick={() => {
-                  if(confirm("Are you sure you want to cancel this order?")) {
-                    apiClient.cancelOrder(order.order_number).then(() => {
-                      toast.success("Order cancelled");
-                      window.location.reload();
-                    });
-                  }
-                }}
+                onClick={() => setIsCancelModalOpen(true)}
               >
                 Cancel Order
               </button>
@@ -230,6 +224,35 @@ export default function OrderDetailPage() {
           </div>
         </div>
       </div>
+
+      {isCancelModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl animate-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Cancel Order</h3>
+            <p className="text-sm text-gray-500 mb-6">Are you sure you want to cancel this order? This action cannot be undone.</p>
+            <div className="flex gap-3">
+              <button 
+                className="flex-1 py-3 px-4 bg-gray-100 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
+                onClick={() => setIsCancelModalOpen(false)}
+              >
+                No, Keep It
+              </button>
+              <button 
+                className="flex-1 py-3 px-4 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition-colors"
+                onClick={() => {
+                  setIsCancelModalOpen(false);
+                  apiClient.cancelOrder(order.order_number).then(() => {
+                    toast.success("Order cancelled");
+                    window.location.reload();
+                  });
+                }}
+              >
+                Yes, Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
