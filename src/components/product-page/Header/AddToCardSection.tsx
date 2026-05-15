@@ -10,15 +10,21 @@ const AddToCardSection = ({ data }: { data: Product }) => {
   const [quantity, setQuantity] = useState<number>(1);
 
   return (
-    <div className="fixed md:relative w-full bg-white border-t md:border-none border-black/5 bottom-0 left-0 p-4 md:p-0 z-[50] flex items-center gap-3">
-      <div className="shrink-0">
-        <CartCounter onAdd={setQuantity} onRemove={setQuantity} />
+    <div className="flex flex-col gap-4 w-full">
+      {/* Top Row: Quantity + Wishlist */}
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-[52px] bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-between px-4">
+          <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Quantity</span>
+          <CartCounter onAdd={setQuantity} onRemove={setQuantity} />
+        </div>
+        <div className="shrink-0">
+          <WishlistButton productId={data.id} productName={data.title} variant="detail" />
+        </div>
       </div>
-      <div className="flex-1 min-w-0">
+
+      {/* Bottom Row: Block Add to Cart Button */}
+      <div className="w-full">
         <AddToCartBtn data={{ ...data, quantity }} />
-      </div>
-      <div className="shrink-0">
-        <WishlistButton productId={data.id} productName={data.title} variant="detail" />
       </div>
     </div>
   );

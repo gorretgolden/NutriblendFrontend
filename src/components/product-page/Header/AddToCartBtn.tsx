@@ -44,10 +44,10 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
   return (
     <button
       type="button"
-      className={`w-full rounded-full h-11 md:h-[52px] text-sm sm:text-base transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2 font-bold ${
+      className={`group w-full rounded-2xl h-14 md:h-[60px] text-base transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-3 font-black uppercase tracking-widest shadow-lg ${
         isInCart
-          ? "bg-[#009E3C] text-white shadow-[0_4px_14px_rgba(0,158,60,0.28)]"
-          : "bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[0_4px_14px_rgba(0,158,60,0.28)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.38)]"
+          ? "bg-[#009E3C] text-white shadow-[#009E3C]/20"
+          : "bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[#009E3C]/30 hover:shadow-[#009E3C]/40"
       }`}
       onClick={async () => {
         if (isInCart) {
@@ -74,13 +74,18 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
     >
       {isInCart ? (
         <>
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
           </svg>
-          In Cart — View
+          In Cart — View Now
         </>
       ) : (
-        "Add to Cart"
+        <>
+          <svg className="w-6 h-6 transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Add to Cart
+        </>
       )}
     </button>
   );
