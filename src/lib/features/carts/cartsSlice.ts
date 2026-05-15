@@ -351,7 +351,6 @@ export const cartsSlice = createSlice({
       state.totalPrice = 0;
       state.adjustedTotalPrice = 0;
       state.isSynced = true;
-      toast.success("Cart cleared!");
     });
 
     // ===== Remove from cart =====
