@@ -93,7 +93,7 @@ export default function Checkout() {
     // Don't redirect while auth state is still loading
     if (authLoading) return;
 
-    if (!cartLoading && cart && cart.items.length === 0) {
+    if (!showSuccessModal && !cartLoading && cart && cart.items.length === 0) {
       toast.error("Your cart is empty");
       router.push('/cart');
       return;

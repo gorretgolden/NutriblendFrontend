@@ -18,7 +18,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
       // Auto-redirect after 3.5 seconds
       const timer = setTimeout(() => {
         router.push("/account/order");
-      }, 3500);
+      }, 6000);
       return () => clearTimeout(timer);
     }
   }, [isOpen, router]);

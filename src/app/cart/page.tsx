@@ -147,14 +147,26 @@ export default function CartPage() {
                 </div>
 
                 <Button
-                  className="w-full bg-[#009E3C] hover:bg-[#007a2e] text-white py-3.5 h-auto rounded-lg font-bold text-sm shadow-sm group active:scale-[0.98] transition-all"
-                  onClick={() => {
+                  className="w-full bg-[#009E3C] hover:bg-[#007a2e] text-white py-3.5 h-auto rounded-lg font-bold text-sm shadow-sm group active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                  disabled={promoLoading}
+                  onClick={async () => {
                     if (!isAuthenticated) {
                       sessionStorage.setItem('returnUrl', '/cart/checkout');
                       toast.error("Please login to proceed to checkout");
                       router.push('/login');
                       return;
                     }
+
+                    try {
+                      const res = await apiClient.getOrders({ status: 'pending' });
+                      if (res.status && res.data && res.data.data.length > 0) {
+                        toast.error("You already have a pending order. Please wait for it to be approved.");
+                        return;
+                      }
+                    } catch (e) {
+                      console.error("Error checking pending orders:", e);
+                    }
+
                     sessionStorage.setItem('checkoutCart', JSON.stringify({
                       items: cart.items,
                       totalPrice,
