@@ -44,7 +44,7 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
   return (
     <button
       type="button"
-      className={`group w-full rounded-2xl h-14 md:h-[60px] text-base transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-3 font-black uppercase tracking-widest shadow-lg ${
+      className={`group w-full rounded-2xl h-14 md:h-[60px] text-base transition-all duration-300 transform active:scale-[0.98] flex items-center justify-start px-8 gap-3 font-black uppercase tracking-widest shadow-lg ${
         isInCart
           ? "bg-[#009E3C] text-white shadow-[#009E3C]/20"
           : "bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[#009E3C]/30 hover:shadow-[#009E3C]/40"

@@ -104,8 +104,8 @@ const Header = ({ data }: { data: Product }) => {
 
           {/* Main Content Area — Reorganized for Importance */}
           <div className="flex flex-col gap-8">
-            {/* Price & Primary Action Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+            {/* Price & Primary Action Section — Left Aligned Stack */}
+            <div className="flex flex-col gap-8 items-start">
               {/* Price */}
               <div className="flex flex-col">
                 <span className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">Price</span>
