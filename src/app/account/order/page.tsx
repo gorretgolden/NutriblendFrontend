@@ -28,31 +28,37 @@ export default function OrdersPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchOrders = async (isPolling = false) => {
       try {
-        setError(null);
+        if (!isPolling) setError(null);
         const response = await apiClient.getOrders();
-        console.log("[Orders] API response:", JSON.stringify(response).substring(0, 300));
         if (response.status && response.data) {
           const rawData = response.data;
           const ordersArray = Array.isArray(rawData)
             ? rawData
             : (rawData as any).data || [];
           setOrders(ordersArray);
-        } else {
-          console.error("[Orders] API error:", response.message);
+        } else if (!isPolling) {
           setError(response.message || "Failed to load orders");
         }
       } catch (error: any) {
-        console.error("[Orders] Fetch error:", error);
-        setError(error?.message || "Network error loading orders");
-        setOrders([]);
+        if (!isPolling) {
+          setError(error?.message || "Network error loading orders");
+          setOrders([]);
+        }
       } finally {
-        setLoading(false);
+        if (!isPolling) setLoading(false);
       }
     };
 
     fetchOrders();
+
+    // Set up polling every 20 seconds to auto-refresh order statuses
+    const interval = setInterval(() => {
+      fetchOrders(true);
+    }, 20000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Filter orders
