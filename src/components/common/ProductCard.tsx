@@ -275,7 +275,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
                 ? `${window.location.origin}/shop/product/${data.id}/${data.slug || 'product'}`
                 : `https://nutriblendhaven.com/shop/product/${data.id}/${data.slug || 'product'}`;
               
-              const message = encodeURIComponent(`Hello Nutriblend Haven.\nLike to buy ${data.title},\nUGX ${(displayPrice || 0).toLocaleString()},\n${productUrl}`);
+              const message = encodeURIComponent(`Hello Nutriblend Haven.\nI would like to buy ${data.title},\nUGX ${(displayPrice || 0).toLocaleString()},\n${productUrl}`);
               window.open(`https://wa.me/256784640607?text=${message}`, '_blank');
             }}
             className="flex-shrink-0 w-10 h-10 bg-[#25D366] hover:bg-[#1ebd5a] text-white rounded-full flex items-center justify-center shadow-md shadow-[#25D366]/20 transition-all duration-300 active:scale-[0.95]"
