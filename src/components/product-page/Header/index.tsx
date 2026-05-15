@@ -16,6 +16,7 @@ const Header = ({ data }: { data: Product }) => {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const isWholesaleUser = isAuthenticated && user?.is_wholesale_approved;
   const isUsingWholesalePrice = isWholesaleUser && !!data.wholesale_price;
+  const hasDiscount = (data.discount?.percentage ?? 0) > 0 || (data.discount?.amount ?? 0) > 0;
 
   const handleShareProduct = async () => {
     const shareUrl = typeof window !== 'undefined'
