@@ -473,7 +473,7 @@
   }
 body {
   @apply bg-white text-gray-900;
-  font-family: var(--font-inter);
+  font-family: var(--font-satoshi), sans-serif;
   font-size: 16px; /* Increased base font size */
   line-height: 1.6;
 }
