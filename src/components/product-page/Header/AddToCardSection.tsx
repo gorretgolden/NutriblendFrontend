@@ -13,7 +13,7 @@ const AddToCardSection = ({ data }: { data: Product }) => {
     <div className="flex flex-col gap-4 w-full">
       {/* Top Row: Quantity + Wishlist */}
       <div className="flex items-center gap-3">
-        <div className="flex-1 h-[52px] bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-between px-4">
+        <div className="flex-1 h-[52px] bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-between px-6">
           <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Quantity</span>
           <CartCounter onAdd={setQuantity} onRemove={setQuantity} />
         </div>
