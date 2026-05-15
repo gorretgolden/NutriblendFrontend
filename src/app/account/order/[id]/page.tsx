@@ -18,25 +18,34 @@ export default function OrderDetailPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchOrder = async () => {
+    const fetchOrder = async (isPolling = false) => {
       try {
         const response = await apiClient.getOrder(orderNumber as string);
         if (response.status && response.data) {
           setOrder(response.data);
-        } else {
+        } else if (!isPolling) {
           toast.error(response.message || "Order not found");
           router.push('/account/order');
         }
       } catch (error) {
-        console.error("Failed to fetch order", error);
-        toast.error("Failed to load order details");
+        if (!isPolling) {
+          console.error("Failed to fetch order", error);
+          toast.error("Failed to load order details");
+        }
       } finally {
-        setLoading(false);
+        if (!isPolling) setLoading(false);
       }
     };
 
     if (orderNumber) {
       fetchOrder();
+      
+      // Auto-refresh order status every 15 seconds
+      const interval = setInterval(() => {
+        fetchOrder(true);
+      }, 15000);
+      
+      return () => clearInterval(interval);
     }
   }, [orderNumber, router]);
 

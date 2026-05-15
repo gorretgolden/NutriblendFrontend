@@ -53,10 +53,10 @@ export default function OrdersPage() {
 
     fetchOrders();
 
-    // Set up polling every 20 seconds to auto-refresh order statuses
+    // Set up polling every 15 seconds to auto-refresh order statuses
     const interval = setInterval(() => {
       fetchOrders(true);
-    }, 20000);
+    }, 15000);
 
     return () => clearInterval(interval);
   }, []);
