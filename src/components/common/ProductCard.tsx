@@ -233,39 +233,40 @@ const ProductCard = ({ data }: ProductCardProps) => {
           </div>
         </div>
 
-        {/* Add to Cart Button */}
-        <button
-          onClick={handleAddToCart}
-          disabled={isOutOfStock}
-          className={`mt-2 w-full py-2.5 rounded-full text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-2 ${
-            isOutOfStock
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
-              : isInCart
-                ? "active:scale-[0.97] bg-[#009E3C] text-white shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)]"
-                : "active:scale-[0.97] bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)]"
-          }`}
-        >
-          {isOutOfStock ? (
-            'Out of Stock'
-          ) : isInCart ? (
-            <>
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-              </svg>
-              In Cart — View
-            </>
-          ) : (
-            <>
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
-              </svg>
-              Add to Cart
-            </>
-          )}
-        </button>
+        {/* Actions Row */}
+        <div className="mt-2 flex items-center gap-2">
+          {/* Add to Cart Button */}
+          <button
+            onClick={handleAddToCart}
+            disabled={isOutOfStock}
+            className={`flex-1 py-2.5 rounded-full text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-2 ${
+              isOutOfStock
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                : isInCart
+                  ? "active:scale-[0.97] bg-[#009E3C] text-white shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)]"
+                  : "active:scale-[0.97] bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)]"
+            }`}
+          >
+            {isOutOfStock ? (
+              'Out of Stock'
+            ) : isInCart ? (
+              <>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+                In Cart
+              </>
+            ) : (
+              <>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+                </svg>
+                Add to Cart
+              </>
+            )}
+          </button>
 
-        {/* WhatsApp Quick Chat Button */}
-        <div className="flex justify-center mt-3 mb-1">
+          {/* WhatsApp Quick Chat Button */}
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -274,13 +275,10 @@ const ProductCard = ({ data }: ProductCardProps) => {
                 ? `${window.location.origin}/shop/product/${data.id}/${data.slug || 'product'}`
                 : `https://nutriblendhaven.com/shop/product/${data.id}/${data.slug || 'product'}`;
               
-              const message = encodeURIComponent(`Hello Nutriblend Haven.
-Like to buy ${data.title},
-UGX ${(displayPrice || 0).toLocaleString()},
-${productUrl}`);
+              const message = encodeURIComponent(`Hello Nutriblend Haven.\nLike to buy ${data.title},\nUGX ${(displayPrice || 0).toLocaleString()},\n${productUrl}`);
               window.open(`https://wa.me/256784640607?text=${message}`, '_blank');
             }}
-            className="w-10 h-10 bg-[#25D366] hover:bg-[#1ebd5a] text-white rounded-full flex items-center justify-center shadow-md shadow-[#25D366]/20 transition-all duration-300 active:scale-[0.95]"
+            className="flex-shrink-0 w-10 h-10 bg-[#25D366] hover:bg-[#1ebd5a] text-white rounded-full flex items-center justify-center shadow-md shadow-[#25D366]/20 transition-all duration-300 active:scale-[0.95]"
             title="Chat about this product"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
