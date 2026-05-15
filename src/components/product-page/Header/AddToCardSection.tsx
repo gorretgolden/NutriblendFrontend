@@ -14,13 +14,12 @@ const AddToCardSection = ({ data }: { data: Product }) => {
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      {/* Quantity Label */}
-      <div className="flex flex-col gap-4">
-        <span className="text-sm font-bold uppercase tracking-widest text-gray-400 ml-1">Quantity</span>
-        
-        <div className="flex items-center gap-5">
-          {/* Custom Counter Pill */}
-          <div className="flex items-center justify-between bg-gray-100/50 p-2 rounded-2xl border border-gray-100 w-full max-w-[200px]">
+      {/* Quantity Selector - Spaced Horizontal Layout */}
+      <div className="flex items-center gap-4">
+        <div className="flex-1 h-[64px] bg-gray-100/50 rounded-2xl border border-gray-100 flex items-center justify-between px-8">
+          <span className="text-sm font-bold uppercase tracking-widest text-gray-400">Quantity</span>
+          
+          <div className="flex items-center gap-6">
             <button 
               onClick={handleRemove}
               className="w-11 h-11 flex items-center justify-center bg-white rounded-xl shadow-sm text-gray-400 hover:text-[#009E3C] hover:shadow-md transition-all active:scale-90"
@@ -30,7 +29,7 @@ const AddToCardSection = ({ data }: { data: Product }) => {
               </svg>
             </button>
             
-            <span className="text-xl font-black text-gray-900 min-w-[50px] text-center">
+            <span className="text-xl font-black text-gray-900 min-w-[30px] text-center">
               {quantity}
             </span>
 
@@ -43,10 +42,10 @@ const AddToCardSection = ({ data }: { data: Product }) => {
               </svg>
             </button>
           </div>
+        </div>
 
-          <div className="shrink-0 h-[60px] w-[60px]">
-            <WishlistButton productId={data.id} productName={data.title} variant="detail" />
-          </div>
+        <div className="shrink-0 h-[64px] w-[64px]">
+          <WishlistButton productId={data.id} productName={data.title} variant="detail" />
         </div>
       </div>
 
