@@ -10,6 +10,7 @@ import SearchableSelect from "@/components/ui/SearchableSelect";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import SuccessModal from "@/components/checkout/SuccessModal";
 
 export default function Checkout() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function Checkout() {
   const [settings, setSettings] = useState<Record<string, any> | null>(null);
   const [hasPendingOrder, setHasPendingOrder] = useState(false);
   const [checkingPending, setCheckingPending] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Fetch settings
   useEffect(() => {
@@ -274,7 +276,8 @@ export default function Checkout() {
       const response = await apiClient.createOrder(orderData);
 
       if (response.status && response.data) {
-        toast.success("Order placed successfully!");
+        // Show Success Modal
+        setShowSuccessModal(true);
 
         // Clear cart from backend and Redux state
         try {
@@ -283,9 +286,8 @@ export default function Checkout() {
           // Cart clear failed silently — order was still placed
         }
         sessionStorage.removeItem('checkoutCart');
-
-        // Redirect to orders tab
-        router.push(`/account/order`);
+        
+        // Redirect is handled by the modal after a delay
       } else {
         // Handle specific error for pending order if backend returned it
         if (response.message && response.message.includes('pending order')) {
@@ -768,6 +770,11 @@ export default function Checkout() {
             </div>          </div>
         </div>
       </main>
+
+      <SuccessModal 
+        isOpen={showSuccessModal} 
+        onClose={() => setShowSuccessModal(false)} 
+      />
     </div>
   );
 }
