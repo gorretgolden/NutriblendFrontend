@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import Rating from "@/components/ui/Rating";
 import SizeSelection from "./SizeSelection";
 import AddToCardSection from "./AddToCardSection";
-import ChatHelp from "./ChatHelp";
 import { sanitizeRichHtml } from "@/lib/utils/security";
 import { useAppSelector } from "@/lib/hooks/redux";
 import { toast } from "sonner";
@@ -226,10 +225,6 @@ const Header = ({ data }: { data: Product }) => {
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="mt-auto pt-8">
-            <ChatHelp data={data} />
           </div>
         </div>
       </div>
