@@ -35,7 +35,7 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
 
   if (data.stock_quantity !== undefined && data.stock_quantity <= 0) {
     return (
-      <div className="w-full ml-3 sm:ml-5 rounded-full h-11 md:h-[52px] text-sm sm:text-base flex items-center justify-center font-bold bg-gray-100 text-gray-500 cursor-not-allowed">
+      <div className="w-full rounded-full h-11 md:h-[52px] text-sm sm:text-base flex items-center justify-center font-bold bg-gray-100 text-gray-500 cursor-not-allowed">
         Out of Stock
       </div>
     );
@@ -44,7 +44,7 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
   return (
     <button
       type="button"
-      className={`w-full ml-3 sm:ml-5 rounded-full h-11 md:h-[52px] text-sm sm:text-base transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2 font-bold ${
+      className={`w-full rounded-full h-11 md:h-[52px] text-sm sm:text-base transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2 font-bold ${
         isInCart
           ? "bg-[#009E3C] text-white shadow-[0_4px_14px_rgba(0,158,60,0.28)]"
           : "bg-[#009E3C] hover:bg-[#00752C] text-white shadow-[0_4px_14px_rgba(0,158,60,0.28)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.38)]"

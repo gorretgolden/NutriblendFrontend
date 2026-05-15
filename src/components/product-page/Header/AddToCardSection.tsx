@@ -10,10 +10,14 @@ const AddToCardSection = ({ data }: { data: Product }) => {
   const [quantity, setQuantity] = useState<number>(1);
 
   return (
-    <div className="fixed md:relative w-full bg-white border-t md:border-none border-black/5 bottom-0 left-0 p-4 md:p-0 z-10 flex items-center justify-between sm:justify-start md:justify-center">
-      <CartCounter onAdd={setQuantity} onRemove={setQuantity} />
-      <AddToCartBtn data={{ ...data, quantity }} />
-      <div className="ml-3 sm:ml-4">
+    <div className="fixed md:relative w-full bg-white border-t md:border-none border-black/5 bottom-0 left-0 p-4 md:p-0 z-[50] flex items-center gap-3">
+      <div className="shrink-0">
+        <CartCounter onAdd={setQuantity} onRemove={setQuantity} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <AddToCartBtn data={{ ...data, quantity }} />
+      </div>
+      <div className="shrink-0">
         <WishlistButton productId={data.id} productName={data.title} variant="detail" />
       </div>
     </div>
