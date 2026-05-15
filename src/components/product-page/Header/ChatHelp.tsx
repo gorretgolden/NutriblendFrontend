@@ -9,11 +9,15 @@ const ChatHelp = ({ data }: { data: Product }) => {
       ? window.location.href
       : `https://nutriblendhaven.com/shop/product/${data.id}/${data.slug || 'product'}`;
       
-    const message = encodeURIComponent(`Hello, I'm inquiring about this product:
-*${data.title}*
-Link: ${productUrl}
-${data.srcUrl ? `Image: ${data.srcUrl}` : ''}
-Please assist me with more details.`);
+    const hasDiscount = (data.discount?.percentage ?? 0) > 0;
+    const currentPrice = hasDiscount 
+      ? Math.round((data.price || 0) - ((data.price || 0) * (data.discount!.percentage) / 100))
+      : (data.price || 0);
+
+    const message = encodeURIComponent(`Hello Nutriblend Haven.
+Like to buy ${data.title},
+UGX ${currentPrice.toLocaleString()},
+${productUrl}`);
     window.open(`https://wa.me/256784640607?text=${message}`, '_blank');
   };
 
