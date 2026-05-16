@@ -195,7 +195,10 @@ const Footer = () => {
               <div className="mt-7">
                 <p className="text-[10px] text-gray-600 uppercase tracking-widest font-bold mb-3">We Accept</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {['Visa', 'MTN MoMo', 'Airtel Money', 'Cash on Delivery'].map((method) => (
+                  {(settings?.accepted_payment_methods && settings.accepted_payment_methods.length > 0
+                    ? settings.accepted_payment_methods
+                    : ['Visa', 'MTN MoMo', 'Airtel Money', 'Cash on Delivery']
+                  ).map((method: string) => (
                     <span
                       key={method}
                       className="bg-white/6 border border-white/12 text-gray-400 text-[10px] font-semibold px-2.5 py-1 rounded-md"
