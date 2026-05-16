@@ -50,6 +50,9 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
     }
   };
 
+  const [isPaused, setIsPaused] = useState(false);
+  const [isWindowScrolling, setIsWindowScrolling] = useState(false);
+
   useEffect(() => {
     updateScrollState();
     const ref = carouselRef.current;
@@ -58,9 +61,18 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
     }
     window.addEventListener('resize', updateScrollState);
 
+    // Pause on window scroll
+    let scrollTimeout: NodeJS.Timeout;
+    const handleWindowScroll = () => {
+      setIsWindowScrolling(true);
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => setIsWindowScrolling(false), 200);
+    };
+    window.addEventListener('scroll', handleWindowScroll, { passive: true });
+
     // Auto-play logic
     let autoPlayTimer: NodeJS.Timeout;
-    if (autoPlay && products.length > 0) {
+    if (autoPlay && products.length > 0 && !isPaused && !isWindowScrolling) {
       autoPlayTimer = setInterval(() => {
         if (carouselRef.current) {
           const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
@@ -77,9 +89,14 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
     return () => {
       if (ref) ref.removeEventListener('scroll', updateScrollState);
       window.removeEventListener('resize', updateScrollState);
+      window.removeEventListener('scroll', handleWindowScroll);
       if (autoPlayTimer) clearInterval(autoPlayTimer);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
     };
-  }, [products, autoPlay, interval]);
+  }, [products, autoPlay, interval, isPaused, isWindowScrolling]);
+
+  const pause = () => setIsPaused(true);
+  const resume = () => setIsPaused(false);
 
   return (
     <section className={hideHeader ? "my-0" : "my-6 sm:my-8 md:my-14"}>
@@ -157,6 +174,10 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
 
           <div
             ref={carouselRef}
+            onMouseEnter={pause}
+            onMouseLeave={resume}
+            onTouchStart={pause}
+            onTouchEnd={resume}
             className={`flex overflow-x-auto scrollbar-hide gap-3 sm:gap-5 py-2 ${hideHeader ? 'px-0' : 'px-1'} snap-x snap-mandatory`}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >

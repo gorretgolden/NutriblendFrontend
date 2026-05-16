@@ -207,15 +207,31 @@ export default function CategoryGrid() {
     }, 4000); // every 4s
   }, [showAll]);
 
+  const [isWindowScrolling, setIsWindowScrolling] = useState(false);
+
   useEffect(() => {
     if (!loading && parentCategories.length > 0 && !showAll) {
-      const timer = setTimeout(startAutoScroll, 3000); // start after 3s
+      // Handle window scroll pause
+      let scrollTimeout: NodeJS.Timeout;
+      const handleWindowScroll = () => {
+        setIsWindowScrolling(true);
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => setIsWindowScrolling(false), 200);
+      };
+      window.addEventListener('scroll', handleWindowScroll, { passive: true });
+
+      const timer = setTimeout(() => {
+        if (!isWindowScrolling) startAutoScroll();
+      }, 3000); // start after 3s
+
       return () => {
         clearTimeout(timer);
+        window.removeEventListener('scroll', handleWindowScroll);
         if (autoScrollId.current) clearInterval(autoScrollId.current);
+        if (scrollTimeout) clearTimeout(scrollTimeout);
       };
     }
-  }, [loading, parentCategories, showAll, startAutoScroll]);
+  }, [loading, parentCategories, showAll, startAutoScroll, isWindowScrolling]);
 
   useEffect(() => {
     const el = scrollRef.current;
