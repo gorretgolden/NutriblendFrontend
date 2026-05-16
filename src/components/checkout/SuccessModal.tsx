@@ -11,15 +11,29 @@ interface SuccessModalProps {
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
+  const [countdown, setCountdown] = React.useState(15);
   const router = useRouter();
 
   useEffect(() => {
     if (isOpen) {
-      // Auto-redirect after 3.5 seconds
-      const timer = setTimeout(() => {
-        router.push("/account/order");
-      }, 15000);
-      return () => clearTimeout(timer);
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            router.push("/account/order");
+            // Fallback for extreme cases
+            setTimeout(() => {
+               if (window.location.pathname.includes('/checkout')) {
+                 window.location.href = "/account/order";
+               }
+            }, 1000);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
     }
   }, [isOpen, router]);
 
@@ -99,9 +113,19 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
                 >
                   View My Orders
                 </button>
-                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">
-                  Redirecting to your orders shortly...
-                </p>
+                <div className="flex flex-col items-center gap-1">
+                  <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">
+                    Redirecting in {countdown}s...
+                  </p>
+                  <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-[#009E3C]"
+                      initial={{ width: "100%" }}
+                      animate={{ width: "0%" }}
+                      transition={{ duration: 15, ease: "linear" }}
+                    />
+                  </div>
+                </div>
               </motion.div>
             </div>
           </motion.div>

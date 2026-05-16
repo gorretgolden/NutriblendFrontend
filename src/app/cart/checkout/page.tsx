@@ -38,6 +38,7 @@ export default function Checkout() {
   const [hasPendingOrder, setHasPendingOrder] = useState(false);
   const [checkingPending, setCheckingPending] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [isOrderSuccessful, setIsOrderSuccessful] = useState(false);
 
   // Fetch settings
   useEffect(() => {
@@ -93,7 +94,7 @@ export default function Checkout() {
     // Don't redirect while auth state is still loading
     if (authLoading) return;
 
-    if (!showSuccessModal && !cartLoading && cart && cart.items.length === 0) {
+    if (!isOrderSuccessful && !showSuccessModal && !cartLoading && cart && cart.items.length === 0) {
       toast.error("Your cart is empty");
       router.push('/cart');
       return;
@@ -278,6 +279,7 @@ export default function Checkout() {
       if (response.status && response.data) {
         // Show Success Modal
         setShowSuccessModal(true);
+        setIsOrderSuccessful(true);
 
         // Clear cart from backend and Redux state
         try {
@@ -310,7 +312,7 @@ export default function Checkout() {
     }
   };
 
-  if (!showSuccessModal && (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading || checkingPending)) {
+  if (!isOrderSuccessful && !showSuccessModal && (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading || checkingPending)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center space-y-4">
