@@ -138,7 +138,7 @@ const MyList = () => {
               {/* Trash/Remove Button - Floating */}
               <button
                 onClick={() => handleRemove(item.product_id)}
-                className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-400 hover:text-red-500 hover:scale-110 transition-all duration-300"
+                className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center text-red-500 hover:text-red-700 hover:scale-110 transition-all duration-300"
                 title="Remove from wishlist"
               >
                 <FiTrash2 className="w-4 h-4" />

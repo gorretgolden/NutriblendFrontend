@@ -106,9 +106,9 @@ const ProductCard = ({ data }: ProductCardProps) => {
               {/* Remove Action - Visible by Default */}
               <button
                 onClick={() => dispatch(removeFromCart(data.id))}
-                className="flex items-center gap-2 text-[#009E3C] hover:text-[#007a2e] transition-colors py-1 group/remove"
+                className="flex items-center gap-2 text-[#E53935] hover:text-[#D32F2F] transition-colors py-1 group/remove"
               >
-                <PiTrashFill className="text-lg text-gray-400 group-hover/remove:text-[#009E3C] transition-colors" />
+                <PiTrashFill className="text-lg text-[#E53935] group-hover/remove:text-[#D32F2F] transition-colors" />
                 <span className="text-xs font-bold uppercase tracking-wide">Remove</span>
               </button>
             </div>
