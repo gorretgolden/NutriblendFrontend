@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { apiClient, getImageUrl } from "@/lib/api/client";
+import { motion, AnimatePresence } from "framer-motion";
 
 // ── Category color palette ─────────────────────────────────
 const categoryColors: Record<string, { bg: string; text: string; border: string; accent: string }> = {
@@ -150,15 +151,16 @@ export default function CategoryGrid() {
   const [showAll, setShowAll]                   = useState(false);
   const [loadingAll, setLoadingAll]             = useState(false);
 
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
   const scrollRef    = useRef<HTMLDivElement>(null);
   const autoScrollId = useRef<ReturnType<typeof setInterval> | null>(null);
-  const autoStartId  = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── Fetch parent categories on mount ──
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        // /categories/tree returns only active parents with their children
         const response = await apiClient.getCategoriesTree();
         if (response.status) {
           const raw: any = response.data;
@@ -176,30 +178,54 @@ export default function CategoryGrid() {
     fetchCategories();
   }, []);
 
-  // ── Auto-scroll: starts after 1 minute, scrolls left slowly ──
+  const updateScrollState = useCallback(() => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 5);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5);
+    }
+  }, []);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === 'left' ? -200 : 200;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  // ── Auto-scroll logic ──
   const startAutoScroll = useCallback(() => {
-    if (!scrollRef.current) return;
+    if (!scrollRef.current || showAll) return;
     autoScrollId.current = setInterval(() => {
       const el = scrollRef.current;
       if (!el) return;
-      // Wrap around
-      if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 2) {
+      if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 5) {
         el.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        el.scrollBy({ left: 96, behavior: "smooth" }); // one card width
+        el.scrollBy({ left: 110, behavior: "smooth" });
       }
-    }, 2000); // scroll one card every 2s
-  }, []);
+    }, 4000); // every 4s
+  }, [showAll]);
 
   useEffect(() => {
-    autoStartId.current = setTimeout(startAutoScroll, 60_000); // start after 1 minute
-    return () => {
-      if (autoStartId.current)  clearTimeout(autoStartId.current);
-      if (autoScrollId.current) clearInterval(autoScrollId.current);
-    };
-  }, [startAutoScroll]);
+    if (!loading && parentCategories.length > 0 && !showAll) {
+      const timer = setTimeout(startAutoScroll, 3000); // start after 3s
+      return () => {
+        clearTimeout(timer);
+        if (autoScrollId.current) clearInterval(autoScrollId.current);
+      };
+    }
+  }, [loading, parentCategories, showAll, startAutoScroll]);
 
-  // Pause auto-scroll when user touches/hovers the row
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) {
+      el.addEventListener('scroll', updateScrollState);
+      updateScrollState();
+      return () => el.removeEventListener('scroll', updateScrollState);
+    }
+  }, [updateScrollState, loading, parentCategories, showAll]);
+
   const pauseScroll = () => {
     if (autoScrollId.current) { clearInterval(autoScrollId.current); autoScrollId.current = null; }
   };
@@ -207,7 +233,7 @@ export default function CategoryGrid() {
     if (!autoScrollId.current) startAutoScroll();
   };
 
-  // ── Fetch all categories when "See All" is clicked ──
+  // ── See All Logic ──
   const handleSeeAll = async () => {
     if (showAll) { setShowAll(false); return; }
     if (allCategories.length > 0) { setShowAll(true); return; }
@@ -227,10 +253,8 @@ export default function CategoryGrid() {
 
   if (loading) return <CategorySkeleton />;
 
-  const displayedCategories = showAll ? allCategories : parentCategories;
-
   return (
-    <section className="py-6 sm:py-8">
+    <section className="py-6 sm:py-8 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 px-1">
         <div>
@@ -253,48 +277,58 @@ export default function CategoryGrid() {
         </button>
       </div>
 
-      {/* Empty state */}
-      {parentCategories.length === 0 && (
-        <div className="py-10 text-center text-gray-400 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-          <p className="text-sm">No categories available.</p>
-        </div>
-      )}
+      <div className="relative group/categories">
+        {/* Navigation Arrows */}
+        {!showAll && parentCategories.length > 0 && (
+          <>
+            <button
+              onClick={() => scroll('left')}
+              className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-20 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center transition-all duration-300 border border-gray-100 ${canScrollLeft ? 'opacity-0 group-hover/categories:opacity-100 hover:bg-[#009E3C] hover:text-white' : 'opacity-0 pointer-events-none'}`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button
+              onClick={() => scroll('right')}
+              className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-20 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center transition-all duration-300 border border-gray-100 ${canScrollRight ? 'opacity-0 group-hover/categories:opacity-100 hover:bg-[#009E3C] hover:text-white' : 'opacity-0 pointer-events-none'}`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </>
+        )}
 
-      {/* ── DEFAULT VIEW: scrollable row of parent categories ── */}
-      {!showAll && parentCategories.length > 0 && (
-        <div
-          ref={scrollRef}
-          onMouseEnter={pauseScroll}
-          onMouseLeave={resumeScroll}
-          onTouchStart={pauseScroll}
-          onTouchEnd={resumeScroll}
-          className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {parentCategories.map((category, idx) => (
-            <div key={category.id} className="snap-start">
-              <CategoryCard category={category} idx={idx} />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* ── EXPANDED VIEW: grid of all categories ── */}
-      {showAll && (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-          {loadingAll
-            ? [1,2,3,4,5,6,7,8].map(i => (
-                <div key={i} className="w-24 h-24 bg-gray-50 animate-pulse rounded-2xl border border-gray-100" />
-              ))
-            : allCategories.map((category, idx) => (
-                <CategoryCard key={category.id} category={category} idx={idx} />
-              ))
-          }
-        </div>
-      )}
+        {/* Categories View */}
+        {!showAll ? (
+          <div
+            ref={scrollRef}
+            onMouseEnter={pauseScroll}
+            onMouseLeave={resumeScroll}
+            onTouchStart={pauseScroll}
+            onTouchEnd={resumeScroll}
+            className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide snap-x"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {parentCategories.map((category, idx) => (
+              <div key={category.id} className="snap-start">
+                <CategoryCard category={category} idx={idx} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+            {loadingAll
+              ? [1,2,3,4,5,6,7,8].map(i => (
+                  <div key={i} className="w-24 h-24 bg-gray-50 animate-pulse rounded-2xl border border-gray-100" />
+                ))
+              : allCategories.map((category, idx) => (
+                  <CategoryCard key={category.id} category={category} idx={idx} />
+                ))
+            }
+          </div>
+        )}
+      </div>
 
       {/* Mobile "See All" button */}
-      <div className="mt-4 flex sm:hidden justify-center">
+      <div className="mt-2 flex sm:hidden justify-center">
         <button
           onClick={handleSeeAll}
           disabled={loadingAll}
