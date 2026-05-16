@@ -168,23 +168,32 @@ export default function WholesaleRegisterPage() {
                         <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full mb-4">
                             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" /> Pending Approval
                         </span>
-                        <h1 className="text-2xl font-bold text-gray-800 mb-3">Application Submitted!</h1>
+                        <h1 className="text-2xl font-bold text-gray-800 mb-3">Application Received!</h1>
                         <p className="text-gray-600 mb-3">
-                            Thank you for applying to the{" "}
-                            <span className="font-semibold text-gray-800">NutriBlend Haven Wholesale Program</span>.
+                            Thank you for applying for the{" "}
+                            <span className="font-semibold text-gray-800">Wholesale Partner Program</span>.
                         </p>
                         <p className="text-sm text-gray-500 mb-6">
-                            Your application is under review. You will receive a confirmation email shortly.
-                            Approval typically takes{" "}
-                            <span className="font-semibold text-amber-600">1-3 business days</span>.
+                            Your application has been submitted successfully and is currently{" "}
+                            <span className="font-semibold text-amber-600">Pending Approval</span>. 
+                            Our team will review your business details and notify you via email.
                         </p>
-                        <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-left mb-6 space-y-2 text-xs text-gray-600">
-                            <p className="font-bold text-green-700 uppercase tracking-wider mb-1">What happens next?</p>
-                            <p>Check your email for a confirmation of your application.</p>
-                            <p>Our team will review your details within 1-3 business days.</p>
-                            <p>Once approved, you will get access to wholesale pricing.</p>
+                        <div className="bg-amber-50 border border-amber-100 rounded-xl p-5 text-left mb-6 space-y-3">
+                            <p className="font-bold text-amber-800 uppercase tracking-wider text-[11px]">What happens next?</p>
+                            <div className="flex gap-3">
+                                <div className="w-5 h-5 rounded-full bg-amber-200 flex items-center justify-center text-[10px] font-bold text-amber-700 flex-shrink-0">1</div>
+                                <p className="text-xs text-amber-900/80 leading-relaxed">Our team reviews your business registration and location details (usually 1-3 business days).</p>
+                            </div>
+                            <div className="flex gap-3">
+                                <div className="w-5 h-5 rounded-full bg-amber-200 flex items-center justify-center text-[10px] font-bold text-amber-700 flex-shrink-0">2</div>
+                                <p className="text-xs text-amber-900/80 leading-relaxed">Once verified, your account will be activated and you'll receive a confirmation email.</p>
+                            </div>
+                            <div className="flex gap-3">
+                                <div className="w-5 h-5 rounded-full bg-amber-200 flex items-center justify-center text-[10px] font-bold text-amber-700 flex-shrink-0">3</div>
+                                <p className="text-xs text-amber-900/80 leading-relaxed">You'll then be able to log in and access exclusive wholesale pricing and bulk ordering.</p>
+                            </div>
                         </div>
-                        <Link href="/" className="inline-block w-full rounded-lg bg-[#009E3C] px-4 py-3 text-base font-bold text-white hover:bg-[#00752C] transition-colors">
+                        <Link href="/" className="inline-block w-full rounded-lg bg-[#009E3C] px-4 py-3 text-base font-bold text-white hover:bg-[#00752C] transition-colors shadow-md">
                             Return to Homepage
                         </Link>
                     </div>
