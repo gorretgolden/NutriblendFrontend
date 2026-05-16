@@ -244,8 +244,8 @@ export default function OrderDetailPage() {
                <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
                   <FiCreditCard className="text-gray-400 w-5 h-5" />
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Chosen Payment Method</p>
-                    <p className="text-xs font-bold text-gray-700 uppercase">{order.chosen_payment_method || order.payment_method || 'COD'}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Payment Method</p>
+                    <p className="text-xs font-bold text-gray-700 capitalize">{(order.chosen_payment_method || order.payment_method || 'COD').replace(/_/g, ' ')}</p>
                   </div>
                </div>
                {order.order_type && (
