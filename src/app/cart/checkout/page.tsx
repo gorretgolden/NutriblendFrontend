@@ -31,7 +31,7 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [loadingRegions, setLoadingRegions] = useState(true);
   const [loadingTowns, setLoadingTowns] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
+  const [paymentMethod, setPaymentMethod] = useState('Cash');
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   const [checkoutErrors, setCheckoutErrors] = useState<Record<string, string | undefined>>({});
   const [settings, setSettings] = useState<Record<string, any> | null>(null);
@@ -579,19 +579,19 @@ export default function Checkout() {
                   </div>
                   <div className="p-5">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'Cash on Delivery' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                      <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'Cash' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                         <input
                           type="radio"
                           disabled={loading}
                           className="h-4 w-4 accent-[#009E3C]"
-                          checked={paymentMethod === 'Cash on Delivery'}
-                          onChange={() => setPaymentMethod('Cash on Delivery')}
+                          checked={paymentMethod === 'Cash'}
+                          onChange={() => setPaymentMethod('Cash')}
                         />
                         <div className="flex items-center gap-2.5">
                           <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
                           </svg>
-                          <span className="text-sm font-medium text-gray-800">Cash on Delivery</span>
+                          <span className="text-sm font-medium text-gray-800">Cash</span>
                         </div>
                       </label>
 
