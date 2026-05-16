@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
 import { clearCartAsync } from "@/lib/features/carts/cartsSlice";
@@ -39,6 +39,7 @@ export default function Checkout() {
   const [checkingPending, setCheckingPending] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isOrderSuccessful, setIsOrderSuccessful] = useState(false);
+  const hasPrepopulated = useRef(false);
 
   // Fetch settings
   useEffect(() => {
@@ -100,16 +101,19 @@ export default function Checkout() {
       return;
     }
 
-    // Pre-populate location from user profile if not already set
-    if (user) {
+    // Pre-populate location from user profile ONCE when user data becomes available
+    if (user && !hasPrepopulated.current) {
       if (user.region_id && !selectedRegion) {
         setSelectedRegion(Number(user.region_id));
       }
       if (user.location && !address) {
         setAddress(user.location);
       }
+      if (user.region_id || user.location) {
+        hasPrepopulated.current = true;
+      }
     }
-  }, [isAuthenticated, authLoading, cart, cartLoading, router, user, selectedRegion, address]);
+  }, [isAuthenticated, authLoading, cart, cartLoading, router, user]);
 
   // Fetch regions
   useEffect(() => {
