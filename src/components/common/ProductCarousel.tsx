@@ -12,6 +12,8 @@ interface ProductCarouselProps {
   badge?: string;
   viewAllLink?: string;
   hideHeader?: boolean;
+  autoPlay?: boolean;
+  interval?: number;
 }
 
 const ProductCarousel: React.FC<ProductCarouselProps> = ({
@@ -20,7 +22,9 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
   subtitle,
   badge,
   viewAllLink = "#",
-  hideHeader = false
+  hideHeader = false,
+  autoPlay = true,
+  interval = 5000
 }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [showArrows, setShowArrows] = useState(true);
@@ -53,11 +57,29 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
       ref.addEventListener('scroll', updateScrollState);
     }
     window.addEventListener('resize', updateScrollState);
+
+    // Auto-play logic
+    let autoPlayTimer: NodeJS.Timeout;
+    if (autoPlay && products.length > 0) {
+      autoPlayTimer = setInterval(() => {
+        if (carouselRef.current) {
+          const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+          // If we're at the end, scroll back to the start
+          if (scrollLeft >= scrollWidth - clientWidth - 5) {
+            carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            scroll('right');
+          }
+        }
+      }, interval);
+    }
+
     return () => {
       if (ref) ref.removeEventListener('scroll', updateScrollState);
       window.removeEventListener('resize', updateScrollState);
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
     };
-  }, [products]);
+  }, [products, autoPlay, interval]);
 
   return (
     <section className={hideHeader ? "my-0" : "my-6 sm:my-8 md:my-14"}>

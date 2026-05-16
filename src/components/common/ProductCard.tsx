@@ -234,12 +234,12 @@ const ProductCard = ({ data }: ProductCardProps) => {
         </div>
 
         {/* Actions Row */}
-        <div className="mt-auto pt-3">
+        <div className="mt-auto pt-3 flex items-center gap-2">
           {/* Add to Cart Button */}
           <button
             onClick={handleAddToCart}
             disabled={isOutOfStock}
-            className={`w-full py-2.5 rounded-xl text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-2 ${
+            className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-2 ${
               isOutOfStock
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
                 : isInCart
@@ -261,10 +261,23 @@ const ProductCard = ({ data }: ProductCardProps) => {
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
                 </svg>
-                Add to Cart
+                Add
               </>
             )}
           </button>
+
+          {/* WhatsApp Action Button */}
+          <a
+            href={`https://wa.me/256784640607?text=Hello Nutriblend, I'm interested in ${data.title} (Price: UGX ${displayPrice.toLocaleString()}). Link: ${typeof window !== 'undefined' ? window.location.origin : ''}/shop/product/${data.id}/${productSlug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-11 h-11 flex-shrink-0 rounded-xl flex items-center justify-center bg-[#25D366] hover:bg-[#128C7E] text-white shadow-md transition-all duration-200 active:scale-95"
+            title="Inquire on WhatsApp"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.484 8.412-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.956-.5-5.705-1.448l-6.305 1.656zm6.357-3.912c1.533.91 3.383 1.39 5.271 1.391 5.405 0 9.803-4.398 9.806-9.803.002-2.62-1.022-5.085-2.885-6.948a9.717 9.717 0 00-6.924-2.865c-5.406 0-9.803 4.397-9.806 9.803-.001 1.733.454 3.426 1.316 4.921l-.815 2.977 3.037-.796zm12.01-6.498c-.329-.165-1.947-.96-2.248-1.07-.3-.109-.518-.165-.736.165-.217.329-.841 1.07-1.03 1.29-.19.217-.379.247-.708.082-.329-.165-1.389-.512-2.645-1.633-.977-.872-1.637-1.95-1.828-2.28-.19-.329-.02-.507.145-.671.148-.147.329-.384.494-.576.165-.192.219-.329.329-.548.11-.219.055-.411-.027-.576-.082-.165-.736-1.775-1.008-2.433-.265-.64-.537-.554-.736-.564-.188-.01-.403-.012-.618-.012s-.565.081-.861.411c-.296.329-1.131 1.106-1.131 2.697s1.159 3.125 1.32 3.344c.162.219 2.278 3.48 5.523 4.882.771.333 1.373.533 1.846.684.776.247 1.48.212 2.037.129.622-.092 1.947-.795 2.221-1.564.274-.768.274-1.426.192-1.564-.081-.137-.296-.219-.625-.384z"/>
+            </svg>
+          </a>
         </div>
       </div>
     </div>
