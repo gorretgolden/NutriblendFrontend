@@ -73,15 +73,15 @@ export default function BrandsSection() {
   if (brands.length === 0) return null;
 
   return (
-    <section className="relative w-full py-10 md:py-16 overflow-hidden bg-white">
+    <section className="relative w-full py-6 md:py-10 overflow-hidden bg-white">
       <div className="relative max-w-[1560px] mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="flex items-center justify-between gap-8 mb-10">
+        <div className="flex items-center justify-between gap-8 mb-6">
           <motion.h2 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="text-[28px] sm:text-[40px] font-[900] text-gray-900 tracking-tight"
+            className="text-[20px] sm:text-[28px] font-[900] text-gray-900 tracking-tight"
           >
             Shop by <span className="text-[#009E3C]">Brand</span>
           </motion.h2>
@@ -93,10 +93,10 @@ export default function BrandsSection() {
           >
             <Link
               href="/brands"
-              className="group flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-100 text-sm font-bold text-gray-600 hover:border-[#009E3C] hover:text-[#009E3C] transition-all duration-300"
+              className="group flex items-center gap-2 px-4 py-2 rounded-full border border-gray-100 text-xs font-bold text-gray-600 hover:border-[#009E3C] hover:text-[#009E3C] transition-all duration-300"
             >
-              View all brands
-              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              View all
+              <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
               </svg>
             </Link>
@@ -106,8 +106,8 @@ export default function BrandsSection() {
         {/* Scrolling Brands Row */}
         <div className="relative">
           {/* Fades for smooth entry/exit */}
-          <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
           
           <div className="flex overflow-hidden">
             <motion.div 
@@ -118,7 +118,7 @@ export default function BrandsSection() {
                 ease: "linear",
                 repeatType: "loop"
               }}
-              className="flex gap-4 py-2 pr-4 shrink-0"
+              className="flex gap-3 py-1 pr-4 shrink-0"
             >
               {/* Triple brands for seamless loop */}
               {[...brands, ...brands, ...brands].map((brand, i) => {
@@ -128,13 +128,13 @@ export default function BrandsSection() {
                     key={`${brand.id}-${i}`}
                     href={`/shop?brand_id=${brand.id}`}
                     className={`
-                      group/badge relative px-8 py-3.5 rounded-full border transition-all duration-300
+                      group/badge relative px-5 py-2.5 rounded-full border transition-all duration-300
                       flex items-center justify-center whitespace-nowrap shadow-sm
                       ${color.bg} ${color.text} ${color.border} ${color.hover}
                       hover:shadow-md hover:-translate-y-0.5
                     `}
                   >
-                    <span className="text-base md:text-lg font-extrabold tracking-tight">
+                    <span className="text-sm md:text-base font-extrabold tracking-tight">
                       {brand.name}
                     </span>
                   </Link>
