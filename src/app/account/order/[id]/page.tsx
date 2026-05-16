@@ -248,15 +248,6 @@ export default function OrderDetailPage() {
                     <p className="text-xs font-bold text-gray-700 capitalize">{(order.chosen_payment_method || order.payment_method || 'COD').replace(/_/g, ' ')}</p>
                   </div>
                </div>
-               {order.order_type && (
-                 <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
-                   <FiPackage className="text-gray-400 w-5 h-5" />
-                   <div>
-                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Order Source</p>
-                     <p className="text-xs font-bold text-gray-700 capitalize">{order.order_type}</p>
-                   </div>
-                 </div>
-               )}
                <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
                   <FiTruck className="text-gray-400 w-5 h-5" />
                   <div>
