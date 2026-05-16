@@ -31,7 +31,7 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [loadingRegions, setLoadingRegions] = useState(true);
   const [loadingTowns, setLoadingTowns] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('cod');
+  const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   const [checkoutErrors, setCheckoutErrors] = useState<Record<string, string | undefined>>({});
   const [settings, setSettings] = useState<Record<string, any> | null>(null);
@@ -579,13 +579,13 @@ export default function Checkout() {
                   </div>
                   <div className="p-5">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'cod' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                      <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'Cash on Delivery' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                         <input
                           type="radio"
                           disabled={loading}
                           className="h-4 w-4 accent-[#009E3C]"
-                          checked={paymentMethod === 'cod'}
-                          onChange={() => setPaymentMethod('cod')}
+                          checked={paymentMethod === 'Cash on Delivery'}
+                          onChange={() => setPaymentMethod('Cash on Delivery')}
                         />
                         <div className="flex items-center gap-2.5">
                           <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -595,13 +595,13 @@ export default function Checkout() {
                         </div>
                       </label>
 
-                      <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'mobile_money' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                      <label className={`border-2 rounded-xl p-4 cursor-pointer flex items-center gap-3 transition-all duration-200 ${paymentMethod === 'Mobile Money' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                         <input
                           type="radio"
                           disabled={loading}
                           className="h-4 w-4 accent-[#009E3C]"
-                          checked={paymentMethod === 'mobile_money'}
-                          onChange={() => setPaymentMethod('mobile_money')}
+                          checked={paymentMethod === 'Mobile Money'}
+                          onChange={() => setPaymentMethod('Mobile Money')}
                         />
                         <div className="flex items-center gap-2.5">
                           <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
