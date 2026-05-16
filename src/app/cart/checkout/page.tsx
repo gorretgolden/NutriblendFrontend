@@ -266,6 +266,7 @@ export default function Checkout() {
         discount_code: discountCode || undefined,
         notes: notes || undefined,
         payment_method: paymentMethod,
+        chosen_payment_method: paymentMethod,
       };
 
       if (deliveryMethod === 'delivery') {

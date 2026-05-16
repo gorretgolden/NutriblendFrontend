@@ -55,6 +55,7 @@ export default function OrderDetailPage() {
       case "processing": return { label: "Processing", color: "text-blue-600 bg-blue-50 border-blue-100", icon: <FiTruck /> };
       case "approved": return { label: "Approved", color: "text-green-600 bg-green-50 border-green-100", icon: <FiCheckCircle /> };
       case "completed": case "delivered": return { label: "Completed", color: "text-green-600 bg-green-50 border-green-100", icon: <FiCheckCircle /> };
+      case "rejected": return { label: "Rejected", color: "text-red-600 bg-red-50 border-red-100", icon: <FiXCircle /> };
       case "cancelled": return { label: "Cancelled", color: "text-red-600 bg-red-50 border-red-100", icon: <FiXCircle /> };
       default: return { label: status, color: "text-gray-600 bg-gray-50 border-gray-100", icon: <FiPackage /> };
     }
@@ -170,6 +171,48 @@ export default function OrderDetailPage() {
                 </div>
              </div>
           </div>
+          
+          {/* Payment History */}
+          {order.payments && order.payments.length > 0 && (
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+              <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <FiCreditCard className="text-[#009E3C]" />
+                Payment History
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-left border-b border-gray-50">
+                      <th className="pb-3 font-semibold text-gray-500">Date</th>
+                      <th className="pb-3 font-semibold text-gray-500">Method</th>
+                      <th className="pb-3 font-semibold text-gray-500 text-right">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {order.payments.map((payment: any, pIdx: number) => (
+                      <tr key={pIdx}>
+                        <td className="py-3 text-gray-600">
+                          {new Date(payment.created_at).toLocaleDateString("en-US", {
+                            month: "short", day: "numeric", year: "numeric"
+                          })}
+                        </td>
+                        <td className="py-3 text-gray-700 font-medium capitalize">{payment.payment_method}</td>
+                        <td className="py-3 text-gray-900 font-bold text-right">{formatPrice(Number(payment.amount))}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <tr className="border-t border-gray-100">
+                      <td colSpan={2} className="pt-3 font-bold text-gray-900">Total Paid</td>
+                      <td className="pt-3 font-bold text-[#009E3C] text-right">
+                        {formatPrice(order.payments.reduce((sum: number, p: any) => sum + Number(p.amount), 0))}
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right: Summary */}
@@ -201,10 +244,19 @@ export default function OrderDetailPage() {
                <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
                   <FiCreditCard className="text-gray-400 w-5 h-5" />
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Payment Method</p>
-                    <p className="text-xs font-bold text-gray-700 uppercase">{order.payment_method || 'COD'}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Chosen Payment Method</p>
+                    <p className="text-xs font-bold text-gray-700 uppercase">{order.chosen_payment_method || order.payment_method || 'COD'}</p>
                   </div>
                </div>
+               {order.order_type && (
+                 <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                   <FiPackage className="text-gray-400 w-5 h-5" />
+                   <div>
+                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Order Source</p>
+                     <p className="text-xs font-bold text-gray-700 capitalize">{order.order_type}</p>
+                   </div>
+                 </div>
+               )}
                <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
                   <FiTruck className="text-gray-400 w-5 h-5" />
                   <div>
