@@ -18,7 +18,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
       // Auto-redirect after 3.5 seconds
       const timer = setTimeout(() => {
         router.push("/account/order");
-      }, 6000);
+      }, 15000);
       return () => clearTimeout(timer);
     }
   }, [isOpen, router]);
@@ -100,7 +100,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
                   View My Orders
                 </button>
                 <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">
-                  Redirecting in a few seconds...
+                  Redirecting to your orders shortly...
                 </p>
               </motion.div>
             </div>

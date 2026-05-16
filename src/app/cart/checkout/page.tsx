@@ -310,7 +310,7 @@ export default function Checkout() {
     }
   };
 
-  if (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading || checkingPending) {
+  if (!showSuccessModal && (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading || checkingPending)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center space-y-4">
