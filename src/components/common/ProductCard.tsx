@@ -185,7 +185,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         {/* Title */}
         <Link
           href={`/shop/product/${data.id}/${productSlug}`}
-          className="text-gray-700 text-[13px] sm:text-[14px] font-bold mb-1 line-clamp-2 hover:text-[#009E3C] transition-colors duration-200 leading-snug text-left h-[40px]"
+          className="text-gray-700 text-[13px] sm:text-[14px] font-bold mb-0.5 line-clamp-1 hover:text-[#009E3C] transition-colors duration-200 leading-snug text-left"
         >
           {data.title}
         </Link>
