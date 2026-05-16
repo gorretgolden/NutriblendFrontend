@@ -11,7 +11,7 @@ interface SuccessModalProps {
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
-  const [countdown, setCountdown] = React.useState(15);
+  const [countdown, setCountdown] = React.useState(8);
   const router = useRouter();
 
   useEffect(() => {
@@ -122,7 +122,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
                       className="h-full bg-[#009E3C]"
                       initial={{ width: "100%" }}
                       animate={{ width: "0%" }}
-                      transition={{ duration: 15, ease: "linear" }}
+                      transition={{ duration: 8, ease: "linear" }}
                     />
                   </div>
                 </div>
