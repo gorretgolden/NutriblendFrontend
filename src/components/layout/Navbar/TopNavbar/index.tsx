@@ -481,12 +481,29 @@ const Header = () => {
 
                 <div className="h-px bg-gray-100 my-3 mx-2" />
 
+                {/* Wholesale CTA Banner */}
+                <Link
+                  href="/wholesale-registration"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 mx-1 px-4 py-3.5 rounded-xl bg-gradient-to-r from-[#009E3C] to-[#00752C] text-white shadow-md hover:shadow-lg transition-all duration-200 group mb-3"
+                >
+                  <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-bold">Join Wholesale Program</p>
+                    <p className="text-[10px] text-white/75">Get exclusive bulk pricing & priority delivery</p>
+                  </div>
+                  <svg className="w-4 h-4 text-white/60 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </Link>
+
                 {/* Quick links */}
-                <div className="grid grid-cols-3 gap-2 px-1">
+                <div className="grid grid-cols-2 gap-2 px-1">
                   {[
                     { href: "/shop", label: "All Products", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /> },
                     { href: "/shop?on_sale=true", label: "Sale", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /> },
                     { href: "/brands", label: "Brands", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /> },
+                    { href: "/wholesale-registration", label: "Wholesale", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /> },
                   ].map(({ href, label, icon }) => (
                     <Link
                       key={label}

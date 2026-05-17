@@ -81,10 +81,9 @@ const NewsLetterSection = () => {
                         </svg>
                       </div>
                       
-                      <h3 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">Welcome to the Tribe!</h3>
+                      <h3 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">You have successfully subscribed</h3>
                       <p className="text-gray-500 text-base leading-relaxed mb-8">
-                        We&apos;re thrilled to have you! You&apos;ve successfully subscribed with <span className="font-bold text-[#009E3C]">{email}</span>. 
-                        Check your inbox shortly for exclusive wellness tips and your first deal.
+                        Thank you for joining us. We will keep you updated.
                       </p>
 
                       <button

@@ -238,7 +238,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             )}
 
             {selectedCategory && (
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm px-4 sm:px-6 py-3 mb-5 flex items-center justify-between gap-3">
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm px-4 sm:px-6 py-3 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <p className="text-[12px] font-bold text-gray-400">
                   {meta.total > 0 ? `Showing ${meta.from}–${meta.to} of ${meta.total} items` : 'No items available'}
                 </p>

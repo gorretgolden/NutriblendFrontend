@@ -203,52 +203,60 @@ export default function WholesaleRegisterPage() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col lg:flex-row">
+        <div className="min-h-screen flex flex-col lg:flex-row bg-[#f8fcf9]">
             <div className="relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col items-center justify-center overflow-hidden">
-                <Image src="/images/hero_wellness_vitamins.png" alt="Wholesale" fill className="object-cover" priority />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#009E3C]/85 to-[#003a17]/75" />
-                <div className="relative z-10 text-white px-10 py-12 max-w-md">
-                    <h1 className="text-4xl font-extrabold mb-4 leading-tight">Wholesale Partner Program</h1>
-                    <p className="text-white/85 mb-8 text-lg">
+                <Image src="/images/header-homepage.png" alt="Wholesale" fill className="object-cover" priority />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#009E3C]/90 via-[#00752C]/85 to-[#003a17]/90 backdrop-blur-[2px]" />
+                
+                {/* Decorative Elements */}
+                <div className="absolute top-0 left-0 w-full h-full opacity-30" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 50%)' }}></div>
+                <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+
+                <div className="relative z-10 text-white px-12 py-16 max-w-lg">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6">
+                        <span className="w-2 h-2 rounded-full bg-[#00ff62] animate-pulse" />
+                        <span className="text-xs font-bold tracking-widest uppercase">Partner Program</span>
+                    </div>
+                    <h1 className="text-5xl font-black mb-6 leading-[1.1] tracking-tight">Grow Your Business With Us</h1>
+                    <p className="text-white/90 mb-10 text-lg leading-relaxed font-medium">
                         Join NutriBlend Haven as a wholesale partner and unlock exclusive bulk pricing,
                         priority delivery, and a dedicated account manager.
                     </p>
-                    <ul className="space-y-3">
+                    <div className="space-y-4 bg-black/20 backdrop-blur-md p-8 rounded-3xl border border-white/10">
                         {[
                             "Exclusive wholesale pricing on all products",
                             "Dedicated account manager support",
                             "Priority order processing & delivery",
                             "Early access to new product launches",
                         ].map((b) => (
-                            <li key={b} className="flex items-start gap-3 text-sm text-white/90">
-                                <CheckCircle className="w-4 h-4 text-white/80 mt-0.5 flex-shrink-0" />
+                            <div key={b} className="flex items-center gap-4 text-sm text-white font-medium">
+                                <div className="w-8 h-8 rounded-full bg-[#009E3C] flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/20">
+                                    <CheckCircle className="w-4 h-4 text-white" />
+                                </div>
                                 {b}
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             </div>
 
-            <div className="flex-1 flex items-start justify-center bg-white overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
-                <div className="w-full max-w-xl">
-                    <div className="sticky top-0 z-20 -mx-1 mb-4 border-b border-gray-100 bg-white/95 px-1 py-2 backdrop-blur">
+            <div className="flex-1 flex items-start justify-center overflow-y-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+                <div className="w-full max-w-2xl">
+                    <div className="mb-6">
                         <Link
                             href="/"
-                            className="inline-flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-semibold text-[#00752C] hover:bg-green-50 hover:text-[#009E3C] transition-colors"
+                            className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold text-gray-500 hover:bg-white hover:text-[#009E3C] hover:shadow-sm transition-all"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Back to Home
                         </Link>
                     </div>
 
-                    <div className="lg:hidden text-center mb-6">
-                        <h1 className="text-2xl font-bold text-gray-900">Wholesale Program</h1>
-                        <p className="text-sm text-gray-500">Partner with NutriBlend Haven</p>
-                    </div>
-                    <div className="hidden lg:block mb-7">
-                        <h2 className="text-3xl font-bold text-gray-900">Apply for Wholesale</h2>
-                        <p className="text-gray-500 mt-1">Fill in your business details to get started</p>
-                    </div>
+                    <div className="bg-white rounded-[2rem] shadow-[0_8px_40px_rgba(0,0,0,0.04)] border border-gray-100 p-6 sm:p-10">
+                        <div className="text-center mb-10">
+                            <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight mb-3">Apply for Wholesale</h2>
+                            <p className="text-gray-500 font-medium">Fill in your business details to partner with us</p>
+                        </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -338,16 +346,19 @@ export default function WholesaleRegisterPage() {
                         </Field>
 
                         <button type="submit" disabled={isLoading}
-                            className="w-full rounded-xl bg-[#009E3C] py-3.5 text-base font-bold text-white transition-all hover:bg-[#00752C] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2">
+                            className="w-full rounded-2xl bg-gradient-to-r from-[#009E3C] to-[#00752C] py-4 text-base font-black tracking-wide text-white transition-all hover:from-[#00bc49] hover:to-[#009E3C] hover:shadow-lg hover:shadow-green-900/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-8 active:scale-[0.98]">
                             {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
-                            {isLoading ? "Submitting..." : "Submit Wholesale Application"}
+                            {isLoading ? "Submitting Application..." : "Submit Wholesale Application"}
                         </button>
 
-                        <p className="text-center text-sm text-gray-500">
-                            Already have an account?{" "}
-                            <Link href="/login" className="text-green-600 font-semibold hover:underline">Log in</Link>
-                        </p>
+                        <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+                            <p className="text-sm font-medium text-gray-500">
+                                Already a wholesale partner?{" "}
+                                <Link href="/login" className="text-[#009E3C] font-bold hover:underline">Log in here</Link>
+                            </p>
+                        </div>
                     </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -355,11 +366,11 @@ export default function WholesaleRegisterPage() {
 }
 
 function cx(hasError?: boolean) {
-    return `w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all ${
+    return `w-full rounded-xl border px-5 py-3.5 text-[15px] font-medium outline-none transition-all shadow-sm ${
         hasError
-            ? "border-red-400 bg-red-50 focus:border-red-500 focus:ring-4 focus:ring-red-100"
-            : "border-gray-200 bg-white focus:border-[#009E3C] focus:ring-4 focus:ring-green-50"
-    } disabled:bg-gray-50 disabled:cursor-not-allowed`;
+            ? "border-red-300 bg-red-50/50 text-red-900 focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-500/10"
+            : "border-gray-200 bg-gray-50/50 text-gray-900 focus:bg-white focus:border-[#009E3C] focus:ring-4 focus:ring-[#009E3C]/10 hover:border-gray-300"
+    } disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed`;
 }
 
 function Field({ label, error, hint, children }: {
