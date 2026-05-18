@@ -84,8 +84,8 @@ const Header = () => {
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
 
-  // Format categories for navigation
-  const dynamicNavItems = categories.map(cat => ({
+  // Format categories for navigation, limiting to 5 to ensure other menu items are visible
+  const dynamicNavItems = categories.slice(0, 5).map(cat => ({
     name: cat.name,
     href: `/shop?category=${cat.slug}`,
     subItems: (cat.children && cat.children.length > 0) ? cat.children.map((child: any) => ({
