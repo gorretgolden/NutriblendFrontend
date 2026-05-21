@@ -118,6 +118,12 @@ export default function WholesaleRegisterPage() {
         if (name === "phone") {
             const digits = value.replace(/\D/g, "");
             processed = digits.startsWith("0") ? digits.slice(1, 10) : digits.slice(0, 9);
+        } else if (name === "name" || name === "location") {
+            // Auto-capitalize names and locations
+            processed = value.replace(/\b\w+/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+        } else if (name === "email") {
+            // Auto-lowercase email
+            processed = value.toLowerCase();
         }
         const updated = { ...formData, [name]: processed };
         setFormData(updated);

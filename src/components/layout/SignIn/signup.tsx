@@ -131,6 +131,12 @@ const SignUpModal = ({
           val = val.substring(1); // Remove leading zero
         }
         val = val.substring(0, 9); // Enforce max 9 digits
+      } else if (target.name === "firstName" || target.name === "lastName") {
+        // Auto-capitalize names
+        val = val.replace(/\b\w+/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+      } else if (target.name === "email") {
+        // Auto-lowercase email
+        val = val.toLowerCase();
       }
       setFormData((prev) => ({
         ...prev,
