@@ -247,7 +247,7 @@ const Header = () => {
               <div>
                 <button
                   className="flex items-center gap-1.5 px-2 py-1.5 md:px-3 rounded-xl hover:bg-gray-50/80 group transition-colors duration-200"
-                  onClick={() => setIsAccountOpen(true)}
+                  onClick={() => user ? setIsAccountOpen(true) : openLoginModal()}
                 >
                   <div className="w-7 h-7 rounded-lg bg-gray-100 group-hover:bg-[#009E3C]/10 flex items-center justify-center transition-colors duration-200">
                     <svg className="w-4 h-4 text-gray-500 group-hover:text-[#009E3C] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
