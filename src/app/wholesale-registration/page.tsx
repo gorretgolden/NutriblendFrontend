@@ -148,7 +148,8 @@ export default function WholesaleRegisterPage() {
         const errs = validate(formData);
         setErrors(errs);
         if (Object.keys(errs).length > 0) { toast.error("Please fix the errors before submitting"); return; }
-        const result = await dispatch(registerWholesaleUser(formData));
+        const payload = { ...formData, phone: `+256${formData.phone}` };
+        const result = await dispatch(registerWholesaleUser(payload));
         if (registerWholesaleUser.fulfilled.match(result)) {
             toast.success("Application submitted successfully!");
             setIsSubmitted(true);

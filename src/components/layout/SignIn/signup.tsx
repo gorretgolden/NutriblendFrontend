@@ -123,9 +123,16 @@ const SignUpModal = ({
         [target.name]: target.checked,
       }));
     } else {
+      let val = target.value;
+      if (target.name === "phone") {
+        val = val.replace(/\D/g, ""); // Remove non-digits
+        if (val.startsWith("0")) {
+          val = val.substring(1); // Remove leading zero
+        }
+      }
       setFormData((prev) => ({
         ...prev,
-        [target.name]: target.value,
+        [target.name]: val,
       }));
     }
 
@@ -189,7 +196,7 @@ const SignUpModal = ({
       first_name: formData.firstName,
       last_name: formData.lastName,
       email: formData.email,
-      phone: formData.phone,
+      phone: `+256${formData.phone}`,
       password: formData.password,
       password_confirmation: formData.confirmPassword,
       region_id: formData.region_id ? Number(formData.region_id) : undefined,
@@ -309,16 +316,21 @@ const SignUpModal = ({
             </div>
 
             <div>
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone Number"
-                className={`w-full rounded border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.phone ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
-                value={formData.phone}
-                onChange={handleInputChange}
-                required
-                disabled={isLoading}
-              />
+              <div className="flex w-full">
+                <span className={`inline-flex items-center rounded-l border border-r-0 px-3 text-sm text-gray-500 bg-gray-50 ${fieldErrors.phone ? 'border-red-400' : 'border-gray-300'}`}>
+                  +256
+                </span>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="751557654"
+                  className={`w-full rounded-r border p-3 text-base outline-none focus:border-[#4caf50] disabled:bg-gray-100 transition-colors ${fieldErrors.phone ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
               {fieldErrors.phone && (
                 <p className="mt-1 text-xs text-red-500">{fieldErrors.phone}</p>
               )}
