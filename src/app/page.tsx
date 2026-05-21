@@ -10,8 +10,6 @@ import { transformProduct } from "@/lib/transformers";
 import { apiClient } from "@/lib/api/client";
 import Link from "next/link";
 import FadeIn from "@/components/common/FadeIn";
-import AIAssistant from "@/components/common/AIAssistant";
-
 export const revalidate = 60;
 
 // ── Safe product fetch helper ───────────────────────────────────────────────
@@ -269,8 +267,6 @@ export default async function Home() {
       
 
 
-
-      <AIAssistant />
     </main>
   );
 }
