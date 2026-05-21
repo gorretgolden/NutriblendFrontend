@@ -94,6 +94,7 @@ const SignUpModal = ({
   useEffect(() => {
     if (visible) {
       document.body.style.overflow = "hidden";
+      if (error) dispatch(clearError());
     } else {
       document.body.style.overflow = "";
     }
@@ -129,6 +130,7 @@ const SignUpModal = ({
         if (val.startsWith("0")) {
           val = val.substring(1); // Remove leading zero
         }
+        val = val.substring(0, 9); // Enforce max 9 digits
       }
       setFormData((prev) => ({
         ...prev,
@@ -328,6 +330,7 @@ const SignUpModal = ({
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
+                  maxLength={9}
                   disabled={isLoading}
                 />
               </div>

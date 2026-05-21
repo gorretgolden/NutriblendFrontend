@@ -27,6 +27,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
   useEffect(() => {
     if (visible) {
       document.body.style.overflow = "hidden";
+      if (error) dispatch(clearError());
     } else {
       document.body.style.overflow = "";
     }
