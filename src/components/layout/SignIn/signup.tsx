@@ -211,13 +211,13 @@ const SignUpModal = ({
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 px-2 py-6">
-        <div className="relative w-full max-w-3xl rounded-lg bg-white p-6 sm:p-8 md:p-10 shadow-md">
+        <div className="relative w-full max-w-xl rounded-xl bg-white p-6 sm:p-8 shadow-2xl mt-4 sm:mt-10">
           {/* Logo + Close */}
-          <div className="flex justify-center mb-6 relative">
+          <div className="flex justify-center mb-4 relative">
             <img
               src="/images/logo.png"
               alt="App Logo"
-              className="h-20 md:h-24 border-2 border-[#4caf50] rounded-full p-2 shadow-lg"
+              className="h-16 md:h-20 border-2 border-[#4caf50] rounded-full p-2 shadow-sm"
             />
             <button
               onClick={onClose}
@@ -227,12 +227,12 @@ const SignUpModal = ({
             </button>
           </div>
 
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">
+          <div className="mb-5 text-center">
+            <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
               Create your account
             </h1>
-            <p className="mt-1 text-sm text-gray-600">
-              Fill in the details below to get started or{" "}
+            <p className="mt-1 text-sm text-gray-500">
+              Fill in the details below or{" "}
               <Link
                 href="/wholesale-registration"
                 onClick={onClose}
@@ -251,11 +251,11 @@ const SignUpModal = ({
 
           <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
             {/* Personal Info */}
-            <div className="col-span-2">
-              <h2 className="text-lg font-semibold text-gray-700 mb-2">
+            <div className="col-span-1 md:col-span-2">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-1 mt-2 border-b pb-1">
                 Personal Information
               </h2>
             </div>
@@ -325,8 +325,8 @@ const SignUpModal = ({
             </div>
 
             {/* Delivery Info */}
-            <div className="col-span-2 mt-4">
-              <h2 className="text-lg font-semibold text-gray-700 mb-2">
+            <div className="col-span-1 md:col-span-2 mt-2">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-1 border-b pb-1">
                 Delivery Information
               </h2>
             </div>
@@ -361,7 +361,7 @@ const SignUpModal = ({
               />
             </div>
 
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-2">
               <input
                 type="text"
                 name="location"
@@ -378,14 +378,14 @@ const SignUpModal = ({
             </div>
 
             {/* Security */}
-            <div className="col-span-2 mt-4">
-              <h2 className="text-lg font-semibold text-gray-700 mb-2">
+            <div className="col-span-1 md:col-span-2 mt-2">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-1 border-b pb-1">
                 Account Security
               </h2>
             </div>
 
             {/* Password Fields on the same line */}
-            <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -449,13 +449,12 @@ const SignUpModal = ({
                 </button>
               </div>
               {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                <p className="col-span-2 text-xs text-red-500 -mt-3">Passwords do not match</p>
+                <p className="col-span-1 md:col-span-2 text-xs text-red-500 -mt-2">Passwords do not match</p>
               )}
             </div>
 
-
             {/* Checkboxes */}
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-2 mt-2">
               <label className="flex items-center mb-2">
                 <input
                   type="checkbox"
@@ -491,7 +490,7 @@ const SignUpModal = ({
             </div>
 
             {/* Submit */}
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-2 mt-2">
               <button
                 type="submit"
                 disabled={isLoading}
@@ -501,13 +500,13 @@ const SignUpModal = ({
               </button>
             </div>
 
-            <div className="col-span-2 flex items-center justify-between mt-2">
+            <div className="col-span-1 md:col-span-2 flex items-center justify-between mt-2">
               <hr className="w-full border-gray-300" />
               <span className="px-2 text-xs text-gray-500 uppercase">Or</span>
               <hr className="w-full border-gray-300" />
             </div>
 
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-2">
               <button
                 type="button"
                 onClick={() => {
@@ -529,7 +528,7 @@ const SignUpModal = ({
             </div>
 
             {/* Switch to Login */}
-            <div className="col-span-2 text-center mt-4">
+            <div className="col-span-1 md:col-span-2 text-center mt-2">
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}
                 <button
