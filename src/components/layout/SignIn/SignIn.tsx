@@ -22,6 +22,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
 
   useEffect(() => {
@@ -75,7 +76,10 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
       return;
     }
 
+    setIsSubmitting(true);
     const resultAction = await dispatch(loginUser({ email, password }));
+    setIsSubmitting(false);
+    
     if (loginUser.fulfilled.match(resultAction)) {
       // Clear stale data from previous session
       dispatch(clearCartLocal());
@@ -144,7 +148,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
               value={email}
               onChange={handleEmailChange}
               required
-              disabled={isLoading}
+              disabled={isSubmitting}
             />
             {fieldErrors.email && (
               <p className="mt-1 text-xs text-red-500">{fieldErrors.email}</p>
@@ -159,13 +163,13 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
                 value={password}
                 onChange={handlePasswordChange}
                 required
-                disabled={isLoading}
+                disabled={isSubmitting}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#4caf50] transition-colors"
-                disabled={isLoading}
+                disabled={isSubmitting}
                 tabIndex={-1}
               >
                 {showPassword ? (
@@ -187,10 +191,10 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
           </div>
           <button
             type="submit"
-            disabled={isLoading || !isFormValid()}
+            disabled={isSubmitting || !isFormValid()}
             className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? "Signing in..." : "Continue"}
+            {isSubmitting ? "Signing in..." : "Continue"}
           </button>
         </form>
 
@@ -218,7 +222,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
               const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
               window.location.href = `${baseUrl}/auth/google/redirect`;
             }}
-            disabled={isLoading}
+            disabled={isSubmitting}
             className="mt-4 flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
