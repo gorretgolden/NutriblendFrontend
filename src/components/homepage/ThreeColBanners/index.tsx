@@ -78,7 +78,7 @@ export default function ThreeColBanners() {
         if (isAtEnd) {
           container.scrollTo({ left: 0, behavior: "smooth" });
         } else {
-          container.scrollBy({ left: container.clientWidth, behavior: "smooth" });
+          container.scrollBy({ left: container.clientWidth * 0.85, behavior: "smooth" });
         }
       }
     }, 4000);
@@ -259,7 +259,7 @@ export default function ThreeColBanners() {
           <Link
             key={idx}
             href={banner.href}
-            className="relative block rounded-2xl overflow-hidden shadow-md flex-none w-full snap-center h-[300px]"
+            className="relative block rounded-2xl overflow-hidden shadow-md flex-none w-[85vw] snap-center h-[300px]"
           >
             <Image
               src={banner.image}
