@@ -98,7 +98,7 @@ export default function SearchableSelect({
         onClick={handleToggle}
         className={`${className} flex items-center justify-between gap-2 w-full ${disabled || isLoading ? "opacity-60 cursor-not-allowed bg-gray-50" : ""}`}
       >
-        <span className={selectedLabel ? "text-gray-900 truncate" : "text-gray-500 truncate"}>
+        <span className={selectedLabel ? "text-gray-900 truncate" : isLoading ? "text-[#009E3C] font-medium animate-pulse truncate" : "text-gray-500 truncate"}>
           {selectedLabel || placeholder}
         </span>
         {isLoading ? (

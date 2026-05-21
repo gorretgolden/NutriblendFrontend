@@ -320,7 +320,7 @@ export default function WholesaleRegisterPage() {
                                 <SearchableSelect value={formData.town_id}
                                     onChange={(v) => handleSelectChange("town_id", v)}
                                     options={towns.map((t) => ({ value: String(t.id), label: t.name }))}
-                                    placeholder={loadingTowns ? "Loading districts..." : formData.region_id ? "Select District" : "Select Region first"}
+                                    placeholder={loadingTowns ? "Loading Towns..." : formData.region_id ? "Select District/Town" : "Select Region first"}
                                     disabled={!formData.region_id || isLoading} isLoading={loadingTowns}
                                     className={`${cx(touched.town_id && !!errors.town_id)} text-left`} />
                             </Field>
