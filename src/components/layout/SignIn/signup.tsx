@@ -199,7 +199,7 @@ const SignUpModal = ({
     else if (formData.password.length < 8) errors.password = "Password must be at least 8 characters";
     if (formData.password !== formData.confirmPassword) errors.confirmPassword = "Passwords do not match";
     if (!formData.region_id) errors.region_id = "Please select a region";
-    if (!formData.town_id) errors.town_id = "Please select a district";
+    if (!formData.town_id) errors.town_id = "Please select a town";
     if (!formData.location.trim()) errors.location = "Location is required";
 
     if (Object.keys(errors).length > 0) {
@@ -380,9 +380,9 @@ const SignUpModal = ({
                 options={towns.map((town) => ({ value: String(town.id), label: town.name }))}
                 placeholder={
                   loadingTowns
-                    ? "Loading districts..."
+                    ? "Loading Towns..."
                     : formData.region_id
-                      ? "Select District"
+                      ? "Select Town"
                       : "Select Region first"
                 }
                 disabled={!formData.region_id || isLoading || loadingTowns}

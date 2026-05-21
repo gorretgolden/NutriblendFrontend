@@ -103,7 +103,7 @@ export default function WholesaleRegisterPage() {
         if (phoneErr) e.phone = phoneErr;
         if (!data.password || data.password.length < 8) e.password = "Password must be at least 8 characters";
         if (!data.region_id) e.region_id = "Please select a region";
-        if (!data.town_id) e.town_id = "Please select a district";
+        if (!data.town_id) e.town_id = "Please select a town";
         if (!data.location.trim()) e.location = "Specific location is required";
         if (!data.wholesale_business_name.trim() || data.wholesale_business_name.trim().length < 3)
             e.wholesale_business_name = "Business name must be at least 3 characters";
@@ -321,11 +321,11 @@ export default function WholesaleRegisterPage() {
                                     disabled={isLoading || loadingRegions} isLoading={loadingRegions}
                                     className={`${cx(touched.region_id && !!errors.region_id)} text-left`} />
                             </Field>
-                            <Field label="District / Town" error={touched.town_id ? errors.town_id : undefined}>
+                            <Field label="Town" error={touched.town_id ? errors.town_id : undefined}>
                                 <SearchableSelect value={formData.town_id}
                                     onChange={(v) => handleSelectChange("town_id", v)}
                                     options={towns.map((t) => ({ value: String(t.id), label: t.name }))}
-                                    placeholder={loadingTowns ? "Loading Towns..." : formData.region_id ? "Select District/Town" : "Select Region first"}
+                                    placeholder={loadingTowns ? "Loading Towns..." : formData.region_id ? "Select Town" : "Select Region first"}
                                     disabled={!formData.region_id || isLoading} isLoading={loadingTowns}
                                     className={`${cx(touched.town_id && !!errors.town_id)} text-left`} />
                             </Field>
