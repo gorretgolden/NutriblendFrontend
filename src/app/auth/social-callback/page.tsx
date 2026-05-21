@@ -126,7 +126,7 @@ function SocialCallbackContent() {
                             <h2 className="text-xl font-semibold text-gray-800 mb-2">Login Failed</h2>
                             <p className="text-gray-500 mb-4">{message}</p>
                             <button
-                                onClick={() => router.push("/")}
+                                onClick={() => window.location.href = "/"}
                                 className="px-6 py-2 bg-[#009E3C] text-white rounded-lg hover:bg-[#00752C] transition-colors"
                             >
                                 Try Again
