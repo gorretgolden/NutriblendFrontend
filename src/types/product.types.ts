@@ -14,9 +14,11 @@ export type Review = {
 export type Product = {
   id: number;
   title: string;
+  name?: string;
   slug?: string;
   sku?: string;
   srcUrl: string;
+  main_image?: string;
   gallery?: string[];
   price: number;
   unit?: string;
@@ -33,6 +35,7 @@ export type Product = {
   keyFeatures?: string[];
   whatsInBox?: string;
   stock?: number;
+  stock_quantity?: number;
   weight?: number;
   inStock?: boolean;
   variations?: {

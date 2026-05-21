@@ -103,6 +103,7 @@ export interface Product {
     average_rating?: number;
     review_count?: number;
     image?: string; // Frontend alias
+    main_image?: string;
     created_at: string;
     updated_at: string;
 }

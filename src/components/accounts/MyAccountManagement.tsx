@@ -61,7 +61,7 @@ export default function MyAccountManagement() {
       try {
         setIsLoadingLocations(true);
         const res = await apiClient.getRegions();
-        if (res.status) setRegions(res.data);
+        if (res.status) setRegions(res.data || []);
       } catch (err) {
         console.error("Failed to fetch regions", err);
       } finally {
@@ -81,7 +81,7 @@ export default function MyAccountManagement() {
       try {
         setIsLoadingTowns(true);
         const res = await apiClient.getTowns(Number(formData.region_id));
-        if (res.status) setTowns(res.data);
+        if (res.status) setTowns(res.data || []);
       } catch (err) {
         console.error("Failed to fetch towns", err);
       } finally {

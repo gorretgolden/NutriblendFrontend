@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import LoginModal from '../../SignIn/SignIn';
@@ -25,6 +25,8 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const accountRef = useRef<HTMLDivElement>(null);
+  const accountHoverTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
@@ -187,6 +189,32 @@ const Header = () => {
     setMobileSearchOpen(false);
   }, []);
 
+  // Click outside to close account dropdown
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (accountRef.current && !accountRef.current.contains(e.target as Node)) {
+        setIsAccountOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Account dropdown hover handlers with delay to prevent flicker
+  const handleAccountMouseEnter = useCallback(() => {
+    if (accountHoverTimeout.current) {
+      clearTimeout(accountHoverTimeout.current);
+      accountHoverTimeout.current = null;
+    }
+    setIsAccountOpen(true);
+  }, []);
+
+  const handleAccountMouseLeave = useCallback(() => {
+    accountHoverTimeout.current = setTimeout(() => {
+      setIsAccountOpen(false);
+    }, 150);
+  }, []);
+
   // Listen for global 'open-login-modal' events (e.g. from Footer account links)
   useEffect(() => {
     const handleOpenLoginModal = () => {
@@ -240,12 +268,15 @@ const Header = () => {
               </button>
 
               {/* Account */}
-              <div className="relative">
+              <div
+                ref={accountRef}
+                className="relative"
+                onMouseEnter={handleAccountMouseEnter}
+                onMouseLeave={handleAccountMouseLeave}
+              >
                 <button
                   className="flex items-center gap-1.5 px-2 py-1.5 md:px-3 rounded-xl hover:bg-gray-50/80 group transition-colors duration-200"
-                  onMouseEnter={() => setIsAccountOpen(true)}
-                  onMouseLeave={() => setIsAccountOpen(false)}
-                  onClick={() => setIsAccountOpen(!isAccountOpen)}
+                  onClick={() => setIsAccountOpen((prev) => !prev)}
                 >
                   <div className="w-7 h-7 rounded-lg bg-gray-100 group-hover:bg-[#009E3C]/10 flex items-center justify-center transition-colors duration-200">
                     <svg className="w-4 h-4 text-gray-500 group-hover:text-[#009E3C] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -267,61 +298,61 @@ const Header = () => {
 
                 {isAccountOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-64 md:w-72 max-w-[92vw] bg-white rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.14),0_4px_12px_rgba(0,0,0,0.06)] z-50 border border-gray-100/80 overflow-hidden text-sm"
-                    onMouseEnter={() => setIsAccountOpen(true)}
-                    onMouseLeave={() => setIsAccountOpen(false)}
+                    className="absolute right-0 pt-2 w-64 md:w-72 max-w-[92vw] z-50 text-sm"
                   >
-                    {/* Dropdown header */}
-                    <div className="relative bg-gradient-to-br from-[#009E3C] to-[#00752C] text-white p-4 overflow-hidden">
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-white/8 rounded-full -translate-y-1/2 translate-x-1/2" />
-                      <h3 className="font-extrabold text-base relative z-10">
-                        {user ? `Welcome back, ${user.first_name || user.name?.split(' ')[0] || 'User'}!` : "Welcome!"}
-                      </h3>
-                      <p className="text-xs text-white/80 mt-0.5 relative z-10">
-                        {user ? "Great to see you again" : "Sign in to access your account"}
-                      </p>
-                    </div>
+                    <div className="bg-white rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.14),0_4px_12px_rgba(0,0,0,0.06)] border border-gray-100/80 overflow-hidden">
+                      {/* Dropdown header */}
+                      <div className="relative bg-gradient-to-br from-[#009E3C] to-[#00752C] text-white p-4 overflow-hidden">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-white/8 rounded-full -translate-y-1/2 translate-x-1/2" />
+                        <h3 className="font-extrabold text-base relative z-10">
+                          {user ? `Welcome back, ${user.first_name || user.name?.split(' ')[0] || 'User'}!` : "Welcome!"}
+                        </h3>
+                        <p className="text-xs text-white/80 mt-0.5 relative z-10">
+                          {user ? "Great to see you again" : "Sign in to access your account"}
+                        </p>
+                      </div>
 
-                    {/* Links */}
-                    <div className="p-1.5">
-                      {user ? (
-                        <div className="space-y-0.5">
-                          {accountLinks.map((item, idx) => (
-                            <Link
-                              key={idx}
-                              href={item.href}
-                              onClick={() => setIsAccountOpen(false)}
-                              className="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-[#009E3C]/6 hover:text-[#009E3C] rounded-xl transition-colors duration-150 font-medium"
-                            >
-                              <span className="text-gray-400 group-hover:text-[#009E3C] flex-shrink-0 w-4">{item.icon}</span>
-                              {item.label}
-                            </Link>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-center py-5">
-                          <p className="text-gray-500 text-sm mb-1">Access your orders, wishlist & more</p>
-                        </div>
-                      )}
-                    </div>
+                      {/* Links */}
+                      <div className="p-1.5">
+                        {user ? (
+                          <div className="space-y-0.5">
+                            {accountLinks.map((item, idx) => (
+                              <Link
+                                key={idx}
+                                href={item.href}
+                                onClick={() => setIsAccountOpen(false)}
+                                className="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-[#009E3C]/6 hover:text-[#009E3C] rounded-xl transition-colors duration-150 font-medium"
+                              >
+                                <span className="text-gray-400 group-hover:text-[#009E3C] flex-shrink-0 w-4">{item.icon}</span>
+                                {item.label}
+                              </Link>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-5">
+                            <p className="text-gray-500 text-sm mb-1">Access your orders, wishlist & more</p>
+                          </div>
+                        )}
+                      </div>
 
-                    {/* CTA */}
-                    <div className="px-2.5 pb-2.5 pt-1 border-t border-gray-100/80">
-                      {user ? (
-                        <button
-                          onClick={handleLogout}
-                          className="w-full bg-red-50 hover:bg-red-500 text-red-600 hover:text-white text-center font-bold py-2.5 px-4 rounded-xl transition-all duration-200 text-sm border border-red-100 hover:border-red-500"
-                        >
-                          Sign Out
-                        </button>
-                      ) : (
-                        <button
-                          onClick={openLoginModal}
-                          className="w-full bg-[#009E3C] hover:bg-[#00752C] text-white text-center font-bold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)] text-sm"
-                        >
-                          Sign in / Create account
-                        </button>
-                      )}
+                      {/* CTA */}
+                      <div className="px-2.5 pb-2.5 pt-1 border-t border-gray-100/80">
+                        {user ? (
+                          <button
+                            onClick={handleLogout}
+                            className="w-full bg-red-50 hover:bg-red-500 text-red-600 hover:text-white text-center font-bold py-2.5 px-4 rounded-xl transition-all duration-200 text-sm border border-red-100 hover:border-red-500"
+                          >
+                            Sign Out
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => { setIsAccountOpen(false); openLoginModal(); }}
+                            className="w-full bg-[#009E3C] hover:bg-[#00752C] text-white text-center font-bold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)] text-sm"
+                          >
+                            Sign in / Create account
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
