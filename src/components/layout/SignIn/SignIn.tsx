@@ -19,7 +19,12 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isLoading, error } = useAppSelector((state) => state.auth);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("rememberedEmail") || "";
+    }
+    return "";
+  });
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,6 +86,12 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
     setIsSubmitting(false);
     
     if (loginUser.fulfilled.match(resultAction)) {
+      const rememberMe = (document.getElementById("keep-signed-in") as HTMLInputElement)?.checked;
+      if (rememberMe) {
+        localStorage.setItem("rememberedEmail", email);
+      } else {
+        localStorage.removeItem("rememberedEmail");
+      }
       // Clear stale data from previous session
       dispatch(clearCartLocal());
       dispatch(clearWishlist());
