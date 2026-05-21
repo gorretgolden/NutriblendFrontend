@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -64,6 +64,28 @@ export default function ThreeColBanners() {
     return () => { cancelled = true; };
   }, []);
 
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
+  const [isInteracting, setIsInteracting] = useState(false);
+
+  // Auto-scroll logic for mobile
+  useEffect(() => {
+    if (banners.length <= 1 || isInteracting) return;
+
+    const interval = setInterval(() => {
+      const container = mobileScrollRef.current;
+      if (container) {
+        const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+        if (isAtEnd) {
+          container.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          container.scrollBy({ left: container.clientWidth, behavior: "smooth" });
+        }
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [banners.length, isInteracting]);
+
   // Return null if loading or no featured categories exist - removes static fallback data
   if (isLoading || banners.length === 0) return null;
 
@@ -71,7 +93,8 @@ export default function ThreeColBanners() {
 
   return (
     <section className="w-full">
-      <div className={`grid grid-cols-1 ${topRight ? 'md:grid-cols-2' : ''} gap-4 md:gap-5`}>
+      {/* ── DESKTOP GRID LAYOUT (Hidden on mobile) ── */}
+      <div className={`hidden md:grid ${topRight ? 'md:grid-cols-2' : ''} gap-4 md:gap-5`}>
 
         {/* ── Large left banner (always shown if banners.length > 0) ── */}
         <motion.div
@@ -217,6 +240,59 @@ export default function ThreeColBanners() {
             )}
           </div>
         )}
+      </div>
+
+      {/* ── MOBILE HORIZONTAL SCROLL (Hidden on desktop) ── */}
+      <div 
+        ref={mobileScrollRef}
+        className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-4 pb-2 hide-scrollbar"
+        onTouchStart={() => setIsInteracting(true)}
+        onTouchEnd={() => {
+          setTimeout(() => setIsInteracting(false), 5000); // Resume auto-scroll after 5s of inactivity
+        }}
+        onScroll={() => setIsInteracting(true)}
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        <style dangerouslySetInnerHTML={{ __html: `.hide-scrollbar::-webkit-scrollbar { display: none; }` }} />
+        
+        {banners.map((banner, idx) => (
+          <Link
+            key={idx}
+            href={banner.href}
+            className="relative block rounded-2xl overflow-hidden shadow-md flex-none w-full snap-center h-[300px]"
+          >
+            <Image
+              src={banner.image}
+              alt={banner.alt}
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent opacity-80" />
+            
+            <div className="absolute inset-0 flex flex-col justify-end px-7 pb-8 text-white">
+              <span
+                className="inline-flex items-center gap-1.5 text-white text-[9px] font-black px-2.5 py-1 rounded-full w-fit mb-3 uppercase tracking-widest shadow-sm"
+                style={{ backgroundColor: banner.badgeColor }}
+              >
+                <span className="w-1 h-1 bg-white rounded-full" />
+                {banner.badge}
+              </span>
+              <h3 className="text-2xl font-black mb-2 leading-none tracking-tight text-white drop-shadow-md">
+                {banner.title}
+              </h3>
+              <p className="text-xs text-white/90 mb-5 font-medium leading-snug max-w-md line-clamp-2">
+                {banner.subtitle}
+              </p>
+              <div className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-white bg-white/15 border border-white/25 backdrop-blur-sm px-4 py-2 rounded-full w-fit">
+                Shop Now
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   );
