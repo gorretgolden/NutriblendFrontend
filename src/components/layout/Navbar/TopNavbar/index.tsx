@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import LoginModal from '../../SignIn/SignIn';
 import SignUpModal from "../../SignIn/signup";
+import ForgotPasswordModal from "../../SignIn/ForgotPasswordModal";
 import CartBtn from "./CartBtn";
 import { apiClient, getImageUrl } from "@/lib/api/client";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [signUpOpen, setSignUpOpen] = useState(false);
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -673,9 +675,26 @@ const Header = () => {
       {/* Modals */}
       <LoginModal
         visible={loginOpen}
-        onClose={closeModals}
-        onSwitchToSignUp={openSignUpModal}
+        onClose={() => setLoginOpen(false)}
+        onSwitchToSignUp={() => {
+          setLoginOpen(false);
+          setSignUpOpen(true);
+        }}
+        onSwitchToForgot={() => {
+          setLoginOpen(false);
+          setForgotPasswordOpen(true);
+        }}
       />
+      
+      <ForgotPasswordModal
+        visible={forgotPasswordOpen}
+        onClose={() => setForgotPasswordOpen(false)}
+        onSwitchToLogin={() => {
+          setForgotPasswordOpen(false);
+          setLoginOpen(true);
+        }}
+      />
+
       <SignUpModal
         visible={signUpOpen}
         onClose={closeModals}

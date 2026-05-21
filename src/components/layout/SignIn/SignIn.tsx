@@ -12,9 +12,10 @@ type LoginModalProps = {
   visible: boolean;
   onClose: () => void;
   onSwitchToSignUp: () => void;
+  onSwitchToForgot?: () => void;
 };
 
-const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => {
+const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: LoginModalProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isLoading, error } = useAppSelector((state) => state.auth);
@@ -186,6 +187,17 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
           </button>
         </form>
 
+        {/* Need Help / Forgot Password */}
+        <div className="mt-4 text-sm text-right">
+          <button
+            type="button"
+            onClick={onSwitchToForgot}
+            className="font-medium text-[#4caf50] hover:text-[#43a047]"
+          >
+            Forgot password?
+          </button>
+        </div>
+
         <div className="mt-6 flex items-center justify-between">
           <hr className="w-full border-gray-300" />
           <span className="px-2 text-xs text-gray-500 uppercase">Or</span>
@@ -235,16 +247,6 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp }: LoginModalProps) => 
               Sign up
             </button>
           </p>
-        </div>
-
-        {/* Need Help */}
-        <div className="mt-4 text-sm">
-          <a
-            href="#"
-            className="font-medium text-[#4caf50] hover:text-[#43a047]"
-          >
-            Need help?
-          </a>
         </div>
 
         {/* Keep signed in */}

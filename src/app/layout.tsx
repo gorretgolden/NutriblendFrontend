@@ -7,7 +7,6 @@ import LayoutWrapper from "./layoutWrapper";
 import HolyLoader from "holy-loader";
 import Providers from "./providers";
 import { Toaster } from "sonner";
-import AIAssistant from "@/components/common/AIAssistant";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nutriblendhaven.com'),
@@ -125,7 +124,6 @@ export default function RootLayout({
         <Providers>
           <LayoutWrapper>
             {children}
-            <AIAssistant />
           </LayoutWrapper>
           <Footer />
         </Providers>
