@@ -74,7 +74,7 @@ export default function ThreeColBanners() {
     const interval = setInterval(() => {
       const container = mobileScrollRef.current;
       if (container) {
-        const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+        const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 50;
         if (isAtEnd) {
           container.scrollTo({ left: 0, behavior: "smooth" });
         } else {
