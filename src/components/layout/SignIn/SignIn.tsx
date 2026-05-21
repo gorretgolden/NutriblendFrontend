@@ -90,23 +90,23 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90" onClick={onClose}>
-      <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-md md:p-8" onClick={(e) => e.stopPropagation()}>
-        {/* Close (X) button */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
-        >
-          ✕
-        </button>
-
-        {/* Cancel link */}
-        <div className="mb-6 text-left">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-6" onClick={onClose}>
+      <div className="relative w-full max-w-md max-h-[95vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl md:p-8" onClick={(e) => e.stopPropagation()}>
+        {/* Header: Cancel (left) and Close (right) */}
+        <div className="flex items-center justify-between mb-4">
           <button
             onClick={onClose}
-            className="font-medium text-[#4caf50] hover:text-[#43a047]"
+            className="font-bold text-[#4caf50] hover:text-[#43a047] text-sm"
           >
             Cancel
+          </button>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-800 transition-colors p-1"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
