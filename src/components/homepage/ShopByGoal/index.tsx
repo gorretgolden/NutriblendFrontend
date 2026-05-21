@@ -40,7 +40,7 @@ export default function ShopByGoal() {
     autoScrollId.current = setInterval(() => {
       const el = scrollRef.current;
       if (!el) return;
-      if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 2) {
+      if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 15) {
         el.scrollTo({ left: 0, behavior: "smooth" });
       } else {
         el.scrollBy({ left: 160, behavior: "smooth" }); // scroll by approximately one card
