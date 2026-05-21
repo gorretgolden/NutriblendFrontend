@@ -161,16 +161,14 @@ const Header = () => {
       dispatch(clearCartLocal());
       dispatch(clearWishlist());
       setIsAccountOpen(false);
-      toast.success("You have been logged out successfully");
-      router.push("/");
+      window.location.href = "/";
     } catch {
       // Force local logout even if API fails
       dispatch(logout());
       dispatch(clearCartLocal());
       dispatch(clearWishlist());
       setIsAccountOpen(false);
-      toast.success("You have been logged out");
-      router.push("/");
+      window.location.href = "/";
     }
   };
 
