@@ -597,7 +597,7 @@ const Header = () => {
 
           {/* Modal Card */}
           <div
-            className="relative w-full max-w-[340px] bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden animate-[scaleIn_250ms_ease-out] z-10 border border-gray-100"
+            className="relative w-full max-w-[380px] bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden animate-[scaleIn_250ms_ease-out] z-10 border border-gray-100"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
