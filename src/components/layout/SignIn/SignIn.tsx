@@ -54,6 +54,12 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
     }
   };
 
+  const isFormValid = () => {
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return false;
+    if (!password || password.length < 6) return false;
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -181,7 +187,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
           </div>
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || !isFormValid()}
             className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Signing in..." : "Continue"}

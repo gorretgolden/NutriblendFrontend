@@ -171,6 +171,15 @@ const SignUpModal = ({
     }
   };
 
+  const isFormValid = () => {
+    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.password || !formData.confirmPassword || !formData.region_id || !formData.town_id || !formData.location.trim() || !formData.terms) return false;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return false;
+    if (formData.phone.length < 9) return false;
+    if (formData.password.length < 8) return false;
+    if (formData.password !== formData.confirmPassword) return false;
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -501,8 +510,8 @@ const SignUpModal = ({
             <div className="col-span-1 md:col-span-2 mt-2">
               <button
                 type="submit"
-                disabled={isLoading}
-                className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047] disabled:opacity-50"
+                disabled={isLoading || !isFormValid()}
+                className="w-full rounded bg-[#4caf50] p-3 text-base font-bold text-white transition-colors duration-300 hover:bg-[#43a047] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? "Creating Account..." : "Create Account"}
               </button>
