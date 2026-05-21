@@ -597,75 +597,81 @@ const Header = () => {
 
           {/* Modal Card */}
           <div
-            className="relative w-full max-w-sm bg-white rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.18),0_8px_20px_rgba(0,0,0,0.08)] overflow-hidden animate-[scaleIn_250ms_ease-out] text-sm z-10"
+            className="relative w-full max-w-[340px] bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden animate-[scaleIn_250ms_ease-out] z-10 border border-gray-100"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button
               onClick={() => setIsAccountOpen(false)}
-              className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center text-white transition-colors duration-150"
+              className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-gray-50 hover:bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors duration-150"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            {/* Header */}
-            <div className="relative bg-gradient-to-br from-[#009E3C] to-[#00752C] text-white px-6 py-5 overflow-hidden">
-              <div className="absolute top-0 right-0 w-28 h-28 bg-white/8 rounded-full -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/3" />
-              <h3 className="font-extrabold text-lg relative z-10">
-                {user ? `Welcome back, ${user.first_name || user.name?.split(' ')[0] || 'User'}!` : "Welcome!"}
-              </h3>
-              <p className="text-sm text-white/80 mt-1 relative z-10">
-                {user ? "Great to see you again" : "Sign in to access your account"}
-              </p>
-            </div>
-
-            {/* Links */}
-            <div className="px-3 py-3">
+            <div className="p-6 md:p-8 flex flex-col items-center text-center">
               {user ? (
-                <div className="space-y-0.5">
-                  {accountLinks.map((item, idx) => (
-                    <Link
-                      key={idx}
-                      href={item.href}
-                      onClick={() => setIsAccountOpen(false)}
-                      className="flex items-center gap-3.5 px-4 py-3 text-gray-600 hover:bg-[#009E3C]/6 hover:text-[#009E3C] rounded-xl transition-colors duration-150 font-medium"
+                <>
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#009E3C] to-[#00bc49] p-0.5 mb-4 shadow-sm">
+                    <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
+                      <span className="text-2xl font-black text-[#009E3C]">
+                        {(user.first_name || user.name || 'U').charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                  <h3 className="font-extrabold text-xl text-gray-800 mb-1">
+                    Welcome back, {user.first_name || user.name?.split(' ')[0] || 'User'}!
+                  </h3>
+                  <p className="text-sm text-gray-500 font-medium mb-6">
+                    Manage your account and orders
+                  </p>
+                  
+                  <div className="w-full space-y-1">
+                    {accountLinks.map((item, idx) => (
+                      <Link
+                        key={idx}
+                        href={item.href}
+                        onClick={() => setIsAccountOpen(false)}
+                        className="group flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-[#009E3C]/10 hover:text-[#009E3C] rounded-2xl transition-colors duration-200 font-bold text-[13px]"
+                      >
+                        <span className="text-gray-400 group-hover:text-[#009E3C] transition-colors">{item.icon}</span>
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+
+                  <div className="w-full mt-4 pt-4 border-t border-gray-100">
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 text-[13px] border border-red-100 hover:border-red-500"
                     >
-                      <span className="text-gray-400 flex-shrink-0 w-5">{item.icon}</span>
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
+                      Sign Out
+                    </button>
+                  </div>
+                </>
               ) : (
-                <div className="text-center py-6">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
-                    <svg className="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <>
+                  <div className="w-20 h-20 rounded-full bg-[#009E3C]/10 flex items-center justify-center mb-4 relative">
+                    <div className="absolute inset-0 rounded-full bg-[#009E3C]/20 animate-ping opacity-20" />
+                    <svg className="w-10 h-10 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <p className="text-gray-500 text-sm">Access your orders, wishlist & more</p>
-                </div>
-              )}
-            </div>
-
-            {/* CTA */}
-            <div className="px-4 pb-4 pt-2 border-t border-gray-100/80">
-              {user ? (
-                <button
-                  onClick={handleLogout}
-                  className="w-full bg-red-50 hover:bg-red-500 text-red-600 hover:text-white text-center font-bold py-3 px-4 rounded-xl transition-all duration-200 text-sm border border-red-100 hover:border-red-500"
-                >
-                  Sign Out
-                </button>
-              ) : (
-                <button
-                  onClick={() => { setIsAccountOpen(false); openLoginModal(); }}
-                  className="w-full bg-[#009E3C] hover:bg-[#00752C] text-white text-center font-bold py-3 px-4 rounded-xl transition-all duration-200 shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)] text-sm"
-                >
-                  Sign in / Create account
-                </button>
+                  <h3 className="font-extrabold text-2xl text-gray-800 mb-2">
+                    Welcome to Nutriblend
+                  </h3>
+                  <p className="text-[13px] text-gray-500 font-medium mb-7 leading-relaxed px-1">
+                    Sign in to track your orders, manage your wishlist, and access exclusive member deals.
+                  </p>
+                  
+                  <button
+                    onClick={() => { setIsAccountOpen(false); openLoginModal(); }}
+                    className="w-full bg-[#009E3C] hover:bg-[#008733] text-white text-center font-bold py-3.5 px-4 rounded-xl transition-all duration-200 shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)] text-sm active:scale-[0.98]"
+                  >
+                    Sign In / Create Account
+                  </button>
+                </>
               )}
             </div>
           </div>
