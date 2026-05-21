@@ -597,54 +597,54 @@ const Header = () => {
 
           {/* Modal Card */}
           <div
-            className="relative w-full max-w-[380px] bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden animate-[scaleIn_250ms_ease-out] z-10 border border-gray-100"
+            className="relative w-full max-w-[420px] bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden animate-[scaleIn_250ms_ease-out] z-10 border border-gray-100"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button
               onClick={() => setIsAccountOpen(false)}
-              className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-gray-50 hover:bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors duration-150"
+              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-gray-50 hover:bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors duration-150"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            <div className="p-6 md:p-8 flex flex-col items-center text-center">
+            <div className="p-8 md:p-10 flex flex-col items-center text-center">
               {user ? (
                 <>
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#009E3C] to-[#00bc49] p-0.5 mb-4 shadow-sm">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#009E3C] to-[#00bc49] p-0.5 mb-5 shadow-sm">
                     <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                      <span className="text-2xl font-black text-[#009E3C]">
+                      <span className="text-3xl font-black text-[#009E3C]">
                         {(user.first_name || user.name || 'U').charAt(0).toUpperCase()}
                       </span>
                     </div>
                   </div>
-                  <h3 className="font-extrabold text-xl text-gray-800 mb-1">
+                  <h3 className="font-extrabold text-2xl text-gray-800 mb-1.5">
                     Welcome back, {user.first_name || user.name?.split(' ')[0] || 'User'}!
                   </h3>
-                  <p className="text-sm text-gray-500 font-medium mb-6">
+                  <p className="text-[15px] text-gray-500 font-medium mb-8">
                     Manage your account and orders
                   </p>
                   
-                  <div className="w-full space-y-1">
+                  <div className="w-full space-y-1.5">
                     {accountLinks.map((item, idx) => (
                       <Link
                         key={idx}
                         href={item.href}
                         onClick={() => setIsAccountOpen(false)}
-                        className="group flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-[#009E3C]/10 hover:text-[#009E3C] rounded-2xl transition-colors duration-200 font-bold text-[13px]"
+                        className="group flex items-center gap-4 px-5 py-3.5 text-gray-600 hover:bg-[#009E3C]/10 hover:text-[#009E3C] rounded-2xl transition-colors duration-200 font-bold text-[15px]"
                       >
-                        <span className="text-gray-400 group-hover:text-[#009E3C] transition-colors">{item.icon}</span>
+                        <span className="text-gray-400 group-hover:text-[#009E3C] transition-colors scale-110">{item.icon}</span>
                         {item.label}
                       </Link>
                     ))}
                   </div>
 
-                  <div className="w-full mt-4 pt-4 border-t border-gray-100">
+                  <div className="w-full mt-6 pt-5 border-t border-gray-100">
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 text-[13px] border border-red-100 hover:border-red-500"
+                      className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white font-bold py-3.5 px-5 rounded-xl transition-all duration-200 text-[15px] border border-red-100 hover:border-red-500"
                     >
                       Sign Out
                     </button>
@@ -652,22 +652,22 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <div className="w-20 h-20 rounded-full bg-[#009E3C]/10 flex items-center justify-center mb-4 relative">
+                  <div className="w-24 h-24 rounded-full bg-[#009E3C]/10 flex items-center justify-center mb-6 relative">
                     <div className="absolute inset-0 rounded-full bg-[#009E3C]/20 animate-ping opacity-20" />
-                    <svg className="w-10 h-10 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-12 h-12 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <h3 className="font-extrabold text-2xl text-gray-800 mb-2">
+                  <h3 className="font-extrabold text-[26px] text-gray-800 mb-3 tracking-tight">
                     Welcome to Nutriblend
                   </h3>
-                  <p className="text-[13px] text-gray-500 font-medium mb-7 leading-relaxed px-1">
+                  <p className="text-[15px] text-gray-500 font-medium mb-9 leading-relaxed px-1">
                     Sign in to track your orders, manage your wishlist, and access exclusive member deals.
                   </p>
                   
                   <button
                     onClick={() => { setIsAccountOpen(false); openLoginModal(); }}
-                    className="w-full bg-[#009E3C] hover:bg-[#008733] text-white text-center font-bold py-3.5 px-4 rounded-xl transition-all duration-200 shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)] text-sm active:scale-[0.98]"
+                    className="w-full bg-[#009E3C] hover:bg-[#008733] text-white text-center font-bold py-4 px-5 rounded-xl transition-all duration-200 shadow-[0_4px_12px_rgba(0,158,60,0.25)] hover:shadow-[0_6px_18px_rgba(0,158,60,0.35)] text-[15px] active:scale-[0.98]"
                   >
                     Sign In / Create Account
                   </button>
