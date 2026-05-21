@@ -467,19 +467,6 @@ const SignUpModal = ({
 
             {/* Checkboxes */}
             <div className="col-span-1 md:col-span-2 mt-2">
-              <label className="flex items-center mb-2">
-                <input
-                  type="checkbox"
-                  id="newsletter"
-                  name="newsletter"
-                  className="h-5 w-5 mr-2 appearance-none border border-gray-400 rounded-sm checked:bg-[#4caf50] checked:border-[#4caf50] checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center"
-                  checked={formData.newsletter}
-                  onChange={handleInputChange}
-                />
-                <span className="text-sm text-gray-600">
-                  Send me special offers
-                </span>
-              </label>
 
               <label className="flex items-center">
                 <input
