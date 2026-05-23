@@ -239,7 +239,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           <button
             onClick={handleAddToCart}
             disabled={isOutOfStock}
-            className={`flex-1 py-2 sm:py-2.5 px-1 sm:px-2 rounded-xl text-[11px] sm:text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-1 sm:gap-2 ${
+            className={`flex-1 h-10 sm:h-11 px-1 sm:px-2 rounded-xl text-[11px] sm:text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-1 sm:gap-2 ${
               isOutOfStock
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
                 : isInCart
@@ -248,20 +248,20 @@ const ProductCard = ({ data }: ProductCardProps) => {
             }`}
           >
             {isOutOfStock ? (
-              <span className="whitespace-nowrap">Out of Stock</span>
+              <span className="whitespace-nowrap text-[10px] sm:text-xs">Out of Stock</span>
             ) : isInCart ? (
               <>
                 <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="whitespace-nowrap">In Cart</span>
+                <span className="whitespace-nowrap hidden sm:inline">In Cart</span>
               </>
             ) : (
               <>
                 <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
                 </svg>
-                <span className="whitespace-nowrap">Add to cart</span>
+                <span className="whitespace-nowrap hidden sm:inline">Add to cart</span>
               </>
             )}
           </button>
@@ -271,7 +271,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
             href={`https://wa.me/256784640607?text=Hello Nutriblend, I'm interested in ${data.title} (Price: UGX ${displayPrice.toLocaleString()}). Link: ${typeof window !== 'undefined' ? window.location.origin : ''}/shop/product/${data.id}/${productSlug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-11 h-11 flex-shrink-0 rounded-xl flex items-center justify-center bg-[#25D366] hover:bg-[#128C7E] text-white shadow-md transition-all duration-200 active:scale-95"
+            className="w-10 h-10 sm:w-11 sm:h-11 flex-shrink-0 rounded-xl flex items-center justify-center bg-[#25D366] hover:bg-[#128C7E] text-white shadow-md transition-all duration-200 active:scale-95"
             title="Inquire on WhatsApp"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

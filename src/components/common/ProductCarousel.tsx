@@ -136,7 +136,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
           {showArrows && (
             <button
               onClick={() => scroll('left')}
-              className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10 w-11 h-11 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 border border-gray-100 ${canScrollLeft
+              className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10 w-11 h-11 bg-white rounded-full shadow-lg hidden sm:flex items-center justify-center transition-all duration-300 border border-gray-100 ${canScrollLeft
                 ? 'hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C] hover:shadow-[#009E3C]/20 hover:scale-110 opacity-0 group-hover/carousel:opacity-100'
                 : 'opacity-0 pointer-events-none'
                 }`}
@@ -147,12 +147,12 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
               </svg>
             </button>
           )}
-
+ 
           {/* Right Arrow */}
           {showArrows && (
             <button
               onClick={() => scroll('right')}
-              className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-10 w-11 h-11 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 border border-gray-100 ${canScrollRight
+              className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-10 w-11 h-11 bg-white rounded-full shadow-lg hidden sm:flex items-center justify-center transition-all duration-300 border border-gray-100 ${canScrollRight
                 ? 'hover:bg-[#009E3C] hover:text-white hover:border-[#009E3C] hover:shadow-[#009E3C]/20 hover:scale-110 opacity-0 group-hover/carousel:opacity-100'
                 : 'opacity-0 pointer-events-none'
                 }`}
