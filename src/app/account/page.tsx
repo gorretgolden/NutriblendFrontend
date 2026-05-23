@@ -21,7 +21,7 @@ export default function AccountPage() {
             {(user?.last_name?.[0] || user?.name?.split(' ')[1]?.[0] || "").toUpperCase()}
           </div>
           <div>
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-2xl font-bold text-white">
               {user?.first_name || user?.name?.split(' ')[0] || ''}{' '}
               {user?.last_name || (user?.name?.split(' ').slice(1).join(' ') || '')}
             </h1>
