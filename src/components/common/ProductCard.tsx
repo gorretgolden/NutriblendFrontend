@@ -74,7 +74,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       : null;
 
   return (
-    <div className={`group relative bg-white border rounded-2xl overflow-hidden flex flex-col h-full transition-all duration-300 ease-out ${
+    <div className={`group relative bg-white border rounded-2xl overflow-hidden flex flex-col h-full transition-all duration-300 ease-out shadow-[0_4px_20px_rgba(0,0,0,0.05)] ${
       isOutOfStock
         ? 'border-gray-100 opacity-75'
         : 'border-gray-100 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.10),0_4px_10px_rgba(0,0,0,0.06)] hover:border-[#009E3C]/25 glow-on-hover'
