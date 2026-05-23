@@ -40,7 +40,7 @@ export default function WholesaleCtaCarousel() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="relative h-[340px] sm:h-[280px] md:h-[250px] rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10 group transition-all duration-500 hover:shadow-green-950/10">
+            <div className="relative h-[260px] sm:h-[240px] md:h-[220px] rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 group transition-all duration-500 hover:shadow-green-950/10">
                 
                 {/* Background Images with Cross-Fade */}
                 {SLIDES.map((slide, idx) => (
@@ -64,11 +64,11 @@ export default function WholesaleCtaCarousel() {
                 {/* Subtle Decorative Lights */}
                 <div className="absolute top-0 right-0 w-80 h-80 bg-[#00ff62]/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none z-10 animate-pulse" />
 
-                {/* Content Overlay */}
-                <div className="absolute inset-0 z-20 p-6 sm:p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                {/* Content Overlay - Snug vertical layout for mobile, split row for desktop */}
+                <div className="absolute inset-0 z-20 p-5 sm:p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-center md:justify-between gap-3 sm:gap-4 md:gap-8">
                     <div className="flex-1 text-left">
                         {/* Animated Badge */}
-                        <div className="overflow-hidden mb-3">
+                        <div className="overflow-hidden mb-1.5 sm:mb-3">
                             <AnimatePresence mode="wait">
                                 <motion.span
                                     key={currentIdx}
@@ -76,7 +76,7 @@ export default function WholesaleCtaCarousel() {
                                     animate={{ y: 0, opacity: 1 }}
                                     exit={{ y: -20, opacity: 0 }}
                                     transition={{ duration: 0.3 }}
-                                    className={`inline-flex items-center gap-1.5 backdrop-blur-md text-[10px] font-black uppercase tracking-widest px-3.5 py-1.5 rounded-full border ${SLIDES[currentIdx].badgeColor}`}
+                                    className={`inline-flex items-center gap-1.5 backdrop-blur-md text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${SLIDES[currentIdx].badgeColor}`}
                                 >
                                     <Building2 className="w-3.5 h-3.5" />
                                     {SLIDES[currentIdx].label}
@@ -85,19 +85,19 @@ export default function WholesaleCtaCarousel() {
                         </div>
                         
                         {/* Dynamic Text with Slide-In Transitions */}
-                        <div className="overflow-hidden min-h-[95px] sm:min-h-auto">
+                        <div className="overflow-hidden">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={currentIdx}
-                                    initial={{ y: 30, opacity: 0 }}
+                                    initial={{ y: 25, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
-                                    exit={{ y: -30, opacity: 0 }}
-                                    transition={{ duration: 0.4, ease: "easeOut" }}
+                                    exit={{ y: -25, opacity: 0 }}
+                                    transition={{ duration: 0.35, ease: "easeOut" }}
                                 >
-                                    <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight mb-2 drop-shadow-md">
+                                    <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight mb-1 sm:mb-2 drop-shadow-md">
                                         {SLIDES[currentIdx].title}
                                     </h3>
-                                    <p className="text-white/80 text-xs sm:text-sm max-w-2xl leading-relaxed font-medium">
+                                    <p className="text-white/95 text-xs sm:text-sm max-w-2xl leading-relaxed font-semibold">
                                         {SLIDES[currentIdx].desc}
                                     </p>
                                 </motion.div>
@@ -106,10 +106,10 @@ export default function WholesaleCtaCarousel() {
                     </div>
 
                     {/* CTA Button */}
-                    <div className="flex-shrink-0 w-full md:w-auto text-left z-30">
+                    <div className="flex-shrink-0 w-full md:w-auto text-left z-30 mt-1 sm:mt-0">
                         <Link
                             href="/wholesale-registration"
-                            className="w-full md:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#009E3C] to-[#00752C] px-8 py-4 text-sm font-black tracking-wide text-white transition-all duration-300 hover:from-[#00bc49] hover:to-[#009E3C] hover:shadow-xl hover:shadow-[#009E3C]/20 hover:scale-[1.02] active:scale-[0.98] text-center group"
+                            className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#009E3C] to-[#00752C] px-6 py-3 sm:px-8 sm:py-4 text-xs sm:text-sm font-black tracking-wide text-white transition-all duration-300 hover:from-[#00bc49] hover:to-[#009E3C] hover:shadow-xl hover:shadow-[#009E3C]/20 hover:scale-[1.01] active:scale-[0.98] text-center group"
                         >
                             Apply for Wholesale Program
                             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -117,19 +117,19 @@ export default function WholesaleCtaCarousel() {
                     </div>
                 </div>
 
-                {/* Premium Clickable Slide Indicators */}
-                <div className="absolute bottom-4 left-6 sm:left-8 md:left-12 z-30 flex items-center gap-2">
+                {/* Premium Clickable Slide Indicators - Safely centered at bottom on mobile */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 md:left-10 md:translate-x-0 z-30 flex items-center gap-1.5">
                     {SLIDES.map((_, idx) => (
                         <button
                             key={idx}
                             onClick={() => setCurrentIdx(idx)}
-                            className="group/btn relative p-2"
+                            className="group/btn relative p-1.5"
                             aria-label={`Go to slide ${idx + 1}`}
                         >
                             <span className={`block h-1.5 rounded-full transition-all duration-500 ${
                                 idx === currentIdx 
-                                    ? "w-8 bg-[#00ff62] shadow-[0_0_8px_#00ff62]" 
-                                    : "w-2.5 bg-white/40 hover:bg-white/70"
+                                    ? "w-6 bg-[#00ff62] shadow-[0_0_8px_#00ff62]" 
+                                    : "w-2 bg-white/40 hover:bg-white/70"
                             }`} />
                         </button>
                     ))}
