@@ -478,6 +478,12 @@ class NutriBlendApiClient {
         return response;
     }
 
+    async verifyEmail(id: string | number, hash: string): Promise<ApiResponse<{ user: User; token: string }>> {
+        return this.request<{ user: User; token: string }>(`/auth/email/verify/${id}/${hash}`, {
+            method: 'POST',
+        });
+    }
+
     async getProfile(): Promise<ApiResponse<User>> {
         return this.request<User>('/me');
     }
