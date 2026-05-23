@@ -187,14 +187,10 @@ const authSlice = createSlice({
         });
         builder.addCase(registerUser.fulfilled, (state, action) => {
             state.isLoading = false;
+            // Note: We intentionally do NOT set isAuthenticated to true
+            // or save the token to localStorage because the user needs to
+            // verify their email first.
             state.user = action.payload.user;
-            state.token = action.payload.token;
-            state.isAuthenticated = true;
-            // Persist to localStorage
-            if (typeof window !== 'undefined') {
-                localStorage.setItem('auth_token', action.payload.token);
-                localStorage.setItem('user', JSON.stringify(action.payload.user));
-            }
         });
         builder.addCase(registerUser.rejected, (state, action) => {
             state.isLoading = false;
