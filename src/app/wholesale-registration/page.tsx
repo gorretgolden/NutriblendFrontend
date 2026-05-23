@@ -289,10 +289,13 @@ export default function WholesaleRegisterPage() {
                         </Link>
                     </div>
 
-                    <div className="bg-white rounded-[2rem] shadow-[0_8px_40px_rgba(0,0,0,0.04)] border border-gray-100 p-6 sm:p-10">
+                    <div className="bg-white/95 backdrop-blur-md rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,158,60,0.04)] border border-green-50/50 p-6 sm:p-10 transition-all duration-300 hover:shadow-[0_25px_60px_rgba(0,158,60,0.06)]">
                         <div className="text-center mb-10">
-                            <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight mb-3">Apply for Wholesale</h2>
-                            <p className="text-gray-500 font-medium">Fill in your business details to partner with us</p>
+                            <span className="inline-flex items-center gap-1.5 bg-[#eefcf2] text-[#009E3C] text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3 border border-green-100">
+                                Business Application
+                            </span>
+                            <h2 className="text-3.5xl font-black text-gray-900 tracking-tight mb-3 leading-none">Apply for Wholesale</h2>
+                            <p className="text-gray-500 text-sm font-medium">Fill in your business details below to open a partner account</p>
                         </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
@@ -403,10 +406,10 @@ export default function WholesaleRegisterPage() {
 }
 
 function cx(hasError?: boolean) {
-    return `w-full rounded-xl border px-5 py-3.5 text-[15px] font-medium outline-none transition-all shadow-sm ${
+    return `w-full rounded-2xl border px-5 py-3.5 text-[15px] font-medium outline-none transition-all duration-300 shadow-sm ${
         hasError
             ? "border-red-300 bg-red-50/50 text-red-900 focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-500/10"
-            : "border-gray-200 bg-gray-50/50 text-gray-900 focus:bg-white focus:border-[#009E3C] focus:ring-4 focus:ring-[#009E3C]/10 hover:border-gray-300"
+            : "border-gray-200 bg-gray-50/30 text-gray-900 focus:bg-white focus:border-[#009E3C] focus:ring-4 focus:ring-[#009E3C]/5 hover:border-gray-300 hover:bg-gray-50/10"
     } disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed`;
 }
 
@@ -415,7 +418,7 @@ function Field({ label, error, hint, children }: {
 }) {
     return (
         <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-gray-700">{label}</label>
+            <label className="text-[11px] font-black uppercase tracking-wider text-gray-500 mb-1.5">{label}</label>
             {children}
             {error ? (
                 <span className="flex items-center gap-1 text-xs text-red-600">
