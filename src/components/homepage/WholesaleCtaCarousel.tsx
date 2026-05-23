@@ -65,10 +65,10 @@ export default function WholesaleCtaCarousel() {
                 <div className="absolute top-0 right-0 w-80 h-80 bg-[#00ff62]/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none z-10 animate-pulse" />
 
                 {/* Content Overlay - Snug vertical layout for mobile, split row for desktop */}
-                <div className="absolute inset-0 z-20 p-5 sm:p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-center md:justify-between gap-3 sm:gap-4 md:gap-8">
+                <div className="absolute inset-0 z-20 p-5 sm:p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-center md:justify-between gap-2.5 sm:gap-4 md:gap-8">
                     <div className="flex-1 text-left">
                         {/* Animated Badge */}
-                        <div className="overflow-hidden mb-1.5 sm:mb-3">
+                        <div className="overflow-hidden mb-0.5 sm:mb-2">
                             <AnimatePresence mode="wait">
                                 <motion.span
                                     key={currentIdx}
@@ -94,10 +94,10 @@ export default function WholesaleCtaCarousel() {
                                     exit={{ y: -25, opacity: 0 }}
                                     transition={{ duration: 0.35, ease: "easeOut" }}
                                 >
-                                    <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight mb-1 sm:mb-2 drop-shadow-md">
+                                    <h3 className="text-[22px] sm:text-2xl md:text-3xl font-black text-white tracking-tight mb-0.5 sm:mb-1.5 drop-shadow-md leading-tight">
                                         {SLIDES[currentIdx].title}
                                     </h3>
-                                    <p className="text-white/95 text-xs sm:text-sm max-w-2xl leading-relaxed font-semibold">
+                                    <p className="text-white/95 text-[13px] sm:text-sm max-w-2xl leading-snug font-semibold">
                                         {SLIDES[currentIdx].desc}
                                     </p>
                                 </motion.div>

@@ -6,6 +6,7 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 import ProductCard from "./ProductCard";
 import { Product } from "@/types/product.types";
@@ -18,6 +19,18 @@ type ProductListSecProps = {
 };
 
 const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
+  const [api, setApi] = React.useState<CarouselApi>();
+
+  React.useEffect(() => {
+    if (!api) return;
+
+    const intervalId = setInterval(() => {
+      api.scrollNext();
+    }, 3500); // Auto scrolls every 3.5 seconds
+
+    return () => clearInterval(intervalId);
+  }, [api]);
+
   return (
     <section className="max-w-frame mx-auto text-center">
       <motion.h2
@@ -38,8 +51,10 @@ const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
         transition={{ delay: 0.6, duration: 0.6 }}
       >
         <Carousel
+          setApi={setApi}
           opts={{
             align: "start",
+            loop: true,
           }}
           className="w-full mb-6 md:mb-9"
         >
@@ -70,3 +85,4 @@ const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
 };
 
 export default ProductListSec;
+
