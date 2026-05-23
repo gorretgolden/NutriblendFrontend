@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { useAppDispatch } from "@/lib/hooks/redux";
 import { setCredentials, fetchUserProfile } from "@/lib/features/auth/authSlice";
 import { fetchCart } from "@/lib/features/carts/cartsSlice";
+import { toast } from "sonner";
 
 function SocialCallbackContent() {
     const router = useRouter();
@@ -22,6 +23,7 @@ function SocialCallbackContent() {
         const token = searchParams.get("token");
         const userParam = searchParams.get("user");
         const errorParam = searchParams.get("error");
+        const registeredParam = searchParams.get("registered") === "true";
 
         // Handle error redirects from backend
         if (errorParam) {
@@ -78,8 +80,15 @@ function SocialCallbackContent() {
             // Also fetch the user's cart so it appears in navbar
             dispatch(fetchCart());
 
-            setStatus("success");
-            setMessage("Login successful! Redirecting...");
+            if (registeredParam) {
+                setStatus("success");
+                setMessage("Account created successfully! Redirecting...");
+                toast.success("Account created successfully! Welcome to NutriBlend!");
+            } else {
+                setStatus("success");
+                setMessage("Login successful! Redirecting...");
+                toast.success("Successfully logged in with Google!");
+            }
 
             // Redirect to homepage after short delay
             setTimeout(() => {

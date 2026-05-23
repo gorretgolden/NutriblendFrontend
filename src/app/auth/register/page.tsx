@@ -155,7 +155,7 @@ export default function RegisterPage() {
 
     const handleGoogleSignup = () => {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-        window.location.href = `${apiUrl}/auth/google/redirect`;
+        window.location.href = `${apiUrl}/auth/google/redirect?action=signup`;
     };
 
     return (
