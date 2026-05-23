@@ -10,6 +10,7 @@ import { transformProduct } from "@/lib/transformers";
 import { apiClient } from "@/lib/api/client";
 import Link from "next/link";
 import FadeIn from "@/components/common/FadeIn";
+import WholesaleCtaCarousel from "@/components/homepage/WholesaleCtaCarousel";
 export const revalidate = 60;
 
 // ── Safe product fetch helper ───────────────────────────────────────────────
@@ -123,35 +124,8 @@ export default async function Home() {
         <ShopByGoal />
       </FadeIn>
 
-      {/* ── 3. Wholesale Program Call-To-Action Banner ── */}
-      <FadeIn duration={0.8} className="bg-[#eefcf2] border-b border-green-100">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-left">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#009E3C] to-[#00752C] flex items-center justify-center flex-shrink-0 shadow-md shadow-green-900/10">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-lg font-black text-gray-900 tracking-tight">Become a Wholesale Partner</h3>
-                <p className="text-gray-600 text-sm font-medium mt-0.5">
-                  Are you a hospital, pharmacy, clinic or wholesale retailer? Unlock exclusive bulk pricing, dedicated support, and priority dispatch.
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/wholesale-registration"
-              className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#009E3C] to-[#00752C] px-6 py-3.5 text-sm font-black tracking-wide text-white transition-all hover:from-[#00bc49] hover:to-[#009E3C] hover:shadow-lg hover:shadow-green-900/15 active:scale-[0.98] text-center"
-            >
-              Apply for Wholesale Program
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </FadeIn>
+      {/* ── 3. Wholesale Program Call-To-Action Carousel Banner ── */}
+      <WholesaleCtaCarousel />
 
       {/* ── 4. Three-Column Promo Banners ── */}
       <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">

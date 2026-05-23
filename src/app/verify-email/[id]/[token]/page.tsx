@@ -32,7 +32,8 @@ export default function VerifyEmailPage({ params }: VerifyEmailPageProps) {
                 const response = await apiClient.verifyEmail(id, token);
 
                 if (response.status && response.data) {
-                    const { user, token: authToken } = response.data;
+                    const { user: rawUser, token: authToken } = response.data;
+                    const user = rawUser as any;
 
                     // If wholesale user and not approved yet
                     if (user.customer_type === "wholesale" && !user.is_wholesale_approved) {
