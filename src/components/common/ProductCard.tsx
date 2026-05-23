@@ -88,7 +88,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       {/* ── Image Container ── */}
       <Link
         href={`/shop/product/${data.id}/${productSlug}`}
-        className="relative block bg-white w-full overflow-hidden h-[180px] sm:h-[220px] md:h-[240px]"
+        className="relative block bg-white w-full overflow-hidden h-[150px] sm:h-[220px] md:h-[240px]"
       >
         {/* Quick View Overlay */}
         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
@@ -171,10 +171,10 @@ const ProductCard = ({ data }: ProductCardProps) => {
       </Link>
 
       {/* ── Content ── */}
-      <div className="relative z-10 px-2 sm:px-3 pt-2 pb-2.5 flex flex-col flex-grow border-t border-gray-100/80 bg-white">
+      <div className="relative z-10 px-2 sm:px-3 pt-2 pb-2 flex flex-col flex-grow border-t border-gray-100/80 bg-white">
 
         {/* Brand Row */}
-        <div className="flex items-center gap-2 mb-1.5 overflow-hidden">
+        <div className="flex items-center gap-2 mb-1 sm:mb-1.5 overflow-hidden">
           {(data.brand || data.category) && (
             <span className="bg-[#f0fdf4] text-[#009E3C] text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider whitespace-nowrap">
               {data.brand || data.category}
@@ -191,7 +191,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         </Link>
 
         {/* Price Block */}
-        <div className="flex flex-col mt-2">
+        <div className="flex flex-col mt-1 sm:mt-2">
           {isUsingWholesalePrice && (
             <p className="text-[9px] text-blue-600 font-bold uppercase tracking-wider mb-0.5">Wholesale Price</p>
           )}
@@ -234,7 +234,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         </div>
 
         {/* Actions Row */}
-        <div className="mt-auto pt-3 flex items-center gap-2">
+        <div className="mt-auto pt-2 sm:pt-3 flex items-center gap-2">
           {/* Add to Cart Button */}
           <button
             onClick={handleAddToCart}
