@@ -12,8 +12,18 @@ const TopBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-  const defaultTexts = ["Great Price", "Great Quality", "Live Now"];
-  const rotatingTexts = settings?.top_banner_rotating_texts || defaultTexts;
+  // Default trust signals as fallback
+  const defaultTexts = [
+    "100% Authentic — Sourced directly from brands",
+    "Secure Payment — Flutterwave & mobile money",
+    "Fast Delivery — Across Uganda within 24-48 hours",
+    "24/7 Support — Expert wellness advice always"
+  ];
+
+  // Rotate items pulled from backend settings trust badges if available, else fallback
+  const rotatingTexts = settings?.trust_badges && settings.trust_badges.length > 0
+    ? settings.trust_badges.map((b: any) => `${b.title || b.name} — ${b.desc || b.description || ""}`)
+    : (settings?.top_banner_rotating_texts || defaultTexts);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -48,7 +58,6 @@ const TopBanner = () => {
         }
       } catch (error) {
         console.error("Failed to fetch top banner settings", error);
-        // Use defaults on error
       } finally {
         setIsLoading(false);
       }
@@ -60,7 +69,7 @@ const TopBanner = () => {
     if (rotatingTexts.length === 0) return;
     const interval = setInterval(() => {
       setCurrentText((prev) => (prev + 1) % rotatingTexts.length);
-    }, 3000);
+    }, 4500); // 4.5 seconds for comfortable reading
 
     return () => clearInterval(interval);
   }, [rotatingTexts.length]);
@@ -68,40 +77,48 @@ const TopBanner = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="w-full bg-[#009E3C] text-white">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5">
-        <div className="flex flex-row justify-between items-center gap-2">
-          {/* Left — phone */}
-          <div className="flex items-center gap-1.5 shrink-0">
-            <PhoneIcon />
-            <span className="text-xs sm:text-sm font-semibold whitespace-nowrap">{settings?.top_banner_phone || "0200 804 020"}</span>
-          </div>
+    <div className="w-full bg-gradient-to-r from-[#009E3C] via-[#008231] to-[#005a22] text-white shadow-md border-b border-green-500/20 relative z-50">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-2.5">
+        <div className="flex flex-row justify-between items-center gap-4">
+          
+          {/* Left — phone link */}
+          <a 
+            href={`tel:${settings?.top_banner_phone || "0200804020"}`}
+            className="flex items-center gap-2 shrink-0 hover:text-green-200 transition-colors group"
+          >
+            <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-all">
+              <PhoneIcon />
+            </div>
+            <span className="text-xs sm:text-sm font-black tracking-wide whitespace-nowrap">
+              {settings?.top_banner_phone || "0200 804 020"}
+            </span>
+          </a>
 
-          {/* Center — rotating promo text */}
-          <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
-            <span className="hidden sm:inline text-white/80">✦</span>
+          {/* Center — rotating premium trust signals */}
+          <div className="flex-1 max-w-[200px] xs:max-w-[280px] sm:max-w-[450px] md:max-w-[600px] flex items-center justify-center gap-2 overflow-hidden mx-auto">
+            <span className="hidden sm:inline text-green-300 animate-pulse text-xs">✦</span>
             <div className="rotating-text-container">
               {rotatingTexts.map((text: string, index: number) => (
-                <div key={index} className={`rotating-text ${index === currentText ? 'active' : ''}`}>
+                <div 
+                  key={index} 
+                  className={`rotating-text ${index === currentText ? 'active' : ''}`}
+                >
                   {text}
                 </div>
               ))}
             </div>
-            <span className="hidden sm:inline text-white/80">✦</span>
-            <span className="hidden sm:inline bg-white/20 text-white font-black px-2 py-0.5 rounded text-[11px] uppercase tracking-widest whitespace-nowrap">
-              {settings?.top_banner_discount_text || "GET 60% OFF"}
-            </span>
+            <span className="hidden sm:inline text-green-300 animate-pulse text-xs">✦</span>
           </div>
 
-          {/* Right — event + close */}
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="hidden md:inline text-xs sm:text-sm font-semibold text-white/90 whitespace-nowrap">
+          {/* Right — event name + close button */}
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="hidden lg:inline text-xs font-bold bg-white/10 border border-white/20 px-3 py-1 rounded-full text-green-100">
               {settings?.top_banner_event_name || "Free delivery over UGX 100k"}
             </span>
             <Button
               variant="ghost"
               onClick={() => setIsVisible(false)}
-              className="hover:bg-transparent text-white/70 hover:text-white transition-colors p-0.5 h-auto w-auto"
+              className="hover:bg-white/10 text-white/80 hover:text-white transition-colors p-1.5 h-7 w-7 rounded-full flex items-center justify-center"
               type="button"
               aria-label="close banner"
             >
@@ -112,80 +129,52 @@ const TopBanner = () => {
       </div>
 
       <style jsx>{`
-        /* Animations */
-        @keyframes slide-in-left {
-          from { opacity: 0; transform: translateX(-100%); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        .animate-slide-in-left { animation: slide-in-left 0.8s ease-out forwards; }
-
-        @keyframes slide-in-right {
-          from { opacity: 0; transform: translateX(100%); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        .animate-slide-in-right { animation: slide-in-right 0.8s ease-out forwards; }
-
-        @keyframes fall-from-top {
-          0% { opacity: 0; transform: translateY(-100px) rotate(-5deg); }
-          60% { transform: translateY(10px) rotate(2deg); }
-          80% { transform: translateY(-5px) rotate(-1deg); }
-          100% { opacity: 1; transform: translateY(0) rotate(0); }
-        }
-        .animate-fall-from-top { animation: fall-from-top 1s ease-out forwards; }
-
-        @keyframes zoom-in-out {
-          0% { opacity: 0; transform: scale(0.5); }
-          50% { transform: scale(1.2); }
-          100% { opacity: 1; transform: scale(1); }
-        }
-        .animate-zoom-in-out { animation: zoom-in-out 1s ease-out forwards; }
-
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
-
-        /* Rotating text */
+        /* Rotating text container */
         .rotating-text-container {
           position: relative;
-          height: 16px;
-          width: 70px;
+          height: 24px;
+          width: 100%;
           overflow: hidden;
-        }
-        .rotating-text {
-          position: absolute;
-          top: 0; left: 0;
-          width: 100%; height: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-weight: bold;
-          font-size: 10px;
+        }
+        
+        .rotating-text {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 800;
+          font-size: 11px;
           opacity: 0;
           transform: translateY(100%);
-          transition: all 0.5s ease-in-out;
+          transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
           white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          letter-spacing: 0.02em;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
         }
+
+        @media (min-width: 640px) {
+          .rotating-text {
+            font-size: 13px;
+          }
+        }
+
         .rotating-text.active {
           opacity: 1;
           transform: translateY(0);
         }
+        
         .rotating-text:not(.active) {
           opacity: 0;
           transform: translateY(-100%);
-        }
-
-        /* Mobile tweaks */
-        @media (max-width: 768px) {
-          .container > div {
-            gap: 2px !important;
-          }
-          .container span,
-          .container div {
-            font-size: 10px !important;
-            padding: 1px 3px !important;
-          }
         }
       `}</style>
     </div>
@@ -194,14 +183,14 @@ const TopBanner = () => {
 
 // Icon components
 const PhoneIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
   </svg>
 );
 
 const CloseIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-4.5 w-4.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
   </svg>
 );
 

@@ -8,17 +8,7 @@ import { registerWholesaleUser, clearError } from "@/lib/features/auth/authSlice
 import { apiClient, Region, Town } from "@/lib/api/client";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
-import { Eye, EyeOff, CheckCircle, AlertCircle, Loader2, ArrowLeft } from "lucide-react";
-
-const BLOCKED_DOMAINS = [
-    "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "live.com", "aol.com",
-    "icloud.com", "me.com", "mac.com", "protonmail.com", "protonmail.ch",
-    "ymail.com", "mail.com", "inbox.com", "zoho.com", "gmx.com", "gmx.net",
-    "temp-mail.org", "mailinator.com", "guerrillamail.com", "throwaway.email",
-    "trashmail.com", "dispostable.com", "yopmail.com", "fakeinbox.com",
-    "maildrop.cc", "20minutemail.com", "tempmail.com", "discard.email",
-    "yahoo.co.uk", "yahoo.co.in", "yahoo.com.au",
-];
+import { Eye, EyeOff, CheckCircle2, AlertCircle, Loader2, ArrowLeft, Building, ClipboardCheck, MailCheck } from "lucide-react";
 
 function validateEmail(email: string): string | null {
     if (!email) return "Business email is required";
@@ -62,25 +52,70 @@ export default function WholesaleRegisterPage() {
     const [loadingTowns, setLoadingTowns] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
+    // Caching Regions to resolve "Loading..." slowness instantly
     useEffect(() => {
         (async () => {
             try {
                 setLoadingRegions(true);
+                const cached = localStorage.getItem("cached_regions");
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    setRegions(parsed);
+                    setLoadingRegions(false);
+                    
+                    // Fetch in background silently to update cache
+                    apiClient.getRegions().then((res) => {
+                        if (res.status && res.data) {
+                            setRegions(res.data);
+                            localStorage.setItem("cached_regions", JSON.stringify(res.data));
+                        }
+                    }).catch(() => {});
+                    return;
+                }
+
                 const res = await apiClient.getRegions();
-                if (res.status && res.data) setRegions(res.data);
+                if (res.status && res.data) {
+                    setRegions(res.data);
+                    localStorage.setItem("cached_regions", JSON.stringify(res.data));
+                }
+            } catch (err) {
+                console.error("Failed to load regions", err);
             } finally {
                 setLoadingRegions(false);
             }
         })();
     }, []);
 
+    // Caching Towns to prevent loading hangs
     useEffect(() => {
         if (!formData.region_id) { setTowns([]); return; }
         (async () => {
             try {
                 setLoadingTowns(true);
+                const cacheKey = `cached_towns_${formData.region_id}`;
+                const cached = localStorage.getItem(cacheKey);
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    setTowns(parsed);
+                    setLoadingTowns(false);
+
+                    // Background sync
+                    apiClient.getTowns(Number(formData.region_id)).then((res) => {
+                        if (res.status && res.data) {
+                            setTowns(res.data);
+                            localStorage.setItem(cacheKey, JSON.stringify(res.data));
+                        }
+                    }).catch(() => {});
+                    return;
+                }
+
                 const res = await apiClient.getTowns(Number(formData.region_id));
-                if (res.status && res.data) setTowns(res.data);
+                if (res.status && res.data) {
+                    setTowns(res.data);
+                    localStorage.setItem(cacheKey, JSON.stringify(res.data));
+                }
+            } catch (err) {
+                console.error("Failed to load towns", err);
             } finally {
                 setLoadingTowns(false);
             }
@@ -112,10 +147,8 @@ export default function WholesaleRegisterPage() {
             const digits = value.replace(/\D/g, "");
             processed = digits.startsWith("0") ? digits.slice(1, 10) : digits.slice(0, 9);
         } else if (name === "name" || name === "location") {
-            // Auto-capitalize names and locations
             processed = value.replace(/\b\w+/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
         } else if (name === "email") {
-            // Auto-lowercase email
             processed = value.toLowerCase();
         }
         const updated = { ...formData, [name]: processed };
@@ -162,43 +195,53 @@ export default function WholesaleRegisterPage() {
         }
     };
 
+    // Beautified, Concise, and Non-Repetitive Success Screen
     if (isSubmitted) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-50 py-12 px-4">
-                <div className="w-full max-w-md text-center">
-                    <div className="bg-white rounded-2xl shadow-xl border border-green-100 p-8">
-                        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
-                            <CheckCircle className="w-10 h-10 text-green-600" />
+            <div className="min-h-screen flex items-center justify-center bg-[#f4f6f9] py-12 px-4">
+                <div className="w-full max-w-lg">
+                    <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-gray-200/80 p-8 md:p-10 text-center relative overflow-hidden">
+                        
+                        {/* Top Accent line */}
+                        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#009E3C] to-[#00752C]" />
+
+                        {/* Floating Icon */}
+                        <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-100 shadow-sm animate-pulse">
+                            <CheckCircle2 className="w-10 h-10 text-[#009E3C]" />
                         </div>
-                        <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full mb-4">
-                            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" /> Pending Approval
-                        </span>
-                        <h1 className="text-2xl font-bold text-gray-800 mb-3">Application Received!</h1>
-                        <p className="text-gray-600 mb-3">
-                            Thank you for applying for the{" "}
-                            <span className="font-semibold text-gray-800">Wholesale Partner Program</span>.
+
+                        {/* Heading */}
+                        <h1 className="text-3xl font-black text-gray-900 tracking-tight mb-2">Application Received!</h1>
+                        <p className="text-gray-500 font-medium max-w-md mx-auto text-sm leading-relaxed mb-8">
+                            Thank you for applying. We are reviewing your wholesale business details and will notify you via email once approved.
                         </p>
-                        <p className="text-sm text-gray-500 mb-6">
-                            Your application has been submitted successfully and is currently{" "}
-                            <span className="font-semibold text-amber-600">Pending Approval</span>. 
-                            Our team will review your business details and notify you via email.
-                        </p>
-                        <div className="bg-amber-50 border border-amber-100 rounded-xl p-5 text-left mb-6 space-y-3">
-                            <p className="font-bold text-amber-800 uppercase tracking-wider text-[11px]">What happens next?</p>
-                            <div className="flex gap-3">
-                                <div className="w-5 h-5 rounded-full bg-amber-200 flex items-center justify-center text-[10px] font-bold text-amber-700 flex-shrink-0">1</div>
-                                <p className="text-xs text-amber-900/80 leading-relaxed">Our team reviews your business registration and location details (usually 1-3 business days).</p>
+
+                        {/* Simplified 2-Step Timeline (Clean & Non-Wordy) */}
+                        <div className="bg-gray-50 rounded-2xl p-6 text-left mb-8 border border-gray-100 space-y-4">
+                            <h3 className="font-extrabold text-xs text-gray-400 uppercase tracking-widest mb-2">Next Steps</h3>
+                            
+                            <div className="flex gap-4">
+                                <div className="w-8 h-8 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-xs font-black text-emerald-800 flex-shrink-0">
+                                    <ClipboardCheck className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <p className="font-bold text-gray-800 text-sm">Compliance Review</p>
+                                    <p className="text-xs text-gray-500 leading-relaxed mt-0.5">Our compliance team is verifying your registration and store location (1-2 business days).</p>
+                                </div>
                             </div>
-                            <div className="flex gap-3">
-                                <div className="w-5 h-5 rounded-full bg-amber-200 flex items-center justify-center text-[10px] font-bold text-amber-700 flex-shrink-0">2</div>
-                                <p className="text-xs text-amber-900/80 leading-relaxed">Once verified, your account will be activated and you'll receive a confirmation email.</p>
-                            </div>
-                            <div className="flex gap-3">
-                                <div className="w-5 h-5 rounded-full bg-amber-200 flex items-center justify-center text-[10px] font-bold text-amber-700 flex-shrink-0">3</div>
-                                <p className="text-xs text-amber-900/80 leading-relaxed">You'll then be able to log in and access exclusive wholesale pricing and bulk ordering.</p>
+
+                            <div className="flex gap-4">
+                                <div className="w-8 h-8 rounded-full bg-amber-100 border border-amber-200 flex items-center justify-center text-xs font-black text-amber-800 flex-shrink-0">
+                                    <MailCheck className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <p className="font-bold text-gray-800 text-sm">Account Activation</p>
+                                    <p className="text-xs text-gray-500 leading-relaxed mt-0.5">You will receive an activation email to log in and unlock standard wholesale pricing.</p>
+                                </div>
                             </div>
                         </div>
-                        <Link href="/" className="inline-block w-full rounded-lg bg-[#009E3C] px-4 py-3 text-base font-bold text-white hover:bg-[#00752C] transition-colors shadow-md">
+
+                        <Link href="/" className="inline-flex items-center justify-center w-full rounded-2xl bg-gradient-to-r from-[#009E3C] to-[#00752C] px-6 py-4 text-base font-black tracking-wide text-white transition-all hover:from-[#00bc49] hover:to-[#009E3C] hover:shadow-lg hover:shadow-green-900/10 active:scale-[0.98]">
                             Return to Homepage
                         </Link>
                     </div>
@@ -208,69 +251,46 @@ export default function WholesaleRegisterPage() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col lg:flex-row bg-[#f8fcf9]">
+        <div className="min-h-screen flex flex-col lg:flex-row bg-[#f4f6f9]">
+            {/* Split layout side banner */}
             <div className="relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col items-center justify-center overflow-hidden">
                 <Image src="/images/header-homepage.png" alt="Wholesale" fill className="object-cover" priority />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#009E3C]/90 via-[#00752C]/85 to-[#003a17]/90 backdrop-blur-[2px]" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#009E3C]/95 via-[#00752C]/90 to-[#003a17]/95" />
                 
-                {/* Decorative Elements */}
-                <div className="absolute top-0 left-0 w-full h-full opacity-30" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 50%)' }}></div>
+                {/* Brand lights */}
                 <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
 
                 <div className="relative z-10 text-white px-12 py-16 max-w-lg">
                     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6">
-                        <span className="w-2 h-2 rounded-full bg-[#00ff62] animate-pulse" />
-                        <span className="text-xs font-bold tracking-widest uppercase">Partner Program</span>
+                        <Building className="w-4 h-4 text-[#00ff62]" />
+                        <span className="text-[10px] font-black tracking-widest uppercase text-white">Partner Program</span>
                     </div>
-                    <h1 className="text-5xl font-black mb-6 leading-[1.1] tracking-tight !text-white">Grow Your Business With Us</h1>
-                    <p className="text-white/90 mb-10 text-lg leading-relaxed font-medium">
+                    <h1 className="text-4xl lg:text-5xl font-black mb-6 leading-[1.1] tracking-tight !text-white">Grow Your Business With Us</h1>
+                    <p className="text-white/95 mb-8 text-base leading-relaxed font-medium">
                         Join NutriBlend Haven as a wholesale partner and unlock exclusive bulk pricing,
                         priority delivery, and a dedicated account manager.
                     </p>
-                    <div className="space-y-4 bg-black/20 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+                    
+                    <div className="space-y-4 bg-black/15 backdrop-blur-sm p-6 rounded-2xl border border-white/10 text-left">
                         {[
-                            "Exclusive wholesale pricing on all products",
-                            "Dedicated account manager support",
-                            "Priority order processing & delivery",
-                            "Early access to new product launches",
-                        ].map((b) => (
-                            <div key={b} className="flex items-center gap-4 text-sm text-white font-medium">
-                                <div className="w-8 h-8 rounded-full bg-[#009E3C] flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/20">
-                                    <CheckCircle className="w-4 h-4 text-white" />
+                            "Exclusive wholesale pricing on all wellness products",
+                            "Dedicated support and order processing",
+                            "Fast priority shipping and delivery logistics",
+                            "Custom formulas and premium brands catalogue",
+                        ].map((benefit) => (
+                            <div key={benefit} className="flex items-center gap-3 text-sm text-white/90 font-bold">
+                                <div className="w-6 h-6 rounded-lg bg-[#009E3C] flex items-center justify-center flex-shrink-0">
+                                    <CheckCircle2 className="w-4.5 h-4.5 text-white" />
                                 </div>
-                                {b}
+                                {benefit}
                             </div>
                         ))}
-                    </div>
-
-                    {/* Trust Signals Guarantees */}
-                    <div className="space-y-4 bg-black/20 backdrop-blur-md p-6 rounded-3xl border border-white/10 mt-6">
-                        <p className="text-[11px] font-black tracking-wider text-[#00ff62] uppercase tracking-widest mb-1 text-left">Our Guarantees</p>
-                        <div className="grid grid-cols-2 gap-4">
-                            {[
-                                { icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", title: "100% Authentic", desc: "Genuine guaranteed" },
-                                { icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z", title: "Secure Payments", desc: "256-bit encryption" },
-                                { icon: "M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0", title: "Fast Delivery", desc: "Nationwide shipping" },
-                                { icon: "M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z", title: "24/7 Support", desc: "Expert advice" }
-                            ].map((t) => (
-                                <div key={t.title} className="flex flex-col gap-2 p-3 rounded-2xl bg-white/5 border border-white/5 text-left">
-                                    <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
-                                        <svg className="w-4 h-4 text-[#00ff62]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={t.icon} />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p className="font-bold text-white text-[11px] leading-tight">{t.title}</p>
-                                        <p className="text-white/60 text-[9px] block mt-0.5 leading-tight">{t.desc}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 flex items-start justify-center overflow-y-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+            {/* Jumia Inspired Crisp Card Registration Form */}
+            <div className="flex-1 flex items-start justify-center overflow-y-auto px-4 py-8 sm:px-6 lg:px-8 bg-[#f4f6f9]">
                 <div className="w-full max-w-2xl">
                     <div className="mb-6">
                         <Link
@@ -282,136 +302,116 @@ export default function WholesaleRegisterPage() {
                         </Link>
                     </div>
 
-                    <div className="bg-white/95 backdrop-blur-md rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,158,60,0.04)] border border-green-50/50 p-6 sm:p-10 transition-all duration-300 hover:shadow-[0_25px_60px_rgba(0,158,60,0.06)]">
-                        <div className="text-center mb-10">
+                    {/* Clean flat card structure just like Jumia */}
+                    <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.02)] border border-gray-200/80 p-6 sm:p-8 transition-all duration-300">
+                        <div className="text-left border-b border-gray-100 pb-5 mb-6">
                             <span className="inline-flex items-center gap-1.5 bg-[#eefcf2] text-[#009E3C] text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3 border border-green-100">
                                 Business Application
                             </span>
-                            <h2 className="text-3.5xl font-black text-gray-900 tracking-tight mb-3 leading-none">Apply for Wholesale</h2>
-                            <p className="text-gray-500 text-sm font-medium mb-6">Fill in your business details below to open a partner account</p>
-
-                            {/* Mobile-Only Guarantees Bar */}
-                            <div className="lg:hidden grid grid-cols-2 gap-3 bg-[#eefcf2]/60 border border-green-100/30 p-4 rounded-2xl text-left">
-                                {[
-                                    { icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", title: "100% Authentic", desc: "Genuine guaranteed" },
-                                    { icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z", title: "Secure Payments", desc: "256-bit encryption" },
-                                    { icon: "M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0", title: "Fast Delivery", desc: "Nationwide shipping" },
-                                    { icon: "M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z", title: "24/7 Support", desc: "Expert advice" }
-                                ].map((t) => (
-                                    <div key={t.title} className="flex gap-2 items-center">
-                                        <div className="w-6 h-6 rounded bg-[#009E3C]/10 flex items-center justify-center flex-shrink-0">
-                                            <svg className="w-3.5 h-3.5 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d={t.icon} />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p className="font-bold text-gray-800 text-[10px] leading-tight">{t.title}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                            <h2 className="text-2xl font-black text-gray-900 tracking-tight">Apply for Wholesale</h2>
+                            <p className="text-gray-400 text-xs font-semibold mt-1">Fill in your business details below to open a partner account</p>
                         </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <Field label="Full Name" error={touched.name ? errors.name : undefined}>
-                                <input type="text" name="name" disabled={isLoading}
-                                    className={cx(touched.name && !!errors.name)}
-                                    placeholder="Enter your full name" value={formData.name}
-                                    onChange={handleChange} onBlur={() => handleBlur("name")} autoComplete="name" />
+                        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <Field label="Full Name" error={touched.name ? errors.name : undefined}>
+                                    <input type="text" name="name" disabled={isLoading}
+                                        className={cx(touched.name && !!errors.name)}
+                                        placeholder="Enter your full name" value={formData.name}
+                                        onChange={handleChange} onBlur={() => handleBlur("name")} autoComplete="name" />
+                                </Field>
+                                <Field label="Contact Phone" error={touched.phone ? errors.phone : undefined}>
+                                    <div className="relative">
+                                        <span className="absolute inset-y-0 left-4 flex items-center text-sm text-gray-500 font-bold pointer-events-none">
+                                            +256
+                                        </span>
+                                        <input type="tel" name="phone" disabled={isLoading}
+                                            className={`${cx(touched.phone && !!errors.phone)} pl-16`}
+                                            placeholder="7XX XXX XXX" value={formData.phone} maxLength={9}
+                                            onChange={handleChange} onBlur={() => handleBlur("phone")} />
+                                    </div>
+                                </Field>
+                            </div>
+
+                            <Field label="Business Email" error={touched.email ? errors.email : undefined}
+                                hint="Enter your contact or business email address">
+                                <input type="email" name="email" disabled={isLoading}
+                                    className={cx(touched.email && !!errors.email)}
+                                    placeholder="you@yourbusiness.com" value={formData.email}
+                                    onChange={handleChange} onBlur={() => handleBlur("email")} autoComplete="email" />
                             </Field>
-                            <Field label="Contact Phone" error={touched.phone ? errors.phone : undefined}>
+
+                            <Field label="Password" error={touched.password ? errors.password : undefined}>
                                 <div className="relative">
-                                    <span className="absolute inset-y-0 left-3 flex items-center text-sm text-gray-500 font-medium pointer-events-none">
-                                        +256
-                                    </span>
-                                    <input type="tel" name="phone" disabled={isLoading}
-                                        className={`${cx(touched.phone && !!errors.phone)} pl-16`}
-                                        placeholder="7XX XXX XXX" value={formData.phone} maxLength={9}
-                                        onChange={handleChange} onBlur={() => handleBlur("phone")} />
+                                    <input type={showPassword ? "text" : "password"} name="password" disabled={isLoading}
+                                        className={`${cx(touched.password && !!errors.password)} pr-12`}
+                                        placeholder="Min. 8 characters" value={formData.password}
+                                        onChange={handleChange} onBlur={() => handleBlur("password")} />
+                                    <button type="button" onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
+                                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    </button>
                                 </div>
                             </Field>
-                        </div>
 
-                        <Field label="Business Email" error={touched.email ? errors.email : undefined}
-                            hint="Enter your contact or business email address">
-                            <input type="email" name="email" disabled={isLoading}
-                                className={cx(touched.email && !!errors.email)}
-                                placeholder="you@yourbusiness.com" value={formData.email}
-                                onChange={handleChange} onBlur={() => handleBlur("email")} autoComplete="email" />
-                        </Field>
-
-                        <Field label="Password" error={touched.password ? errors.password : undefined}>
-                            <div className="relative">
-                                <input type={showPassword ? "text" : "password"} name="password" disabled={isLoading}
-                                    className={`${cx(touched.password && !!errors.password)} pr-12`}
-                                    placeholder="Min. 8 characters" value={formData.password}
-                                    onChange={handleChange} onBlur={() => handleBlur("password")} />
-                                <button type="button" onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
-                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                </button>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <Field label="Region" error={touched.region_id ? errors.region_id : undefined}>
+                                    <SearchableSelect value={formData.region_id}
+                                        onChange={(v) => handleSelectChange("region_id", v)}
+                                        options={regions.map((r) => ({ value: String(r.id), label: r.name }))}
+                                        placeholder={loadingRegions ? "Loading..." : "Select Region"}
+                                        disabled={isLoading || loadingRegions} isLoading={loadingRegions}
+                                        className={`${cx(touched.region_id && !!errors.region_id)} text-left`} />
+                                </Field>
+                                <Field label="Town" error={touched.town_id ? errors.town_id : undefined}>
+                                    <SearchableSelect value={formData.town_id}
+                                        onChange={(v) => handleSelectChange("town_id", v)}
+                                        options={towns.map((t) => ({ value: String(t.id), label: t.name }))}
+                                        placeholder={loadingTowns ? "Loading Towns..." : formData.region_id ? "Select Town" : "Select Region first"}
+                                        disabled={!formData.region_id || isLoading} isLoading={loadingTowns}
+                                        className={`${cx(touched.town_id && !!errors.town_id)} text-left`} />
+                                </Field>
                             </div>
-                        </Field>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <Field label="Region" error={touched.region_id ? errors.region_id : undefined}>
-                                <SearchableSelect value={formData.region_id}
-                                    onChange={(v) => handleSelectChange("region_id", v)}
-                                    options={regions.map((r) => ({ value: String(r.id), label: r.name }))}
-                                    placeholder={loadingRegions ? "Loading..." : "Select Region"}
-                                    disabled={isLoading || loadingRegions} isLoading={loadingRegions}
-                                    className={`${cx(touched.region_id && !!errors.region_id)} text-left`} />
+                            <Field label="Specific Location" error={touched.location ? errors.location : undefined}>
+                                <input type="text" name="location" disabled={isLoading}
+                                    className={cx(touched.location && !!errors.location)}
+                                    placeholder="e.g. Kampala Road, Plot 12" value={formData.location}
+                                    onChange={handleChange} onBlur={() => handleBlur("location")} />
                             </Field>
-                            <Field label="Town" error={touched.town_id ? errors.town_id : undefined}>
-                                <SearchableSelect value={formData.town_id}
-                                    onChange={(v) => handleSelectChange("town_id", v)}
-                                    options={towns.map((t) => ({ value: String(t.id), label: t.name }))}
-                                    placeholder={loadingTowns ? "Loading Towns..." : formData.region_id ? "Select Town" : "Select Region first"}
-                                    disabled={!formData.region_id || isLoading} isLoading={loadingTowns}
-                                    className={`${cx(touched.town_id && !!errors.town_id)} text-left`} />
+
+                            <div className="border-t border-gray-100 my-6 pt-4" />
+
+                            <Field label="Business Name" error={touched.wholesale_business_name ? errors.wholesale_business_name : undefined}>
+                                <input type="text" name="wholesale_business_name" disabled={isLoading}
+                                    className={cx(touched.wholesale_business_name && !!errors.wholesale_business_name)}
+                                    placeholder="Legal Business Name" value={formData.wholesale_business_name}
+                                    onChange={handleChange} onBlur={() => handleBlur("wholesale_business_name")} />
                             </Field>
-                        </div>
 
-                        <Field label="Specific Location" error={touched.location ? errors.location : undefined}>
-                            <input type="text" name="location" disabled={isLoading}
-                                className={cx(touched.location && !!errors.location)}
-                                placeholder="e.g. Kampala Road, Plot 12" value={formData.location}
-                                onChange={handleChange} onBlur={() => handleBlur("location")} />
-                        </Field>
+                            <Field label="Business Details & Licence Info"
+                                error={touched.wholesale_business_details ? errors.wholesale_business_details : undefined}
+                                hint={`${formData.wholesale_business_details.length} / 20 min characters`}>
+                                <textarea name="wholesale_business_details" disabled={isLoading} rows={4}
+                                    className={`${cx(touched.wholesale_business_details && !!errors.wholesale_business_details)} resize-none`}
+                                    placeholder="Describe your business, location, and registration details (min. 20 characters)..."
+                                    value={formData.wholesale_business_details}
+                                    onChange={handleChange} onBlur={() => handleBlur("wholesale_business_details")} />
+                            </Field>
 
-                        <hr className="border-gray-100" />
+                            <button type="submit" disabled={isLoading || !isFormValid()}
+                                className="w-full rounded-2xl bg-gradient-to-r from-[#009E3C] to-[#00752C] py-4 text-base font-black tracking-wide text-white transition-all hover:from-[#00bc49] hover:to-[#009E3C] hover:shadow-lg hover:shadow-green-900/10 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-8 active:scale-[0.98]">
+                                {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
+                                {isLoading ? "Submitting Application..." : "Submit Wholesale Application"}
+                            </button>
 
-                        <Field label="Business Name" error={touched.wholesale_business_name ? errors.wholesale_business_name : undefined}>
-                            <input type="text" name="wholesale_business_name" disabled={isLoading}
-                                className={cx(touched.wholesale_business_name && !!errors.wholesale_business_name)}
-                                placeholder="Legal Business Name" value={formData.wholesale_business_name}
-                                onChange={handleChange} onBlur={() => handleBlur("wholesale_business_name")} />
-                        </Field>
-
-                        <Field label="Business Details & Licence Info"
-                            error={touched.wholesale_business_details ? errors.wholesale_business_details : undefined}
-                            hint={`${formData.wholesale_business_details.length} / 20 min characters`}>
-                            <textarea name="wholesale_business_details" disabled={isLoading} rows={4}
-                                className={`${cx(touched.wholesale_business_details && !!errors.wholesale_business_details)} resize-none`}
-                                placeholder="Describe your business, location, and registration details (min. 20 characters)..."
-                                value={formData.wholesale_business_details}
-                                onChange={handleChange} onBlur={() => handleBlur("wholesale_business_details")} />
-                        </Field>
-
-                        <button type="submit" disabled={isLoading || !isFormValid()}
-                            className="w-full rounded-2xl bg-gradient-to-r from-[#009E3C] to-[#00752C] py-4 text-base font-black tracking-wide text-white transition-all hover:from-[#00bc49] hover:to-[#009E3C] hover:shadow-lg hover:shadow-green-900/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-8 active:scale-[0.98]">
-                            {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
-                            {isLoading ? "Submitting Application..." : "Submit Wholesale Application"}
-                        </button>
-
-                        <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-                            <p className="text-sm font-medium text-gray-500">
-                                Already a wholesale partner?{" "}
-                                <Link href="/login" className="text-[#009E3C] font-bold hover:underline">Log in here</Link>
-                            </p>
-                        </div>
-                    </form>
+                            <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+                                <p className="text-sm font-semibold text-gray-400">
+                                    Already a wholesale partner?{" "}
+                                    <Link href="/login" className="text-[#009E3C] font-bold hover:underline">Log in here</Link>
+                                </p>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -420,10 +420,10 @@ export default function WholesaleRegisterPage() {
 }
 
 function cx(hasError?: boolean) {
-    return `w-full rounded-2xl border px-5 py-3.5 text-[15px] font-medium outline-none transition-all duration-300 shadow-sm ${
+    return `w-full rounded-xl border px-4 py-3.5 text-sm font-semibold outline-none transition-all duration-200 shadow-sm ${
         hasError
             ? "border-red-300 bg-red-50/50 text-red-900 focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-500/10"
-            : "border-gray-200 bg-gray-50/30 text-gray-900 focus:bg-white focus:border-[#009E3C] focus:ring-4 focus:ring-[#009E3C]/5 hover:border-gray-300 hover:bg-gray-50/10"
+            : "border-gray-200 bg-white text-gray-900 focus:border-[#009E3C] focus:ring-4 focus:ring-[#009E3C]/5 hover:border-gray-300"
     } disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed`;
 }
 
@@ -432,14 +432,14 @@ function Field({ label, error, hint, children }: {
 }) {
     return (
         <div className="flex flex-col gap-1">
-            <label className="text-[11px] font-black uppercase tracking-wider text-gray-500 mb-1.5">{label}</label>
+            <label className="text-[11px] font-extrabold uppercase tracking-wider text-gray-500 mb-1.5">{label}</label>
             {children}
             {error ? (
                 <span className="flex items-center gap-1 text-xs text-red-600">
                     <AlertCircle className="w-3 h-3 flex-shrink-0" /> {error}
                 </span>
             ) : hint ? (
-                <span className="text-xs text-gray-400">{hint}</span>
+                <span className="text-[10px] text-gray-400">{hint}</span>
             ) : null}
         </div>
     );
