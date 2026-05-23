@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import { satoshi } from "@/styles/fonts";
+import { Suspense } from "react";
 
 import Footer from "@/components/layout/Footer";
 import LayoutWrapper from "./layoutWrapper";
@@ -122,9 +123,11 @@ export default function RootLayout({
       <body className={satoshi.className}>
         <HolyLoader color="#8e44ad" height="3px" speed={200} easing="ease-in-out" />
         <Providers>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
+          <Suspense fallback={null}>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
+          </Suspense>
           <Footer />
         </Providers>
         <Toaster position="top-right" richColors closeButton duration={3000} />

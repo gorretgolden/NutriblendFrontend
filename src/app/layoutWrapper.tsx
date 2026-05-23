@@ -22,17 +22,20 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   // Handle Google Social Login Callback
   useEffect(() => {
+    if (pathname === '/auth/social-callback') return; // Let the dedicated callback page handle it
+
     const token = searchParams.get('token');
     const userJson = searchParams.get('user');
 
     if (token && userJson) {
       try {
-        const user = JSON.parse(userJson);
+        const decodedUserJson = decodeURIComponent(userJson);
+        const user = JSON.parse(decodedUserJson);
         dispatch(setCredentials({ user, token }));
 
         // Save to localStorage (apiClient should also handle this but slice needs it)
         localStorage.setItem('auth_token', token);
-        localStorage.setItem('user', userJson);
+        localStorage.setItem('user', decodedUserJson);
 
         toast.success("Successfully logged in with Google!");
 
@@ -42,10 +45,10 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
         nextUrl.searchParams.delete('user');
         window.history.replaceState({}, '', nextUrl.pathname);
       } catch (error) {
-        console.error("Error parsing social login data:", error);
+        console.error("Error parsing social login data in LayoutWrapper:", error);
       }
     }
-  }, [searchParams, dispatch]);
+  }, [searchParams, pathname, dispatch]);
 
   // Handle Unauthorized Session
   useEffect(() => {
