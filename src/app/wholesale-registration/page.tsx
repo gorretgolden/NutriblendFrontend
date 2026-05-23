@@ -249,6 +249,31 @@ export default function WholesaleRegisterPage() {
                             </div>
                         ))}
                     </div>
+
+                    {/* Trust Signals Guarantees */}
+                    <div className="space-y-4 bg-black/20 backdrop-blur-md p-6 rounded-3xl border border-white/10 mt-6">
+                        <p className="text-[11px] font-black tracking-wider text-[#00ff62] uppercase tracking-widest mb-1 text-left">Our Guarantees</p>
+                        <div className="grid grid-cols-2 gap-4">
+                            {[
+                                { icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", title: "100% Authentic", desc: "Genuine guaranteed" },
+                                { icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z", title: "Secure Payments", desc: "256-bit encryption" },
+                                { icon: "M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0", title: "Fast Delivery", desc: "Nationwide shipping" },
+                                { icon: "M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z", title: "24/7 Support", desc: "Expert advice" }
+                            ].map((t) => (
+                                <div key={t.title} className="flex flex-col gap-2 p-3 rounded-2xl bg-white/5 border border-white/5 text-left">
+                                    <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
+                                        <svg className="w-4 h-4 text-[#00ff62]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={t.icon} />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-white text-[11px] leading-tight">{t.title}</p>
+                                        <p className="text-white/60 text-[9px] block mt-0.5 leading-tight">{t.desc}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
 
