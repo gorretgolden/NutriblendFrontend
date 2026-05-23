@@ -212,6 +212,45 @@ export default async function Home() {
         </FadeIn>
       )}
 
+      {/* ── Wholesale CTA Banner Section ── */}
+      <FadeIn duration={0.8} className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#009E3C] to-[#005a22] text-white shadow-lg border border-green-700/30 group">
+          {/* Subtle design elements */}
+          <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+          <div className="absolute bottom-0 left-10 w-40 h-40 bg-white/5 rounded-full translate-y-1/2 pointer-events-none" />
+
+          <div className="relative z-10 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-12">
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3 border border-white/10">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                For Businesses & Retailers
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight mb-2">
+                Join Our Exclusive Wholesale Program
+              </h2>
+              <p className="text-white/80 text-sm sm:text-base max-w-2xl leading-relaxed">
+                Get exclusive bulk pricing, personalized support, priority delivery, and custom wellness formulations designed directly for your pharmacy, clinic, or shop.
+              </p>
+            </div>
+            <div className="flex-shrink-0 w-full md:w-auto flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/wholesale-registration"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#009E3C] hover:bg-gray-50 transition-all duration-200 rounded-2xl font-black text-sm uppercase tracking-wider shadow-lg active:scale-[0.98] text-center"
+              >
+                Apply Now
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-white/30 hover:border-white hover:bg-white/5 transition-all duration-200 rounded-2xl font-black text-sm uppercase tracking-wider text-center"
+              >
+                Talk to an Expert
+              </Link>
+            </div>
+          </div>
+        </div>
+      </FadeIn>
+
       {/* ── 9. Why Choose Us ── */}
       <FadeIn duration={0.8}>
         <WhyChooseUs />
