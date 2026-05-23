@@ -156,6 +156,9 @@ const Header = () => {
   };
 
   const handleLogout = async () => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('show_logout_toast', 'true');
+    }
     try {
       await dispatch(logoutUser()).unwrap();
       dispatch(clearCartLocal());

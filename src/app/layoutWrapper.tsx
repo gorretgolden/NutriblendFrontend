@@ -71,6 +71,19 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     }
   }, [isAuthenticated, dispatch]);
 
+  // Show logout toast notification across page reload/redirect
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const showToast = localStorage.getItem('show_logout_toast');
+      if (showToast === 'true') {
+        toast.success("Successfully signed out. Have a wonderful day!", {
+          icon: "👋",
+        });
+        localStorage.removeItem('show_logout_toast');
+      }
+    }
+  }, []);
+
   // Hide these on checkout page
   const hideLayoutRoutes = ["/cart/checkout", "/wholesale-registration"];
   const shouldHideLayout = hideLayoutRoutes.includes(pathname);
