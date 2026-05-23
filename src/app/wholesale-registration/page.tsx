@@ -229,7 +229,7 @@ export default function WholesaleRegisterPage() {
                         <span className="w-2 h-2 rounded-full bg-[#00ff62] animate-pulse" />
                         <span className="text-xs font-bold tracking-widest uppercase">Partner Program</span>
                     </div>
-                    <h1 className="text-5xl font-black mb-6 leading-[1.1] tracking-tight">Grow Your Business With Us</h1>
+                    <h1 className="text-5xl font-black mb-6 leading-[1.1] tracking-tight !text-white">Grow Your Business With Us</h1>
                     <p className="text-white/90 mb-10 text-lg leading-relaxed font-medium">
                         Join NutriBlend Haven as a wholesale partner and unlock exclusive bulk pricing,
                         priority delivery, and a dedicated account manager.
