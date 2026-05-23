@@ -76,9 +76,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     if (typeof window !== 'undefined') {
       const showToast = localStorage.getItem('show_logout_toast');
       if (showToast === 'true') {
-        toast.success("Successfully signed out. Have a wonderful day!", {
-          icon: "👋",
-        });
+        toast.success("Successfully signed out. Have a wonderful day!");
         localStorage.removeItem('show_logout_toast');
       }
     }
