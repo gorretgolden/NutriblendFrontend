@@ -180,9 +180,9 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                       alt={selectedCategory.name} 
                       className="w-full h-full object-cover" 
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-black/20 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
                     <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 text-white">
-                      <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 drop-shadow-md">
+                      <h1 className="text-white text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 drop-shadow-md">
                         {selectedCategory.name}
                       </h1>
                       <p className="text-sm sm:text-base font-medium text-gray-100 max-w-xl opacity-90">
