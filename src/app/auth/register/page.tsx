@@ -10,6 +10,16 @@ import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 
+function validatePasswordStrength(password: string): string | null {
+    if (!password) return "Password is required";
+    if (password.length < 8) return "Password must be at least 8 characters long";
+    if (!/[A-Z]/.test(password)) return "Password must contain at least one uppercase letter";
+    if (!/[a-z]/.test(password)) return "Password must contain at least one lowercase letter";
+    if (!/[0-9]/.test(password)) return "Password must contain at least one number";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) return "Password must contain at least one special character (e.g. @, $, !)";
+    return null;
+}
+
 export default function RegisterPage() {
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -119,6 +129,12 @@ export default function RegisterPage() {
 
         if (!formData.terms) {
             toast.error("Please agree to the Terms and Conditions");
+            return;
+        }
+
+        const passwordErr = validatePasswordStrength(formData.password);
+        if (passwordErr) {
+            toast.error(passwordErr);
             return;
         }
 

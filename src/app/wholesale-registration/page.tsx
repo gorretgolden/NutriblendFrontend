@@ -25,6 +25,16 @@ function validatePhone(phone: string): string | null {
     return null;
 }
 
+function validatePasswordStrength(password: string): string | null {
+    if (!password) return "Password is required";
+    if (password.length < 8) return "Password must be at least 8 characters long";
+    if (!/[A-Z]/.test(password)) return "Password must contain at least one uppercase letter";
+    if (!/[a-z]/.test(password)) return "Password must contain at least one lowercase letter";
+    if (!/[0-9]/.test(password)) return "Password must contain at least one number";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) return "Password must contain at least one special character (e.g. @, $, !)";
+    return null;
+}
+
 type FormErrors = Partial<Record<string, string>>;
 
 export default function WholesaleRegisterPage() {
@@ -129,7 +139,8 @@ export default function WholesaleRegisterPage() {
         if (emailErr) e.email = emailErr;
         const phoneErr = validatePhone(data.phone);
         if (phoneErr) e.phone = phoneErr;
-        if (!data.password || data.password.length < 8) e.password = "Password must be at least 8 characters";
+        const passwordErr = validatePasswordStrength(data.password);
+        if (passwordErr) e.password = passwordErr;
         if (!data.region_id) e.region_id = "Please select a region";
         if (!data.town_id) e.town_id = "Please select a town";
         if (!data.location.trim()) e.location = "Specific location is required";
@@ -175,9 +186,15 @@ export default function WholesaleRegisterPage() {
                     
                     const checkData = res.data;
                     if (res && res.status === false && res.message) {
-                        setErrors((p) => ({ ...p, [name]: res.message }));
+                        const cleanMsg = name === "email" && (res.message.includes("registered") || res.message.includes("use") || res.message.includes("unique"))
+                            ? "Email in use, please use another email for your application"
+                            : res.message;
+                        setErrors((p) => ({ ...p, [name]: cleanMsg }));
                     } else if (res && checkData && checkData.unique === false) {
-                        setErrors((p) => ({ ...p, [name]: checkData.message || `This ${name} is already registered.` }));
+                        const fallbackMsg = name === "email"
+                            ? "Email in use, please use another email for your application"
+                            : `This ${name} is already registered.`;
+                        setErrors((p) => ({ ...p, [name]: checkData.message || fallbackMsg }));
                     }
                 } catch (err) {
                     console.error(`Uniqueness validation failed for ${name}`, err);
