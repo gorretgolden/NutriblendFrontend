@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { registerWholesaleUser, clearError } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
@@ -293,24 +294,66 @@ export default function WholesaleRegisterPage() {
         <div className="min-h-screen flex flex-col lg:flex-row bg-[#f4f6f9]">
             {/* Split layout side banner */}
             <div className="relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col items-center justify-center overflow-hidden">
-                <Image src="/images/header-homepage.png" alt="Wholesale" fill className="object-cover" priority />
+                <Image src="https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=1200" alt="Wholesale Supplements and Perfumes" fill className="object-cover" priority />
                 <div className="absolute inset-0 bg-gradient-to-br from-[#009E3C]/95 via-[#00752C]/90 to-[#003a17]/95" />
                 
                 {/* Brand lights */}
                 <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
 
-                <div className="relative z-10 text-white px-12 py-16 max-w-lg">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6">
+                <motion.div 
+                    initial="hidden"
+                    animate="show"
+                    variants={{
+                        hidden: { opacity: 0 },
+                        show: {
+                            opacity: 1,
+                            transition: {
+                                staggerChildren: 0.12,
+                                delayChildren: 0.15
+                            }
+                        }
+                    }}
+                    className="relative z-10 text-white px-12 py-16 max-w-lg"
+                >
+                    <motion.div 
+                        variants={{
+                            hidden: { y: 15, opacity: 0 },
+                            show: { y: 0, opacity: 1, transition: { duration: 0.4 } }
+                        }}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6"
+                    >
                         <Building className="w-4 h-4 text-[#00ff62]" />
-                        <span className="text-[10px] font-black tracking-widest uppercase text-white">Partner Program</span>
-                    </div>
-                    <h1 className="text-4xl lg:text-5xl font-black mb-6 leading-[1.1] tracking-tight !text-white">Grow Your Business With Us</h1>
-                    <p className="text-white/95 mb-8 text-base leading-relaxed font-medium">
+                        <span className="text-[10px] font-black tracking-widest uppercase text-white">Nutriblend Wholesale Program</span>
+                    </motion.div>
+                    
+                    <motion.h1 
+                        variants={{
+                            hidden: { y: 20, opacity: 0 },
+                            show: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } }
+                        }}
+                        className="text-4xl lg:text-5xl font-black mb-6 leading-[1.1] tracking-tight !text-white"
+                    >
+                        Grow Your Business With Us
+                    </motion.h1>
+                    
+                    <motion.p 
+                        variants={{
+                            hidden: { y: 20, opacity: 0 },
+                            show: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } }
+                        }}
+                        className="text-white/95 mb-8 text-base leading-relaxed font-medium"
+                    >
                         Join NutriBlend Haven as a wholesale partner and unlock exclusive bulk pricing,
                         priority delivery, and a dedicated account manager.
-                    </p>
+                    </motion.p>
                     
-                    <div className="space-y-4 bg-black/15 backdrop-blur-sm p-6 rounded-2xl border border-white/10 text-left">
+                    <motion.div 
+                        variants={{
+                            hidden: { y: 25, opacity: 0 },
+                            show: { y: 0, opacity: 1, transition: { duration: 0.6, ease: "easeOut" } }
+                        }}
+                        className="space-y-4 bg-black/15 backdrop-blur-sm p-6 rounded-2xl border border-white/10 text-left"
+                    >
                         {[
                             "Exclusive wholesale pricing on all wellness products",
                             "Dedicated support and order processing",
@@ -324,8 +367,8 @@ export default function WholesaleRegisterPage() {
                                 {benefit}
                             </div>
                         ))}
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             </div>
 
             {/* Jumia Inspired Crisp Card Registration Form */}
@@ -340,6 +383,50 @@ export default function WholesaleRegisterPage() {
                             Back to Home
                         </Link>
                     </div>
+
+                    {/* Mobile Summary Banner: only visible on mobile/tablet (< lg) */}
+                    <motion.div 
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                        className="block lg:hidden mb-6 bg-gradient-to-br from-[#009E3C] to-[#00752C] rounded-2xl p-5 sm:p-6 text-white shadow-md relative overflow-hidden"
+                    >
+                        {/* Background supplements/perfumes ambient decor photo with low opacity */}
+                        <div 
+                            className="absolute inset-0 opacity-15 mix-blend-overlay z-0 bg-cover bg-center pointer-events-none"
+                            style={{
+                                backgroundImage: `url('https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=600')`
+                            }}
+                        />
+                        {/* Floating ambient lights */}
+                        <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl z-0" />
+                        
+                        <div className="relative z-10 text-left">
+                            <span className="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 backdrop-blur-md text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full mb-3 text-white">
+                                <Building className="w-3.5 h-3.5 text-[#00ff62]" />
+                                Nutriblend Wholesale Program
+                            </span>
+                            <h2 className="text-xl sm:text-2xl font-black mb-2 leading-tight tracking-tight !text-white">Grow Your Business With Us</h2>
+                            <p className="text-white/90 text-[11px] sm:text-xs leading-relaxed mb-4 font-semibold">
+                                Join NutriBlend Haven as a wholesale partner and unlock exclusive bulk pricing, priority delivery, and custom support.
+                            </p>
+                            
+                            {/* Stretched grid of benefits */}
+                            <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-white/10">
+                                {[
+                                    "Exclusive bulk pricing",
+                                    "Priority delivery",
+                                    "Dispenser support",
+                                    "Premium catalogue",
+                                ].map((benefit) => (
+                                    <div key={benefit} className="flex items-center gap-1.5 text-[10px] font-black text-white/95">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-[#00ff62] flex-shrink-0" />
+                                        {benefit}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </motion.div>
 
                     {/* Clean flat card structure just like Jumia */}
                     <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.02)] border border-gray-200/80 p-6 sm:p-8 transition-all duration-300">
