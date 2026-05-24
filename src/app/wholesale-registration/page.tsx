@@ -294,7 +294,7 @@ export default function WholesaleRegisterPage() {
         <div className="min-h-screen flex flex-col lg:flex-row bg-[#f4f6f9]">
             {/* Split layout side banner */}
             <div className="relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col items-center justify-center overflow-hidden">
-                <Image src="https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=1200" alt="Wholesale Supplements and Perfumes" fill className="object-cover" priority />
+                <Image src="https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=1200" alt="Wholesale Supplements and Perfumes" fill className="object-cover" priority />
                 <div className="absolute inset-0 bg-gradient-to-br from-[#009E3C]/95 via-[#00752C]/90 to-[#003a17]/95" />
                 
                 {/* Brand lights */}
@@ -395,7 +395,7 @@ export default function WholesaleRegisterPage() {
                         <div 
                             className="absolute inset-0 opacity-15 mix-blend-overlay z-0 bg-cover bg-center pointer-events-none"
                             style={{
-                                backgroundImage: `url('https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=600')`
+                                backgroundImage: `url('https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=600')`
                             }}
                         />
                         {/* Floating ambient lights */}
@@ -460,7 +460,7 @@ export default function WholesaleRegisterPage() {
                             </div>
 
                             <Field label="Business Email" error={touched.email ? errors.email : undefined}
-                                hint="Enter your contact or business email address">
+                                hint={formData.email ? undefined : "Enter your contact or business email address"}>
                                 <input type="email" name="email" disabled={isLoading}
                                     className={cx(touched.email && !!errors.email)}
                                     placeholder="you@yourbusiness.com" value={formData.email}

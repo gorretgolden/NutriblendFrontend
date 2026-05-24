@@ -7,17 +7,17 @@ import { Building2, ArrowRight } from "lucide-react";
 
 const SLIDES = [
     {
-        image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1600",
+        image: "https://images.unsplash.com/photo-1611079830811-b65d1a34c5af?auto=format&fit=crop&q=80&w=1600",
         title: "Become a Wholesale Partner",
         desc: "Are you a hospital, pharmacy, clinic or wholesale retailer? Unlock exclusive bulk pricing, dedicated support, and priority dispatch.",
-        label: "Partner Program",
+        label: "Nutriblend Wholesale Program",
         badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
     },
     {
-        image: "https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&q=80&w=1600",
+        image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=1600",
         title: "Empower Your Business Growth",
         desc: "Access Uganda's most reliable premium wellness catalog. Fast logistics, guaranteed authenticity, and flexible order structures.",
-        label: "Bulk Ordering",
+        label: "Nutriblend Wholesale Program",
         badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30"
     }
 ];
