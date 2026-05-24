@@ -104,24 +104,26 @@ export default function BrandsSection() {
         </div>
 
         {/* Scrolling Brands Row */}
-        <div className="relative">
+        <div className="relative group">
           {/* Fades for smooth entry/exit */}
           <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
           <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
           
           <div className="flex overflow-hidden">
-            <motion.div 
-              animate={{ x: [0, -2000] }}
-              transition={{ 
-                duration: 40, 
-                repeat: Infinity, 
-                ease: "linear",
-                repeatType: "loop"
-              }}
-              className="flex gap-3 py-1 pr-4 shrink-0"
+            <style dangerouslySetInnerHTML={{ __html: `
+              @keyframes brand-marquee {
+                0% { transform: translateX(0%); }
+                100% { transform: translateX(-50%); }
+              }
+              .animate-brand-marquee {
+                animation: brand-marquee 40s linear infinite;
+              }
+            `}} />
+            <div 
+              className="flex gap-3 py-1 shrink-0 w-max animate-brand-marquee group-hover:[animation-play-state:paused]"
             >
-              {/* Triple brands for seamless loop */}
-              {[...brands, ...brands, ...brands].map((brand, i) => {
+              {/* Four copies for seamless loop on all screen sizes */}
+              {[...brands, ...brands, ...brands, ...brands].map((brand, i) => {
                 const color = BADGE_COLORS[i % BADGE_COLORS.length];
                 return (
                   <Link
@@ -140,7 +142,7 @@ export default function BrandsSection() {
                   </Link>
                 );
               })}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

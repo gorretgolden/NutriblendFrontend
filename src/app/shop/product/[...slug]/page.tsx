@@ -12,9 +12,10 @@ export const dynamic = 'force-dynamic';
 export default async function ProductPage({
   params,
 }: {
-  params: { slug: string[] };
+  params: { slug: string[] } | Promise<{ slug: string[] }>;
 }) {
-  const productId = Number(params.slug[0]);
+  const resolvedParams = await Promise.resolve(params);
+  const productId = Number(resolvedParams.slug[0]);
   let productData: Product | null = null;
   let relatedProducts: Product[] = [];
 
