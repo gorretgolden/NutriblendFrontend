@@ -39,7 +39,9 @@ export default function LoginPage() {
         setEmail(emailParam);
       }
     }
-  }, []);
+    // Clear any lingering auth errors on mount
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
