@@ -59,56 +59,45 @@ export default function BrandsPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* ── Premium Hero Section ── */}
-      <section className="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-24">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#f5faf7] via-white to-white" />
-        <div className="absolute top-0 left-1/2 h-[22rem] w-[22rem] -translate-x-1/2 rounded-full bg-[#009E3C]/10 blur-[120px] opacity-80" />
-        <div className="absolute right-0 top-24 h-[12rem] w-[12rem] rounded-full bg-[#8bcf9a]/20 blur-[80px]" />
+      {/* ── Compact Hero Section ── */}
+      <section className="relative overflow-hidden py-10 md:py-12">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#f5faf7] to-white" />
 
         <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-3xl mx-auto">
-            <motion.div
+          <div className="text-center">
+            <motion.h1
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#009E3C]/5 border border-[#009E3C]/15 mb-6"
+              className="text-2xl md:text-3xl font-black text-gray-950 tracking-tight mb-4"
             >
-              <span className="w-2 h-2 rounded-full bg-[#009E3C]" />
-              <span className="text-[11px] font-black tracking-[0.24em] text-[#009E3C] uppercase">Authentic Brands</span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-6xl xl:text-7xl font-black text-gray-950 tracking-tight mb-6 leading-[1.02]"
-            >
-              Discover premium wellness brands built for trust, quality and real results.
+              Authentic Brands
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-gray-600 text-base md:text-lg mb-10 leading-relaxed font-medium"
+              transition={{ delay: 0.1 }}
+              className="text-gray-500 text-sm md:text-base mb-6 leading-relaxed font-medium max-w-2xl mx-auto"
             >
-              Every partner on our page is verified for authenticity, quality sourcing and safe global delivery. Explore brands you can rely on.
+              Verified partners delivering 100% authentic wellness products worldwide.
             </motion.p>
 
-            {/* Premium Search */}
+            {/* Compact Search */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="relative max-w-xl mx-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="relative max-w-sm mx-auto"
             >
-              <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-                <Search className="text-gray-400 w-5 h-5" />
+              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                <Search className="text-gray-400 w-4 h-4" />
               </div>
               <input
                 type="text"
-                placeholder="Search brands, names or keywords"
+                placeholder="Search brands..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-14 pr-8 py-5 rounded-[32px] border border-gray-200 bg-white focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/20 transition-all text-base font-semibold text-gray-900 placeholder:text-gray-400 shadow-lg shadow-gray-100"
+                className="w-full pl-11 pr-6 py-3 rounded-2xl border border-gray-200 bg-white focus:border-[#009E3C] focus:ring-1 focus:ring-[#009E3C]/30 transition-all text-sm font-medium text-gray-900 placeholder:text-gray-400 shadow-sm"
                 disabled={loading}
               />
             </motion.div>
@@ -117,7 +106,7 @@ export default function BrandsPage() {
       </section>
 
       {/* ── Brand Grid ── */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-12 md:py-20 border-t border-gray-100">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-10 md:py-16 border-t border-gray-100">
         {loading ? (
           <div className="flex flex-col justify-center items-center py-24">
             <Loader2 className="w-10 h-10 text-[#009E3C] animate-spin" />
@@ -149,48 +138,37 @@ export default function BrandsPage() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
               <AnimatePresence mode="popLayout">
                 {currentBrands.map((brand, idx) => (
                   <motion.div
                     key={brand.id}
                     layout
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 16 }}
-                    transition={{ duration: 0.35, delay: (idx % 12) * 0.04 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3, delay: (idx % 20) * 0.03 }}
                   >
                     <Link
                       href={`/shop?brand_id=${brand.id}`}
-                      className="group block overflow-hidden rounded-[32px] border border-gray-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_60px_-24px_rgba(0,158,60,0.22)]"
+                      className="group flex flex-col items-center justify-center rounded-2xl border border-gray-150 bg-white p-4 transition duration-300 hover:border-[#009E3C] hover:shadow-md hover:shadow-[#009E3C]/10"
                     >
-                      <div className="relative overflow-hidden rounded-[28px] bg-[#f7faf6] p-6 flex items-center justify-center min-h-[220px]">
-                        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#009E3C]/12 to-transparent" />
+                      <div className="relative flex h-28 w-full items-center justify-center rounded-lg bg-gray-50 mb-3 overflow-hidden group-hover:bg-gray-100 transition">
                         {brand.image ? (
                           <img
                             src={getImageUrl(brand.full_image_url || brand.image || '')}
                             alt={brand.name}
-                            className="relative z-10 max-h-36 max-w-full object-contain transition-transform duration-700 group-hover:scale-105"
+                            className="max-h-24 max-w-[90%] object-contain transition-transform duration-500 group-hover:scale-110"
                           />
                         ) : (
-                          <div className="relative z-10 flex h-32 w-32 items-center justify-center rounded-full bg-[#009E3C]/10 text-4xl font-black text-[#009E3C] uppercase tracking-[0.2em]">
+                          <div className="text-2xl font-black text-gray-300 uppercase">
                             {brand.name.substring(0, 2).toUpperCase()}
                           </div>
                         )}
                       </div>
-
-                      <div className="mt-6 text-center">
-                        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#009E3C]">Brand partner</p>
-                        <h3 className="mt-3 text-xl font-black text-gray-950 leading-tight">{brand.name}</h3>
-                        <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-                          Tap to explore curated products from this trusted wellness brand.
-                        </p>
-                      </div>
-
-                      <div className="mt-6 inline-flex items-center justify-center gap-2 rounded-full border border-[#009E3C]/20 bg-[#009E3C]/5 px-4 py-2 text-sm font-bold text-[#009E3C] transition group-hover:bg-[#009E3C] group-hover:text-white">
-                        <span>Shop brand</span>
-                        <ChevronRight className="h-4 w-4" />
-                      </div>
+                      <h3 className="text-center text-xs md:text-sm font-bold text-gray-900 leading-snug line-clamp-2">
+                        {brand.name}
+                      </h3>
                     </Link>
                   </motion.div>
                 ))}
