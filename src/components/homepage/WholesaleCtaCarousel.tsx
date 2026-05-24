@@ -40,7 +40,7 @@ export default function WholesaleCtaCarousel() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="relative h-[260px] sm:h-[240px] md:h-[220px] rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 group transition-all duration-500 hover:shadow-green-950/10">
+            <div className="relative h-[235px] sm:h-[240px] md:h-[220px] rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 group transition-all duration-500 hover:shadow-green-950/10">
                 
                 {/* Background Images with Cross-Fade */}
                 {SLIDES.map((slide, idx) => (
@@ -65,7 +65,7 @@ export default function WholesaleCtaCarousel() {
                 <div className="absolute top-0 right-0 w-80 h-80 bg-[#00ff62]/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none z-10 animate-pulse" />
 
                 {/* Content Overlay - Snug vertical layout for mobile, split row for desktop */}
-                <div className="absolute inset-0 z-20 p-5 sm:p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-center md:justify-between gap-2.5 sm:gap-4 md:gap-8">
+                <div className="absolute inset-0 z-20 p-4 sm:p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-center md:justify-between gap-2 sm:gap-4 md:gap-8">
                     <div className="flex-1 text-left">
                         {/* Animated Badge */}
                         <div className="overflow-hidden mb-0.5 sm:mb-2">

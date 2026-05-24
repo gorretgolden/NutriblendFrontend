@@ -444,6 +444,16 @@ class NutriBlendApiClient {
         );
     }
 
+    async checkUniqueness(type: 'email' | 'phone', value: string): Promise<ApiResponse<{ unique: boolean; message?: string }>> {
+        return this.request<{ unique: boolean; message?: string }>(
+            '/auth/check-uniqueness',
+            {
+                method: 'POST',
+                body: JSON.stringify({ type, value }),
+            }
+        );
+    }
+
     async login(credentials: {
         email: string;
         password: string;

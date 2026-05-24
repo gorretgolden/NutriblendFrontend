@@ -159,9 +159,31 @@ export default function WholesaleRegisterPage() {
         if (authError) dispatch(clearError());
     };
 
-    const handleBlur = (name: string) => {
+    const handleBlur = async (name: string) => {
         setTouched((p) => ({ ...p, [name]: true }));
-        setErrors((p) => ({ ...p, [name]: validate(formData)[name] }));
+        const localErrs = validate(formData);
+        const localErr = localErrs[name];
+        setErrors((p) => ({ ...p, [name]: localErr }));
+
+        if (!localErr && (name === "email" || name === "phone")) {
+            const val = formData[name as "email" | "phone"];
+            if (val) {
+                try {
+                    // Send phone formatted as E.164 (+256XXXXXXXXX) to match DB contact column
+                    const checkVal = name === "phone" ? `+256${val}` : val;
+                    const res = await apiClient.checkUniqueness(name as "email" | "phone", checkVal);
+                    
+                    const checkData = res.data;
+                    if (res && res.status === false && res.message) {
+                        setErrors((p) => ({ ...p, [name]: res.message }));
+                    } else if (res && checkData && checkData.unique === false) {
+                        setErrors((p) => ({ ...p, [name]: checkData.message || `This ${name} is already registered.` }));
+                    }
+                } catch (err) {
+                    console.error(`Uniqueness validation failed for ${name}`, err);
+                }
+            }
+        }
     };
 
     const handleSelectChange = (name: "region_id" | "town_id", value: string) => {
