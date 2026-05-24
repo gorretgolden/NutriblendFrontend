@@ -313,7 +313,10 @@ class NutriBlendApiClient {
             const config: RequestInit = {
                 ...options,
                 cache: 'no-store' as RequestCache, // Prevent Next.js from caching API responses
-                credentials: 'include', // Required for cross-subdomain auth cookies (frontend -> admin API)
+                // Only send cookies from the browser; server-side fetches must use 'omit'
+                // because Node's fetch rejects credentialed cross-origin requests without
+                // a matching ACAO response header, crashing Server Components in production.
+                credentials: (typeof window !== 'undefined') ? 'include' : 'omit',
                 headers: {
                     ...this.getAuthHeaders(),
                     ...options.headers,

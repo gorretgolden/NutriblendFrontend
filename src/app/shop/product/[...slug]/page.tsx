@@ -18,28 +18,46 @@ export default async function ProductPage({
   let productData: Product | null = null;
   let relatedProducts: Product[] = [];
 
+  // ── Fetch the single product ─────────────────────────────────────────────
   try {
     const response = await apiClient.getProduct(productId);
     if (response.status && response.data) {
-      // Handle potential Laravel Resource double-wrapping where data is inside response.data.data
-      const rawProduct = (response.data as any).data ? (response.data as any).data : response.data;
-      productData = transformProduct(rawProduct);
-    }
+      // Handle potential Laravel Resource double-wrapping: data.data
+      const rawProduct = (response.data as any).data
+        ? (response.data as any).data
+        : response.data;
 
-    const relatedRes = await apiClient.getProducts({ per_page: 6 });
-    if (relatedRes.status && relatedRes.data) {
-      relatedProducts = relatedRes.data.data
-        .map(transformProduct)
-        .filter(p => p.id !== productId)
-        .slice(0, 6);
+      try {
+        productData = transformProduct(rawProduct);
+      } catch (transformError) {
+        console.error("[ProductPage] transformProduct failed:", transformError, rawProduct);
+      }
+    } else {
+      console.error("[ProductPage] API returned non-success:", response.message);
     }
-
-  } catch (error) {
-    console.error("Error fetching product:", error);
+  } catch (fetchError) {
+    console.error("[ProductPage] Error fetching product:", fetchError);
   }
 
+  // ── Guard: show 404 if product could not be loaded ───────────────────────
+  // Called OUTSIDE the try/catch so Next.js can handle it properly.
   if (!productData) {
     notFound();
+  }
+
+  // ── Fetch related products (best-effort, never throws) ───────────────────
+  try {
+    const relatedRes = await apiClient.getProducts({ per_page: 7 });
+    if (relatedRes.status && relatedRes.data) {
+      relatedProducts = relatedRes.data.data
+        .map((p) => {
+          try { return transformProduct(p); } catch { return null; }
+        })
+        .filter((p): p is Product => p !== null && p.id !== productId)
+        .slice(0, 6);
+    }
+  } catch {
+    // Related products are non-critical — silently ignore failures
   }
 
   return (
@@ -47,7 +65,7 @@ export default async function ProductPage({
       {/* Breadcrumb bar */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-3">
-          <BreadcrumbProduct title={productData.title} />
+          <BreadcrumbProduct title={productData!.title} />
         </div>
       </div>
 
@@ -56,13 +74,13 @@ export default async function ProductPage({
         
         {/* Hero Section: Photo + Pricing */}
         <section>
-          <Header data={productData} />
+          <Header data={productData!} />
         </section>
 
         {/* Product Details Section — Main Content */}
         <section id="product-tabs">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <Tabs data={productData} />
+            <Tabs data={productData!} />
           </div>
         </section>
       </div>
