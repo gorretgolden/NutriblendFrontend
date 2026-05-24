@@ -1,23 +1,17 @@
-export const dynamic = 'force-dynamic';
+"use client";
 
-import { redirect } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-interface ProductsPageProps {
-  searchParams: {
-    category?: string;
-    brand?: string;
-    search?: string;
-    [key: string]: string | undefined;
-  };
-}
+export default function ProductsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-export default function ProductsPage({ searchParams }: ProductsPageProps) {
-  const params = new URLSearchParams();
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    const query = params.toString();
+    router.replace(`/shop${query ? `?${query}` : ""}`);
+  }, [router, searchParams]);
 
-  if (searchParams.category) params.set("category", searchParams.category);
-  if (searchParams.brand) params.set("search", searchParams.brand);
-  if (searchParams.search) params.set("search", searchParams.search);
-
-  const query = params.toString();
-  redirect(`/shop${query ? `?${query}` : ""}`);
+  return null;
 }
