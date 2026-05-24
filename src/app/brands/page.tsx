@@ -59,45 +59,42 @@ export default function BrandsPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* ── Sophisticated Hero Section ── */}
-      <section className="relative pt-20 pb-16 md:pt-32 md:pb-24 overflow-hidden">
-        {/* Background Accents */}
-        <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-          <div className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-emerald-50 rounded-full blur-[120px] opacity-60" />
-          <div className="absolute top-[20%] -left-[10%] w-[30%] h-[30%] bg-blue-50 rounded-full blur-[100px] opacity-40" />
-        </div>
+      {/* ── Premium Hero Section ── */}
+      <section className="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-24">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#f5faf7] via-white to-white" />
+        <div className="absolute top-0 left-1/2 h-[22rem] w-[22rem] -translate-x-1/2 rounded-full bg-[#009E3C]/10 blur-[120px] opacity-80" />
+        <div className="absolute right-0 top-24 h-[12rem] w-[12rem] rounded-full bg-[#8bcf9a]/20 blur-[80px]" />
 
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 relative z-10">
+        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#009E3C]/5 border border-[#009E3C]/10 mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#009E3C]/5 border border-[#009E3C]/15 mb-6"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#009E3C]" />
-              <span className="text-[10px] font-black tracking-[0.2em] text-[#009E3C] uppercase">Authorized Partners</span>
+              <span className="w-2 h-2 rounded-full bg-[#009E3C]" />
+              <span className="text-[11px] font-black tracking-[0.24em] text-[#009E3C] uppercase">Authentic Brands</span>
             </motion.div>
 
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-7xl font-black text-gray-900 tracking-tight mb-6 leading-[1.1]"
+              className="text-4xl md:text-6xl xl:text-7xl font-black text-gray-950 tracking-tight mb-6 leading-[1.02]"
             >
-              Our Wellness <br />
-              <span className="text-[#009E3C]">Brand Partners</span>
+              Discover premium wellness brands built for trust, quality and real results.
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-gray-500 text-base md:text-lg mb-10 leading-relaxed font-medium"
+              className="text-gray-600 text-base md:text-lg mb-10 leading-relaxed font-medium"
             >
-              We collaborate exclusively with world-class pharmaceutical and wellness brands to bring you 100% authentic products.
+              Every partner on our page is verified for authenticity, quality sourcing and safe global delivery. Explore brands you can rely on.
             </motion.p>
 
             {/* Premium Search */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -108,10 +105,10 @@ export default function BrandsPage() {
               </div>
               <input
                 type="text"
-                placeholder="Find a specific brand..."
+                placeholder="Search brands, names or keywords"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-14 pr-8 py-5 rounded-2xl border-none bg-gray-50 focus:ring-2 focus:ring-[#009E3C]/20 transition-all text-base font-semibold text-gray-900 placeholder:text-gray-400 shadow-sm"
+                className="w-full pl-14 pr-8 py-5 rounded-[32px] border border-gray-200 bg-white focus:border-[#009E3C] focus:ring-2 focus:ring-[#009E3C]/20 transition-all text-base font-semibold text-gray-900 placeholder:text-gray-400 shadow-lg shadow-gray-100"
                 disabled={loading}
               />
             </motion.div>
@@ -152,49 +149,47 @@ export default function BrandsPage() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
               <AnimatePresence mode="popLayout">
                 {currentBrands.map((brand, idx) => (
                   <motion.div
                     key={brand.id}
                     layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.4, delay: (idx % 12) * 0.05 }}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 16 }}
+                    transition={{ duration: 0.35, delay: (idx % 12) * 0.04 }}
                   >
                     <Link
                       href={`/shop?brand_id=${brand.id}`}
-                      className="group relative flex flex-col items-center justify-center p-8 rounded-3xl bg-white border border-gray-100 hover:border-[#009E3C]/20 transition-all duration-500 hover:shadow-[0_30px_60px_-15px_rgba(0,158,60,0.15)] overflow-hidden aspect-square"
+                      className="group block overflow-hidden rounded-[32px] border border-gray-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_60px_-24px_rgba(0,158,60,0.22)]"
                     >
-                      {/* Hover Accent */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#009E3C]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                      
-                      {/* Logo */}
-                      <div className="relative z-10 w-full h-full flex items-center justify-center">
+                      <div className="relative overflow-hidden rounded-[28px] bg-[#f7faf6] p-6 flex items-center justify-center min-h-[220px]">
+                        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#009E3C]/12 to-transparent" />
                         {brand.image ? (
                           <img
                             src={getImageUrl(brand.full_image_url || brand.image || '')}
                             alt={brand.name}
-                            className="w-full h-full object-contain filter group-hover:scale-110 transition-transform duration-700 ease-out p-2"
+                            className="relative z-10 max-h-36 max-w-full object-contain transition-transform duration-700 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="text-4xl font-black text-gray-100 group-hover:text-[#009E3C]/10 transition-colors duration-500 tracking-tighter">
+                          <div className="relative z-10 flex h-32 w-32 items-center justify-center rounded-full bg-[#009E3C]/10 text-4xl font-black text-[#009E3C] uppercase tracking-[0.2em]">
                             {brand.name.substring(0, 2).toUpperCase()}
                           </div>
                         )}
                       </div>
 
-                      {/* Brand Label (Appears on Hover) */}
-                      <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-white/95 backdrop-blur-sm border-t border-gray-50">
-                        <p className="text-gray-900 text-center text-[10px] font-black uppercase tracking-[0.2em] truncate">
-                          {brand.name}
+                      <div className="mt-6 text-center">
+                        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#009E3C]">Brand partner</p>
+                        <h3 className="mt-3 text-xl font-black text-gray-950 leading-tight">{brand.name}</h3>
+                        <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+                          Tap to explore curated products from this trusted wellness brand.
                         </p>
                       </div>
 
-                      {/* Subtle Static Label */}
-                      <div className="absolute bottom-4 left-0 right-0 text-center opacity-40 group-hover:opacity-0 transition-opacity duration-300">
-                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{brand.name}</span>
+                      <div className="mt-6 inline-flex items-center justify-center gap-2 rounded-full border border-[#009E3C]/20 bg-[#009E3C]/5 px-4 py-2 text-sm font-bold text-[#009E3C] transition group-hover:bg-[#009E3C] group-hover:text-white">
+                        <span>Shop brand</span>
+                        <ChevronRight className="h-4 w-4" />
                       </div>
                     </Link>
                   </motion.div>
