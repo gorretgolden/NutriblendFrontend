@@ -138,7 +138,7 @@ export default function BrandsPage() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               <AnimatePresence mode="popLayout">
                 {currentBrands.map((brand, idx) => (
                   <motion.div
@@ -151,24 +151,29 @@ export default function BrandsPage() {
                   >
                     <Link
                       href={`/shop?brand_id=${brand.id}`}
-                      className="group flex flex-col items-center justify-center rounded-2xl border border-gray-150 bg-white p-4 transition duration-300 hover:border-[#009E3C] hover:shadow-md hover:shadow-[#009E3C]/10"
+                      className="flex flex-col group border border-gray-100 rounded-2xl overflow-hidden hover:shadow-[0_12px_28px_rgba(0,158,60,0.08)] hover:border-[#009E3C]/20 transition-all duration-300 hover:-translate-y-1 bg-white h-full"
                     >
-                      <div className="relative flex h-28 w-full items-center justify-center rounded-lg bg-gray-50 mb-3 overflow-hidden group-hover:bg-gray-100 transition">
+                      <div className="w-full aspect-[5/4] bg-[#f8f9fa] flex items-center justify-center relative overflow-hidden">
                         {brand.image ? (
                           <img
                             src={getImageUrl(brand.full_image_url || brand.image || '')}
                             alt={brand.name}
-                            className="max-h-24 max-w-[90%] object-contain transition-transform duration-500 group-hover:scale-110"
+                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 p-4"
                           />
                         ) : (
-                          <div className="text-2xl font-black text-gray-300 uppercase">
-                            {brand.name.substring(0, 2).toUpperCase()}
+                          <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-300">
+                            <div className="text-4xl font-black uppercase">
+                              {brand.name.substring(0, 2).toUpperCase()}
+                            </div>
                           </div>
                         )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/3 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       </div>
-                      <h3 className="text-center text-xs md:text-sm font-bold text-gray-900 leading-snug line-clamp-2">
-                        {brand.name}
-                      </h3>
+                      <div className="w-full bg-[#f1f5f9] py-3 px-2 flex items-center justify-center border-t border-gray-100 mt-auto">
+                        <span className="block text-[13px] sm:text-[14px] font-black text-gray-700 leading-tight group-hover:text-[#009E3C] transition-colors text-center line-clamp-2">
+                          {brand.name}
+                        </span>
+                      </div>
                     </Link>
                   </motion.div>
                 ))}
