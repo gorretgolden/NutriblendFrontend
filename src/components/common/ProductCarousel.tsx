@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ProductCard from './ProductCard';
 import { Product } from '@/types/product.types';
+import { useAppSelector } from '@/lib/hooks/redux';
 
 interface ProductCarouselProps {
   products: Product[];
@@ -30,6 +31,15 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
   const [showArrows, setShowArrows] = useState(true);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const isWholesaleUser = isAuthenticated && (user?.role === 'Wholesale Customer' || user?.is_wholesale_approved);
+
+  const displayProducts = React.useMemo(() => {
+    return isWholesaleUser 
+      ? products.filter(p => p.wholesale_price && p.wholesale_price > 0)
+      : products;
+  }, [products, isWholesaleUser]);
 
   const updateScrollState = () => {
     if (carouselRef.current) {
@@ -72,7 +82,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
 
     // Auto-play logic
     let autoPlayTimer: NodeJS.Timeout;
-    if (autoPlay && products.length > 0 && !isPaused && !isWindowScrolling) {
+    if (autoPlay && displayProducts.length > 0 && !isPaused && !isWindowScrolling) {
       autoPlayTimer = setInterval(() => {
         if (carouselRef.current) {
           const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
@@ -93,10 +103,12 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
       if (autoPlayTimer) clearInterval(autoPlayTimer);
       if (scrollTimeout) clearTimeout(scrollTimeout);
     };
-  }, [products, autoPlay, interval, isPaused, isWindowScrolling]);
+  }, [displayProducts, autoPlay, interval, isPaused, isWindowScrolling]);
 
   const pause = () => setIsPaused(true);
   const resume = () => setIsPaused(false);
+
+  if (!displayProducts || displayProducts.length === 0) return null;
 
   return (
     <section className={hideHeader ? "my-0" : "my-6 sm:my-8 md:my-14"}>
@@ -181,7 +193,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
             className={`flex overflow-x-auto scrollbar-hide gap-3 sm:gap-5 py-2 ${hideHeader ? 'px-0' : 'px-1'} snap-x snap-mandatory`}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {products.map((product, index) => (
+            {displayProducts.map((product, index) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, scale: 0.95 }}

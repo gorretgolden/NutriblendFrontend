@@ -72,6 +72,8 @@ export const transformProduct = (p: ApiProduct): Product => {
         unit_name: (p as any).unit_name,
         wholesale_price: p.wholesale_price,
         wholesale_min_qty: p.wholesale_min_qty,
+        wholesale_unit_name: (p as any).wholesale_unit_name,
+        wholesale_stock_quantity: (p as any).wholesale_stock_quantity,
         discount: {
             amount: p.discount_amount || 0,
             percentage: p.discount_percentage || 0,

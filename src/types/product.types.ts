@@ -25,6 +25,8 @@ export type Product = {
   unit_name?: string;
   wholesale_price?: number;
   wholesale_min_qty?: number;
+  wholesale_unit_name?: string;
+  wholesale_stock_quantity?: number;
   discount: Discount;
   rating: number;
   reviews?: number;

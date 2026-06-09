@@ -499,9 +499,9 @@ const SignUpModal = ({
                 />
                 <span className="text-sm text-gray-600">
                   I agree to the{" "}
-                  <a href="#" className="text-[#4caf50]">Terms</a>{" "}
+                  <Link href="/terms" className="text-[#4caf50]" onClick={onClose}>Terms</Link>{" "}
                   &{" "}
-                  <a href="#" className="text-[#4caf50]">Privacy</a>
+                  <Link href="/privacy" className="text-[#4caf50]" onClick={onClose}>Privacy</Link>
                 </span>
               </label>
             </div>

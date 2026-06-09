@@ -212,9 +212,22 @@ const ProductCard = ({ data }: ProductCardProps) => {
               </span>
             )}
           </div>
-          {data.unit && (
-             <span className="text-[10px] text-gray-400 mt-0.5">per {data.unit}</span>
-          )}
+          {/* Product Weight and Unit Info */}
+          <div className="flex flex-col gap-0.5 mt-1">
+            {data.weight ? (
+              <span className="text-[10px] text-gray-500 font-medium">
+                Weight: {data.weight} {data.weight_unit || ''}
+              </span>
+            ) : null}
+            
+            {(isUsingWholesalePrice ? data.wholesale_unit_name : data.unit_name) ? (
+              <span className="text-[10px] text-gray-400">
+                Sold per: {isUsingWholesalePrice ? data.wholesale_unit_name : data.unit_name}
+              </span>
+            ) : data.unit ? (
+              <span className="text-[10px] text-gray-400">per {data.unit}</span>
+            ) : null}
+          </div>
 
           {/* Rating */}
           <div className="flex items-center gap-1.5 mt-0">

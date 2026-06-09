@@ -129,8 +129,8 @@ const Header = ({ data }: { data: Product }) => {
                       UGX {(data.price || 0).toLocaleString()}
                     </span>
                   )}
-                  {data.unit_name ? (
-                    <span className="text-sm text-gray-400 font-bold">/ {data.unit_name}</span>
+                  {(isUsingWholesalePrice ? data.wholesale_unit_name : data.unit_name) ? (
+                    <span className="text-sm text-gray-400 font-bold">/ {isUsingWholesalePrice ? data.wholesale_unit_name : data.unit_name}</span>
                   ) : data.unit ? (
                     <span className="text-sm text-gray-400 font-bold">/ {data.unit}</span>
                   ) : null}

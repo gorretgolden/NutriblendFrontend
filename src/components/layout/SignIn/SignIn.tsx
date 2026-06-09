@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { loginUser, clearError } from "@/lib/features/auth/authSlice";
@@ -287,19 +288,21 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
         {/* Terms */}
         <p className="mt-6 text-left text-xs leading-snug text-gray-400">
           By continuing, you've read and agree to our{" "}
-          <a
-            href="#"
+          <Link
+            href="/terms"
             className="text-[#4caf50] hover:text-[#43a047]"
+            onClick={onClose}
           >
             Terms and Conditions
-          </a>{" "}
+          </Link>{" "}
           and{" "}
-          <a
-            href="#"
+          <Link
+            href="/privacy"
             className="text-[#4caf50] hover:text-[#43a047]"
+            onClick={onClose}
           >
             Privacy Policy
-          </a>
+          </Link>
           .
         </p>
 
