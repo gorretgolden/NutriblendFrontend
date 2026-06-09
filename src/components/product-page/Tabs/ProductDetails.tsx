@@ -5,7 +5,7 @@ const ProductDetails = ({ data }: { data: Product }) => {
   const specsData = [
     { label: "SKU", value: data.sku || "N/A" },
     { label: "Brand", value: data.brand || "Generic" },
-    { label: "Weight", value: data.weight ? `${data.weight} ${data.weight_unit || 'kg'}` : "N/A" },
+    { label: "Measurement", value: data.weight ? `${data.weight} ${data.unit || 'kg'}` : "N/A" },
     { label: "Stock", value: data.inStock ? "In Stock" : "Out of Stock" },
     { label: "Model", value: data.title },
   ];
