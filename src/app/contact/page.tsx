@@ -6,7 +6,7 @@ import { Metadata } from 'next';
 import DynamicPage from '@/components/common/DynamicPage';
 import { apiClient, Page, PageContent } from '@/lib/api/client';
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
     try {
