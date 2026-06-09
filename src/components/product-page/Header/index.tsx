@@ -129,8 +129,17 @@ const Header = ({ data }: { data: Product }) => {
                       UGX {(data.price || 0).toLocaleString()}
                     </span>
                   )}
-                  {data.unit && <span className="text-sm text-gray-400 font-bold">/ {data.unit}</span>}
+                  {data.unit_name ? (
+                    <span className="text-sm text-gray-400 font-bold">/ {data.unit_name}</span>
+                  ) : data.unit ? (
+                    <span className="text-sm text-gray-400 font-bold">/ {data.unit}</span>
+                  ) : null}
                 </div>
+                {data.weight && (
+                  <div className="text-sm text-gray-500 font-medium mt-1">
+                    Product Weight: <span className="font-bold text-gray-800">{data.weight} {data.weight_unit || 'kg'}</span>
+                  </div>
+                )}
                 {(hasDiscount || isUsingWholesalePrice) && (
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-gray-300 line-through text-sm font-medium">UGX {(data.price || 0).toLocaleString()}</span>
