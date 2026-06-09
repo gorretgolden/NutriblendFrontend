@@ -14,6 +14,7 @@ const TopBanner = () => {
 
   // Default trust signals as fallback
   const defaultTexts = [
+    "a Rasmus Pharmaceuticals entity",
     "100% Authentic — Sourced directly from brands",
     "Secure Payment — Flutterwave & mobile money",
     "Fast Delivery — Across Uganda within 24-48 hours",
@@ -83,14 +84,14 @@ const TopBanner = () => {
           
           {/* Left — phone link */}
           <a 
-            href={`tel:${settings?.top_banner_phone || "0200804020"}`}
+            href={`tel:${settings?.top_banner_phone || "+256784640607"}`}
             className="flex items-center gap-2 shrink-0 hover:text-green-200 transition-colors group"
           >
             <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-all">
               <PhoneIcon />
             </div>
             <span className="text-xs sm:text-sm font-black tracking-wide whitespace-nowrap">
-              {settings?.top_banner_phone || "0200 804 020"}
+              {settings?.top_banner_phone || "+256784640607"}
             </span>
           </a>
 
