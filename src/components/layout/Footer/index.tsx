@@ -22,7 +22,7 @@ const Footer = () => {
   }, []);
 
   const handleAccountLink = (e: React.MouseEvent, href: string) => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && href.includes('/account')) {
       e.preventDefault();
       window.dispatchEvent(new CustomEvent('open-login-modal'));
     }
