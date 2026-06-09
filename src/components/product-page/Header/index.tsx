@@ -135,11 +135,16 @@ const Header = ({ data }: { data: Product }) => {
                     <span className="text-sm text-gray-400 font-bold">/ {data.unit}</span>
                   ) : null}
                 </div>
-                {data.weight && (
-                  <div className="text-sm text-gray-500 font-medium mt-1">
-                    Product Weight: <span className="font-bold text-gray-800">{data.weight} {data.weight_unit || 'kg'}</span>
+                <div className="text-sm text-gray-500 font-medium mt-2 flex flex-col gap-1.5 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                  <div className="flex justify-between items-center">
+                    <span>Product Weight:</span>
+                    <span className="font-bold text-gray-800">{data.weight ? `${data.weight} ${data.weight_unit || 'kg'}` : 'Not specified'}</span>
                   </div>
-                )}
+                  <div className="flex justify-between items-center">
+                    <span>Selling Unit ({isUsingWholesalePrice ? 'Wholesale' : 'Retail'}):</span>
+                    <span className="font-bold text-[#009E3C]">{isUsingWholesalePrice ? (data.wholesale_unit_name || 'Not specified') : (data.unit_name || data.unit || 'Not specified')}</span>
+                  </div>
+                </div>
                 {(hasDiscount || isUsingWholesalePrice) && (
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-gray-300 line-through text-sm font-medium">UGX {(data.price || 0).toLocaleString()}</span>
