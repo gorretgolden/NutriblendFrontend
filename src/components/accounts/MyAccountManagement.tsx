@@ -201,7 +201,15 @@ export default function MyAccountManagement() {
           {initials}
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">Account Settings</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-gray-800">Account Settings</h2>
+            {user?.is_wholesale_approved && (
+              <span className="bg-[#009E3C]/10 text-[#009E3C] px-3 py-1 rounded-full text-xs font-bold border border-[#009E3C]/20 flex items-center gap-1 shadow-sm">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+                Wholesale Customer
+              </span>
+            )}
+          </div>
           <p className="text-sm text-gray-500">Manage your profile and security</p>
         </div>
       </div>

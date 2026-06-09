@@ -107,7 +107,14 @@ const Header = ({ data }: { data: Product }) => {
             <div className="flex flex-col gap-8 items-start">
               {/* Price */}
               <div className="flex flex-col">
-                <span className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">Price</span>
+                <span className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">
+                  {isUsingWholesalePrice ? "WHOLESALE BULK PRICE (Per Box)" : "Price"}
+                </span>
+                {isUsingWholesalePrice && (
+                  <span className="text-sm text-[#009E3C] font-bold mb-2">
+                    *(This box contains {data.wholesale_min_qty || 'multiple'} items)*
+                  </span>
+                )}
                 <div className="flex items-baseline gap-2">
                   {isUsingWholesalePrice ? (
                     <span className="font-black text-blue-600 text-2xl lg:text-3xl">

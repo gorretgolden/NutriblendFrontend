@@ -17,7 +17,9 @@ const AddToCardSection = ({ data }: { data: Product }) => {
       {/* Quantity Selector - Spaced Horizontal Layout */}
       <div className="flex items-center gap-4">
         <div className="flex-1 h-[64px] bg-gray-100/50 rounded-2xl border border-gray-100 flex items-center justify-between px-8">
-          <span className="text-sm font-bold uppercase tracking-widest text-gray-400">Quantity</span>
+          <span className="text-sm font-bold uppercase tracking-widest text-gray-400">
+            {typeof window !== 'undefined' && JSON.parse(localStorage.getItem('user_profile') || '{}')?.is_wholesale_approved && data.wholesale_price ? 'NUMBER OF BOXES' : 'Quantity'}
+          </span>
           
           <div className="flex items-center gap-6">
             <button 
