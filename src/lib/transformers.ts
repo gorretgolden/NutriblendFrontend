@@ -69,6 +69,7 @@ export const transformProduct = (p: ApiProduct): Product => {
         gallery: allImages.length > 0 ? allImages : [imageUrl],
         price: p.price,
         unit: p.unit,
+        unit_name: (p as any).unit_name,
         wholesale_price: p.wholesale_price,
         wholesale_min_qty: p.wholesale_min_qty,
         discount: {
@@ -85,6 +86,7 @@ export const transformProduct = (p: ApiProduct): Product => {
         whatsInBox: p.whats_in_box || '',
         stock: p.stock_quantity || 0,
         weight: typeof p.weight === 'string' ? parseFloat(p.weight) : p.weight,
+        weight_unit: (p as any).weight_unit,
         inStock: p.in_stock,
         variations: p.variations?.map(v => ({
             id: v.id,
