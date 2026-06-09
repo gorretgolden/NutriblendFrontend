@@ -37,6 +37,7 @@ export type Product = {
   stock?: number;
   stock_quantity?: number;
   weight?: number;
+  weight_unit?: string;
   inStock?: boolean;
   variations?: {
     id: number;
