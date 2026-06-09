@@ -21,10 +21,12 @@ const TopBanner = () => {
     "24/7 Support — Expert wellness advice always"
   ];
 
-  // Rotate items pulled from backend settings trust badges if available, else fallback
-  const rotatingTexts = settings?.trust_badges && settings.trust_badges.length > 0
+  const baseTexts = settings?.trust_badges && settings.trust_badges.length > 0
     ? settings.trust_badges.map((b: any) => `${b.title || b.name} — ${b.desc || b.description || ""}`)
     : (settings?.top_banner_rotating_texts || defaultTexts);
+
+  // Hardcode this text per client request
+  const rotatingTexts = ["a Rasmus Pharmaceuticals entity", ...baseTexts.filter((t: string) => !t.toLowerCase().includes("rasmus"))];
 
   useEffect(() => {
     const fetchSettings = async () => {
