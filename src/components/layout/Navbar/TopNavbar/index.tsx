@@ -230,6 +230,7 @@ const Header = () => {
                 searchResults={searchResults}
                 isSearching={isSearching}
                 categories={categories}
+                isWholesaleUser={isWholesaleUser}
               />
             </div>
 
@@ -763,12 +764,14 @@ function DesktopSearchBar({
   searchResults,
   isSearching,
   categories,
+  isWholesaleUser,
 }: {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   searchResults: any[];
   isSearching: boolean;
   categories: any[];
+  isWholesaleUser: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
