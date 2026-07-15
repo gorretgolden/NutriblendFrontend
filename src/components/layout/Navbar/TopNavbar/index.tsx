@@ -256,8 +256,13 @@ const Header = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <span className="hidden md:inline text-sm font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">
+                  <span className="hidden md:flex items-center gap-2 text-sm font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">
                     {user ? `Hi, ${user.first_name || user.name?.split(' ')[0] || 'User'}` : "Account"}
+                    {user && (
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-md uppercase tracking-wider font-bold border ${isWholesaleUser ? "bg-purple-50 text-purple-600 border-purple-100" : "bg-blue-50 text-blue-600 border-blue-100"}`}>
+                        {isWholesaleUser ? "Wholesale" : "Retail"}
+                      </span>
+                    )}
                   </span>
                 </button>
               </div>
