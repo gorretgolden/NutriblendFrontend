@@ -172,7 +172,7 @@ const Header = ({ data }: { data: Product }) => {
               {/* Action */}
               <div className="flex flex-col gap-4">
                 <SizeSelection data={data} />
-                <AddToCardSection data={data} />
+                {currentStock !== 0 && <AddToCardSection data={data} />}
               </div>
             </div>
 
