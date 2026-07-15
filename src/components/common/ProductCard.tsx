@@ -124,10 +124,14 @@ const ProductCard = ({ data }: ProductCardProps) => {
           </span>
         )}
 
-        {/* Wholesale Badge */}
-        {isUsingWholesalePrice && (
-          <span className="absolute top-2.5 left-2.5 z-10 bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm tracking-wide">
+        {/* Type Badge */}
+        {isUsingWholesalePrice ? (
+          <span className="absolute top-2.5 left-2.5 z-10 bg-purple-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm tracking-wide">
             WHOLESALE
+          </span>
+        ) : (
+          <span className="absolute top-2.5 left-2.5 z-10 bg-[#009E3C] text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm tracking-wide">
+            RETAIL
           </span>
         )}
 
@@ -192,8 +196,10 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
         {/* Price Block */}
         <div className="flex flex-col mt-1 sm:mt-2">
-          {isUsingWholesalePrice && (
+          {isUsingWholesalePrice ? (
             <p className="text-[9px] text-purple-600 font-bold uppercase tracking-wider mb-0.5">Wholesale Price</p>
+          ) : (
+            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Retail Price</p>
           )}
           <div className="flex items-baseline gap-1.5 flex-wrap">
             <span className={`font-extrabold text-base sm:text-lg leading-none ${
