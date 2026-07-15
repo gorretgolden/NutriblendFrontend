@@ -193,12 +193,12 @@ const ProductCard = ({ data }: ProductCardProps) => {
         {/* Price Block */}
         <div className="flex flex-col mt-1 sm:mt-2">
           {isUsingWholesalePrice && (
-            <p className="text-[9px] text-blue-600 font-bold uppercase tracking-wider mb-0.5">Wholesale Price</p>
+            <p className="text-[9px] text-purple-600 font-bold uppercase tracking-wider mb-0.5">Wholesale Price</p>
           )}
           <div className="flex items-baseline gap-1.5 flex-wrap">
             <span className={`font-extrabold text-base sm:text-lg leading-none ${
               isUsingWholesalePrice
-                ? "text-blue-600"
+                ? "text-purple-600"
                 : hasDiscount
                   ? "text-[#E53935]"
                   : "text-gray-900"
