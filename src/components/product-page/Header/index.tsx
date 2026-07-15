@@ -126,7 +126,7 @@ const Header = ({ data }: { data: Product }) => {
                 </span>
                 {isUsingWholesalePrice && (
                   <span className="text-sm text-[#009E3C] font-bold mb-2">
-                    *(This box contains {data.wholesale_min_qty || 'multiple'} items)*
+                    *(This {data.wholesale_unit_name ? data.wholesale_unit_name.toLowerCase() : 'box'} contains {data.wholesale_min_qty || 'multiple'} items)*
                   </span>
                 )}
                 <div className="flex items-baseline gap-2">
