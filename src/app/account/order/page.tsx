@@ -243,6 +243,15 @@ export default function OrdersPage() {
                           <span className="text-xs text-gray-500">
                             {itemCount} item{itemCount !== 1 ? 's' : ''}
                           </span>
+                          <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
+                            firstItem?.product?.wholesale_price > 0 && Number(firstItem?.unit_price) <= Number(firstItem?.product?.wholesale_price)
+                              ? 'bg-purple-100 text-purple-700'
+                              : 'bg-green-100 text-green-700'
+                          }`}>
+                            {firstItem?.product?.wholesale_price > 0 && Number(firstItem?.unit_price) <= Number(firstItem?.product?.wholesale_price) 
+                              ? `Wholesale (${firstItem?.product?.wholesale_unit_name || firstItem?.product?.unit || 'Unit'})` 
+                              : `Retail (${firstItem?.product?.unit_name || firstItem?.product?.unit || 'Unit'})`}
+                          </span>
                           <span className="text-gray-300">·</span>
                           {getPaymentBadge(order.payment_status)}
                         </div>

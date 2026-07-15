@@ -758,7 +758,7 @@ export default function Checkout() {
                   <button
                     onClick={handlePlaceOrder}
                     disabled={loading || (deliveryMethod === 'delivery' && (!selectedRegion || !selectedTown || !address))}
-                    className="w-full bg-[#009E3C] text-white py-4 rounded-xl font-bold hover:bg-[#00752C] transition-all duration-300 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-[0_4px_14px_rgba(0,158,60,0.30)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.40)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
+                    className="w-full bg-[#009E3C] text-white py-4 rounded-xl font-bold hover:bg-[#00752C] transition-all duration-300 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:shadow-none disabled:hover:translate-y-0 flex items-center justify-center gap-3 shadow-[0_4px_14px_rgba(0,158,60,0.30)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.40)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
                   >
                     {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
