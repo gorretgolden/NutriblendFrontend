@@ -149,14 +149,18 @@ const Header = ({ data }: { data: Product }) => {
                     <span className="text-sm text-gray-400 font-bold">/ {data.unit}</span>
                   ) : null}
                 </div>
-                <div className="text-sm text-gray-500 font-medium mt-2 flex flex-col gap-1.5 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                  <div className="flex justify-between items-center">
-                    <span>Product Weight:</span>
-                    <span className="font-bold text-gray-800">{data.weight ? `${data.weight} ${data.weight_unit || 'kg'}` : 'Not specified'}</span>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <div className="flex items-center gap-2 bg-blue-50/50 border border-blue-100 px-3 py-1.5 rounded-lg shadow-sm">
+                    <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                    </svg>
+                    <span className="text-[13px] font-medium text-gray-600">Weight: <strong className="text-gray-900">{data.weight ? `${data.weight} ${data.weight_unit || 'kg'}` : 'Not specified'}</strong></span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Selling Unit ({isWholesaleUser ? 'Wholesale' : 'Retail'}):</span>
-                    <span className="font-bold text-[#009E3C]">{isWholesaleUser ? (data.wholesale_unit_name || 'Not specified') : (data.unit_name || data.unit || 'Not specified')}</span>
+                  <div className="flex items-center gap-2 bg-emerald-50/50 border border-emerald-100 px-3 py-1.5 rounded-lg shadow-sm">
+                    <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    <span className="text-[13px] font-medium text-gray-600">Unit ({isWholesaleUser ? 'Wholesale' : 'Retail'}): <strong className="text-[#009E3C]">{isWholesaleUser ? (data.wholesale_unit_name || 'Not specified') : (data.unit_name || data.unit || 'Not specified')}</strong></span>
                   </div>
                 </div>
                 {(hasDiscount || isUsingWholesalePrice) && (
