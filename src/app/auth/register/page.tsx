@@ -174,6 +174,17 @@ export default function RegisterPage() {
         window.location.href = `${apiUrl}/auth/google/redirect?action=signup`;
     };
 
+    const isFormValid =
+        formData.firstName.trim() !== "" &&
+        formData.lastName.trim() !== "" &&
+        formData.email.trim() !== "" &&
+        formData.phone.trim() !== "" &&
+        formData.password !== "" &&
+        formData.confirmPassword !== "" &&
+        formData.password === formData.confirmPassword &&
+        formData.terms === true &&
+        validatePasswordStrength(formData.password) === null;
+
     return (
         <div className="min-h-screen bg-[#f2f4f3] flex items-center justify-center py-12 px-4">
             <div className="w-full max-w-lg">
@@ -380,8 +391,8 @@ export default function RegisterPage() {
 
                         <button
                             type="submit"
-                            disabled={isLoading}
-                            className="w-full rounded-lg bg-[#009E3C] px-4 py-3 text-base font-bold text-white transition-all duration-200 hover:bg-[#00752C] shadow-[0_4px_14px_rgba(0,158,60,0.30)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.40)] disabled:opacity-50"
+                            disabled={isLoading || !isFormValid}
+                            className="w-full rounded-lg bg-[#009E3C] px-4 py-3 text-base font-bold text-white transition-all duration-200 hover:bg-[#00752C] shadow-[0_4px_14px_rgba(0,158,60,0.30)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.40)] disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading ? "Creating Account..." : "Create Account"}
                         </button>
