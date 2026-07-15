@@ -92,7 +92,7 @@ const Header = ({ data }: { data: Product }) => {
           </div>
 
           {/* Title & Rating */}
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-3 leading-tight tracking-tight capitalize">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 leading-tight tracking-tight capitalize">
             {data.title}
           </h1>
 
