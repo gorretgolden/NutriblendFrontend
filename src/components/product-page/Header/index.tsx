@@ -111,66 +111,71 @@ const Header = ({ data }: { data: Product }) => {
             </div>
             <span className="text-gray-400 text-sm font-medium">|</span>
             <span className="text-[#009E3C] text-sm font-bold hover:underline cursor-pointer">
-              {data.reviews || 0} Verifed Reviews
+              {data.reviews || 0} Verified Reviews
             </span>
           </div>
 
           {/* Main Content Area — Reorganized for Importance */}
           <div className="flex flex-col gap-8">
             {/* Price & Primary Action Section — Left Aligned Stack */}
-            <div className="flex flex-col gap-8 items-start">
-              {/* Price */}
-              <div className="flex flex-col">
-                <span className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">
-                  {isUsingWholesalePrice ? "WHOLESALE BULK PRICE (Per Box)" : "Price"}
-                </span>
-                {isUsingWholesalePrice && (
-                  <span className="text-sm text-[#009E3C] font-bold mb-2">
-                    *(This {data.wholesale_unit_name ? data.wholesale_unit_name.toLowerCase() : 'box'} contains {data.wholesale_min_qty || 'multiple'} items)*
+            <div className="flex flex-col gap-6 items-start w-full">
+              {/* Price Container */}
+              <div className="flex flex-col gap-3 p-5 bg-gray-50/50 rounded-2xl border border-gray-100 w-full">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[11px] text-gray-500 font-bold uppercase tracking-wider">
+                    {isUsingWholesalePrice ? `WHOLESALE BULK PRICE (PER ${data.wholesale_unit_name?.toUpperCase() || 'UNIT'})` : "Price"}
                   </span>
-                )}
-                <div className="flex items-baseline gap-2">
-                  {isUsingWholesalePrice ? (
-                    <span className="font-black text-blue-600 text-2xl lg:text-3xl">
-                      UGX {data.wholesale_price?.toLocaleString()}
-                    </span>
-                  ) : (data.discount?.percentage ?? 0) > 0 ? (
-                    <span className="font-black text-[#E53935] text-2xl lg:text-3xl">
-                      UGX {Math.round((data.price || 0) - ((data.price || 0) * (data.discount?.percentage ?? 0)) / 100).toLocaleString()}
-                    </span>
-                  ) : (
-                    <span className="font-black text-gray-900 text-2xl lg:text-3xl">
-                      UGX {(data.price || 0).toLocaleString()}
-                    </span>
-                  )}
-                  {(isUsingWholesalePrice ? data.wholesale_unit_name : data.unit_name) ? (
-                    <span className="text-sm text-gray-400 font-bold">/ {isUsingWholesalePrice ? data.wholesale_unit_name : data.unit_name}</span>
-                  ) : data.unit ? (
-                    <span className="text-sm text-gray-400 font-bold">/ {data.unit}</span>
-                  ) : null}
+                  
+                  <div className="flex items-end gap-4 mt-1">
+                    {isUsingWholesalePrice ? (
+                      <span className="font-black text-gray-900 text-3xl lg:text-4xl">
+                        UGX {data.wholesale_price?.toLocaleString()}
+                      </span>
+                    ) : (data.discount?.percentage ?? 0) > 0 ? (
+                      <span className="font-black text-[#E53935] text-3xl lg:text-4xl">
+                        UGX {Math.round((data.price || 0) - ((data.price || 0) * (data.discount?.percentage ?? 0)) / 100).toLocaleString()}
+                      </span>
+                    ) : (
+                      <span className="font-black text-gray-900 text-3xl lg:text-4xl">
+                        UGX {(data.price || 0).toLocaleString()}
+                      </span>
+                    )}
+                    
+                    {(hasDiscount || isUsingWholesalePrice) && (
+                      <div className="flex flex-col mb-1.5">
+                        <span className="text-gray-400 line-through text-sm font-medium">UGX {(data.price || 0).toLocaleString()}</span>
+                        <span className="text-[#E53935] text-[10px] font-bold uppercase">
+                          {isUsingWholesalePrice ? 'Retail Price' : `Save ${data.discount?.percentage}%`}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-2 mt-3">
-                  <div className="flex items-center gap-2 bg-blue-50/50 border border-blue-100 px-3 py-1.5 rounded-lg shadow-sm">
-                    <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                {isUsingWholesalePrice && data.wholesale_min_qty && (
+                  <div className="flex items-center gap-1.5 text-sm text-[#009E3C] bg-[#009E3C]/10 w-fit px-3 py-1 rounded-md font-medium mt-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Includes {data.wholesale_min_qty} individual items
+                  </div>
+                )}
+                
+                <div className="flex items-center flex-wrap gap-4 mt-2 pt-4 border-t border-gray-200">
+                  <div className="flex items-center gap-1.5 text-sm text-gray-600">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
                     </svg>
-                    <span className="text-[13px] font-medium text-gray-600">Weight: <strong className="text-gray-900">{data.weight ? `${data.weight} ${data.weight_unit || 'kg'}` : 'Not specified'}</strong></span>
+                    Weight: <span className="font-semibold text-gray-900">{data.weight ? `${data.weight} ${data.weight_unit || 'kg'}` : 'N/A'}</span>
                   </div>
-                  <div className="flex items-center gap-2 bg-emerald-50/50 border border-emerald-100 px-3 py-1.5 rounded-lg shadow-sm">
-                    <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-1 h-1 rounded-full bg-gray-300"></div>
+                  <div className="flex items-center gap-1.5 text-sm text-gray-600">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
-                    <span className="text-[13px] font-medium text-gray-600">Unit ({isWholesaleUser ? 'Wholesale' : 'Retail'}): <strong className="text-[#009E3C]">{isWholesaleUser ? (data.wholesale_unit_name || 'Not specified') : (data.unit_name || data.unit || 'Not specified')}</strong></span>
+                    Unit: <span className="font-semibold text-gray-900">{isWholesaleUser ? (data.wholesale_unit_name || 'N/A') : (data.unit_name || data.unit || 'N/A')}</span>
                   </div>
                 </div>
-                {(hasDiscount || isUsingWholesalePrice) && (
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-gray-300 line-through text-sm font-medium">UGX {(data.price || 0).toLocaleString()}</span>
-                    <span className="text-[#E53935] text-xs font-bold bg-red-50 px-1.5 py-0.5 rounded">
-                      {isUsingWholesalePrice ? 'Retail Price' : `Save ${data.discount?.percentage}%`}
-                    </span>
-                  </div>
-                )}
               </div>
 
               {/* Action */}
