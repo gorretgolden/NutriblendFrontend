@@ -181,15 +181,15 @@ const Header = ({ data }: { data: Product }) => {
               {currentStock !== undefined && (
                 <div className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-2xl border text-sm font-bold transition-colors",
-                  currentStock > 0 && currentStock <= 10 
-                    ? "bg-red-50 border-red-100 text-red-600" 
-                    : currentStock > 10 
-                      ? "bg-emerald-50 border-emerald-100 text-[#009E3C]"
-                      : "bg-gray-50 border-gray-200 text-gray-500"
+                  currentStock > 10 
+                    ? "bg-emerald-50 border-emerald-100 text-[#009E3C]"
+                    : currentStock > 0 
+                      ? "bg-amber-50 border-amber-100 text-amber-600"
+                      : "bg-red-50 border-red-100 text-red-600"
                 )}>
                   <span className={cn(
                     "w-2 h-2 rounded-full",
-                    currentStock > 10 ? "bg-emerald-500" : "bg-red-500 animate-pulse"
+                    currentStock > 10 ? "bg-emerald-500" : currentStock > 0 ? "bg-amber-500 animate-pulse" : "bg-red-500"
                   )} />
                   {currentStock > 10 ? 'In Stock' : currentStock > 0 ? `Limited: Only ${currentStock} Left` : 'Out of Stock'}
                 </div>
