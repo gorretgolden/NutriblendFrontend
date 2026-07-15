@@ -548,9 +548,16 @@ const Header = () => {
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="font-semibold text-gray-900 text-sm truncate group-hover/res:text-[#009E3C] transition-colors">{product.name}</p>
-                              <p className="text-xs text-[#009E3C] font-bold mt-0.5">
-                                UGX {Number(product.price).toLocaleString()}
-                              </p>
+                              <div className="flex flex-col mt-0.5">
+                                {isWholesaleUser && product.wholesale_price ? (
+                                  <p className="text-[9px] text-purple-600 font-bold uppercase tracking-wider mb-0.5">Wholesale Price</p>
+                                ) : (
+                                  <p className="text-[9px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Retail Price</p>
+                                )}
+                                <p className={`text-xs font-bold ${isWholesaleUser && product.wholesale_price ? "text-purple-600" : "text-[#009E3C]"}`}>
+                                  UGX {Number(isWholesaleUser && product.wholesale_price ? product.wholesale_price : product.price).toLocaleString()}
+                                </p>
+                              </div>
                             </div>
                           </Link>
                         ))}
@@ -920,10 +927,17 @@ function DesktopSearchBar({
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-bold text-gray-900 text-[15px] truncate group-hover/result:text-[#009E3C] transition-colors leading-tight">{product.name}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <p className="text-[#009E3C] font-black text-sm">
-                            UGX {Number(product.price).toLocaleString()}
-                          </p>
+                        <div className="flex flex-col mt-0.5">
+                          {isWholesaleUser && product.wholesale_price ? (
+                            <p className="text-[9px] text-purple-600 font-bold uppercase tracking-wider mb-0.5">Wholesale Price</p>
+                          ) : (
+                            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Retail Price</p>
+                          )}
+                          <div className="flex items-center gap-2">
+                            <p className={`font-black text-sm ${isWholesaleUser && product.wholesale_price ? "text-purple-600" : "text-[#009E3C]"}`}>
+                              UGX {Number(isWholesaleUser && product.wholesale_price ? product.wholesale_price : product.price).toLocaleString()}
+                            </p>
+                          </div>
                         </div>
                       </div>
                       <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover/result:bg-[#009E3C] group-hover/result:text-white transition-all">
