@@ -66,6 +66,16 @@ const Header = ({ data }: { data: Product }) => {
               <span className="bg-[#f0fdf4] text-[#009E3C] text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest border border-[#009E3C]/10">
                 {data.brand || data.category || "Authentic"}
               </span>
+              {isAuthenticated && (
+                <span className={cn(
+                  "text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest border",
+                  isWholesaleUser 
+                    ? "bg-purple-50 text-purple-600 border-purple-100" 
+                    : "bg-blue-50 text-blue-600 border-blue-100"
+                )}>
+                  {isWholesaleUser ? "Wholesale" : "Retail"}
+                </span>
+              )}
               {data.sku && (
                 <span className="text-[10px] text-gray-400 font-medium tracking-wider">SKU: {data.sku}</span>
               )}
