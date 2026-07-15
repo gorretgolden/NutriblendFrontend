@@ -16,6 +16,10 @@ const Header = ({ data }: { data: Product }) => {
   const isWholesaleUser = isAuthenticated && user?.is_wholesale_approved;
   const isUsingWholesalePrice = isWholesaleUser && !!data.wholesale_price;
   const hasDiscount = (data.discount?.percentage ?? 0) > 0 || (data.discount?.amount ?? 0) > 0;
+  
+  const currentStock = isUsingWholesalePrice 
+    ? (data.wholesale_stock_quantity ?? 0) 
+    : (data.stock_quantity ?? data.stock ?? 0);
 
   const handleShareProduct = async () => {
     const shareUrl = typeof window !== 'undefined'
@@ -164,20 +168,20 @@ const Header = ({ data }: { data: Product }) => {
 
             {/* Availability & Quick Info */}
             <div className="flex flex-wrap gap-4 py-6 border-y border-gray-50">
-              {data.stock !== undefined && (
+              {currentStock !== undefined && (
                 <div className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-2xl border text-sm font-bold transition-colors",
-                  data.stock > 0 && data.stock <= 10 
+                  currentStock > 0 && currentStock <= 10 
                     ? "bg-red-50 border-red-100 text-red-600" 
-                    : data.stock > 10 
+                    : currentStock > 10 
                       ? "bg-emerald-50 border-emerald-100 text-[#009E3C]"
                       : "bg-gray-50 border-gray-200 text-gray-500"
                 )}>
                   <span className={cn(
                     "w-2 h-2 rounded-full",
-                    data.stock > 10 ? "bg-emerald-500" : "bg-red-500 animate-pulse"
+                    currentStock > 10 ? "bg-emerald-500" : "bg-red-500 animate-pulse"
                   )} />
-                  {data.stock > 10 ? 'In Stock' : data.stock > 0 ? `Limited: Only ${data.stock} Left` : 'Out of Stock'}
+                  {currentStock > 10 ? 'In Stock' : currentStock > 0 ? `Limited: Only ${currentStock} Left` : 'Out of Stock'}
                 </div>
               )}
               <div className="flex items-center gap-2 px-4 py-2 rounded-2xl border border-gray-100 bg-gray-50/50 text-gray-600 text-sm font-bold">
