@@ -156,7 +156,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           src={imgSrc}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className={`object-cover transition-all duration-700 ease-out group-hover:scale-[1.12] ${data.gallery && data.gallery.length > 0 ? 'group-hover:opacity-0' : ''}`}
+          className={`object-contain transition-all duration-700 ease-out p-2 group-hover:scale-[1.12] ${data.gallery && data.gallery.length > 0 ? 'group-hover:opacity-0' : ''}`}
           alt={data.title}
           priority
           onError={() => setImgSrc('/images/placeholder.jpg')}
@@ -168,7 +168,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
             src={data.gallery[0]}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover transition-all duration-700 ease-out opacity-0 group-hover:opacity-100 group-hover:scale-[1.12] absolute inset-0"
+            className="object-contain transition-all duration-700 ease-out opacity-0 p-2 group-hover:opacity-100 group-hover:scale-[1.12] absolute inset-0"
             alt={`${data.title} alternate view`}
           />
         )}
