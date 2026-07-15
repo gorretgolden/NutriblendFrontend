@@ -166,14 +166,14 @@ const Header = ({ data }: { data: Product }) => {
                     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
                     </svg>
-                    Weight: <span className="font-semibold text-gray-900">{data.weight ? `${data.weight} ${data.weight_unit || 'kg'}` : 'N/A'}</span>
+                    Weight: <span className="font-semibold text-gray-900">{data.weight ? `${data.weight} ${data.weight_unit || 'kg'}` : 'Not provided'}</span>
                   </div>
                   <div className="w-1 h-1 rounded-full bg-gray-300"></div>
                   <div className="flex items-center gap-1.5 text-sm text-gray-600">
                     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
-                    Unit: <span className="font-semibold text-gray-900">{isWholesaleUser ? (data.wholesale_unit_name || 'N/A') : (data.unit_name || data.unit || 'N/A')}</span>
+                    Unit: <span className="font-semibold text-gray-900">{isWholesaleUser ? (data.wholesale_unit_name || 'Not provided') : (data.unit_name || data.unit || 'Not provided')}</span>
                   </div>
                 </div>
               </div>
