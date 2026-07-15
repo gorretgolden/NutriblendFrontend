@@ -28,6 +28,17 @@ export default function CartPage() {
   const [promoApplied, setPromoApplied] = useState(false);
   const [discountAmount, setDiscountAmount] = useState(0);
 
+  const ITEMS_PER_PAGE = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reverse to show latest added first
+  const sortedItems = [...(cart?.items || [])].reverse();
+  const totalPages = Math.ceil(sortedItems.length / ITEMS_PER_PAGE);
+  const paginatedItems = sortedItems.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   const handleApplyPromo = async () => {
     if (!promoCode.trim()) {
       toast.error("Please enter a promo code");
@@ -74,12 +85,35 @@ export default function CartPage() {
                   <span className="text-sm font-medium text-gray-500">Subtotal: UGX {Math.round(adjustedTotalPrice).toLocaleString()}</span>
                 </div>
                 <div className="divide-y divide-gray-100">
-                  {cart.items.map((product, idx) => (
+                  {paginatedItems.map((product, idx) => (
                     <div key={idx} className="p-6">
                       <ProductCard data={product} />
                     </div>
                   ))}
                 </div>
+                {totalPages > 1 && (
+                  <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/30 flex items-center justify-between">
+                    <Button
+                      variant="outline"
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="text-sm px-4 py-2"
+                    >
+                      Previous
+                    </Button>
+                    <span className="text-sm font-medium text-gray-600">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    <Button
+                      variant="outline"
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="text-sm px-4 py-2"
+                    >
+                      Next
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
 
