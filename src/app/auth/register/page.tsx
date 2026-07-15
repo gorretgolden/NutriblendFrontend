@@ -41,6 +41,7 @@ export default function RegisterPage() {
 
     const [regions, setRegions] = useState<Region[]>([]);
     const [towns, setTowns] = useState<Town[]>([]);
+    const [allTowns, setAllTowns] = useState<Town[]>([]);
     const [loadingRegions, setLoadingRegions] = useState(false);
     const [loadingTowns, setLoadingTowns] = useState(false);
 
@@ -53,45 +54,41 @@ export default function RegisterPage() {
         }
     }, [isAuthenticated, router]);
 
-    // Fetch regions on mount
+    // Fetch regions and all towns on component mount
     useEffect(() => {
-        async function fetchRegions() {
+        async function fetchInitialData() {
+            setLoadingRegions(true);
             try {
-                setLoadingRegions(true);
-                const response = await apiClient.getRegions();
-                if (response.status && response.data) {
-                    setRegions(response.data);
+                const [regionsRes, townsRes] = await Promise.all([
+                    apiClient.getRegions(),
+                    apiClient.getAllTowns()
+                ]);
+                
+                if (regionsRes.status && regionsRes.data) {
+                    setRegions(regionsRes.data);
+                }
+                
+                if (townsRes.status && townsRes.data) {
+                    setAllTowns(townsRes.data);
                 }
             } catch (err) {
-                console.error("Error fetching regions:", err);
+                console.error("Error fetching initial data:", err);
             } finally {
                 setLoadingRegions(false);
             }
         }
-        fetchRegions();
+        fetchInitialData();
     }, []);
 
-    // Fetch towns when region changes
+    // Filter towns locally when region changes
     useEffect(() => {
         if (!formData.region_id) {
             setTowns([]);
             return;
         }
-        async function fetchTowns() {
-            try {
-                setLoadingTowns(true);
-                const response = await apiClient.getTowns(Number(formData.region_id));
-                if (response.status && response.data) {
-                    setTowns(response.data);
-                }
-            } catch (err) {
-                console.error("Error fetching towns:", err);
-            } finally {
-                setLoadingTowns(false);
-            }
-        }
-        fetchTowns();
-    }, [formData.region_id]);
+        const regionIdNum = Number(formData.region_id);
+        setTowns(allTowns.filter((t) => t.region_id === regionIdNum));
+    }, [formData.region_id, allTowns]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const target = e.target;

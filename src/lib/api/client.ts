@@ -674,6 +674,10 @@ class NutriBlendApiClient {
         return this.request<Town[]>(`/regions/${regionId}/towns`);
     }
 
+    async getAllTowns(): Promise<ApiResponse<Town[]>> {
+        return this.request<Town[]>('/towns');
+    }
+
     async calculateDeliveryFee(data: {
         region_id: number;
         town_id: number;
