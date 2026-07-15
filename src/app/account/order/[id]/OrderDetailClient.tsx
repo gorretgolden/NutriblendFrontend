@@ -137,7 +137,18 @@ export default function OrderDetailClient({ id }: OrderDetailClientProps) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-gray-900 truncate">{item.product?.name}</p>
-                      <p className="text-xs text-gray-500 mt-1">Quantity: {item.quantity}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs text-gray-500">Quantity: {item.quantity}</p>
+                        {order.user?.role === 'Wholesale Customer' && (
+                          <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
+                            item.product?.wholesale_price > 0 && Number(item.unit_price) <= Number(item.product?.wholesale_price)
+                              ? 'bg-purple-100 text-purple-700'
+                              : 'bg-green-100 text-green-700'
+                          }`}>
+                            {item.product?.wholesale_price > 0 && Number(item.unit_price) <= Number(item.product?.wholesale_price) ? 'Wholesale' : 'Retail'}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold text-gray-900">{formatPrice(Number(item.total_price))}</p>
