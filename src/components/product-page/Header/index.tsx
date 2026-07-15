@@ -163,7 +163,7 @@ const Header = ({ data }: { data: Product }) => {
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-gray-300 line-through text-sm font-medium">UGX {(data.price || 0).toLocaleString()}</span>
                     <span className="text-[#E53935] text-xs font-bold bg-red-50 px-1.5 py-0.5 rounded">
-                      {isUsingWholesalePrice ? 'Wholesale Rate' : `Save ${data.discount?.percentage}%`}
+                      {isUsingWholesalePrice ? 'Retail Price' : `Save ${data.discount?.percentage}%`}
                     </span>
                   </div>
                 )}
