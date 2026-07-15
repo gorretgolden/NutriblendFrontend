@@ -170,10 +170,12 @@ const Header = ({ data }: { data: Product }) => {
               </div>
 
               {/* Action */}
-              <div className="flex flex-col gap-4">
-                <SizeSelection data={data} />
-                {currentStock !== 0 && <AddToCardSection data={data} />}
-              </div>
+              {((data.variations && data.variations.length > 0) || currentStock !== 0) && (
+                <div className="flex flex-col gap-4 w-full">
+                  <SizeSelection data={data} />
+                  {currentStock !== 0 && <AddToCardSection data={data} />}
+                </div>
+              )}
             </div>
 
             {/* Availability & Quick Info */}
