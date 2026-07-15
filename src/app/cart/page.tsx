@@ -155,7 +155,7 @@ export default function CartPage() {
                       <input
                         type="text"
                         value={promoCode}
-                        onChange={(e) => setPromoCode(e.target.value)}
+                        onChange={(e) => setPromoCode(e.target.value.replace(/-/g, ''))}
                         placeholder="Promo Code"
                         className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-[#009E3C] focus:border-[#009E3C] outline-none transition-all"
                         disabled={promoApplied}

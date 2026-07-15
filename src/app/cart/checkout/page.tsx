@@ -737,7 +737,7 @@ export default function Checkout() {
                         disabled={loading}
                         placeholder="Promo code"
                         value={discountCode}
-                        onChange={(e) => setDiscountCode(e.target.value)}
+                        onChange={(e) => setDiscountCode(e.target.value.replace(/-/g, ''))}
                         className={`flex-1 border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none text-sm transition-all ${loading ? 'bg-gray-50 opacity-70' : ''}`}
                       />
                       <button
