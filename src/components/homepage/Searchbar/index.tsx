@@ -8,7 +8,7 @@ import { useAppSelector } from "@/lib/hooks/redux";
 
 export default function SearchWithDropdown() {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
-  const isWholesaleUser = isAuthenticated && user?.is_wholesale_approved;
+  const isWholesaleUser = isAuthenticated && (user?.role === 'Wholesale Customer' || user?.is_wholesale_approved);
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);

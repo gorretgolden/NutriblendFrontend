@@ -23,7 +23,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
   const isOutOfStock = data.stock !== undefined && data.stock === 0;
 
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
-  const isWholesaleUser = isAuthenticated && user?.is_wholesale_approved;
+  const isWholesaleUser = isAuthenticated && (user?.role === 'Wholesale Customer' || user?.is_wholesale_approved);
 
   const discountedPrice = (data.discount?.percentage ?? 0) > 0
     ? Math.round(data.price - (data.price * (data.discount?.percentage ?? 0)) / 100)
