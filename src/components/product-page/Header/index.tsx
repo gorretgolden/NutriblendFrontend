@@ -69,11 +69,11 @@ const Header = ({ data }: { data: Product }) => {
               {isAuthenticated && (
                 <span className={cn(
                   "text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest border",
-                  isWholesaleUser 
+                  isUsingWholesalePrice 
                     ? "bg-purple-50 text-purple-600 border-purple-100" 
                     : "bg-blue-50 text-blue-600 border-blue-100"
                 )}>
-                  {isWholesaleUser ? "Wholesale" : "Retail"}
+                  {isUsingWholesalePrice ? "Wholesale" : "Retail"}
                 </span>
               )}
               {data.sku && (
@@ -173,7 +173,7 @@ const Header = ({ data }: { data: Product }) => {
                     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
-                    Unit: <span className="font-semibold text-gray-900">{isWholesaleUser ? (data.wholesale_unit_name || 'Not provided') : (data.unit_name || data.unit || 'Not provided')}</span>
+                    Unit: <span className="font-semibold text-gray-900">{isUsingWholesalePrice ? (data.wholesale_unit_name || 'Not provided') : (data.unit_name || data.unit || 'Not provided')}</span>
                   </div>
                 </div>
               </div>
