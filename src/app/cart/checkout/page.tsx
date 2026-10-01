@@ -723,7 +723,7 @@ export default function Checkout() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs font-bold text-gray-700">
-                          {paymentMethod === 'cod' ? 'Cash on Delivery' : 'Mobile Money'}
+                          {paymentMethod === 'Cash' ? 'Cash on Delivery' : paymentMethod}
                         </p>
                       </div>
                     </div>
