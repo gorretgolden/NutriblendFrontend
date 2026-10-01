@@ -415,7 +415,7 @@ export default function Checkout() {
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
                   <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
                     <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#009E3C] text-white text-xs font-bold flex items-center justify-center">2</span>
-                    <h2 className="font-semibold text-gray-900">Delivery Method</h2>
+                    <h2 className="font-semibold text-gray-900">{deliveryMethod === 'pickup' ? 'Pickup Location' : 'Delivery Details'}</h2>
                   </div>
                   <div className="p-5 space-y-4">
                     {/* Delivery Method Toggle */}
@@ -695,6 +695,9 @@ export default function Checkout() {
 
                   {/* Delivery & Payment Preview */}
                   <div className="bg-gray-50 rounded-xl p-4 space-y-3 mb-6 border border-gray-100">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+                      {deliveryMethod === 'pickup' ? 'Pickup Location' : 'Delivery Address'}
+                    </p>
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-[#009E3C] flex-shrink-0 shadow-sm">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -722,6 +725,7 @@ export default function Checkout() {
                         </svg>
                       </div>
                       <div className="min-w-0">
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Payment Method</p>
                         <p className="text-xs font-bold text-gray-700">
                           {paymentMethod === 'Cash' ? 'Cash on Delivery' : paymentMethod}
                         </p>
