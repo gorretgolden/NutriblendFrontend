@@ -26,7 +26,7 @@ export default function ProductError({
 
                 <h1 className="text-2xl font-black text-gray-900 mb-2">Product Unavailable</h1>
                 <p className="text-gray-500 text-sm leading-relaxed mb-8">
-                    We couldn't load this product right now. This might be a temporary issue — please try again or browse other products.
+                    We couldn't load this product right now. This might be a temporary issue. Please try again or browse other products.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
