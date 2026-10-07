@@ -180,7 +180,13 @@ export default function OrderDetailClient({ id }: OrderDetailClientProps) {
                     Order Notes
                   </h3>
                   <div className="text-sm text-gray-600 italic bg-gray-50 p-4 rounded-xl border border-gray-100 min-h-[100px]">
-                    {order.notes || "No special instructions provided for this order."}
+                    {Array.isArray(order.notes)
+                      ? (order.notes.length > 0
+                        ? order.notes.map((note: any, idx: number) => (
+                            <p key={idx}>{typeof note === 'string' ? note : note.body}</p>
+                          ))
+                        : "No special instructions provided for this order.")
+                      : (order.notes || "No special instructions provided for this order.")}
                   </div>
                 </div>
              </div>
