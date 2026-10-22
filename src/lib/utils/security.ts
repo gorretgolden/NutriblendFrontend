@@ -3,6 +3,8 @@
  * Provides input sanitization and XSS protection
  */
 
+import DOMPurify from 'isomorphic-dompurify';
+
 /**
  * Sanitize HTML to prevent XSS attacks
  */
@@ -12,35 +14,38 @@ export const sanitizeHtml = (input: string): string => {
     return div.innerHTML;
 };
 
+const RICH_HTML_ALLOWED_TAGS = [
+    'p', 'br', 'hr', 'span', 'div',
+    'strong', 'b', 'em', 'i', 'u', 's', 'mark', 'small', 'sub', 'sup',
+    'ul', 'ol', 'li',
+    'blockquote', 'pre', 'code',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'a', 'img', 'table', 'thead', 'tbody', 'tr', 'th', 'td',
+];
+
+const RICH_HTML_ALLOWED_ATTR = [
+    'href', 'title', 'target', 'rel',
+    'src', 'alt', 'width', 'height',
+    'colspan', 'rowspan',
+];
+
 /**
  * Sanitize rich HTML for safe rendering via dangerouslySetInnerHTML.
- * Strips dangerous tags (script, iframe, object, embed, form) and
- * event handlers (onclick, onerror, etc.) while preserving safe
- * formatting tags like p, b, i, ul, li, br, a, span, div, h1-h6, etc.
+ * DOMPurify-backed: strips script/svg/style/object/embed/form/input,
+ * all event handlers and javascript:/data: URLs while preserving safe
+ * formatting tags (p, ul, li, strong, a, headings, tables, images).
  */
 export const sanitizeRichHtml = (html: string): string => {
     if (!html) return '';
 
-    // Remove dangerous tags and their content
-    let clean = html
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-        .replace(/<iframe\b[^>]*>.*?<\/iframe>/gi, '')
-        .replace(/<object\b[^>]*>.*?<\/object>/gi, '')
-        .replace(/<embed\b[^>]*\/?>/gi, '')
-        .replace(/<form\b[^>]*>.*?<\/form>/gi, '')
-        .replace(/<input\b[^>]*\/?>/gi, '')
-        .replace(/<textarea\b[^>]*>.*?<\/textarea>/gi, '')
-        .replace(/<button\b[^>]*>.*?<\/button>/gi, '');
-
-    // Remove event handlers (onclick, onerror, onload, etc.)
-    clean = clean.replace(/\s+on\w+\s*=\s*(['"])[^'"]*\1/gi, '');
-    clean = clean.replace(/\s+on\w+\s*=\s*[^\s>]*/gi, '');
-
-    // Remove javascript: and data: URIs in attributes
-    clean = clean.replace(/href\s*=\s*(['"])javascript:[^'"]*\1/gi, 'href=$1#$1');
-    clean = clean.replace(/src\s*=\s*(['"])data:[^'"]*\1/gi, 'src=$1$1');
-
-    return clean;
+    return DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: RICH_HTML_ALLOWED_TAGS,
+        ALLOWED_ATTR: RICH_HTML_ALLOWED_ATTR,
+        ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
+        FORBID_TAGS: ['style', 'script', 'svg', 'math', 'iframe', 'object', 'embed', 'form', 'input', 'textarea', 'button'],
+        FORBID_ATTR: ['style', 'class', 'onerror', 'onload', 'onclick'],
+        KEEP_CONTENT: true,
+    });
 };
 
 /**

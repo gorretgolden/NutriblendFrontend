@@ -251,7 +251,7 @@ export const cartsSlice = createSlice({
       if (state.cart === null) {
         state.cart = {
           items: [action.payload],
-          totalQuantities: 1,
+          totalQuantities: Number(action.payload.quantity) || 1,
         };
       } else {
         const existingItem = state.cart.items.find(

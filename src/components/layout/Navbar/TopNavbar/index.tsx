@@ -30,7 +30,7 @@ const Header = () => {
 
 
   const { user } = useAppSelector((state) => state.auth);
-  const isWholesaleUser = user?.role === 'Wholesale Customer' || user?.is_wholesale_approved;
+  const isWholesaleUser = user?.role === 'Wholesale Customer' || !!user?.is_wholesale_approved;
   const dispatch = useAppDispatch();
   const router = useRouter();
 

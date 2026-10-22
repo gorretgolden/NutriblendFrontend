@@ -272,7 +272,7 @@ export default function OrderDetailClient({ id }: OrderDetailClientProps) {
                   <FiTruck className="text-gray-400 w-5 h-5" />
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Delivery Status</p>
-                    <p className="text-xs font-bold text-gray-700">{(order.delivery_status || 'Pending').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+                    <p className="text-xs font-bold text-gray-700">{(order.delivery_status || 'Pending').replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</p>
                   </div>
                </div>
             </div>

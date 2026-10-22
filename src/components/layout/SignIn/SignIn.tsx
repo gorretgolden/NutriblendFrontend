@@ -8,6 +8,7 @@ import { loginUser, clearError } from "@/lib/features/auth/authSlice";
 import { clearCartLocal, fetchCart } from "@/lib/features/carts/cartsSlice";
 import { clearWishlist, fetchWishlist } from "@/lib/features/wishlist/wishlistSlice";
 import { toast } from "sonner";
+import { getBackendBaseUrl } from "@/lib/utils/env";
 
 type LoginModalProps = {
   visible: boolean;
@@ -139,7 +140,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
             Sign in or create account
           </h1>
           <p className="mt-2 text-sm leading-snug text-gray-600">
-            Enter your email to sign in. If you're new, we'll help you create a NutriBlend Haven account in seconds.
+            Enter your email to sign in. If you&apos;re new, we&apos;ll help you create a NutriBlend Haven account in seconds.
           </p>
         </div>
 
@@ -229,10 +230,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
 
           <button
             onClick={() => {
-              const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-              // Strip /api/v1 suffix since Google OAuth uses web routes
-              const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
-              window.location.href = `${baseUrl}/auth/google/redirect`;
+              window.location.href = `${getBackendBaseUrl()}/auth/google/redirect`;
             }}
             disabled={isSubmitting}
             className="mt-4 flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -262,7 +260,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <button
               onClick={onSwitchToSignUp}
               className="font-medium text-[#4caf50] hover:text-[#43a047] underline"
@@ -287,7 +285,7 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
 
         {/* Terms */}
         <p className="mt-6 text-left text-xs leading-snug text-gray-400">
-          By continuing, you've read and agree to our{" "}
+          By continuing, you&apos;ve read and agree to our{" "}
           <Link
             href="/terms"
             className="text-[#4caf50] hover:text-[#43a047]"

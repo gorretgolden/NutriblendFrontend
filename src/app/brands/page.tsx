@@ -128,7 +128,7 @@ export default function BrandsPage() {
               <Search className="w-10 h-10 text-gray-200" />
             </div>
             <h3 className="text-2xl font-black text-gray-900 tracking-tight mb-2">No brands found</h3>
-            <p className="text-gray-500 mb-8">We couldn't find any brands matching "{search}"</p>
+            <p className="text-gray-500 mb-8">We couldn&apos;t find any brands matching &quot;{search}&quot;</p>
             <button 
               onClick={() => setSearch("")}
               className="text-[#009E3C] font-black uppercase tracking-widest text-xs border-b-2 border-[#009E3C] pb-1"

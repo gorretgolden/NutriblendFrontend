@@ -133,8 +133,17 @@ describe('Cart Slice — Local Cart Operations', () => {
 
     const state = store.getState().carts;
     expect(state.cart?.items).toHaveLength(2);
-    expect(state.cart?.totalQuantities).toBe(2);
+    expect(state.cart?.totalQuantities).toBe(3); // 1 + 2 units
     expect(state.totalPrice).toBe(80000); // 50000 + 2*15000
+  });
+
+  it('addToCartLocal counts units when the first item has quantity above 1', () => {
+    const store = createStore();
+    store.dispatch(addToCartLocal({ ...mockCartItem, quantity: 3 }));
+
+    const state = store.getState().carts;
+    expect(state.cart?.totalQuantities).toBe(3);
+    expect(state.totalPrice).toBe(150000);
   });
 
   it('addToCartLocal treats different variations as separate items', () => {

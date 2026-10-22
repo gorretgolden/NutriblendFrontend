@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { apiClient } from "@/lib/api/client";
+import { getApiBaseUrl } from "@/lib/utils/env";
 import { toast } from "sonner";
 
 type ForgotPasswordModalProps = {
@@ -41,7 +42,7 @@ const ForgotPasswordModal = ({ visible, onClose, onSwitchToLogin }: ForgotPasswo
     setError(null);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/auth/password/forgot`, {
+      const response = await fetch(`${getApiBaseUrl()}/auth/password/forgot`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

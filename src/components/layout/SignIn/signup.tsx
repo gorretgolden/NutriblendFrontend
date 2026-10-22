@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { registerUser, clearError } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
+import { getBackendBaseUrl } from "@/lib/utils/env";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
 
@@ -527,9 +528,7 @@ const SignUpModal = ({
               <button
                 type="button"
                 onClick={() => {
-                  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-                  const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
-                  window.location.href = `${baseUrl}/auth/google/redirect`;
+                  window.location.href = `${getBackendBaseUrl()}/auth/google/redirect`;
                 }}
                 disabled={isLoading}
                 className="flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white p-3 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"

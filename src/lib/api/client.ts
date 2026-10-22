@@ -1,21 +1,16 @@
 /**
  * NutriBlend Haven API Client
  * Matches Laravel backend structure exactly
- * Base URL: http://localhost:8000/api/v1
  */
 
-const envApi = process.env.NEXT_PUBLIC_API_URL || '';
+import { getApiBaseUrl } from "@/lib/utils/env";
+
 const isDev = process.env.NODE_ENV === 'development';
 
 const isServer = typeof window === 'undefined';
-const PROD_API = 'https://admin.rasmuspharmaceuticals.com/api/v1';
-const isLocalUrl = (url: string) => /localhost|127\.0\.0\.1|0\.0\.0\.0/.test(url);
 
-// In production, never use localhost/127.0.0.1 URLs
-let API_BASE_URL = envApi || PROD_API;
-if (!isDev && isLocalUrl(API_BASE_URL)) {
-    API_BASE_URL = PROD_API;
-}
+// Production-safe base URL (falls back to the live API, never localhost)
+let API_BASE_URL = getApiBaseUrl();
 
 // Node.js 18+ resolves localhost to IPv6 (::1). Replace with 127.0.0.1 ONLY during dev server-side fetches
 if (isDev && isServer && API_BASE_URL.includes('localhost')) {

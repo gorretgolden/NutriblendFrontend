@@ -293,7 +293,7 @@ export default function Checkout() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center space-y-4">
-          <h2 className="text-lg font-bold text-gray-900">Couldn't load your cart</h2>
+          <h2 className="text-lg font-bold text-gray-900">Couldn&apos;t load your cart</h2>
           <p className="text-sm text-gray-500">
             {cartError || "The connection timed out. Please check your internet and try again."}
           </p>

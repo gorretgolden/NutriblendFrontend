@@ -196,11 +196,11 @@ export default function SearchWithDropdown() {
                     }}
                     className="block text-center text-[#4caf50] font-medium py-2 hover:underline"
                   >
-                    View all results for "{searchQuery}"
+                    View all results for &quot;{searchQuery}&quot;
                   </Link>
                 </div>
               ) : (
-                <p className="text-gray-500 text-center py-4">No products found for "{searchQuery}"</p>
+                <p className="text-gray-500 text-center py-4">No products found for &quot;{searchQuery}&quot;</p>
               )}
               <hr className="my-5" />
             </div>
