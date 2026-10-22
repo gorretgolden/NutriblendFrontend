@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { registerUser } from "@/lib/features/auth/authSlice";
 import { apiClient, Region, Town } from "@/lib/api/client";
+import { getApiBaseUrl } from "@/lib/utils/env";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
@@ -167,8 +168,7 @@ export default function RegisterPage() {
     };
 
     const handleGoogleSignup = () => {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-        window.location.href = `${apiUrl}/auth/google/redirect?action=signup`;
+        window.location.href = `${getApiBaseUrl()}/auth/google/redirect?action=signup`;
     };
 
     const isFormValid =

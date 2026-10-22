@@ -49,6 +49,18 @@ function SocialCallbackContent() {
 
         hasProcessed.current = true;
 
+        // The values are captured above; drop them from the address bar so the
+        // token and user JSON do not stay visible or in browser history.
+        const leftover = new URLSearchParams(window.location.search);
+        leftover.delete("token");
+        leftover.delete("user");
+        const cleanQuery = leftover.toString();
+        window.history.replaceState(
+            null,
+            "",
+            cleanQuery ? `${window.location.pathname}?${cleanQuery}` : window.location.pathname
+        );
+
         try {
             // Parse user data
             const user = JSON.parse(decodeURIComponent(userParam));

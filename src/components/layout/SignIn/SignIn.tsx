@@ -9,6 +9,7 @@ import { clearCartLocal, fetchCart } from "@/lib/features/carts/cartsSlice";
 import { clearWishlist, fetchWishlist } from "@/lib/features/wishlist/wishlistSlice";
 import { toast } from "sonner";
 import { getBackendBaseUrl } from "@/lib/utils/env";
+import { isSafeInternalPath } from "@/lib/utils/navigation";
 
 type LoginModalProps = {
   visible: boolean;
@@ -104,8 +105,8 @@ const LoginModal = ({ visible, onClose, onSwitchToSignUp, onSwitchToForgot }: Lo
       onClose();
       // Check for returnUrl (e.g., from checkout redirect)
       const returnUrl = sessionStorage.getItem("returnUrl");
-      if (returnUrl) {
-        sessionStorage.removeItem("returnUrl");
+      sessionStorage.removeItem("returnUrl");
+      if (returnUrl && isSafeInternalPath(returnUrl)) {
         router.push(returnUrl);
       }
     }

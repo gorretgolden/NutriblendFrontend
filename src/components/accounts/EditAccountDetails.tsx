@@ -28,7 +28,6 @@ const handleSelectChange = (name: "region" | "city", value: string) => {
 
 const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
-  console.log("Form submitted:", formData);
   router.push("/account");
 };
 

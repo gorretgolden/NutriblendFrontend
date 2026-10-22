@@ -279,7 +279,6 @@ class NutriBlendApiClient {
     private headers: HeadersInit;
     constructor() {
         this.baseURL = API_BASE_URL;
-        console.log(`[API Client] Initialized with baseURL: ${this.baseURL}`);
         this.headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -306,7 +305,6 @@ class NutriBlendApiClient {
         const timeout = setTimeout(() => controller.abort(), 25000);
         try {
             const url = `${this.baseURL}${endpoint}`;
-            console.log(`[API Client] Fetching: ${url}`);
 
             const config: RequestInit = {
                 ...options,
@@ -323,8 +321,6 @@ class NutriBlendApiClient {
             };
 
             const response = await fetch(url, config);
-
-            console.log(`[API Client] Response status: ${response.status}, Content-Type: ${response.headers.get('content-type')}`);
 
             // Handle logical errors before parsing JSON
             if (!response.ok) {
@@ -379,7 +375,6 @@ class NutriBlendApiClient {
                 message: `Server returned non-JSON response (${contentType || 'unknown type'}). Please try again later.`,
             };
         } catch (error) {
-            console.error('API Error:', error);
             const aborted = error instanceof Error && error.name === 'AbortError';
             return {
                 status: false,

@@ -6,6 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { loginUser, clearError } from "@/lib/features/auth/authSlice";
+import { getApiBaseUrl } from "@/lib/utils/env";
+import { isSafeInternalPath } from "@/lib/utils/navigation";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -21,8 +23,8 @@ export default function LoginPage() {
   useEffect(() => {
     if (isAuthenticated) {
       const returnUrl = sessionStorage.getItem("returnUrl");
-      if (returnUrl) {
-        sessionStorage.removeItem("returnUrl");
+      sessionStorage.removeItem("returnUrl");
+      if (returnUrl && isSafeInternalPath(returnUrl)) {
         router.push(returnUrl);
       } else {
         router.push("/");
@@ -73,8 +75,8 @@ export default function LoginPage() {
     if (loginUser.fulfilled.match(resultAction)) {
       toast.success("You have successfully logged into your account");
       const returnUrl = sessionStorage.getItem("returnUrl");
-      if (returnUrl) {
-        sessionStorage.removeItem("returnUrl");
+      sessionStorage.removeItem("returnUrl");
+      if (returnUrl && isSafeInternalPath(returnUrl)) {
         router.push(returnUrl);
       } else {
         router.push("/");
@@ -83,8 +85,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-    window.location.href = `${apiUrl}/auth/google/redirect?action=login`;
+    window.location.href = `${getApiBaseUrl()}/auth/google/redirect?action=login`;
   };
 
   const isPendingWholesale = error && (error.toLowerCase().includes("pending") || error.toLowerCase().includes("approve"));

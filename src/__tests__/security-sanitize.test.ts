@@ -4,6 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { sanitizeRichHtml } from '@/lib/utils/security';
+import { isSafeInternalPath } from '@/lib/utils/navigation';
 
 describe('sanitizeRichHtml', () => {
   it('returns empty string for empty input', () => {
@@ -52,5 +53,24 @@ describe('sanitizeRichHtml', () => {
     expect(out).toContain('<li>one</li>');
     expect(out).toContain('<li>two</li>');
     expect(out).toContain('<a href="https://example.com">link</a>');
+  });
+});
+
+describe('isSafeInternalPath', () => {
+  it('accepts same-origin paths', () => {
+    expect(isSafeInternalPath('/cart/checkout')).toBe(true);
+    expect(isSafeInternalPath('/account/order/12')).toBe(true);
+  });
+
+  it('rejects absolute and protocol-relative off-site targets', () => {
+    expect(isSafeInternalPath('https://evil.example.com/checkout')).toBe(false);
+    expect(isSafeInternalPath('//evil.example.com/checkout')).toBe(false);
+  });
+
+  it('rejects javascript: and empty values', () => {
+    expect(isSafeInternalPath('javascript:alert(1)')).toBe(false);
+    expect(isSafeInternalPath('')).toBe(false);
+    expect(isSafeInternalPath(null)).toBe(false);
+    expect(isSafeInternalPath(undefined)).toBe(false);
   });
 });

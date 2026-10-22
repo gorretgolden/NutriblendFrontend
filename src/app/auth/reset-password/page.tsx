@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
+import { getApiBaseUrl } from "@/lib/utils/env";
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -23,6 +24,19 @@ function ResetPasswordForm() {
   useEffect(() => {
     if (emailParam) setEmail(emailParam);
     if (tokenParam) setToken(tokenParam);
+    if (!emailParam && !tokenParam) return;
+
+    // The token stays in React state and is only ever sent in the POST body.
+    // Drop it from the address bar so it never lands in history or referrers.
+    const remaining = new URLSearchParams(window.location.search);
+    remaining.delete("token");
+    remaining.delete("email");
+    const query = remaining.toString();
+    window.history.replaceState(
+      null,
+      "",
+      query ? `${window.location.pathname}?${query}` : window.location.pathname
+    );
   }, [emailParam, tokenParam]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,7 +61,7 @@ function ResetPasswordForm() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/auth/password/reset`, {
+      const response = await fetch(`${getApiBaseUrl()}/auth/password/reset`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,8 +83,8 @@ function ResetPasswordForm() {
 
       toast.success("Password reset successful. You can now log in.");
       router.push("/?login=true");
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setIsLoading(false);
     }
@@ -106,9 +120,6 @@ function ResetPasswordForm() {
               </div>
             </div>
           )}
-          
-          <input type="hidden" name="email" value={email} />
-          <input type="hidden" name="token" value={token} />
           
           <div className="space-y-4 rounded-md shadow-sm">
             <div className="relative">
