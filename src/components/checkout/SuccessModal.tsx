@@ -8,13 +8,18 @@ import { useRouter } from "next/navigation";
 interface SuccessModalProps {
   isOpen: boolean;
   onClose: () => void;
+  orderNumber?: string;
+  isGuest?: boolean;
 }
 
-const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
+const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderNumber, isGuest = false }) => {
   const [countdown, setCountdown] = React.useState(8);
   const router = useRouter();
 
   useEffect(() => {
+    // A guest has no order list to land on, so the modal stays open on the order number.
+    if (isGuest) return;
+
     if (isOpen) {
       const timer = setInterval(() => {
         setCountdown((prev) => {
@@ -35,7 +40,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
 
       return () => clearInterval(timer);
     }
-  }, [isOpen, router]);
+  }, [isOpen, router, isGuest]);
 
   return (
     <AnimatePresence>
@@ -96,10 +101,29 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="text-gray-500 font-medium leading-relaxed mb-8"
+                className="text-gray-500 font-medium leading-relaxed mb-6"
               >
-                Your health journey continues! We&apos;ve received your order and our team is already preparing it for you.
+                {isGuest ? (
+                  <>
+                    We have your order and our team will call you to confirm it. Keep the order
+                    number below, you need it with your phone number to follow the order.
+                  </>
+                ) : (
+                  <>Your health journey continues! We&apos;ve received your order and our team is already preparing it for you.</>
+                )}
               </motion.p>
+
+              {isGuest && orderNumber && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.45 }}
+                  className="w-full mb-6 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Order Number</p>
+                  <p className="text-xl font-black text-gray-900 select-all">{orderNumber}</p>
+                </motion.div>
+              )}
 
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -107,25 +131,50 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
                 transition={{ delay: 0.5 }}
                 className="w-full space-y-3"
               >
-                <button
-                  onClick={() => router.push("/account/order")}
-                  className="w-full py-4 bg-[#009E3C] text-white font-bold rounded-xl shadow-[0_10px_20px_rgba(0,158,60,0.2)] hover:shadow-[0_15px_25px_rgba(0,158,60,0.3)] transition-all active:scale-[0.98]"
-                >
-                  View My Orders
-                </button>
-                <div className="flex flex-col items-center gap-1">
-                  <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">
-                    Redirecting in {countdown}s...
-                  </p>
-                  <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
-                    <motion.div 
-                      className="h-full bg-[#009E3C]"
-                      initial={{ width: "100%" }}
-                      animate={{ width: "0%" }}
-                      transition={{ duration: 8, ease: "linear" }}
-                    />
-                  </div>
-                </div>
+                {isGuest ? (
+                  <>
+                    <button
+                      onClick={() => router.push(orderNumber ? `/track?order=${encodeURIComponent(orderNumber)}` : '/track')}
+                      className="w-full py-4 bg-[#009E3C] text-white font-bold rounded-xl shadow-[0_10px_20px_rgba(0,158,60,0.2)] hover:shadow-[0_15px_25px_rgba(0,158,60,0.3)] transition-all active:scale-[0.98]"
+                    >
+                      Track This Order
+                    </button>
+                    <button
+                      onClick={() => router.push('/auth/register')}
+                      className="w-full py-3.5 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all text-sm"
+                    >
+                      Create An Account For Order History
+                    </button>
+                    <button
+                      onClick={() => router.push('/shop')}
+                      className="w-full py-2 text-gray-500 font-bold text-sm hover:text-gray-700 transition-colors"
+                    >
+                      Continue Shopping
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => router.push("/account/order")}
+                      className="w-full py-4 bg-[#009E3C] text-white font-bold rounded-xl shadow-[0_10px_20px_rgba(0,158,60,0.2)] hover:shadow-[0_15px_25px_rgba(0,158,60,0.3)] transition-all active:scale-[0.98]"
+                    >
+                      View My Orders
+                    </button>
+                    <div className="flex flex-col items-center gap-1">
+                      <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">
+                        Redirecting in {countdown}s...
+                      </p>
+                      <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+                        <motion.div 
+                          className="h-full bg-[#009E3C]"
+                          initial={{ width: "100%" }}
+                          animate={{ width: "0%" }}
+                          transition={{ duration: 8, ease: "linear" }}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
               </motion.div>
             </div>
           </motion.div>

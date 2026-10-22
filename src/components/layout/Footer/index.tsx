@@ -47,7 +47,7 @@ const Footer = () => {
   const serviceLinks = [
     { href: "/privacy",          label: "Privacy Policy"    },
     { href: "/terms",            label: "Terms & Conditions"},
-    { href: "/account/order",    label: "Track My Order"    },
+    { href: "/track",            label: "Track My Order"    },
     { href: "/account",          label: "My Account"        },
     { href: "/account/mylist",   label: "Wishlist"          },
     { href: "/account/myreview", label: "My Reviews"        },

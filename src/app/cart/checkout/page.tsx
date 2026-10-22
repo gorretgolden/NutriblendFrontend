@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
-import { clearCartAsync, fetchCart } from "@/lib/features/carts/cartsSlice";
+import { clearCartAsync, clearCartLocal, fetchCart } from "@/lib/features/carts/cartsSlice";
 import { fetchUserProfile } from "@/lib/features/auth/authSlice";
 import { apiClient, type Region, type Town } from "@/lib/api/client";
 import SearchableSelect from "@/components/ui/SearchableSelect";
@@ -11,6 +12,12 @@ import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import SuccessModal from "@/components/checkout/SuccessModal";
+import {
+  isValidPhone,
+  loadGuestContact,
+  saveGuestContact,
+  type GuestContact,
+} from "@/lib/guestCheckout";
 
 export default function Checkout() {
   const router = useRouter();
@@ -37,6 +44,10 @@ export default function Checkout() {
   const [settings, setSettings] = useState<Record<string, any> | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isOrderSuccessful, setIsOrderSuccessful] = useState(false);
+  const [placedOrderNumber, setPlacedOrderNumber] = useState('');
+  const [guestContact, setGuestContact] = useState<GuestContact>({ name: '', phone: '', email: '' });
+  const [rememberDetails, setRememberDetails] = useState(true);
+  const [savedGuestContact, setSavedGuestContact] = useState<GuestContact | null>(null);
   const hasPrepopulated = useRef(false);
 
   // Fetch settings
@@ -54,22 +65,20 @@ export default function Checkout() {
     fetchSettings();
   }, []);
 
-  // Check authentication — wait for auth to load, also check localStorage as fallback
+  // An account is optional here: a guest orders with a name and a phone number.
   useEffect(() => {
-    // Don't redirect while auth state is still loading
+    // Don't touch the profile while auth state is still loading
     if (authLoading) return;
 
-    if (!isAuthenticated && !hasToken) {
-      toast.error("Please login to checkout");
-      router.push('/cart');
-      return;
-    }
-
-    // Refresh profile to get latest location details
     if (isAuthenticated || hasToken) {
       dispatch(fetchUserProfile());
     }
   }, [isAuthenticated, hasToken, dispatch]);
+
+  // Details saved by an earlier guest order on this device
+  useEffect(() => {
+    setSavedGuestContact(loadGuestContact());
+  }, []);
 
   // Pre-populate logic
   useEffect(() => {
@@ -77,6 +86,13 @@ export default function Checkout() {
     if (authLoading) return;
 
     if (!isOrderSuccessful && !showSuccessModal && !cartLoading && cart && cart.items.length === 0) {
+      toast.error("Your cart is empty");
+      router.push('/cart');
+      return;
+    }
+
+    // A guest with nothing in the cart has no checkout to show
+    if (!isAuthenticated && !hasToken && !isOrderSuccessful && !showSuccessModal && !cartLoading && !authLoading && !cart) {
       toast.error("Your cart is empty");
       router.push('/cart');
       return;
@@ -113,10 +129,10 @@ export default function Checkout() {
       }
     }
 
-    if ((isAuthenticated || hasToken) && cart?.items && cart.items.length > 0) {
+    if (cart?.items && cart.items.length > 0) {
       fetchRegions();
     }
-  }, [isAuthenticated, hasToken, cart]);
+  }, [cart]);
 
   // Fetch towns when region changes
   useEffect(() => {
@@ -215,17 +231,38 @@ export default function Checkout() {
 
   const handlePlaceOrder = async () => {
     // Validation
+    const errors: Record<string, string> = {};
+
+    if (!isAuthenticated) {
+      if (!guestContact.name.trim()) errors.customer_name = "Please enter your full name";
+      if (!guestContact.phone.trim()) {
+        errors.customer_phone = "Please enter the phone number we should call about this order";
+      } else if (!isValidPhone(guestContact.phone)) {
+        errors.customer_phone = "That phone number looks incomplete. Use 10 digits, for example 0771234567.";
+      }
+      if (guestContact.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestContact.email.trim())) {
+        errors.customer_email = "Check the email address, it is missing an @ or a domain";
+      }
+    }
+
     if (deliveryMethod === 'delivery') {
-      const errors: Record<string, string> = {};
       if (!selectedRegion) errors.region = "Please select a delivery region";
       if (!selectedTown) errors.town = "Please select a delivery town";
       if (!address.trim()) errors.address = "Please enter your delivery address";
+    }
 
-      if (Object.keys(errors).length > 0) {
-        setCheckoutErrors(errors);
-        toast.error("Please fill in all delivery details");
-        return;
-      }
+    if (Object.keys(errors).length > 0) {
+      setCheckoutErrors(errors);
+      const fields = [
+        errors.customer_name && 'your name',
+        errors.customer_phone && 'your phone number',
+        errors.customer_email && 'your email address',
+        errors.region && 'delivery region',
+        errors.town && 'delivery town',
+        errors.address && 'delivery address',
+      ].filter(Boolean).join(', ');
+      toast.error(`Please check ${fields}`);
+      return;
     }
 
     try {
@@ -245,6 +282,13 @@ export default function Checkout() {
         chosen_payment_method: paymentMethod,
       };
 
+      // Guests identify themselves on the order itself, not through an account.
+      if (!isAuthenticated) {
+        orderData.customer_name = guestContact.name.trim();
+        orderData.customer_phone = guestContact.phone.trim();
+        orderData.customer_email = guestContact.email.trim() || undefined;
+      }
+
       if (deliveryMethod === 'delivery') {
         orderData.delivery_region_id = selectedRegion;
         orderData.delivery_town_id = selectedTown;
@@ -259,17 +303,29 @@ export default function Checkout() {
 
       if (response.status && response.data) {
         // Show Success Modal
+        setPlacedOrderNumber((response.data as any).order_number || '');
         setShowSuccessModal(true);
         setIsOrderSuccessful(true);
 
-        // Clear cart from backend and Redux state
-        try {
-          await dispatch(clearCartAsync()).unwrap();
-        } catch {
-          // Cart clear failed silently — order was still placed
+        if (!isAuthenticated) {
+          dispatch(clearCartLocal());
+          if (rememberDetails) {
+            saveGuestContact({
+              name: guestContact.name.trim(),
+              phone: guestContact.phone.trim(),
+              email: guestContact.email.trim(),
+            });
+          }
+        } else {
+          // Clear cart from backend and Redux state
+          try {
+            await dispatch(clearCartAsync()).unwrap();
+          } catch {
+            // Cart clear failed silently — order was still placed
+          }
         }
         sessionStorage.removeItem('checkoutCart');
-        
+
         // Redirect is handled by the modal after a delay
       } else {
         if ((response.message || '').toLowerCase().includes('unauthenticated')) {
@@ -316,7 +372,7 @@ export default function Checkout() {
     );
   }
 
-  if (!isOrderSuccessful && !showSuccessModal && (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading)) {
+  if (!isOrderSuccessful && !showSuccessModal && (!cart || cartLoading || authLoading)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center space-y-4">
@@ -360,18 +416,126 @@ export default function Checkout() {
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
                   <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
                     <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#009E3C] text-white text-xs font-bold flex items-center justify-center">1</span>
-                    <h2 className="font-semibold text-gray-900">Customer Information</h2>
+                    <h2 className="font-semibold text-gray-900">{isAuthenticated ? 'Customer Information' : 'Your Details'}</h2>
+                    {!isAuthenticated && (
+                      <span className="ml-auto text-[11px] font-bold uppercase tracking-wider text-gray-400">No account needed</span>
+                    )}
                   </div>
                   <div className="p-5">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[#009E3C] flex items-center justify-center text-white font-bold text-sm shadow-[0_4px_10px_rgba(0,158,60,0.30)]">
-                        {(user?.first_name || user?.name || 'U').charAt(0).toUpperCase()}
+                    {isAuthenticated ? (
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-[#009E3C] flex items-center justify-center text-white font-bold text-sm shadow-[0_4px_10px_rgba(0,158,60,0.30)]">
+                          {(user?.first_name || user?.name || 'U').charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">{user?.first_name || user?.name?.split(' ')[0]} {user?.last_name || (user?.name?.split(' ').slice(1).join(' ') || '')}</p>
+                          <p className="text-sm text-gray-500">{user?.email}{user?.phone ? ` · ${user.phone}` : ''}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">{user?.first_name || user?.name?.split(' ')[0]} {user?.last_name || (user?.name?.split(' ').slice(1).join(' ') || '')}</p>
-                        <p className="text-sm text-gray-500">{user?.email}{user?.phone ? ` · ${user.phone}` : ''}</p>
+                    ) : (
+                      <div className="space-y-4">
+                        <p className="text-sm text-gray-500">
+                          Just your name and a phone number. We use them to confirm the order and to find it again if you call us.
+                        </p>
+
+                        {savedGuestContact && !guestContact.name && !guestContact.phone && (
+                          <button
+                            type="button"
+                            onClick={() => setGuestContact(savedGuestContact)}
+                            className="w-full flex items-center justify-center gap-2 border border-[#009E3C]/30 bg-[#009E3C]/5 text-[#009E3C] rounded-xl px-4 py-2.5 text-sm font-bold hover:bg-[#009E3C]/10 transition-colors"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            Use my details from last time
+                          </button>
+                        )}
+
+                        <div>
+                          <label htmlFor="guestName" className="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
+                          <input
+                            id="guestName"
+                            type="text"
+                            autoComplete="name"
+                            disabled={loading}
+                            value={guestContact.name}
+                            onChange={(e) => {
+                              setGuestContact((prev) => ({ ...prev, name: e.target.value }));
+                              if (checkoutErrors.customer_name) setCheckoutErrors((prev) => ({ ...prev, customer_name: undefined }));
+                            }}
+                            placeholder="e.g. Aisha Namutebi"
+                            className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors ${checkoutErrors.customer_name ? 'border-red-400 bg-red-50' : 'border-gray-300'} ${loading ? 'bg-gray-50' : ''}`}
+                          />
+                          {checkoutErrors.customer_name && (
+                            <p className="mt-1 text-xs text-red-500">{checkoutErrors.customer_name}</p>
+                          )}
+                        </div>
+
+                        <div>
+                          <label htmlFor="guestPhone" className="block text-sm font-medium text-gray-700 mb-1.5">Phone Number</label>
+                          <input
+                            id="guestPhone"
+                            type="tel"
+                            inputMode="tel"
+                            autoComplete="tel"
+                            disabled={loading}
+                            value={guestContact.phone}
+                            onChange={(e) => {
+                              setGuestContact((prev) => ({ ...prev, phone: e.target.value }));
+                              if (checkoutErrors.customer_phone) setCheckoutErrors((prev) => ({ ...prev, customer_phone: undefined }));
+                            }}
+                            placeholder="0771234567"
+                            className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors ${checkoutErrors.customer_phone ? 'border-red-400 bg-red-50' : 'border-gray-300'} ${loading ? 'bg-gray-50' : ''}`}
+                          />
+                          {checkoutErrors.customer_phone ? (
+                            <p className="mt-1 text-xs text-red-500">{checkoutErrors.customer_phone}</p>
+                          ) : (
+                            <p className="mt-1 text-xs text-gray-400">You will need this number to track the order.</p>
+                          )}
+                        </div>
+
+                        <div>
+                          <label htmlFor="guestEmail" className="block text-sm font-medium text-gray-700 mb-1.5">
+                            Email Address <span className="text-gray-400 font-normal">(Optional)</span>
+                          </label>
+                          <input
+                            id="guestEmail"
+                            type="email"
+                            autoComplete="email"
+                            disabled={loading}
+                            value={guestContact.email}
+                            onChange={(e) => {
+                              setGuestContact((prev) => ({ ...prev, email: e.target.value }));
+                              if (checkoutErrors.customer_email) setCheckoutErrors((prev) => ({ ...prev, customer_email: undefined }));
+                            }}
+                            placeholder="you@example.com"
+                            className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors ${checkoutErrors.customer_email ? 'border-red-400 bg-red-50' : 'border-gray-300'} ${loading ? 'bg-gray-50' : ''}`}
+                          />
+                          {checkoutErrors.customer_email ? (
+                            <p className="mt-1 text-xs text-red-500">{checkoutErrors.customer_email}</p>
+                          ) : (
+                            <p className="mt-1 text-xs text-gray-400">Add one if you want the order confirmation by email.</p>
+                          )}
+                        </div>
+
+                        <label className="flex items-start gap-3 text-sm text-gray-600 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={rememberDetails}
+                            onChange={(e) => setRememberDetails(e.target.checked)}
+                            className="mt-0.5 h-4 w-4 accent-[#009E3C]"
+                          />
+                          <span>Remember these details on this device so my next order is faster</span>
+                        </label>
+
+                        <div className="pt-1 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+                          <Link href="/login" className="font-bold text-[#009E3C] hover:text-[#00752C] transition-colors">
+                            I already have an account
+                          </Link>
+                          <span className="text-gray-400">You can create an account with a password after this order.</span>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
 
@@ -725,7 +889,7 @@ export default function Checkout() {
 
                   <button
                     onClick={handlePlaceOrder}
-                    disabled={loading || (deliveryMethod === 'delivery' && (!selectedRegion || !selectedTown || !address))}
+                    disabled={loading}
                     className="w-full bg-[#009E3C] text-white py-4 rounded-xl font-bold hover:bg-[#00752C] transition-all duration-300 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:shadow-none disabled:hover:translate-y-0 flex items-center justify-center gap-3 shadow-[0_4px_14px_rgba(0,158,60,0.30)] hover:shadow-[0_6px_20px_rgba(0,158,60,0.40)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
                   >
                     {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
@@ -746,9 +910,11 @@ export default function Checkout() {
         </div>
       </main>
 
-      <SuccessModal 
-        isOpen={showSuccessModal} 
-        onClose={() => setShowSuccessModal(false)} 
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        orderNumber={placedOrderNumber}
+        isGuest={!isAuthenticated}
       />
     </div>
   );

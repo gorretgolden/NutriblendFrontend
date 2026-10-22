@@ -230,6 +230,34 @@ export interface OrderItem {
     variation?: ProductVariation;
 }
 
+export interface TrackedOrder {
+    order_number: string;
+    customer_name: string;
+    status: string;
+    payment_status: string;
+    delivery_status: string;
+    delivery_method: 'delivery' | 'pickup';
+    branch_name: string | null;
+    placed_at: string | null;
+    expected_delivery_date: string | null;
+    delivered_at: string | null;
+    next_step: string;
+    totals: {
+        subtotal: number;
+        discount_amount: number;
+        delivery_fee: number;
+        grand_total: number;
+        amount_paid: number;
+        balance: number;
+    };
+    items: {
+        product_name: string;
+        quantity: number;
+        unit_price: number;
+        total_price: number;
+    }[];
+}
+
 export interface WishlistItem {
     id: number;
     user_id: number;
@@ -717,17 +745,37 @@ class NutriBlendApiClient {
 
     async createOrder(orderData: {
         items: { product_id: number; quantity: number; variation_id?: number }[];
-        delivery_region_id: number;
-        delivery_town_id: number;
+        delivery_region_id?: number;
+        delivery_town_id?: number;
         delivery_address: string;
+        delivery_method?: 'delivery' | 'pickup';
+        delivery_fee?: number;
         discount_code?: string;
         notes?: string;
         payment_method?: string;
+        chosen_payment_method?: string;
+        customer_name?: string;
+        customer_phone?: string;
+        customer_email?: string;
     }): Promise<ApiResponse<Order>> {
         return this.request<Order>('/orders', {
             method: 'POST',
             body: JSON.stringify(orderData),
         });
+    }
+
+    /**
+     * Public order lookup. The phone number is the secret, so it goes in the
+     * request body and never in the address bar.
+     */
+    async trackOrder(orderNumber: string, phone: string): Promise<ApiResponse<TrackedOrder>> {
+        return this.request<TrackedOrder>(
+            `/orders/track/${encodeURIComponent(orderNumber.trim())}`,
+            {
+                method: 'POST',
+                body: JSON.stringify({ phone }),
+            }
+        );
     }
 
     async getOrders(params?: {

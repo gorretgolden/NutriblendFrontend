@@ -21,7 +21,6 @@ export default function CartPage() {
   );
 
   const router = useRouter();
-  const isAuthenticated = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
 
   const [promoCode, setPromoCode] = useState("");
   const [promoLoading, setPromoLoading] = useState(false);
@@ -184,13 +183,6 @@ export default function CartPage() {
                   className="w-full bg-[#009E3C] hover:bg-[#007a2e] text-white py-3.5 h-auto rounded-lg font-bold text-sm shadow-sm group active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                   disabled={promoLoading}
                   onClick={async () => {
-                    if (!isAuthenticated) {
-                      sessionStorage.setItem('returnUrl', '/cart/checkout');
-                      toast.error("Please login to proceed to checkout");
-                      router.push('/login');
-                      return;
-                    }
-
                     sessionStorage.setItem('checkoutCart', JSON.stringify({
                       items: cart.items,
                       totalPrice,
