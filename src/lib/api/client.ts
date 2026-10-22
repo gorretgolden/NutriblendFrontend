@@ -306,12 +306,16 @@ class NutriBlendApiClient {
         endpoint: string,
         options: RequestInit = {}
     ): Promise<ApiResponse<T>> {
+        // Abort hung requests (mobile networks) so no screen waits forever
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 25000);
         try {
             const url = `${this.baseURL}${endpoint}`;
             console.log(`[API Client] Fetching: ${url}`);
 
             const config: RequestInit = {
                 ...options,
+                signal: controller.signal,
                 cache: 'no-store' as RequestCache, // Prevent Next.js from caching API responses
                 // Only send cookies from the browser; server-side fetches must use 'omit'
                 // because Node's fetch rejects credentialed cross-origin requests without
@@ -381,10 +385,15 @@ class NutriBlendApiClient {
             };
         } catch (error) {
             console.error('API Error:', error);
+            const aborted = error instanceof Error && error.name === 'AbortError';
             return {
                 status: false,
-                message: error instanceof Error ? error.message : 'Network error occurred',
+                message: aborted
+                    ? 'Connection timed out. Please check your internet and try again.'
+                    : (error instanceof Error ? error.message : 'Network error occurred'),
             };
+        } finally {
+            clearTimeout(timeout);
         }
     }
 

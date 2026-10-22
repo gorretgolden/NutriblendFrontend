@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
-import { clearCartAsync } from "@/lib/features/carts/cartsSlice";
+import { clearCartAsync, fetchCart } from "@/lib/features/carts/cartsSlice";
 import { fetchUserProfile } from "@/lib/features/auth/authSlice";
 import { apiClient, type Region, type Town } from "@/lib/api/client";
 import SearchableSelect from "@/components/ui/SearchableSelect";
@@ -15,7 +15,7 @@ import SuccessModal from "@/components/checkout/SuccessModal";
 export default function Checkout() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { cart, adjustedTotalPrice, isLoading: cartLoading } = useAppSelector((state) => state.carts);
+  const { cart, adjustedTotalPrice, isLoading: cartLoading, error: cartError } = useAppSelector((state) => state.carts);
   const { user, isAuthenticated, isLoading: authLoading } = useAppSelector((state) => state.auth);
   const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
 
@@ -317,7 +317,37 @@ export default function Checkout() {
     }
   };
 
-  if (!isOrderSuccessful && !showSuccessModal && (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading || checkingPending)) {
+  // Cart failed to load (timeout/network) — offer retry instead of an endless spinner
+  if (!isOrderSuccessful && !showSuccessModal && !cart && !cartLoading && !authLoading && (isAuthenticated || hasToken)) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center space-y-4">
+          <h2 className="text-lg font-bold text-gray-900">Couldn't load your cart</h2>
+          <p className="text-sm text-gray-500">
+            {cartError || "The connection timed out. Please check your internet and try again."}
+          </p>
+          <div className="flex gap-3 justify-center pt-2">
+            <button
+              onClick={() => dispatch(fetchCart() as any)}
+              className="px-5 py-2.5 bg-[#009E3C] text-white rounded-xl text-sm font-bold hover:bg-[#00752C] transition-colors"
+            >
+              Try Again
+            </button>
+            <button
+              onClick={() => router.push('/cart')}
+              className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
+            >
+              Back to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // checkingPending intentionally NOT in this gate: the pending-order check runs in
+  // the background so a slow API can't leave the page stuck on the spinner forever.
+  if (!isOrderSuccessful && !showSuccessModal && (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center space-y-4">
