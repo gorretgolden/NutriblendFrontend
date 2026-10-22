@@ -191,16 +191,6 @@ export default function CartPage() {
                       return;
                     }
 
-                    try {
-                      const res = await apiClient.getOrders({ status: 'pending' });
-                      if (res.status && res.data && res.data.data.length > 0) {
-                        toast.error("You already have a pending order. Please wait for it to be approved.");
-                        return;
-                      }
-                    } catch (e) {
-                      console.error("Error checking pending orders:", e);
-                    }
-
                     sessionStorage.setItem('checkoutCart', JSON.stringify({
                       items: cart.items,
                       totalPrice,

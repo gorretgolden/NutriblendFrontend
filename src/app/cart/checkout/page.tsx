@@ -35,8 +35,6 @@ export default function Checkout() {
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   const [checkoutErrors, setCheckoutErrors] = useState<Record<string, string | undefined>>({});
   const [settings, setSettings] = useState<Record<string, any> | null>(null);
-  const [hasPendingOrder, setHasPendingOrder] = useState(false);
-  const [checkingPending, setCheckingPending] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isOrderSuccessful, setIsOrderSuccessful] = useState(false);
   const hasPrepopulated = useRef(false);
@@ -70,23 +68,6 @@ export default function Checkout() {
     // Refresh profile to get latest location details
     if (isAuthenticated || hasToken) {
       dispatch(fetchUserProfile());
-      
-      // Check for pending orders
-      const checkPending = async () => {
-        try {
-          setCheckingPending(true);
-          const res = await apiClient.getOrders({ status: 'pending' });
-          if (res.status && res.data && res.data.data.length > 0) {
-            setHasPendingOrder(true);
-            toast.error("You already have a pending order. Please wait for it to be approved.");
-          }
-        } catch (e) {
-          console.error("Error checking pending orders:", e);
-        } finally {
-          setCheckingPending(false);
-        }
-      };
-      checkPending();
     }
   }, [isAuthenticated, hasToken, dispatch]);
 
@@ -247,11 +228,6 @@ export default function Checkout() {
       }
     }
 
-    if (hasPendingOrder) {
-      toast.error("You cannot place a new order while you have a pending order.");
-      return;
-    }
-
     try {
       setLoading(true);
 
@@ -296,11 +272,6 @@ export default function Checkout() {
         
         // Redirect is handled by the modal after a delay
       } else {
-        // Handle specific error for pending order if backend returned it
-        if (response.message && response.message.includes('pending order')) {
-          setHasPendingOrder(true);
-        }
-        
         if ((response.message || '').toLowerCase().includes('unauthenticated')) {
           toast.error('Session expired. Please log in again.');
           router.push('/login');
@@ -345,8 +316,6 @@ export default function Checkout() {
     );
   }
 
-  // checkingPending intentionally NOT in this gate: the pending-order check runs in
-  // the background so a slow API can't leave the page stuck on the spinner forever.
   if (!isOrderSuccessful && !showSuccessModal && (!cart || (!isAuthenticated && !authLoading) || cartLoading || authLoading)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -357,41 +326,6 @@ export default function Checkout() {
       </div>
     );
   }
-
-  if (hasPendingOrder) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-8 text-center space-y-6">
-          <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto">
-            <svg className="w-10 h-10 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-          </div>
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-gray-900">Pending Order Active</h2>
-            <p className="text-gray-600">
-              You already have an order currently being processed. Please wait for it to be completed or contact support before placing another one.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 pt-2">
-            <button 
-              onClick={() => router.push('/account/order')}
-              className="w-full py-3.5 bg-[#009E3C] text-white font-bold rounded-xl shadow-[0_10px_20px_-5px_rgba(0,158,60,0.3)] hover:bg-[#008a34] transition-all"
-            >
-              View My Orders
-            </button>
-            <button 
-              onClick={() => router.push('/')}
-              className="w-full py-3.5 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all"
-            >
-              Return Home
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
 
   return (
     <div className="min-h-screen bg-gray-50">
