@@ -347,38 +347,151 @@ export default function Checkout() {
   // Cart failed to load (timeout/network) — offer retry instead of an endless spinner
   if (!isOrderSuccessful && !showSuccessModal && !cart && !cartLoading && !authLoading && (isAuthenticated || hasToken)) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center space-y-4">
-          <h2 className="text-lg font-bold text-gray-900">Couldn&apos;t load your cart</h2>
-          <p className="text-sm text-gray-500">
-            {cartError || "The connection timed out. Please check your internet and try again."}
-          </p>
-          <div className="flex gap-3 justify-center pt-2">
-            <button
-              onClick={() => dispatch(fetchCart() as any)}
-              className="px-5 py-2.5 bg-[#009E3C] text-white rounded-xl text-sm font-bold hover:bg-[#00752C] transition-colors"
-            >
-              Try Again
-            </button>
-            <button
-              onClick={() => router.push('/cart')}
-              className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
-            >
-              Back to Cart
-            </button>
+      <div className="min-h-screen bg-[#f4f6f9]">
+        <header className="bg-white border-b border-gray-200">
+          <div className="max-w-frame mx-auto px-4 py-4 flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <button onClick={() => router.push('/cart')} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Back to cart">
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900">Checkout</h1>
+            </div>
           </div>
-        </div>
+        </header>
+
+        <main className="max-w-frame mx-auto px-4 py-10 md:py-16">
+          <div className="max-w-md mx-auto bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="h-1.5 bg-gradient-to-r from-[#009E3C] via-[#009E3C]/40 to-transparent" />
+            <div className="p-6 md:p-8 text-center">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-[#009E3C]/10 flex items-center justify-center">
+                <svg className="w-7 h-7 text-[#009E3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                </svg>
+              </div>
+              <h2 className="mt-4 text-lg font-bold text-gray-900">Couldn&apos;t load your cart</h2>
+              <p className="mt-1.5 text-sm text-gray-500">
+                {cartError || "The connection timed out. Please check your internet and try again."}
+              </p>
+              <div className="mt-6 flex gap-3 justify-center">
+                <button
+                  onClick={() => dispatch(fetchCart() as any)}
+                  className="px-5 py-2.5 bg-[#009E3C] text-white rounded-xl text-sm font-bold hover:bg-[#00752C] transition-colors"
+                >
+                  Try Again
+                </button>
+                <button
+                  onClick={() => router.push('/cart')}
+                  className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
+                >
+                  Back to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
 
   if (!isOrderSuccessful && !showSuccessModal && (!cart || cartLoading || authLoading)) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Loader2 className="w-10 h-10 animate-spin text-[#009E3C] mx-auto" />
-          <p className="text-gray-500 font-medium">Preparing your checkout...</p>
-        </div>
+      <div className="min-h-screen bg-[#f4f6f9]">
+        <header className="bg-white border-b border-gray-200">
+          <div className="max-w-frame mx-auto px-4 py-4 flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <button onClick={() => router.push('/cart')} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Back to cart">
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900">Checkout</h1>
+            </div>
+            <div className="flex items-center gap-1.5 text-gray-500 text-sm">
+              <svg className="h-4 w-4 text-[#009E3C]" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+              </svg>
+              <span>Secure Checkout</span>
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-frame mx-auto px-4 py-6 md:py-10">
+          {/* Wait card */}
+          <div className="max-w-md mx-auto bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="h-1.5 bg-gradient-to-r from-[#009E3C] via-[#009E3C]/40 to-transparent" />
+            <div className="p-6 md:p-8 text-center">
+              <div className="relative w-14 h-14 mx-auto">
+                <div className="absolute inset-0 rounded-full border-4 border-[#009E3C]/10" />
+                <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#009E3C] animate-spin" />
+                <svg className="absolute inset-0 m-auto h-6 w-6 text-[#009E3C]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <h2 className="mt-5 text-lg font-bold text-gray-900">Preparing your checkout</h2>
+              <p className="mt-1.5 text-sm text-gray-500">Fetching your cart, delivery areas and payment options.</p>
+
+              {/* Step preview */}
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-y-3 gap-x-1">
+                {['Your Details', 'Delivery', 'Payment'].map((step, i) => (
+                  <div key={step} className="flex items-center">
+                    <span className={`flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold ${i === 0 ? 'bg-[#009E3C] text-white' : 'bg-gray-100 text-gray-400'}`}>
+                      {i + 1}
+                    </span>
+                    <span className={`ml-2 text-xs font-semibold ${i === 0 ? 'text-gray-900' : 'text-gray-400'}`}>{step}</span>
+                    {i < 2 && <span className="w-6 h-px bg-gray-200 mx-2" />}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Skeleton of the checkout layout */}
+          <div className="mt-6 flex flex-col lg:flex-row gap-6 lg:gap-8 animate-pulse">
+            <div className="lg:w-2/3 space-y-5">
+              {[1, 2, 3].map((step) => (
+                <div key={step} className="bg-white rounded-xl border border-gray-200/70 overflow-hidden">
+                  <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
+                    <div className="w-7 h-7 rounded-full bg-[#009E3C]/15 flex-shrink-0" />
+                    <div className="h-4 w-36 bg-gray-200 rounded" />
+                  </div>
+                  <div className="p-5 space-y-4">
+                    <div className="h-4 w-3/4 bg-gray-100 rounded" />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="h-11 bg-gray-100 rounded-xl" />
+                      <div className="h-11 bg-gray-100 rounded-xl" />
+                    </div>
+                    <div className="h-11 w-full bg-gray-100 rounded-xl" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="lg:w-1/3">
+              <div className="bg-white rounded-xl border border-gray-200/70 overflow-hidden">
+                <div className="px-5 py-4 border-b border-gray-100">
+                  <div className="h-4 w-40 bg-gray-200 rounded" />
+                </div>
+                <div className="p-5 space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-3.5 w-full bg-gray-100 rounded" />
+                        <div className="h-3.5 w-1/2 bg-gray-100 rounded" />
+                      </div>
+                    </div>
+                  ))}
+                  <div className="border-t border-gray-100 pt-4 space-y-2.5">
+                    <div className="h-3.5 w-full bg-gray-100 rounded" />
+                    <div className="h-3.5 w-2/3 bg-gray-100 rounded" />
+                  </div>
+                  <div className="h-12 w-full bg-[#009E3C]/20 rounded-xl" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
