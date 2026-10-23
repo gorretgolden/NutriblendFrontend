@@ -52,6 +52,56 @@ export default function Checkout() {
   const [activeStep, setActiveStep] = useState(1);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Staff (Admin / Super Admin / Branch Manager) order on behalf of clients:
+  // they pick a retail or wholesale order type, edit each selling price, and
+  // enter the client's details. Regular customers never see this panel.
+  const isStaff = !!user && ['Admin', 'Super Admin', 'Branch Manager'].includes(user?.role || '');
+  const [orderType, setOrderType] = useState<'retail' | 'wholesale'>('retail');
+  const [staffClient, setStaffClient] = useState({ name: '', phone: '', email: '' });
+  const [priceEdits, setPriceEdits] = useState<Record<number, string>>({});
+  const priceSeedMode = useRef<'retail' | 'wholesale'>('retail');
+
+  const catalogPriceFor = (item: any, mode: 'retail' | 'wholesale'): number => {
+    const fallback = Number(item.price || item.product?.price || 0);
+    if (mode === 'wholesale') {
+      const wholesale = Number(item.wholesale_price);
+      return wholesale > 0 ? wholesale : fallback;
+    }
+    const retail = Number(item.retail_price);
+    return retail > 0 ? retail : fallback;
+  };
+
+  const staffUnitPrice = (index: number): number => {
+    const item = (cart?.items || [])[index];
+    if (!item) return 0;
+    const raw = priceEdits[index];
+    if (raw !== undefined && raw !== '') {
+      const n = Number(raw);
+      if (Number.isFinite(n) && n >= 0) return n;
+    }
+    return catalogPriceFor(item, orderType);
+  };
+
+  const staffSubtotal = isStaff && (cart?.items || []).length > 0
+    ? (cart?.items || []).reduce((sum: number, item: any, i: number) => sum + staffUnitPrice(i) * item.quantity, 0)
+    : 0;
+
+  // Seed each editable price from the catalog for the chosen order type.
+  // Toggling retail/wholesale reloads catalog prices; manual edits survive
+  // while the mode stays the same.
+  useEffect(() => {
+    if (!isStaff || !cart?.items?.length) return;
+    const modeChanged = priceSeedMode.current !== orderType;
+    setPriceEdits((prev) => {
+      const next: Record<number, string> = {};
+      cart.items.forEach((item: any, i: number) => {
+        next[i] = !modeChanged && prev[i] !== undefined ? prev[i] : String(catalogPriceFor(item, orderType));
+      });
+      return next;
+    });
+    priceSeedMode.current = orderType;
+  }, [isStaff, cart?.items, orderType]);
+
   // Fetch settings
   useEffect(() => {
     const fetchSettings = async () => {
@@ -202,7 +252,7 @@ export default function Checkout() {
     calculateFee();
   }, [selectedRegion, selectedTown]);
 
-  const subtotal = Number(adjustedTotalPrice) || 0;
+  const subtotal = isStaff ? staffSubtotal : (Number(adjustedTotalPrice) || 0);
   const actualDeliveryFee = deliveryMethod === 'pickup' ? 0 : Number(deliveryFee);
   const finalTotal = subtotal + actualDeliveryFee - Number(discountAmount);
 
@@ -217,7 +267,7 @@ export default function Checkout() {
     try {
       const response = await apiClient.validateDiscount({
         code: discountCode,
-        total_amount: adjustedTotalPrice + deliveryFee,
+        total_amount: subtotal + deliveryFee,
       });
 
       if (response.status && response.data) {
@@ -235,14 +285,15 @@ export default function Checkout() {
     // Validation
     const errors: Record<string, string> = {};
 
-    if (!isAuthenticated) {
-      if (!guestContact.name.trim()) errors.customer_name = "Please enter your full name";
-      if (!guestContact.phone.trim()) {
-        errors.customer_phone = "Please enter the phone number we should call about this order";
-      } else if (!isValidPhone(guestContact.phone)) {
+    if (!isAuthenticated || isStaff) {
+      const contact = isStaff ? staffClient : guestContact;
+      if (!contact.name.trim()) errors.customer_name = isStaff ? "Please enter the client's full name" : "Please enter your full name";
+      if (!contact.phone.trim()) {
+        errors.customer_phone = isStaff ? "Please enter the client's phone number" : "Please enter the phone number we should call about this order";
+      } else if (!isValidPhone(contact.phone)) {
         errors.customer_phone = "That phone number looks incomplete. Use 10 digits, for example 0771234567.";
       }
-      if (guestContact.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestContact.email.trim())) {
+      if (contact.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim())) {
         errors.customer_email = "Check the email address, it is missing an @ or a domain";
       }
     }
@@ -271,11 +322,19 @@ export default function Checkout() {
       setLoading(true);
 
       const orderData: any = {
-        items: (cart?.items || []).map((item: any) => ({
-          product_id: item.product_id,
-          quantity: item.quantity,
-          variation_id: item.variation_id,
-        })),
+        items: (cart?.items || []).map((item: any, i: number) => {
+          const line: any = {
+            product_id: item.product_id,
+            quantity: item.quantity,
+            variation_id: item.variation_id,
+          };
+          // Staff always send the selling price shown in their pricing panel,
+          // so the order uses it instead of the catalog selling price.
+          if (isStaff) {
+            line.unit_price = staffUnitPrice(i);
+          }
+          return line;
+        }),
         delivery_method: deliveryMethod,
         delivery_fee: deliveryMethod === 'pickup' ? 0 : (Number(deliveryFee) || 0),
         discount_code: discountCode || undefined,
@@ -284,8 +343,15 @@ export default function Checkout() {
         chosen_payment_method: paymentMethod,
       };
 
-      // Guests identify themselves on the order itself, not through an account.
-      if (!isAuthenticated) {
+      if (isStaff) {
+        // Staff order on behalf of a client: the order keeps the staff member
+        // as its creator and records the client's details on it.
+        orderData.price_mode = orderType;
+        orderData.customer_name = staffClient.name.trim();
+        orderData.customer_phone = staffClient.phone.trim();
+        orderData.customer_email = staffClient.email.trim() || undefined;
+      } else if (!isAuthenticated) {
+        // Guests identify themselves on the order itself, not through an account.
         orderData.customer_name = guestContact.name.trim();
         orderData.customer_phone = guestContact.phone.trim();
         orderData.customer_email = guestContact.email.trim() || undefined;
@@ -349,7 +415,7 @@ export default function Checkout() {
   // Track which checkout section is on screen so the step chips stay in sync,
   // and let a chip scroll back to its section.
   const steps = [
-    { id: 1, full: isAuthenticated ? 'Customer Information' : 'Your Details', short: 'Details' },
+    { id: 1, full: isStaff ? 'Client Details' : (isAuthenticated ? 'Customer Information' : 'Your Details'), short: 'Details' },
     { id: 2, full: 'Delivery Details', short: 'Delivery' },
     { id: 3, full: 'Payment Method', short: 'Payment' },
   ];
@@ -602,17 +668,213 @@ export default function Checkout() {
             <div className="lg:w-2/3 space-y-5">
               <fieldset disabled={loading} className="space-y-5 border-none p-0 m-0">
 
+                {/* Staff: Order Type & Selling Prices */}
+                {isStaff && (
+                  <div className="bg-white rounded-xl border-2 border-[#009E3C]/25 overflow-hidden shadow-sm">
+                    <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-[#009E3C]/5">
+                      <svg className="w-5 h-5 text-[#009E3C] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div className="min-w-0">
+                        <h2 className="font-semibold text-gray-900">Order Type & Selling Prices</h2>
+                        <p className="text-xs text-gray-500 truncate">Signed in as {user?.first_name || user?.name} (staff). This order will be recorded as made by you.</p>
+                      </div>
+                      <span className="ml-auto flex-shrink-0 text-[11px] font-bold uppercase tracking-wider text-[#009E3C]">Staff Ordering</span>
+                    </div>
+                    <div className="p-5 space-y-4">
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-2">This order is for a...</p>
+                        <div className="grid grid-cols-2 gap-3">
+                          <label className={`border-2 rounded-xl p-3 cursor-pointer flex items-center gap-2.5 transition-all duration-200 ${orderType === 'retail' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                            <input
+                              type="radio"
+                              name="staffOrderType"
+                              disabled={loading}
+                              className="h-4 w-4 accent-[#009E3C]"
+                              checked={orderType === 'retail'}
+                              onChange={() => setOrderType('retail')}
+                            />
+                            <span className="text-sm font-medium text-gray-800">Retail Customer</span>
+                          </label>
+                          <label className={`border-2 rounded-xl p-3 cursor-pointer flex items-center gap-2.5 transition-all duration-200 ${orderType === 'wholesale' ? 'border-[#009E3C] bg-[#009E3C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                            <input
+                              type="radio"
+                              name="staffOrderType"
+                              disabled={loading}
+                              className="h-4 w-4 accent-[#009E3C]"
+                              checked={orderType === 'wholesale'}
+                              onChange={() => setOrderType('wholesale')}
+                            />
+                            <span className="text-sm font-medium text-gray-800">Wholesale Customer</span>
+                          </label>
+                        </div>
+                        <p className="mt-2 text-xs text-gray-400">
+                          {orderType === 'wholesale'
+                            ? 'Wholesale prices are per box. The quantity in the cart is the number of boxes.'
+                            : 'Retail prices are per unit.'}{' '}
+                          Changing the type reloads each price from the catalog. You can still edit any price below.
+                        </p>
+                      </div>
+
+                      <div className="space-y-2.5">
+                        {(cart?.items || []).map((item: any, i: number) => {
+                          const catalog = catalogPriceFor(item, orderType);
+                          const unit = staffUnitPrice(i);
+                          const isEdited = Number(priceEdits[i]) !== catalog;
+                          return (
+                            <div key={i} className="flex flex-wrap items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50/60">
+                              <div className="flex-1 min-w-[200px]">
+                                <p className="text-sm font-semibold text-gray-900 truncate">{item.name || item.product?.name}</p>
+                                <p className="text-xs text-gray-500">
+                                  {item.quantity} {orderType === 'wholesale' ? (item.quantity === 1 ? 'box' : 'boxes') : (item.quantity === 1 ? 'unit' : 'units')} · Catalog {orderType} price: UGX {catalog.toLocaleString()}
+                                </p>
+                              </div>
+                              <label className="flex items-center gap-2">
+                                <span className="text-xs font-medium text-gray-500">Selling price UGX</span>
+                                <input
+                                  type="number"
+                                  min={0}
+                                  step="any"
+                                  disabled={loading}
+                                  value={priceEdits[i] ?? ''}
+                                  onChange={(e) => setPriceEdits((prev) => ({ ...prev, [i]: e.target.value }))}
+                                  className={`w-36 border rounded-lg px-3 py-2 text-sm text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors ${isEdited ? 'border-[#009E3C]/60 bg-[#009E3C]/5 font-bold' : 'border-gray-300'}`}
+                                />
+                              </label>
+                              <span className="text-sm font-bold text-gray-900 w-32 text-right tabular-nums">
+                                = UGX {(unit * item.quantity).toLocaleString()}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="flex justify-between items-center pt-3 border-t border-gray-100">
+                        <span className="text-sm font-bold text-gray-900">Order total before delivery</span>
+                        <span className="text-lg font-black text-gray-900 tabular-nums">UGX {staffSubtotal.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Step 1: Customer Info */}
                 <div ref={(el) => { stepRefs.current[0] = el; }} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm scroll-mt-24">
                   <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
                     <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#009E3C] text-white text-xs font-bold flex items-center justify-center">1</span>
-                    <h2 className="font-semibold text-gray-900">{isAuthenticated ? 'Customer Information' : 'Your Details'}</h2>
+                    <h2 className="font-semibold text-gray-900">{isStaff ? 'Client Details' : (isAuthenticated ? 'Customer Information' : 'Your Details')}</h2>
                     {!isAuthenticated && (
                       <span className="ml-auto text-[11px] font-bold uppercase tracking-wider text-gray-400">No account needed</span>
                     )}
+                    {isStaff && (
+                      <span className="ml-auto text-[11px] font-bold uppercase tracking-wider text-[#009E3C]">On behalf of a client</span>
+                    )}
                   </div>
                   <div className="p-5">
-                    {isAuthenticated ? (
+                    {isStaff ? (
+                      <div className="space-y-4">
+                        <p className="text-sm text-gray-500">
+                          Enter the details of the client this order is for. We use them to confirm the order and to find it again if they call us.
+                        </p>
+
+                        {(settings?.default_wholesale_customer?.name || settings?.default_wholesale_customer?.phone || settings?.default_retail_customer?.name || settings?.default_retail_customer?.phone) && (
+                          <div className="flex flex-wrap gap-2">
+                            {(settings?.default_wholesale_customer?.name || settings?.default_wholesale_customer?.phone) && (
+                              <button
+                                type="button"
+                                onClick={() => setStaffClient({
+                                  name: settings?.default_wholesale_customer?.name || '',
+                                  phone: settings?.default_wholesale_customer?.phone || '',
+                                  email: settings?.default_wholesale_customer?.email || '',
+                                })}
+                                className="border border-[#009E3C]/30 bg-[#009E3C]/5 text-[#009E3C] rounded-xl px-3.5 py-2 text-sm font-bold hover:bg-[#009E3C]/10 transition-colors"
+                              >
+                                Use default wholesale customer
+                              </button>
+                            )}
+                            {(settings?.default_retail_customer?.name || settings?.default_retail_customer?.phone) && (
+                              <button
+                                type="button"
+                                onClick={() => setStaffClient({
+                                  name: settings?.default_retail_customer?.name || '',
+                                  phone: settings?.default_retail_customer?.phone || '',
+                                  email: settings?.default_retail_customer?.email || '',
+                                })}
+                                className="border border-[#009E3C]/30 bg-[#009E3C]/5 text-[#009E3C] rounded-xl px-3.5 py-2 text-sm font-bold hover:bg-[#009E3C]/10 transition-colors"
+                              >
+                                Use default retail customer
+                              </button>
+                            )}
+                          </div>
+                        )}
+
+                        <div>
+                          <label htmlFor="staffClientName" className="block text-sm font-medium text-gray-700 mb-1.5">Client Full Name</label>
+                          <input
+                            id="staffClientName"
+                            type="text"
+                            autoComplete="off"
+                            disabled={loading}
+                            value={staffClient.name}
+                            onChange={(e) => {
+                              setStaffClient((prev) => ({ ...prev, name: e.target.value }));
+                              if (checkoutErrors.customer_name) setCheckoutErrors((prev) => ({ ...prev, customer_name: undefined }));
+                            }}
+                            placeholder="e.g. Aisha Namutebi"
+                            className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors ${checkoutErrors.customer_name ? 'border-red-400 bg-red-50' : 'border-gray-300'} ${loading ? 'bg-gray-50' : ''}`}
+                          />
+                          {checkoutErrors.customer_name && (
+                            <p className="mt-1 text-xs text-red-500">{checkoutErrors.customer_name}</p>
+                          )}
+                        </div>
+
+                        <div>
+                          <label htmlFor="staffClientPhone" className="block text-sm font-medium text-gray-700 mb-1.5">Client Phone Number</label>
+                          <input
+                            id="staffClientPhone"
+                            type="tel"
+                            inputMode="tel"
+                            autoComplete="off"
+                            disabled={loading}
+                            value={staffClient.phone}
+                            onChange={(e) => {
+                              setStaffClient((prev) => ({ ...prev, phone: e.target.value }));
+                              if (checkoutErrors.customer_phone) setCheckoutErrors((prev) => ({ ...prev, customer_phone: undefined }));
+                            }}
+                            placeholder="0771234567"
+                            className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors ${checkoutErrors.customer_phone ? 'border-red-400 bg-red-50' : 'border-gray-300'} ${loading ? 'bg-gray-50' : ''}`}
+                          />
+                          {checkoutErrors.customer_phone ? (
+                            <p className="mt-1 text-xs text-red-500">{checkoutErrors.customer_phone}</p>
+                          ) : (
+                            <p className="mt-1 text-xs text-gray-400">The client will need this number to track the order.</p>
+                          )}
+                        </div>
+
+                        <div>
+                          <label htmlFor="staffClientEmail" className="block text-sm font-medium text-gray-700 mb-1.5">
+                            Email Address <span className="text-gray-400 font-normal">(Optional)</span>
+                          </label>
+                          <input
+                            id="staffClientEmail"
+                            type="email"
+                            autoComplete="off"
+                            disabled={loading}
+                            value={staffClient.email}
+                            onChange={(e) => {
+                              setStaffClient((prev) => ({ ...prev, email: e.target.value }));
+                              if (checkoutErrors.customer_email) setCheckoutErrors((prev) => ({ ...prev, customer_email: undefined }));
+                            }}
+                            placeholder="you@example.com"
+                            className={`w-full border rounded-lg px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-[#009E3C]/20 focus:border-[#009E3C] focus:outline-none transition-colors ${checkoutErrors.customer_email ? 'border-red-400 bg-red-50' : 'border-gray-300'} ${loading ? 'bg-gray-50' : ''}`}
+                          />
+                          {checkoutErrors.customer_email ? (
+                            <p className="mt-1 text-xs text-red-500">{checkoutErrors.customer_email}</p>
+                          ) : (
+                            <p className="mt-1 text-xs text-gray-400">Add one if the client wants the order confirmation by email.</p>
+                          )}
+                        </div>
+                      </div>
+                    ) : isAuthenticated ? (
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-[#009E3C] flex items-center justify-center text-white font-bold text-sm shadow-[0_4px_10px_rgba(0,158,60,0.30)]">
                           {(user?.first_name || user?.name || 'U').charAt(0).toUpperCase()}
@@ -968,7 +1230,7 @@ export default function Checkout() {
                   {/* Items */}
                   <div className="space-y-3 mb-5">
                     {(cart?.items || []).map((item: any, index: number) => {
-                      const itemPrice = Number(item.unit_price || item.price || item.product?.price || 0);
+                      const itemPrice = isStaff ? staffUnitPrice(index) : Number(item.unit_price || item.price || item.product?.price || 0);
                       return (
                       <div key={index} className="flex justify-between items-center text-sm group">
                         <div className="flex items-center gap-3 min-w-0">

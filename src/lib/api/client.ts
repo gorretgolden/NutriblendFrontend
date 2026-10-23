@@ -744,7 +744,7 @@ class NutriBlendApiClient {
     // ==================== Orders ====================
 
     async createOrder(orderData: {
-        items: { product_id: number; quantity: number; variation_id?: number }[];
+        items: { product_id: number; quantity: number; variation_id?: number; unit_price?: number }[];
         delivery_region_id?: number;
         delivery_town_id?: number;
         delivery_address: string;
@@ -754,6 +754,7 @@ class NutriBlendApiClient {
         notes?: string;
         payment_method?: string;
         chosen_payment_method?: string;
+        price_mode?: 'retail' | 'wholesale';
         customer_name?: string;
         customer_phone?: string;
         customer_email?: string;
