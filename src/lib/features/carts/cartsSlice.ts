@@ -23,6 +23,8 @@ export type CartItem = {
   short_description?: string;
   stock_quantity?: number;
   tier?: 'Retail' | 'Wholesale';
+  retail_price?: number;
+  wholesale_price?: number;
 };
 
 export type Cart = {
@@ -70,6 +72,8 @@ function transformBackendCart(backendCart: any): { cart: Cart; totalPrice: numbe
       percentage: Number(item.product?.discount_percentage || 0),
     },
     tier: item.tier || 'Retail',
+    retail_price: Number(item.retail_price || item.product?.price || 0),
+    wholesale_price: Number(item.wholesale_price || item.product?.wholesale_price || 0),
   }));
 
   const totalQuantities = items.reduce((sum, item) => sum + item.quantity, 0);
