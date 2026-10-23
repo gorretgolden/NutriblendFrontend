@@ -49,6 +49,8 @@ export default function Checkout() {
   const [rememberDetails, setRememberDetails] = useState(true);
   const [savedGuestContact, setSavedGuestContact] = useState<GuestContact | null>(null);
   const hasPrepopulated = useRef(false);
+  const [activeStep, setActiveStep] = useState(1);
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Fetch settings
   useEffect(() => {
@@ -344,6 +346,40 @@ export default function Checkout() {
     }
   };
 
+  // Track which checkout section is on screen so the step chips stay in sync,
+  // and let a chip scroll back to its section.
+  const steps = [
+    { id: 1, full: isAuthenticated ? 'Customer Information' : 'Your Details', short: 'Details' },
+    { id: 2, full: 'Delivery Details', short: 'Delivery' },
+    { id: 3, full: 'Payment Method', short: 'Payment' },
+  ];
+
+  useEffect(() => {
+    const sections = stepRefs.current.filter(Boolean) as HTMLDivElement[];
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        const topEntry = visible[0];
+        if (!topEntry) return;
+        const index = sections.indexOf(topEntry.target as HTMLDivElement);
+        if (index >= 0) setActiveStep(index + 1);
+      },
+      { rootMargin: '-25% 0px -60% 0px' }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [cart]);
+
+  const scrollToStep = (step: number) => {
+    setActiveStep(step);
+    stepRefs.current[step - 1]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   // Cart failed to load (timeout/network) — offer retry instead of an endless spinner
   if (!isOrderSuccessful && !showSuccessModal && !cart && !cartLoading && !authLoading && (isAuthenticated || hasToken)) {
     return (
@@ -519,6 +555,33 @@ export default function Checkout() {
       </header>
 
       <main className="max-w-frame mx-auto px-4 py-6 md:py-10">
+        {/* Clickable step navigation */}
+        <div className="sticky top-0 z-30 pb-4">
+          <nav aria-label="Checkout steps" className="flex justify-center">
+            <div className="inline-flex items-center bg-white rounded-full border border-gray-200 shadow-sm px-2 sm:px-3 py-1.5 gap-0.5 sm:gap-1">
+              {steps.map((step, i) => (
+                <div key={step.id} className="flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => scrollToStep(step.id)}
+                    aria-current={activeStep === step.id ? 'step' : undefined}
+                    className={`flex items-center gap-1.5 sm:gap-2 rounded-full px-2 sm:px-3 py-1 text-xs font-bold transition-colors ${activeStep === step.id ? 'bg-[#009E3C]/10 text-[#009E3C]' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'}`}
+                  >
+                    <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${activeStep === step.id ? 'bg-[#009E3C] text-white' : 'bg-gray-100 text-gray-500'}`}>
+                      {step.id}
+                    </span>
+                    <span className="sm:hidden">{step.short}</span>
+                    <span className="hidden sm:inline">{step.full}</span>
+                  </button>
+                  {i < steps.length - 1 && (
+                    <span className={`w-4 sm:w-6 h-px mx-0.5 sm:mx-1 ${activeStep > step.id ? 'bg-[#009E3C]/50' : 'bg-gray-200'}`} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </nav>
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
             {/* Left Column — Form */}
@@ -526,7 +589,7 @@ export default function Checkout() {
               <fieldset disabled={loading} className="space-y-5 border-none p-0 m-0">
 
                 {/* Step 1: Customer Info */}
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                <div ref={(el) => { stepRefs.current[0] = el; }} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm scroll-mt-24">
                   <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
                     <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#009E3C] text-white text-xs font-bold flex items-center justify-center">1</span>
                     <h2 className="font-semibold text-gray-900">{isAuthenticated ? 'Customer Information' : 'Your Details'}</h2>
@@ -653,7 +716,7 @@ export default function Checkout() {
                 </div>
 
                 {/* Step 2: Delivery */}
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                <div ref={(el) => { stepRefs.current[1] = el; }} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm scroll-mt-24">
                   <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
                     <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#009E3C] text-white text-xs font-bold flex items-center justify-center">2</span>
                     <h2 className="font-semibold text-gray-900">{deliveryMethod === 'pickup' ? 'Pickup Location' : 'Delivery Details'}</h2>
@@ -813,7 +876,7 @@ export default function Checkout() {
                 </div>
 
                 {/* Step 3: Payment */}
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                <div ref={(el) => { stepRefs.current[2] = el; }} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm scroll-mt-24">
                   <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/50">
                     <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#009E3C] text-white text-xs font-bold flex items-center justify-center">3</span>
                     <h2 className="font-semibold text-gray-900">Payment Method</h2>
