@@ -538,11 +538,12 @@ export default function Checkout() {
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-frame mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <button onClick={() => router.back()} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link href="/cart" aria-label="Back to cart" className="flex items-center gap-1 p-1.5 rounded-lg hover:bg-gray-100 transition-colors group">
+              <svg className="w-5 h-5 text-gray-600 group-hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-            </button>
+              <span className="text-sm font-semibold text-gray-600 group-hover:text-gray-900 hidden sm:inline">Back</span>
+            </Link>
             <h1 className="text-xl md:text-2xl font-bold text-gray-900">Checkout</h1>
           </div>
           <div className="flex items-center gap-1.5 text-gray-500 text-sm">
@@ -555,6 +556,19 @@ export default function Checkout() {
       </header>
 
       <main className="max-w-frame mx-auto px-4 py-6 md:py-10">
+        {/* Breadcrumb: always a way home or back to the cart */}
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm mb-2">
+          <Link href="/" className="font-medium text-gray-500 hover:text-[#009E3C] transition-colors">Home</Link>
+          <svg className="w-3.5 h-3.5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+          <Link href="/cart" className="font-medium text-gray-500 hover:text-[#009E3C] transition-colors">Cart</Link>
+          <svg className="w-3.5 h-3.5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+          <span aria-current="page" className="font-semibold text-gray-900">Checkout</span>
+        </nav>
+
         {/* Clickable step navigation */}
         <div className="sticky top-0 z-30 pb-4">
           <nav aria-label="Checkout steps" className="flex justify-center">
