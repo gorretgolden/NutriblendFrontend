@@ -102,6 +102,23 @@ export default function Checkout() {
     priceSeedMode.current = orderType;
   }, [isStaff, cart?.items, orderType]);
 
+  // Switching order type also pre-fills the client fields with the matching
+  // default customer (wholesale type -> default wholesale customer, retail
+  // type -> default retail customer). Both "Use default ..." buttons stay
+  // available so the manager can pick the other one or type their own client.
+  useEffect(() => {
+    if (!isStaff || !settings) return;
+    const d = orderType === 'wholesale'
+      ? settings.default_wholesale_customer
+      : settings.default_retail_customer;
+    if (!d || (!d.name && !d.phone)) return;
+    setStaffClient({
+      name: d.name || '',
+      phone: d.phone || '',
+      email: d.email || '',
+    });
+  }, [isStaff, settings, orderType]);
+
   // Fetch settings
   useEffect(() => {
     const fetchSettings = async () => {
@@ -786,7 +803,7 @@ export default function Checkout() {
                                   phone: settings?.default_wholesale_customer?.phone || '',
                                   email: settings?.default_wholesale_customer?.email || '',
                                 })}
-                                className="border border-[#009E3C]/30 bg-[#009E3C]/5 text-[#009E3C] rounded-xl px-3.5 py-2 text-sm font-bold hover:bg-[#009E3C]/10 transition-colors"
+                                className={`rounded-xl px-3.5 py-2 text-sm font-bold transition-colors ${orderType === 'wholesale' ? 'bg-[#009E3C] text-white shadow-sm' : 'border border-[#009E3C]/30 bg-[#009E3C]/5 text-[#009E3C] hover:bg-[#009E3C]/10'}`}
                               >
                                 Use default wholesale customer
                               </button>
@@ -799,7 +816,7 @@ export default function Checkout() {
                                   phone: settings?.default_retail_customer?.phone || '',
                                   email: settings?.default_retail_customer?.email || '',
                                 })}
-                                className="border border-[#009E3C]/30 bg-[#009E3C]/5 text-[#009E3C] rounded-xl px-3.5 py-2 text-sm font-bold hover:bg-[#009E3C]/10 transition-colors"
+                                className={`rounded-xl px-3.5 py-2 text-sm font-bold transition-colors ${orderType === 'retail' ? 'bg-[#009E3C] text-white shadow-sm' : 'border border-[#009E3C]/30 bg-[#009E3C]/5 text-[#009E3C] hover:bg-[#009E3C]/10'}`}
                               >
                                 Use default retail customer
                               </button>
@@ -1216,42 +1233,43 @@ export default function Checkout() {
 
             {/* Right Column — Order Summary */}
             <div className="lg:w-1/3">
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm sticky top-20">
-                <div className="bg-gradient-to-br from-[#009E3C] to-[#007a2e] px-5 py-4">
-                  <h2 className="font-semibold text-white flex items-center gap-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                    </svg>
-                    Cart Summary
-                  </h2>
-                </div>
+              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm sticky top-20">
+                <div className="h-1 bg-gradient-to-r from-[#009E3C] via-[#009E3C]/40 to-transparent" />
 
                 <div className="p-5">
+                  <div className="flex items-center justify-between mb-5">
+                    <h2 className="font-bold text-gray-900">Order Summary</h2>
+                    <span className="text-[11px] font-bold text-gray-500 bg-gray-100 rounded-full px-2.5 py-1">
+                      {(cart?.items || []).length} {(cart?.items || []).length === 1 ? 'item' : 'items'}
+                    </span>
+                  </div>
+
                   {/* Items */}
-                  <div className="space-y-3 mb-5">
+                  <div className="space-y-3.5 mb-5 max-h-64 overflow-y-auto pr-1">
                     {(cart?.items || []).map((item: any, index: number) => {
                       const itemPrice = isStaff ? staffUnitPrice(index) : Number(item.unit_price || item.price || item.product?.price || 0);
                       return (
-                      <div key={index} className="flex justify-between items-center text-sm group">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className="flex-shrink-0 w-6 h-6 rounded-md bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-500 border border-gray-200">
+                      <div key={index} className="flex justify-between items-start text-sm gap-3">
+                        <div className="flex items-start gap-3 min-w-0">
+                          <div className="flex-shrink-0 w-6 h-6 rounded-md bg-[#009E3C]/10 flex items-center justify-center text-[10px] font-bold text-[#009E3C] mt-0.5">
                             {item.quantity}
                           </div>
                           <div className="min-w-0">
                             <p className="text-gray-900 font-semibold truncate leading-tight">{item.name || item.product?.name}</p>
-                            {item.short_description && (
-                              <p className="text-[10px] text-gray-400 truncate mt-0.5">{item.short_description}</p>
-                            )}
+                            <p className="text-[11px] text-gray-400 mt-0.5 tabular-nums">UGX {itemPrice.toLocaleString()} each</p>
                           </div>
                         </div>
-                        <span className="font-bold text-gray-900 ml-4">UGX {(itemPrice * item.quantity).toLocaleString()}</span>
+                        <span className="font-bold text-gray-900 ml-4 tabular-nums whitespace-nowrap">UGX {(itemPrice * item.quantity).toLocaleString()}</span>
                       </div>
                       );
                     })}
-                              <div className="border-t border-gray-100 pt-4 space-y-3 mb-6">
+                  </div>
+
+                  {/* Totals */}
+                  <div className="border-t border-gray-100 pt-4 space-y-2.5 mb-5">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500 font-medium">Subtotal</span>
-                      <span className="font-bold text-gray-900">UGX {subtotal.toLocaleString()}</span>
+                      <span className="font-bold text-gray-900 tabular-nums">UGX {subtotal.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500 font-medium">Delivery Fee</span>
@@ -1274,7 +1292,7 @@ export default function Checkout() {
                   </div>
 
                   {/* Delivery & Payment Preview */}
-                  <div className="bg-gray-50 rounded-xl p-4 space-y-3 mb-6 border border-gray-100">
+                  <div className="bg-[#0B1F3A]/[0.04] rounded-xl p-4 space-y-3 mb-5 border border-[#0B1F3A]/[0.06]">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-2">
                       {deliveryMethod === 'pickup' ? 'Pickup Location' : 'Delivery Address'}
                     </p>
@@ -1314,7 +1332,7 @@ export default function Checkout() {
                   </div>
 
                   {/* Discount Code */}
-                  <div className="mb-6">
+                  <div className="mb-5">
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -1334,9 +1352,9 @@ export default function Checkout() {
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center border-t border-gray-100 pt-5 mb-6">
+                  <div className="flex justify-between items-center border-t border-gray-100 pt-5 mb-5">
                     <span className="text-gray-900 font-bold">Total Amount</span>
-                    <span className="text-2xl font-black text-gray-900">UGX {Math.round(finalTotal).toLocaleString()}</span>
+                    <span className="text-2xl font-black text-gray-900 tabular-nums">UGX {Math.round(finalTotal).toLocaleString()}</span>
                   </div>
 
                   <button
@@ -1359,7 +1377,6 @@ export default function Checkout() {
                 </div>
               </div>
             </div>          </div>
-        </div>
       </main>
 
       <SuccessModal

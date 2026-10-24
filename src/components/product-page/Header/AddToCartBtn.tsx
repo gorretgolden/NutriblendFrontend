@@ -2,6 +2,7 @@
 
 import { addToCart } from "@/lib/features/carts/cartsSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
+import { useWholesaleView } from "@/lib/viewMode";
 import { RootState } from "@/lib/store";
 import { Product } from "@/types/product.types";
 import React from "react";
@@ -13,8 +14,7 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
   const { sizeSelection, colorSelection, selectedVariationId } = useAppSelector(
     (state: RootState) => state.products
   );
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
-  const isWholesaleUser = isAuthenticated && (user?.role === 'Wholesale Customer' || user?.is_wholesale_approved);
+  const isWholesaleUser = useWholesaleView();
 
   const hasDiscount = (data.discount?.percentage ?? 0) > 0 || (data.discount?.amount ?? 0) > 0;
 

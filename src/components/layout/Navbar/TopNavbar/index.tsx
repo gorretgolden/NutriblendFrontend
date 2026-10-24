@@ -6,6 +6,7 @@ import LoginModal from '../../SignIn/SignIn';
 import SignUpModal from "../../SignIn/signup";
 import ForgotPasswordModal from "../../SignIn/ForgotPasswordModal";
 import CartBtn from "./CartBtn";
+import ViewModeSwitch from "@/components/ui/ViewModeSwitch";
 import { apiClient, getImageUrl } from "@/lib/api/client";
 import { toast } from "sonner";
 
@@ -13,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { logoutUser, logout } from "@/lib/features/auth/authSlice";
 import { clearCartLocal } from "@/lib/features/carts/cartsSlice";
 import { clearWishlist } from "@/lib/features/wishlist/wishlistSlice";
+import { useWholesaleView } from "@/lib/viewMode";
 import { useRouter } from "next/navigation";
 
 const Header = () => {
@@ -30,7 +32,7 @@ const Header = () => {
 
 
   const { user } = useAppSelector((state) => state.auth);
-  const isWholesaleUser = user?.role === 'Wholesale Customer' || !!user?.is_wholesale_approved;
+  const isWholesaleUser = useWholesaleView();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -267,6 +269,8 @@ const Header = () => {
                   </span>
                 </button>
               </div>
+
+              <ViewModeSwitch />
 
               <CartBtn />
 

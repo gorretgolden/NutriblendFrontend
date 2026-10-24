@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ProductCard from './ProductCard';
 import { Product } from '@/types/product.types';
-import { useAppSelector } from '@/lib/hooks/redux';
+import { useWholesaleView } from '@/lib/viewMode';
 
 interface ProductCarouselProps {
   products: Product[];
@@ -32,8 +32,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
-  const isWholesaleUser = isAuthenticated && (user?.role === 'Wholesale Customer' || user?.is_wholesale_approved);
+  const isWholesaleUser = useWholesaleView();
 
   const displayProducts = React.useMemo(() => {
     return isWholesaleUser 

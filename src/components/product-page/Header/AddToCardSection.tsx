@@ -4,10 +4,12 @@ import CartCounter from "@/components/ui/CartCounter";
 import WishlistButton from "@/components/ui/WishlistButton";
 import React, { useState } from "react";
 import AddToCartBtn from "./AddToCartBtn";
+import { useWholesaleView } from "@/lib/viewMode";
 import { Product } from "@/types/product.types";
 
 const AddToCardSection = ({ data }: { data: Product }) => {
   const [quantity, setQuantity] = useState<number>(1);
+  const isWholesale = useWholesaleView();
 
   const handleAdd = () => setQuantity(prev => prev + 1);
   const handleRemove = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
@@ -18,7 +20,7 @@ const AddToCardSection = ({ data }: { data: Product }) => {
       <div className="flex items-center gap-4">
         <div className="flex-1 h-[64px] bg-gray-100/50 rounded-2xl border border-gray-100 flex items-center justify-between px-8">
           <span className="text-sm font-bold uppercase tracking-widest text-gray-400">
-            {typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('user_profile') || '{}')?.role === 'Wholesale Customer' || JSON.parse(localStorage.getItem('user_profile') || '{}')?.is_wholesale_approved) && data.wholesale_price ? `NUMBER OF ${data.wholesale_unit_name || 'BOXES'}` : 'Quantity'}
+            {isWholesale && data.wholesale_price ? `NUMBER OF ${data.wholesale_unit_name || 'BOXES'}` : 'Quantity'}
           </span>
           
           <div className="flex items-center gap-6">
@@ -65,8 +67,6 @@ const AddToCardSection = ({ data }: { data: Product }) => {
               : `https://nutriblendhaven.com/shop/product/${data.id}/${data.slug || 'product'}`;
             
             // Calculate display price (wholesale logic included)
-            const user = JSON.parse(localStorage.getItem('user_profile') || '{}');
-            const isWholesale = user?.role === 'Wholesale Customer' || user?.is_wholesale_approved;
             const price = isWholesale && data.wholesale_price ? data.wholesale_price : (data.price);
             const message = encodeURIComponent(`Hello Nutriblend Haven.\nI would like to buy ${data.title},\nQuantity: ${quantity},\nTotal Price: UGX ${(price * quantity).toLocaleString()},\nLink: ${productUrl}`);
             window.open(`https://wa.me/256784640607?text=${message}`, '_blank');

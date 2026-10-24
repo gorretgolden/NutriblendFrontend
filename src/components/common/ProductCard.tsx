@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { addToCart } from "@/lib/features/carts/cartsSlice";
 import WishlistButton from "@/components/ui/WishlistButton";
+import { useWholesaleView } from "@/lib/viewMode";
 import { Product } from "@/types/product.types";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -22,8 +23,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
   const hasDiscount = (data.discount?.percentage ?? 0) > 0 || (data.discount?.amount ?? 0) > 0;
   const isOutOfStock = data.stock !== undefined && data.stock === 0;
 
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
-  const isWholesaleUser = isAuthenticated && (user?.role === 'Wholesale Customer' || user?.is_wholesale_approved);
+  const isWholesaleUser = useWholesaleView();
 
   const discountedPrice = (data.discount?.percentage ?? 0) > 0
     ? Math.round(data.price - (data.price * (data.discount?.percentage ?? 0)) / 100)

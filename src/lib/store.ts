@@ -5,6 +5,7 @@ import productsReducer from "./features/products/productsSlice";
 import cartsReducer from "./features/carts/cartsSlice";
 import authReducer from "./features/auth/authSlice";
 import wishlistReducer from "./features/wishlist/wishlistSlice";
+import viewModeReducer from "./features/viewMode/viewModeSlice";
 
 const persistConfig = {
   key: "root",
@@ -37,6 +38,10 @@ const rootReducer = combineReducers({
   carts: cartsReducer,
   auth: authReducer,
   wishlist: wishlistReducer,
+  // Deliberately NOT in the persist whitelist: viewMode keeps its own
+  // localStorage entry so a staff member's browsing mode survives reloads
+  // without going through the redux-persist migration machinery.
+  viewMode: viewModeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

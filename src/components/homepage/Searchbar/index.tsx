@@ -4,11 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient, getImageUrl } from "@/lib/api/client";
-import { useAppSelector } from "@/lib/hooks/redux";
+import { useWholesaleView } from "@/lib/viewMode";
 
 export default function SearchWithDropdown() {
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
-  const isWholesaleUser = isAuthenticated && (user?.role === 'Wholesale Customer' || user?.is_wholesale_approved);
+  const isWholesaleUser = useWholesaleView();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
